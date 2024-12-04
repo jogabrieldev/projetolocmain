@@ -1,0 +1,300 @@
+body{
+    padding: 0px;
+    margin: 0px;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+input{
+    height: 23px;
+}
+/* Cabeçalho */
+.containerHeader{
+    height: 115px;
+    background-color: cornflowerblue;
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    right: 0;
+}
+
+.material-symbols-outlined {
+    font-family: sans-serif;
+    margin-top: 2.5%;
+    font-size: 20px;
+    cursor: pointer;
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+
+.logo{
+ width: 130px;
+ margin-top: 1%;
+ margin-left: 1%;
+}
+#photo{
+    width: 100px;
+    border-radius: 100%;
+}
+.information{
+  width: 60%;
+ text-align: center;
+}
+/* Container principal da aplicaçao */
+.containerApp{
+    display: flex;
+ height:600px;
+background-color: darkgray;
+
+}
+.workButton{
+    display: flex;
+    background-color: darkgray;
+    width: 19%;
+    height: 100%;
+    justify-content: flex-end;
+    border-radius: 10px;
+    border: none;
+    position: fixed;
+    
+}
+     
+ul{
+    width: 100%;
+    background-color: darkgray;
+    list-style-type: none;
+    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
+}
+/* Botoes do menu principais */
+.btnCadBens{ 
+    margin-top: 3%;
+    width: 90%;
+    height: 30px;
+    border: none;
+    background-color: lightslategray;
+    cursor: pointer;
+    margin-right: 2.5%;
+}
+.btnCadClie{
+    width: 90%;
+    height: 30px;
+    border: none;
+    background-color: lightslategray;
+    cursor: pointer;
+    margin-right: 2.5%;
+}
+.btnCadForn{
+    width: 90%;
+    height: 30px;
+    border: none;
+    background-color: lightslategray;
+    cursor: pointer;
+    margin-right: 2.5%;
+}
+.btnCadProd{
+    width: 90%;
+    height: 30px;
+    border: none;
+    background-color: lightslategray;
+    cursor: pointer;
+    margin-right: 2.5%;
+}
+.btnCadFabri{
+    width: 90%;
+    height: 30px;
+    border: none;
+    background-color: lightslategray;
+    cursor: pointer;
+    margin-right: 2.5%;
+}
+.btnCadTypeProd{
+    width: 90%;
+    height: 30px;
+    border: none;
+    background-color: lightslategray;
+    cursor: pointer;
+    margin-right: 2.5%;
+}
+.btnCadMotorista{
+    width: 90%;
+    height: 30px;
+    border: none;
+    background-color: lightslategray;
+    cursor: pointer;
+    margin-right: 2.5%;
+}
+/* botoes de opções para os bens */
+.optionsBens{
+    display: flex;
+    display: none;
+    margin-left: 20%;
+    flex-direction: row;
+    gap: 5%;
+    width: 25%;
+    height: 60px;
+    justify-content: center;
+    background-color: darkgray; 
+    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
+    margin-top: 2%;
+    align-items: center;
+}
+.listGoods{
+    cursor: pointer;
+    height: 60%;
+    width: 20%;
+}
+.registerGoods{
+    cursor: pointer;
+    height: 60%;
+    width: 35%;
+}
+.listingBens{
+    display: none;
+    background-color: darkgray;
+    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
+    width: 78%;
+    height: 95%;
+    margin-left: 20%;
+    margin-top:1.2% ;
+    flex-direction: column;
+}
+.btnPageListGoods{
+    display: flex;
+    height:45px;
+}
+.delete{
+    height: 30px;
+    cursor: pointer;
+}
+.edit{
+    height: 30px;
+    cursor: pointer;
+}
+/* container de registro de bens */
+.showContentBens{
+    width: 75%;
+    display: none;
+    background-color: darkgray;
+    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
+     height: 95%;
+    margin-left: 20%;
+    margin-top: 1.2%;
+    gap: 1.5%;
+}
+label{
+    margin-bottom: 1.5%;
+    width: auto;
+}
+
+.moveAllFieldsGoods{
+    display: flex;
+    max-width:94%;
+    flex-direction:column;
+    
+}
+
+/* tudo sobre os campos bens */
+
+.moveFieldGoods{
+    display: flex;
+    justify-content: space-around;
+    margin-top: 2.5%;
+    flex-wrap: wrap;
+    width: 105%;
+}
+
+#codForne{
+    width: 35%;
+}
+#valor{
+    width: 42%;
+}
+#alug{
+    width: 45%;
+}
+#cor{
+    width: 45%;
+}
+/* botoes que estao na tela de registro */
+.btnOutNext{
+    display: flex;
+    width:50%;
+     gap: 4.5%;
+     justify-content: center;
+     margin-top: 10%;
+}
+.btnOut{
+    cursor: pointer;
+    width: 25%;
+    margin-bottom: 2%;
+    background-color: lightslategray; 
+    border: none;
+    height: 90%;
+}
+.btnNext{
+    cursor: pointer;
+    width: 25%;
+    margin-bottom: 2%;
+    background-color: lightslategray; 
+    border: none;
+    height: 90%;
+}
+/* Client */
+
+.optionsClient{
+    display: flex;
+    display: none;
+    margin-left: 20%;
+    flex-direction: row;
+    gap: 5%;
+    width: 25%;
+    height: 60px;
+    justify-content: center;
+    background-color: darkgray; 
+    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
+    margin-top: 2%;
+    align-items: center;
+}
+.registerClient{
+    cursor: pointer;
+    height: 60%;
+    width: 35%;
+}
+.listYouClient{
+    cursor: pointer;
+    height: 60%;
+    width: 35%;
+}
+.listingClient{
+    display: none;
+    background-color: darkgray;
+    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
+    width: 78%;
+    height: 95%;
+}
+
+.showContentClient{
+    width: 78%;
+    display: none;
+    background-color: darkgray;
+    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
+     height: 95%;
+    margin-left: 20%;
+    margin-top: 1.2%;
+    gap: 1.5%;
+}
+.moveAllFieldsClient{
+    display: flex;
+    max-width:94%;
+    flex-direction:column;
+}
+.moveFieldsClient{
+    display: flex;
+    justify-content: space-around;
+    margin-top: 2.5%;
+   flex-wrap: wrap;
+   width: 105%;
+}

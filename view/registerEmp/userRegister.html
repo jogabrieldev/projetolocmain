@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de empresa</title>
+  <link rel="stylesheet" href="useRegister.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+
+<body>
+  
+  <div class="container">
+    <div class="logo">
+      <img src="../img/sgttec2.jpg" alt="logo" id="logo">
+      <h3>Faça seu Cadastro</h3>
+     </div>
+    <form  id="form">
+      <div class="moveNome">
+        <input type="text" name="name" id="name" placeholder="Nome completo" required>
+        <input type="text" name="fant" id="nameFan" placeholder="Nome fantasia">
+      </div>
+        
+      <div class="moveCnpjCep">
+        <input type="number" name="cnpj" id="cnpj" placeholder="CNPJ" required>
+        <input type="number" name="cep" id="cep" placeholder="CEP" required>
+      </div>  
+     
+      <div class="moveRuaCida">
+        <input type="text" name="rua" id="road" placeholder="Rua">
+        <input type="text" name="address" id="city" placeholder="Cidade" required>
+      </div>
+
+      <div class="moveEstadoTele">
+        <input type="text" name="estado" id="state"
+        placeholder="Estado" required>
+        <input type="tel" name="phone" id="phone" placeholder="Telefone" required>
+      </div>
+
+      <div class="moveMailBanco">
+        <input type="email" name="mail" id="mail" placeholder="E-mail" required>
+        <input type="text" name="bank" id="bank"   placeholder="Banco"required>
+      </div>
+
+      <div class="moveContAgencia">
+        <input type="text" name="cont" id="cont" placeholder="Conta" required>
+        <input type="text" name="age" id="agency" placeholder="Agencia" required>
+      </div>
+
+      <div class="movePixBtn">
+        <input type="text" name="pix" id="pix" placeholder="Pix" required>
+        <button id="buttonRegister">Cadastrar-se</button>
+      </div>
+    
+    </form>
+  </div>
+
+  <script src="register.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</body>
+
+</html>

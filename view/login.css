@@ -1,0 +1,61 @@
+body{
+    padding: 0px;
+    margin: 0px;
+    font-size: 19px;
+    
+}
+img{
+   max-width:  100%;
+    height: 100%;
+}
+i{
+    font-size: 19px;
+    cursor: pointer;
+    position: absolute;
+    right : 19.5%;
+    color: #988f8f;
+}
+.left{
+    width: 80%;
+    height: 115%;
+    margin: 0;
+}
+.container{
+    background-color: rgb(21, 21, 21);
+    max-width: 110%;
+    display: flex;
+    justify-content: space-between;
+    height: 640px;
+}
+
+.right{
+    background-color: rgb(131, 152, 136);
+    width: 90%;
+    text-align: center;
+    height: 115%;
+    margin: 0;
+}
+.information{
+    margin-top: 37%;
+}
+#user{
+    width: 219px;
+    height: 27px;
+    border-radius: 10px;
+    border: none;
+    padding: 0px 5px 0px 15px;
+}
+#pin{
+    width: 219px;
+    height: 27px;
+    border-radius: 10px;
+    border: none;
+    padding: 0px 5px 0px 15px;
+}
+.submit{
+    width: 131px;
+    height: 29px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}   
