@@ -8,13 +8,16 @@ const addGoods = require("../controllers/goodsRegister.js");
 route.get("/", () => {
   routeMain.submitStart();
 });
+route.get('/listbens',(req , res)=>{
+  addGoods.listBens(req , res)
+})
 
 route.post("/autenticar", (req, res) => {
   AuthController(req, res);
 });
 
 route.post("/submit", (req, res) => {
-  addGoods(req, res);
+  addGoods.registerBens(req,res)
 });
 
 module.exports = route;

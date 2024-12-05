@@ -1,197 +1,265 @@
 <!DOCTYPE html>
 <html lang="pt-BR ">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="main.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=exit_to_app" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=exit_to_app" />
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+        
     <title>Screen main</title>
 </head>
+
 <body>
-    <section class="containerHeader"> 
+    <section class="containerHeader">
         <div class="logo">
             <img src="../img/sgttec2.jpg" alt="logo" id="photo">
         </div>
 
-        
+
 
         <div class="information">
             <h3>Informaçoes</h3>
         </div>
-        
+
     </section>
 
-    <section class="containerApp" >
+    <section class="containerApp">
         <div class="workButton">
-           <ul>
-              <li><button class="btnCadBens">Bens</button></li>
-              <br>
-              <li><button class="btnCadClie">Clientes</button></li>
-              <br>
-              <li><button class="btnCadForn">Fornecedor</button></li>
-              <br>
-              <li><button class="btnCadProd">Produto</button></li>
-              <br>
-              <li><button class="btnCadFabri">Fabricante</button></li>
-              <br>
-              <li><button class="btnCadTypeProd"> Tipo do produto</button></li>
-              <br>
-              <li><button class="btnCadMotorista">Motorista</button></li> 
-        </ul>
-        <span class="material-symbols-outlined">
-            exit_to_app
-        </span>
-       </div>
-     
-    <div class="optionsBens">
-           <p>Bens</p>
-           <button class="listGoods">Listar</button>
-           <button class="registerGoods">Faça o Cadastro</button>
-   </div> 
-    <div class="listingBens">
+            <ul>
+                <li><button class="btnCadBens">Bens</button></li>
+                <br>
+                <li><button class="btnCadClie">Clientes</button></li>
+                <br>
+                <li><button class="btnCadForn">Fornecedor</button></li>
+                <br>
+                <li><button class="btnCadProd">Produto</button></li>
+                <br>
+                <li><button class="btnCadFabri">Fabricante</button></li>
+                <br>
+                <li><button class="btnCadTypeProd"> Tipo do produto</button></li>
+                <br>
+                <li><button class="btnCadMotorista">Motorista</button></li>
+            </ul>
+            <span class="material-symbols-outlined">
+                exit_to_app
+            </span>
+        </div>
 
-   
-      <!-- informações -->
+        <div class="optionsBens">
+            <p>Bens</p>
+            <button class="listGoods">Listar</button>
+            <button class="registerGoods">Faça o Cadastro</button>
+        </div>
+        <div class="pageListingBens">
+         
+              <div class="listingBens">
+                
+              </div>
 
-     <div class="btnPageListGoods">
-         <button class="delete" >Excluir</button>
-         <button class="edit">Editar</button>
-     </div>
-    </div>
+            <!-- informações -->
 
-    <div class="showContentBens">
-     <form  id="formRegisterBens"> 
-          <div class="moveAllFieldsGoods">
-               <div class="moveFieldGoods">
-                    <label for="name">Nome
-                         <input type="text" name="name" id="name" placeholder="Nome">
-                    </label>
-                    <label for="model">Modelo
-                         <input type="text" name="model" id="model" placeholder="Modelo">
-                    </label>
-                    <label for="serial">Numero de Serie
-                         <input type="number" name="serial" id="serial" placeholder="Numero de serie">
-                    </label>
-                    <label for="codForne" id="labelForne">Fornecedor
-                        <input type="number" name="codForne" id="codForne" placeholder="codigo">
-                    </label>
-                    <label for="dtCompra" id="labelDatacompra"> Data da compra
-                        <input type="date" name="dtCompra" id="dtCompra" >
-                    </label>
-                    <label for="Valor" id="labelValor">Valor compra
-                        <input type="number" name="valor" id="valor" placeholder="Valor">
-                   </label>
+            <div class="btnPageListGoods">
+                <button class="delete">Excluir</button>
+                <button class="edit">Editar</button>
+                <button class="exit">Voltar</button>
             </div>
-             <div class="moveFieldGoods">
-                   <label for="ntFiscal">Nota Fiscal
-                       <input type="number" name="ntFiscal" id="ntFiscal" placeholder="Nota Fiscal">
-                   </label>
-                   <label for="status">Status
-                        <select name="status" id="status">
-                            <option value="Em Locaçao">EL</option>
-                            <option value="Saida do cliente">SC</option>
-                            <option value="Saida do Aterro">SA</option>
-                            <option value="Saida do Aterro para o cliente">AC</option>
-                            <option value="Transito para o cliente">TC</option>
-                            <option value="Cliente para o aterro">CA</option>
-                        </select>
-                   </label>
-                    <label for="dtStatus">Data do Status
-                        <input type="date" name="dtStatus" id="dtStatus" >
+        </div>
+
+        <div class="showContentBens">
+            <form id="formRegisterBens">
+                <div class="moveAllFieldsGoods">
+
+                    <div class="moveFieldGoods">
+
+                        <label for="name">Codigo
+                            <input type="text" name="code" id="code" placeholder="bensCode">
                         </label>
-                    <label for="fabri">Fabricante
-                         <input type="text" name="fabri" id="fabri" placeholder="Fabricante">
-                    </label>
-                    <label for="rena">Renavam
-                        <input type="text" name="rena" id="rena" placeholder="Renavam">
-                    </label>
-                    <label for="placa">Placa
-                        <input type="text" name="placa" id="placa" placeholder="Placa">
-                    </label>
-             </div>
-              <div class="moveFieldGoods">
-                   <label for="alug">Alugado
-                         <select name="alug" id="alug">
-                            <option value="">Sim</option>
-                            <option value="">Nao</option>
-                         </select>
-                   </label>
-                   <label for="chassi">Chassi
-                        <input type="text" name="chassi" id="chassi" placeholder="Chassi">
-                   </label>
-                   <label for="Cor" id="COR">Cor
-                         <input type="text" name="cor" id="cor" placeholder="Cor">
-                    </label>
-                   <label for="hrStatus">Hora do Status
-                        <input type="time" name="alug" id="hrStatus" placeholder="Hora do status">
-                   </label>
-                   <label for="exe">KM Atual <input type="text"         name="kmAtual" id="kmAtual" placeholder="KM Atual">
-                    </label>
-                    <label for="exe">Valor Alugado <input type="number" name="valorAlug" id="valorAlug"></label>
-           </div>     
-            <div class="btnOutNext">
-                <button class="btnNext">Cadastrar</button>
-                <button class="btnOut">Voltar</button>
-           </div>
-         </div>
-    </form>
-</div>
+                        <label for="name">Nome
+                            <input type="text" name="name" id="name" placeholder="bensnome">
+                        </label>
+                        <label for="placa"> Cofa
+                            <input type="text" name="cofa" id="cofa" placeholder="benscofa">
+                        </label>
+                        <label for="model">Modelo
+                            <input type="text" name="model" id="model" placeholder="bensMode">
+                        </label>
 
-<!-- RegisteClient -->
-      <div class="optionsClient">
-        <p>Cliente</p>
-          <button class="listYouClient">Listar</button>
-           <button class="registerClient">Faça o cadastro</button>
-      </div>
-      <div class="listingClient">
-  
-      </div>
+                        <label for="serial">Numero de Serie
+                            <input type="number" name="serial" id="serial" placeholder="bensNuse">
+                        </label>
 
-     <div class="showContentClient">
+                        <label for="placa" id="labelForne">Placa
+                            <input type="text" name="placa" id="placa" placeholder="bensPlac">
+                        </label>
+                    </div>
+
+                    <div class="moveFieldGoods">
+
+                        <label for="Valor" id="labelValor">bensAnmo
+                            <input type="text" name="bensAnmo" id="bensAnmo" placeholder="bensAnmo">
+                        </label>
+
+                        <label for="dtCompra" id="labelDatacompra"> Data da compra
+                            <input type="date" name="dtCompra" id="dtCompra">
+                        </label>
+
+                        <label for="Valor" id="labelValor">Valor compra
+                            <input type="number" name="valor" id="valor" placeholder="bensVacp">
+                        </label>
+
+                        <label for="ntFiscal">Nota Fiscal
+                            <input type="number" name="ntFiscal" id="ntFiscal" placeholder="bensNunf">
+                        </label>
+
+
+                        <label for="fabri">codigo Fornecedor
+                            <input type="text" name="cofo" id="cofo" placeholder="bensCofo">
+                        </label>
+
+                        <label for="kmAtual">KM Atual <input type="number" name="kmAtual" id="kmAtual"
+                                placeholder="bensKmat">
+                        </label>
+                    </div>
+
+                    <div class="moveFieldGoods">
+
+                        <label for="dtKm">Data do KM
+                            <input type="date" name="dtKm" id="dtKm">
+                        </label>
+
+                        <label for="status">Status
+                            <select name="status" id="status">
+                                <option value="EL">EL</option>
+                                <option value="SC">SC</option>
+                                <option value="SA">SA</option>
+                                <option value="AC">AC</option>
+                                <option value="TC">TC</option>
+                                <option value="CA">CA</option>
+                            </select>
+                        </label>
+
+
+                        <label for="dtStatus">Data do Status
+                            <input type="date" name="dtStatus" id="dtStatus">
+                        </label>
+
+                        <label for="hrStatus">Hora do Status
+                            <input type="time" name="hrStatus" id="hrStatus" placeholder="bensHrus">
+                        </label>
+
+                        <label for="chassi">Chassi
+                            <input type="number" name="chassi" id="chassi" placeholder="Chassi">
+                        </label>
+
+                        <label for="Cor" id="COR">Cor
+                            <input type="text" name="cor" id="cor" placeholder="bensCore">
+                        </label>
+
+                        <div class="moveFieldGoods">
+
+                            <label for="nuMO" id="nuMO">nuMO
+                                <input type="number" name="nuMO" id="nuMO" placeholder="bensNumo">
+                            </label>
+
+                            <label for="rena">Renavam
+                                <input type="number" name="rena" id="rena" placeholder="bensRena">
+                            </label>
+
+                            <label for="bensCtep">bensCtep
+                                <input type="text" name="bensCtep" id="bensCtep" placeholder="bensCtep">
+                            </label>
+
+                            <label for="fabri">Ativo
+                                <select name="bensAtiv" id="bensAtiv">
+                                    <option value="S">Sim</option>
+                                    <option value="N">Nao</option>
+                                </select>
+                            </label>
+
+                            <label for="alug">Alugado
+                                <select name="alug" id="alug">
+                                    <option value="S">Sim</option>
+                                    <option value="N">Nao</option>
+                                </select>
+                            </label>
+
+                            <label for="exe">Valor Alugado <input type="number" name="valorAlug" id="valorAlug" placeholder="bensVaal"></label>
+
+                            <label for="fabri">Fabricante
+                                <input type="text" name="fabri" id="fabri" placeholder="bensFabr">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="btnOutNext">
+                        <button class="btnNext">Cadastrar</button>
+                        <button class="btnOut">Voltar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- RegisteClient -->
+        <div class="optionsClient">
+            <p>Cliente</p>
+            <button class="listYouClient">Listar</button>
+            <button class="registerClient">Faça o cadastro</button>
+        </div>
+        <div class="listingClient">
+
+        </div>
+
+        <div class="showContentClient">
             <div class="moveAllFieldsClient">
                 <div class="moveFieldsClient">
-                       <label for="nome">
-                          <input type="text" name="clientNome" id="clientNome" placeholder="nome">
-                       </label>
-                       <label for="clientCpf">
-                          <input type="number" name="clientCpf" id="clientCpf" placeholder="CPF">
-                       </label>
-                       <label for="dtCad">
-                          <input type="date" name="dtCad" id="dtCad">
-                       </label>
+                    <label for="nome">
+                        <input type="text" name="clientNome" id="clientNome" placeholder="nome">
+                    </label>
+                    <label for="clientCpf">
+                        <input type="number" name="clientCpf" id="clientCpf" placeholder="CPF">
+                    </label>
+                    <label for="dtCad">
+                        <input type="date" name="dtCad" id="dtCad">
+                    </label>
                 </div>
                 <div class="moveFieldsClient">
-                       <label for="dtNcClient">
-                           <input type="date" name="dtNcClient" id="dtNcClient">
-                       </label>
-                       <label for="clientCelu">
-                           <input type="number" name="clientCelu" id="clientCelu" placeholder="Celular">
-                       </label>
-                       <label for="clientCity">
-                           <input type="text" name="clientCity" id="clientCity" placeholder="Cidade">
-                       </label>
+                    <label for="dtNcClient">
+                        <input type="date" name="dtNcClient" id="dtNcClient">
+                    </label>
+                    <label for="clientCelu">
+                        <input type="number" name="clientCelu" id="clientCelu" placeholder="Celular">
+                    </label>
+                    <label for="clientCity">
+                        <input type="text" name="clientCity" id="clientCity" placeholder="Cidade">
+                    </label>
                 </div>
                 <div class="moveFieldsClient">
-                      <label for="clientEstd">
-                            <input type="text" name="clientEstd" id="clientEstd" placeholder="Estado">
-                      </label>
-                      <label for="clientRua">
-                             <input type="text" name="clientRua" id="clientRua" placeholder="Rua">
-                      </label>
-                      <label for="clientCep">
-                            <input type="number" name="clientCep" id="clientCep" placeholder="CEP">
-                      </label>
-                      <label for="clientMail">
+                    <label for="clientEstd">
+                        <input type="text" name="clientEstd" id="clientEstd" placeholder="Estado">
+                    </label>
+                    <label for="clientRua">
+                        <input type="text" name="clientRua" id="clientRua" placeholder="Rua">
+                    </label>
+                    <label for="clientCep">
+                        <input type="number" name="clientCep" id="clientCep" placeholder="CEP">
+                    </label>
+                    <label for="clientMail">
                         <input type="email" name="clientMail" id="clientMail" placeholder="E-mail">
-                      </label>
+                    </label>
                 </div>
                 <div class="btnOutNext">
                     <button class="clientRegister">Cadastrar</button>
                     <button class="outClient">Voltar</button>
                 </div>
-            </div> 
-     </div>
-</section>
-<script src="main.js"></script>
+            </div>
+        </div>
+    </section>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script src="main.js"></script>
 </body>
+
 </html>

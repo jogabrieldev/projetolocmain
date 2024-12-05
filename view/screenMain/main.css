@@ -3,6 +3,7 @@ body{
     margin: 0px;
     font-size: 15px;
     font-family: Arial, Helvetica, sans-serif;
+    
 }
 input{
     height: 23px;
@@ -151,7 +152,7 @@ ul{
     height: 60%;
     width: 35%;
 }
-.listingBens{
+.pageListingBens{
     display: none;
     background-color: darkgray;
     box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
@@ -161,6 +162,29 @@ ul{
     margin-top:1.2% ;
     flex-direction: column;
 }
+.listingBens{
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 20px; 
+    justify-content: space-evenly;
+    overflow-y: auto;
+}
+.bem-item{
+    background: #f4f4f4;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 10px; 
+    min-height: 150px;
+    font-size: 13px;
+}
+.bem-item p {
+    margin: 5px 0;
+  }
 .btnPageListGoods{
     display: flex;
     height:45px;

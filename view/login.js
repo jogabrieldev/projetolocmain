@@ -31,7 +31,16 @@ document.querySelector("#formLogin").addEventListener("submit", async (event) =>
 
         if(responseData.ok) {
           // console.log(response);
-             alert('Usuario acessou')
+            //  alert('Usuario acessou')
+            Toastify({
+              text: 'Login com sucesso',
+              duration: 3000,
+              close: true,
+              gravity: 'top',
+              position: 'right',
+              backgroundColor: 'linear-gradient(to right, #00b09b, #96c93d)',
+          }).showToast();
+
              window.location.href = 'screenMain/main.html'
         } else {
   
