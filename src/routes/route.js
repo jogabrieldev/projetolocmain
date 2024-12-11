@@ -3,13 +3,13 @@ const route = express.Router();
 
 const routeMain = require("../controllers/controller.js");
 const AuthController = require("../controllers/authController.js");
-const addGoods = require("../controllers/goodsRegister.js");
+const movementGoods = require("../controllers/goodsRegister.js");
 
 route.get("/", () => {
   routeMain.submitStart();
 });
-route.get('/listbens',(req , res)=>{
-  addGoods.listBens(req , res)
+route.get('/api/listbens',(req , res)=>{
+  movementGoods.listBens(req , res)
 })
 
 route.post("/autenticar", (req, res) => {
@@ -17,7 +17,19 @@ route.post("/autenticar", (req, res) => {
 });
 
 route.post("/submit", (req, res) => {
-  addGoods.registerBens(req,res)
+  movementGoods.registerBens(req, res)
 });
+
+route.get('/bem/:id' , (req , res)=>{
+  movementGoods.getBemById(req , res)
+})
+
+route.delete('/delete/:id', async (req,res)=>{
+  movementGoods.deletarGoods(req , res)
+})
+route.put('/update/:id' , async (req , res)=>{
+  movementGoods.updateGoods(req , res)
+ 
+})
 
 module.exports = route;

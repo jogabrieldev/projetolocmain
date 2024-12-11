@@ -33,17 +33,41 @@ document.querySelector("#formLogin").addEventListener("submit", async (event) =>
           // console.log(response);
             //  alert('Usuario acessou')
             Toastify({
-              text: 'Login com sucesso',
-              duration: 3000,
+              text: "Login com sucesso",
+              duration: 2000,
+              destination: "https://github.com/apvarun/toastify-js",
+              newWindow: true,
               close: true,
-              gravity: 'top',
-              position: 'right',
-              backgroundColor: 'linear-gradient(to right, #00b09b, #96c93d)',
+              gravity: "top", // `top` or `bottom`
+              position: "center", // `left`, `center` or `right`
+              stopOnFocus: true, // Prevents dismissing of toast on hover
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+              onClick: function(){} // Callback after click
+            }).showToast();
+
+            setTimeout(() => {
+              window.location.href = 'screenMain/main.html';
+            }, 2000);
+
+            
+        } else {
+          Toastify({
+            text: "Usuario invalido",
+            duration: 3000,
+            destination: "https://github.com/apvarun/toastify-js",
+            newWindow: true,
+            close: true,
+            gravity: "top", // `top` or `bottom`
+            position: "center", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+              background: "red",
+            },
+            onClick: function(){} // Callback after click
           }).showToast();
 
-             window.location.href = 'screenMain/main.html'
-        } else {
-  
           console.log("deu errado");
         }
        })

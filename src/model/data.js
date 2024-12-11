@@ -11,13 +11,10 @@ const AuthController = {
       return result.rows[0];
   },
 
- registerBens: async (data) => {
+ registerOfBens: async (data) => {
   
-  // Desestrutura os dados recebidos
   const { code , name , cofa , model , serial, placa,bensAnmo,dtCompra,valor, ntFiscal, cofo, kmAtual, dtKM, status, dtStatus, hrStatus, chassi, cor, nuMO, rena, bensctep,  bensAtiv, alug, valorAlug, fabri  } = data;
 
-  // console.log('dados recebidos' , data)
-  // SQL para o insert no banco
   const insert = `
     INSERT INTO cadbens(
        benscode , bensnome, benscofa, bensmode, bensnuse, bensplac, bensanmo, bensdtcp, bensvacp, 
@@ -28,7 +25,7 @@ const AuthController = {
     ) RETURNING *`;
 
   const values = [
-    code , name , cofa , model , serial, placa,bensAnmo,dtCompra,valor, ntFiscal, cofo, kmAtual, dtKM, status, dtStatus, hrStatus, chassi, cor, nuMO, rena, bensctep,  bensAtiv, alug, valorAlug, fabri
+    code , name , cofa , model , serial, placa,bensAnmo,dtCompra,valor, ntFiscal, cofo, kmAtual, dtKM, status, dtStatus, hrStatus, chassi, cor, nuMO, rena, bensctep, bensAtiv, alug, valorAlug, fabri
   ];
 
   const result = await userDataBase.query(insert, values);
@@ -38,18 +35,60 @@ const AuthController = {
 listingBens: async()=>{
 
   try {
-    const query = 'SELECT * FROM cadbens'; // Consulta todos os registros
+    const query = 'SELECT * FROM cadbens'; 
     const result = await userDataBase.query(query);
-    //  console.log(result.rows[0])
+    
     return result.rows
     
   } catch (error) {
     console.error("Erro ao listar bens:", error.message);
     
   }
+},
+   
+deleteBens: async(id)=>{
+  
+   const delet =  "DELETE FROM cadbens WHERE benscode = $1 RETURNING *"
+   const result = await userDataBase.query(delet , [id]);
+
+   return result.rows[0]
+},
+
+//pegando o ID
+//  getBemByIdModel: async (id)=> {
+//   const query = 'SELECT * FROM cadbens WHERE benscode = $1';
+//   const values = [id];
+
+//   const result = await userDataBase.query(query, values);
+//   return result.rows[0];
+// },
+
+
+updateBens: async(id, updateBem  )=>{
+
+    const query = `
+        UPDATE cadbens
+        SET 
+             bensnome = $1, benscofa = $2, bensmode = $3, bensnuse = $4, bensplac = $5, bensanmo = $6, bensdtcp = $7, bensvacp = $8, 
+             bensnunf = $9, benscofo = $10, benskmat = $11, bensdtkm = $12, bensstat = $13, bensdtus = $14, benshrus = $15, bensnuch = $16, 
+             benscore = $17, bensnumo = $18, bensrena = $19, bensctep = $20, bensativ = $21, bensalug = $22, bensvaal = $23, bensfabr = $24
+        WHERE benscode = $25
+        RETURNING *;
+    `;
+    const values = [ 
+      updateBem.bensnome, updateBem.benscofa, updateBem.bensmode, updateBem.bensnuse, updateBem.bensplac, 
+      updateBem.bensanmo, updateBem.bensdtcp, updateBem.bensvacp, updateBem.bensnunf, updateBem.benscofo, 
+      updateBem.benskmat, updateBem.bensdtkm, updateBem.bensstat, updateBem.bensdtus, updateBem.benshrus, 
+      updateBem.bensnuch, updateBem.benscore, updateBem.bensnumo, updateBem.bensrena, updateBem.bensctep, 
+      updateBem.bensativ, updateBem.bensalug, updateBem.bensvaal, updateBem.bensfabr, id   ] ;
+    const result = await userDataBase.query(query, values);
+    return result.rows[0];
+
 }
-      
 }
+
+
+
 
 
 module.exports = AuthController;

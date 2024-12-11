@@ -3,7 +3,7 @@ body{
     margin: 0px;
     font-size: 15px;
     font-family: Arial, Helvetica, sans-serif;
-    
+    background-color:  darkgray;
 }
 input{
     height: 23px;
@@ -33,7 +33,7 @@ input{
 
 .logo{
  width: 130px;
- margin-top: 1%;
+ margin-top:0.5%;
  margin-left: 1%;
 }
 #photo{
@@ -128,9 +128,10 @@ ul{
     margin-right: 2.5%;
 }
 /* botoes de opções para os bens */
+
 .optionsBens{
     display: flex;
-    display: none;
+    display:none ;
     margin-left: 20%;
     flex-direction: row;
     gap: 5%;
@@ -161,7 +162,28 @@ ul{
     margin-left: 20%;
     margin-top:1.2% ;
     flex-direction: column;
+    overflow: auto;
 }
+table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 20px; /* Aumenta o espaço interno das células */
+    text-align: left;
+    border: 1px solid #ddd; /* Opcional: para adicionar borda */
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f2f2f2; /* Alterna a cor das linhas */
+  }
+  
+  th {
+    background-color:cornflowerblue; /* Cor de fundo do cabeçalho */
+    color: white;
+  }
+  
 .listingBens{
     display: flex; 
     flex-wrap: wrap; 
@@ -182,18 +204,54 @@ ul{
     min-height: 150px;
     font-size: 13px;
 }
+.editForm{
+    width: 75%;
+    display: flex;
+    background-color: darkgray;
+    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
+     height: 95%;
+    margin-left: 20%;
+    margin-top: 1.2%;
+    gap: 1.5%;
+    flex-direction: column;
+    flex-wrap: wrap;
+} 
+.moveFieldGoodsEdit{
+    display: flex;
+    justify-content: space-around;
+    margin-top: 2.5%;
+    flex-wrap: wrap;
+    width: 105%;
+}
+.submitEditBtn{
+    width: 25%;
+    height: 27px;
+    cursor: pointer;
+    margin-left: 20%;
+    background-color:lightslategray ;
+    border: none;
+}
 .bem-item p {
     margin: 5px 0;
   }
 .btnPageListGoods{
     display: flex;
-    height:45px;
+    height:50px;
+    gap: 20px;
+    margin-left: 3%;
 }
-.delete{
+.buttonDelete{
+    margin-top: 1.5%;
     height: 30px;
     cursor: pointer;
 }
-.edit{
+.buttonEdit{
+    margin-top: 1.5%;
+    height: 30px;
+    cursor: pointer;
+}
+.buttonExit{
+    margin-top: 1.5%;
     height: 30px;
     cursor: pointer;
 }

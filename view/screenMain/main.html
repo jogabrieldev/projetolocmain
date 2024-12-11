@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=exit_to_app" />
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-        
+       
     <title>Screen main</title>
 </head>
 
@@ -56,17 +56,152 @@
         <div class="pageListingBens">
          
               <div class="listingBens">
-                
+
+                 <!-- informações -->
+                 
               </div>
 
-            <!-- informações -->
-
             <div class="btnPageListGoods">
-                <button class="delete">Excluir</button>
-                <button class="edit">Editar</button>
-                <button class="exit">Voltar</button>
+
+                <button class="buttonEdit" data-benscode = '101'>Editar</button>
+               
+                <button class="buttonDelete">Excluir</button>
+                <button class="buttonExit">Voltar</button>
             </div>
         </div>
+
+        
+      
+            <div class="editForm" style="display: none;">
+               <form id="formEditBens" >
+                
+                <div class="moveFieldGoodsEdit">
+                    <label for="name">Codigo
+                        <input type="text" name="code" id="code" placeholder="bensCode" >
+                    </label>
+                    <label for="name">Nome
+                        <input type="text" name="name" id="name" placeholder="bensnome"  >
+                    </label>
+                    <label for="placa"> Cofa
+                        <input type="text" name="cofa" id="cofa" placeholder="benscofa"  >
+                    </label>
+                    <label for="model">Modelo
+                        <input type="text" name="model" id="model" placeholder="bensMode"  >
+                    </label>
+                      <br>
+                    <label for="serial">Numero de Serie
+                        <input type="number" name="serial" id="serial" placeholder="bensNuse"  >
+                    </label>
+    
+                    <label for="placa" id="labelForne">Placa
+                        <input type="text" name="placa" id="placa" placeholder="bensPlac"  >
+                    </label>
+                </div>
+    
+                <div class="moveFieldGoodsEdit">
+    
+                    <label for="Valor" id="labelValor">bensAnmo
+                        <input type="text" name="bensAnmo" id="bensAnmo" placeholder="bensAnmo"  >
+                    </label>
+    
+                    <label for="dtCompra" id="labelDatacompra"> Data da compra
+                        <input type="date" name="dtCompra" id="dtCompra"  class="fields">
+                    </label>
+    
+                    <label for="Valor" id="labelValor">Valor compra
+                        <input type="number" name="valor" id="valor" placeholder="bensVacp"  >
+                    </label>
+    
+                    <label for="ntFiscal">Nota Fiscal
+                        <input type="number" name="ntFiscal" id="ntFiscal" placeholder="bensNunf"  >
+                    </label>
+    
+    
+                    <label for="fabri">codigo Fornecedor
+                        <input type="text" name="cofo" id="cofo" placeholder="bensCofo"  >
+                    </label>
+    
+                    <label for="kmAtual">KM Atual <input type="number" name="kmAtual" id="kmAtual"
+                            placeholder="bensKmat" >
+                    </label>
+                </div>
+    
+                <div class="moveFieldGoodsEdit">
+    
+                    <label for="dtKm">Data do KM
+                        <input type="date" name="dtKm" id="dtKm">
+                    </label>
+    
+                    <label for="status">Status
+                        <select name="status" id="status">
+                            <option value="EL">EL</option>
+                            <option value="SC">SC</option>
+                            <option value="SA">SA</option>
+                            <option value="AC">AC</option>
+                            <option value="TC">TC</option>
+                            <option value="CA">CA</option>
+                        </select>
+                    </label>
+    
+    
+                    <label for="dtStatus">Data do Status
+                        <input type="date" name="dtStatus" id="dtStatus">
+                    </label>
+    
+                    <label for="hrStatus">Hora do Status
+                        <input type="time" name="hrStatus" id="hrStatus" placeholder="bensHrus">
+                    </label>
+    
+                    <label for="chassi">Chassi
+                        <input type="number" name="chassi" id="chassi" placeholder="Chassi">
+                    </label>
+    
+                    <label for="Cor" id="COR">Cor
+                        <input type="text" name="cor" id="cor" placeholder="bensCore">
+                    </label>
+
+                   </div>
+                         
+                    <div class="moveFieldGoodsEdit">
+    
+                        <label for="nuMO" id="nuMO">nuMO
+                            <input type="number" name="nuMO" id="nuMO" placeholder="bensNumo">
+                        </label>
+    
+                        <label for="rena">Renavam
+                            <input type="number" name="rena" id="rena" placeholder="bensRena">
+                        </label>
+    
+                        <label for="bensCtep">bensCtep
+                            <input type="text" name="bensCtep" id="bensCtep" placeholder="bensCtep">
+                        </label>
+    
+                        <label for="fabri">Ativo
+                            <select name="bensAtiv" id="bensAtiv">
+                                <option value="S">Sim</option>
+                                <option value="N">Nao</option>
+                            </select>
+                        </label>
+    
+                        <label for="alug">Alugado
+                            <select name="alug" id="alug">
+                                <option value="S">Sim</option>
+                                <option value="N">Nao</option>
+                            </select>
+                        </label>
+    
+                        <label for="exe">Valor Alugado <input type="number" name="valorAlug" id="valorAlug" placeholder="bensVaal"  ></label>
+    
+                        <label for="fabri">Fabricante
+                            <input type="text" name="fabri" id="fabri" placeholder="bensFabr">
+                        </label>
+                    </div>
+                
+                <button class="submitEditBtn">Salvar</button>
+            </form>
+        </div>
+
+
 
         <div class="showContentBens">
             <form id="formRegisterBens">
@@ -75,52 +210,52 @@
                     <div class="moveFieldGoods">
 
                         <label for="name">Codigo
-                            <input type="text" name="code" id="code" placeholder="bensCode">
+                            <input type="text" name="code" id="code" placeholder="bensCode" >
                         </label>
                         <label for="name">Nome
-                            <input type="text" name="name" id="name" placeholder="bensnome">
+                            <input type="text" name="name" id="name" placeholder="bensnome"  >
                         </label>
                         <label for="placa"> Cofa
-                            <input type="text" name="cofa" id="cofa" placeholder="benscofa">
+                            <input type="text" name="cofa" id="cofa" placeholder="benscofa"  >
                         </label>
                         <label for="model">Modelo
-                            <input type="text" name="model" id="model" placeholder="bensMode">
+                            <input type="text" name="model" id="model" placeholder="bensMode"  >
                         </label>
 
                         <label for="serial">Numero de Serie
-                            <input type="number" name="serial" id="serial" placeholder="bensNuse">
+                            <input type="number" name="serial" id="serial" placeholder="bensNuse"  >
                         </label>
 
                         <label for="placa" id="labelForne">Placa
-                            <input type="text" name="placa" id="placa" placeholder="bensPlac">
+                            <input type="text" name="placa" id="placa" placeholder="bensPlac"  >
                         </label>
                     </div>
 
                     <div class="moveFieldGoods">
 
                         <label for="Valor" id="labelValor">bensAnmo
-                            <input type="text" name="bensAnmo" id="bensAnmo" placeholder="bensAnmo">
+                            <input type="text" name="bensAnmo" id="bensAnmo" placeholder="bensAnmo"  >
                         </label>
 
                         <label for="dtCompra" id="labelDatacompra"> Data da compra
-                            <input type="date" name="dtCompra" id="dtCompra">
+                            <input type="date" name="dtCompra" id="dtCompra"  class="fields">
                         </label>
 
                         <label for="Valor" id="labelValor">Valor compra
-                            <input type="number" name="valor" id="valor" placeholder="bensVacp">
+                            <input type="number" name="valor" id="valor" placeholder="bensVacp"  >
                         </label>
 
                         <label for="ntFiscal">Nota Fiscal
-                            <input type="number" name="ntFiscal" id="ntFiscal" placeholder="bensNunf">
+                            <input type="number" name="ntFiscal" id="ntFiscal" placeholder="bensNunf"  >
                         </label>
 
 
-                        <label for="fabri">codigo Fornecedor
-                            <input type="text" name="cofo" id="cofo" placeholder="bensCofo">
+                        <label for="cofo">codigo Fornecedor
+                            <input type="text" name="cofo" id="cofo" placeholder="bensCofo"  >
                         </label>
 
                         <label for="kmAtual">KM Atual <input type="number" name="kmAtual" id="kmAtual"
-                                placeholder="bensKmat">
+                                placeholder="bensKmat" >
                         </label>
                     </div>
 
@@ -186,7 +321,7 @@
                                 </select>
                             </label>
 
-                            <label for="exe">Valor Alugado <input type="number" name="valorAlug" id="valorAlug" placeholder="bensVaal"></label>
+                            <label for="exe">Valor Alugado <input type="number" name="valorAlug" id="valorAlug" placeholder="bensVaal"  ></label>
 
                             <label for="fabri">Fabricante
                                 <input type="text" name="fabri" id="fabri" placeholder="bensFabr">
@@ -259,7 +394,8 @@
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-    <script src="main.js"></script>
+    <script src="mainGoods.js"></script>
+    <script src="mainClient.js"></script>
 </body>
 
 </html>
