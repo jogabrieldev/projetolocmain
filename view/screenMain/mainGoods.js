@@ -1,15 +1,13 @@
-
-
 //butoes relacionados aos bens
 const buttonStartCadBens = document.querySelector(".btnCadBens");
 buttonStartCadBens.addEventListener("click", () => {
-  const contentOptionsGoods = document.querySelector(".optionsBens");
+  const navigatorPageBens = document.querySelector(".pageListingBens");
   const contentOptionsClient = document.querySelector(".optionsClient");
 
-  if ((contentOptionsGoods.style.display = "none")) {
-    contentOptionsGoods.style.display = "flex";
+  if ((navigatorPageBens.style.display = "none")) {
+    navigatorPageBens.style.display = "flex";
   }
-  if ((contentOptionsGoods.style.display = "flex")) {
+  if ((navigatorPageBens.style.display = "flex")) {
     contentOptionsClient.style.display = "none";
   }
 });
@@ -19,27 +17,14 @@ buttonOutStart.addEventListener("click", () => {
   window.location.href = "main.html";
 });
 
-const buttonList = document.querySelector(".listGoods");
-buttonList.addEventListener("click", () => {});
-
 const buttonRegisterGoods = document.querySelector(".registerGoods");
 buttonRegisterGoods.addEventListener("click", () => {
   const registerBens = document.querySelector(".showContentBens");
-  const contentOptions = document.querySelector(".optionsBens");
+  const contentOptions = document.querySelector(".pageListingBens");
 
   if ((contentOptions.style.display = "flex")) {
     contentOptions.style.display = "none";
     registerBens.style.display = "flex";
-  }
-});
-
-const buttonListGoods = document.querySelector(".listGoods");
-buttonListGoods.addEventListener("click", () => {
-  const listingGoods = document.querySelector(".pageListingBens");
-  const contentOptions = document.querySelector(".optionsBens");
-  if ((listingGoods.style.display = "none")) {
-    listingGoods.style.display = "flex";
-    contentOptions.style.display = "none";
   }
 });
 
@@ -52,6 +37,14 @@ buttonExit.addEventListener("click", () => {
   }
 });
 
+const btnOutPageEdit = document.querySelector(".btnOutPageEdit");
+btnOutPageEdit.addEventListener("click", (e) => {
+  e.preventDefault();
+  const pageEditForm = document.querySelector(".editForm");
+  pageEditForm.style.display = "none";
+  return;
+});
+
 const buttonOutGoods = document.querySelector(".btnOut");
 buttonOutGoods.addEventListener("click", (event) => {
   event.preventDefault();
@@ -62,6 +55,120 @@ buttonOutGoods.addEventListener("click", (event) => {
   return;
 });
 
+//mascaras para os inputs 
+
+$(document).ready(function(){
+  // Aplica a máscara para o campo de valor
+  $('#valorCp').mask('R$ 000.000.000,00', {reverse: true});
+});
+
+
+//validação dos campos
+$(document).ready(function() {
+  $('#formRegisterBens').validate({
+    rules: {
+      code: {
+        required: true,
+        minlength:3
+      },
+      name: {
+        required: true,
+        minlength:4
+      },
+      cofa:{
+        required: true 
+      },
+      model:{
+        required: true
+      },
+      serial:{
+        required: true,
+        minlength: 5
+      },
+      dtCompra:{
+        date:true,
+        required:true
+      },
+      valor:{
+        required: true
+      },
+      ntFiscal:{
+        required: true,
+        minlength: 5
+      },
+      cofo:{
+        required: true,
+        minlength: 4
+      },
+      valorAlug:{
+        required: true
+      }
+      
+  },
+     
+    messages:{
+      code: {
+        required: "Por favor, insira o codigo",
+        minlength:'Maior que 3 caracteres'
+      },
+      name: {
+        required: "Por favor, insira um Nome",
+        minlength:'Maior que 4 caracteres'
+      },
+
+      cofa:{
+        required: 'Por favor insira o codigo'
+      },
+      model:{
+        required: 'Por favor insira o Modelo'
+      },
+      serial:{
+        required: 'Por favor insira o serial',
+        minlength: 'Maior que 3 caracteres'
+      },
+      dtCompra:{
+          required: 'Por favor insira uma data valida',
+          date: 'Por favor insiar uma data valida'
+      },   
+      valor:{
+        required: 'Por Favor insira o valor'
+      }, 
+      ntFiscal:{
+        required: 'Por favor insira o numero da Nota',
+        minlength:'Sua nota não tem a quantidade de digitos correto'
+      },
+      cofo:{
+        required: 'Por favor insira um codigo do fornecedor valido',
+        minlength: 'Tamanho do Codigo invalido'
+      },
+      valorAlug:{
+        required: 'Coloque o valor'
+      }
+      
+     
+
+  },
+     
+    errorPlacement: function (error, element) {
+      // Adiciona uma mensagem de erro logo abaixo do input
+      error.addClass('error-text'); // Adiciona uma classe para estilização
+      error.insertAfter(element);
+    },
+    highlight: function(element) {
+      // Adiciona uma classe de erro ao campo inválido
+      $(element).addClass('error-field');
+    },
+    unhighlight: function(element) {
+      // Remove a classe de erro do campo válido
+      $(element).removeClass('error-field');
+    },
+    submitHandler: function(form) {
+      form.submit(); // Envia o formulário se for válido
+    }
+  });
+});
+
+
 const formRegister = document
   .querySelector("#formRegisterBens")
   .addEventListener("submit", async (event) => {
@@ -71,36 +178,39 @@ const formRegister = document
     const data = Object.fromEntries(formData.entries());
 
     try {
-      await fetch("/submit", {
+     const response =  await fetch("/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data }),
-      }).then((response) => {
-        if (response.ok) {
-          Toastify({
-            text: "Bem cadastrado com sucesso!",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-          }).showToast();
+        body: JSON.stringify({data})
+      })
+       if(response.ok){
 
-          document.querySelector("#formRegisterBens").reset();
-          console.log("deu certo");
-        } else {
-          Toastify({
-            text: "Erro ao cadastrar bem!",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "red",
-          }).showToast();
+        console.log('deu certo')
 
-          console.log("deu ruim");
-        }
-      });
+         Toastify({
+          text: "Sucesso",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor:"red"
+        }).showToast();
+
+       
+        document.querySelector('#formRegisterBens').reset()
+       
+      }else{
+        Toastify({
+          text: "Erro no cadastro",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red"
+        }).showToast();
+        console.log('deu ruim')
+      }
+
     } catch (error) {
       console.log("erro no envio", error);
     }
@@ -108,13 +218,14 @@ const formRegister = document
 
 // fazendo listagens
 
+let bensData = {};
+
 async function fetchBens() {
   try {
     const response = await fetch("/api/listbens");
     const bens = await response.json();
 
     const bensListDiv = document.querySelector(".listingBens");
-    const editButton = document.querySelector(".edit");
     bensListDiv.innerHTML = ""; // Limpa a div antes de preencher
 
     if (bens.length > 0) {
@@ -166,12 +277,22 @@ async function fetchBens() {
       bens.forEach((bem) => {
         const linha = corpo.insertRow();
 
+        linha.setAttribute("data-benscode", bem.benscode);
+
         const checkboxCell = linha.insertCell();
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.name = "selectBem"; // Nome para identificar o grupo de checkboxes
-        checkbox.value = bem.benscode; // Valor associado ao checkbox
-        checkbox.dataset.bem = JSON.stringify(bem);
+        checkbox.name = "selectBem";
+        checkbox.value = bem.benscode;
+
+        // Aqui, serializa `bem` como JSON e valida antes de atribuir
+        const bemData = JSON.stringify(bem);
+        if (bemData) {
+          checkbox.dataset.bem = bemData;
+        } else {
+          console.warn(`Bem inválido encontrado:`, bem);
+        }
+
         checkboxCell.appendChild(checkbox);
 
         // Adiciona os dados do bem
@@ -200,139 +321,10 @@ async function fetchBens() {
         linha.insertCell().textContent = bem.bensalug;
         linha.insertCell().textContent = bem.bensvaal;
         linha.insertCell().textContent = bem.bensfabr;
-
-        // Adiciona a tabela à div
-        bensListDiv.appendChild(tabela);
       });
 
-      // Evento para o botão Excluir
-      const deleteButton = document.querySelector(".buttonDelete");
-      deleteButton.addEventListener("click", async () => {
-        const selectedCheckbox = document.querySelector(
-          'input[name="selectBem"]:checked'
-        );
-        if (!selectedCheckbox) {
-          Toastify({
-            text: "Selecione um item para excluir",
-            duration: 2000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-          }).showToast();
-          return;
-        }
-
-        const bemSelecionado = JSON.parse(selectedCheckbox.dataset.bem);
-        const bemId = bemSelecionado.benscode;
-
-        const confirmacao = confirm(
-          `Tem certeza de que deseja excluir o bem com código ${bemId}?`
-        );
-        if (!confirmacao) {
-          return;
-        }
-
-        await deleteBem(bemId, selectedCheckbox.closest("tr"));
-      });
-
-      // Evento para o botão Editar
-      const editButton = document.querySelector(".buttonEdit");
-      editButton.addEventListener("click", () => {
-        const selectedCheckbox = document.querySelector(
-          'input[name="selectBem"]:checked'
-        );
-        if (!selectedCheckbox) {
-          Toastify({
-            text: "Selecione um item para editar",
-            duration: 2000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-          }).showToast();
-          return;
-        }
-
-        const bemSelecionado = JSON.parse(selectedCheckbox.dataset.bem);
-
-        console.log("Editar item:", bemSelecionado);
-
-        // Exibe o formulário de edição
-        const editForm = document.querySelector(".editForm");
-        editForm.style.display = "flex";
-
-        const listingBens = document.querySelector(".pageListingBens");
-        listingBens.style.display = "none";
-      });
-
-       const formEditBens = document.querySelector('.formEditBens')
-       formEditBens.addEventListener('submit' , async (event)=>{
-         
-         event.preventDefault()
-
-        const formData = new FormData(event.target);
-        const data = Object.fromEntries(formData.values);
-          
-        const bemId = document.querySelector(".edit").dataset.benscode;
-  
-          await fetch(`/bem/${bemId}` , {
-            method: 'GET'
-          })
-       })
-
-
-
-
-
-
-
-      // botão salvar
-
-      document
-        .querySelector(".submitEditBtn")
-        .addEventListener("click", async () => {
-          const bemId = document.querySelector(".edit").dataset.benscode;
-          const updateBem = {
-            benscode: document.getElementById("code").value, // Código
-            bensnome: document.getElementById("name").value, // Nome
-            benscofa: document.getElementById("cofa").value, // Código do fabricante
-            bensmode: document.getElementById("model").value, // Modelo
-            bensnuse: document.getElementById("serial").value, // Número de série
-            bensplac: document.getElementById("placa").value, // Placa
-            bensanmo: document.getElementById("bensAnmo").value, // Ano
-            bensdtcp: document.getElementById("dtCompra").value, // Data da compra
-            bensvacp: document.getElementById("valor").value, // Valor da compra
-            bensnunf: document.getElementById("ntFiscal").value, // Nota fiscal
-            benscofo: document.getElementById("cofo").value, // Código do fornecedor
-            benskmat: document.getElementById("kmAtual").value, // Quilometragem atual
-            bensdtkm: document.getElementById("dtKm").value, // Data do KM
-            bensstat: document.getElementById("status").value, // Status
-            bensdtst: document.getElementById("dtStatus").value, // Data do status
-            benshrus: document.getElementById("hrStatus").value, // Hora do status
-            bensnuch: document.getElementById("chassi").value, // Chassi
-            benscore: document.getElementById("cor").value, // Cor
-            bensnumo: document.getElementById("nuMO").value, // Número MO
-            bensrena: document.getElementById("rena").value, // Renavam
-            bensctep: document.getElementById("bensCtep").value, // CTEP
-            bensativ: document.getElementById("bensAtiv").value, // Ativo
-            bensalug: document.getElementById("alug").value, // Alugado
-            bensvaal: document.getElementById("valorAlug").value, // Valor do aluguel
-            bensfabr: document.getElementById("fabri").value, // Fabricante
-          };
-
-          const response = await fetch(`/update/${bemId}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(updateBem),
-          });
-          if (response.ok) {
-            console.log("deu certo");
-            alert("atualizou sucesso");
-          } else {
-            alert("Erro ao atualizar o bem");
-          }
-        });
+      // Adiciona a tabela à div
+      bensListDiv.appendChild(tabela);
     } else {
       bensListDiv.innerHTML = "<p>Nenhum bem cadastrado.</p>";
     }
@@ -345,10 +337,41 @@ async function fetchBens() {
 
 fetchBens();
 
+// Evento para o botão Excluir
+const deleteButton = document.querySelector(".buttonDelete");
+deleteButton.addEventListener("click", async () => {
+  const selectedCheckbox = document.querySelector(
+    'input[name="selectBem"]:checked'
+  );
+  if (!selectedCheckbox) {
+    Toastify({
+      text: "Selecione um item para excluir",
+      duration: 2000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red"
+    }).showToast();
+    return;
+  }
+
+  const bemSelecionado = JSON.parse(selectedCheckbox.dataset.bem);
+  const bemId = bemSelecionado.benscode;
+
+  const confirmacao = confirm(
+    `Tem certeza de que deseja excluir o bem com código ${bemId}?`
+  );
+  if (!confirmacao) {
+    return;
+  }
+
+  await deleteBem(bemId, selectedCheckbox.closest("tr"));
+});
+
 //deleteBens
 async function deleteBem(id, bemItem) {
   try {
-    const response = await fetch(`/delete/${id}`, {
+    const response = await fetch(`/api/delete/${id}`, {
       method: "DELETE",
     });
     const data = await response.json();
@@ -380,3 +403,203 @@ async function deleteBem(id, bemItem) {
     alert("erro ao excluir o bem");
   }
 }
+
+// Evento para o botão Editar
+const editButton = document.querySelector(".buttonEdit");
+editButton.addEventListener("click", (event) => {
+  const selectedCheckbox = document.querySelector(
+    'input[name="selectBem"]:checked'
+  );
+
+  if (!selectedCheckbox) {
+    Toastify({
+      text: "Selecione um item para editar",
+      duration: 2000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+    return;
+  }
+
+  const bemData = selectedCheckbox.dataset.bem;
+  if (!bemData) {
+    console.error("O atributo data-bem está vazio ou indefinido.");
+    return;
+  }
+
+  try {
+    const bemSelecionado = JSON.parse(bemData);
+    console.log("Editar item:", bemSelecionado);
+
+    // Campos e IDs correspondentes
+    const campos = [
+      { id: "code", valor: bemSelecionado.benscode },
+      { id: "name", valor: bemSelecionado.bensnome },
+      { id: "cofa", valor: bemSelecionado.benscofa },
+      { id: "model", valor: bemSelecionado.bensmode },
+      { id: "serial", valor: bemSelecionado.bensnuse },
+      { id: "placa", valor: bemSelecionado.bensplac },
+      { id: "bensAnmo", valor: bemSelecionado.bensanmo },
+      { id: "dtCompra", valor: bemSelecionado.bensdtcp },
+      { id: "valor", valor: bemSelecionado.bensvacp },
+      { id: "ntFiscal", valor: bemSelecionado.bensnunf },
+      { id: "cofo", valor: bemSelecionado.benscofo },
+      { id: "kmAtual", valor: bemSelecionado.benskmat },
+      { id: "dtKm", valor: bemSelecionado.bensdtkm },
+      { id: "status", valor: bemSelecionado.bensstat },
+      { id: "dtStatus", valor: bemSelecionado.bensdtst },
+      { id: "hrStatus", valor: bemSelecionado.benshrus },
+      { id: "chassi", valor: bemSelecionado.bensnuch },
+      { id: "cor", valor: bemSelecionado.benscore },
+      { id: "nuMO", valor: bemSelecionado.bensnumo },
+      { id: "rena", valor: bemSelecionado.bensrena },
+      { id: "bensCtep", valor: bemSelecionado.bensctep },
+      { id: "bensAtiv", valor: bemSelecionado.bensativ },
+      { id: "alug", valor: bemSelecionado.bensalug },
+      { id: "valorAlug", valor: bemSelecionado.bensvaal },
+      { id: "fabri", valor: bemSelecionado.bensfabr },
+    ];
+
+    // Atualizar valores no formulário
+    campos.forEach(({ id, valor }) => {
+      const elemento = document.getElementById(id);
+      if (elemento) {
+        elemento.value = valor || ""; // Define o valor ou vazio se indefinido
+      } else {
+        console.warn(`Elemento com ID '${id}' não encontrado.`);
+      }
+    });
+
+    // Mostrar o formulário de edição e ocultar a lista
+    const editForm = document.querySelector(".editForm");
+    const listingBens = document.querySelector(".pageListingBens");
+
+    if (editForm) {
+      editForm.style.display = "flex";
+    } else {
+      console.error("O formulário de edição não foi encontrado.");
+    }
+
+    if (listingBens) {
+      listingBens.style.display = "none";
+    } else {
+      console.error("A lista de bens não foi encontrada.");
+    }
+  } catch (error) {
+    console.error("Erro ao fazer parse de data-bem:", error);
+  }
+});
+
+
+// Função para editar e atualizar os dados
+async function editAndUpdateOfBens() {
+  const formEditBens = document.querySelector("#formEditBens");
+
+  formEditBens.addEventListener("submit", async (event) => {
+
+    event.preventDefault()
+
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData.entries());
+
+    // Obter o checkbox selecionado
+    const selectedCheckbox = document.querySelector(
+      'input[name="selectBem"]:checked'
+    );
+
+    if (!selectedCheckbox) {
+      console.error("Nenhum checkbox foi selecionado.");
+      return;
+    }
+
+    const bemId = selectedCheckbox.dataset.bem;
+
+    if (!bemId) {
+      console.error("O atributo data-bem está vazio ou inválido.");
+      return;
+    }
+
+    let bemIdParsed;
+    try {
+      bemIdParsed = JSON.parse(bemId).benscode; // Supondo que benscode seja a identificação
+    } catch (error) {
+      console.error("Erro ao fazer parse de bemId:", error);
+      return;
+    }
+
+    const updateBem = {
+      benscode: document.getElementById("code").value,
+      bensnome: document.getElementById("name").value,
+      benscofa: document.getElementById("cofa").value,
+      bensmode: document.getElementById("model").value,
+      bensnuse: document.getElementById("serial").value,
+      bensplac: document.getElementById("placa").value,
+      bensanmo: document.getElementById("bensAnmo").value,
+      bensdtcp: document.getElementById("dtCompra").value || null,
+      bensvacp: document.getElementById("valorCp").value,
+      bensnunf: document.getElementById("ntFiscal").value,
+      benscofo: document.getElementById("cofo").value,
+      benskmat: document.getElementById("kmAtual").value,
+      bensdtkm: document.getElementById("dtKm").value || null,
+      bensstat: document.getElementById("status").value,
+      bensdtst: document.getElementById("dtStatus").value || null,
+      benshrus: document.getElementById("hrStatus").value,
+      bensnuch: document.getElementById("chassi").value,
+      benscore: document.getElementById("cor").value,
+      bensnumo: document.getElementById("nuMO").value,
+      bensrena: document.getElementById("rena").value,
+      bensctep: document.getElementById("bensCtep").value,
+      bensativ: document.getElementById("bensAtiv").value,
+      bensalug: document.getElementById("alug").value,
+      bensvaal: document.getElementById("valorAlug").value,
+      bensfabr: document.getElementById("fabri").value,
+    };
+
+    try {
+      const response = await fetch(`/api/update/${bemIdParsed}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updateBem)
+      });
+
+      console.log( 'resposta:' ,response)
+
+      if (response.ok) {
+        console.log("Atualização bem-sucedida");
+
+        Toastify({
+          text: `Bem '${bemIdParsed}' Atualizado com sucesso!!`,
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+        }).showToast();
+
+        setTimeout(() => {
+          window.location.reload();
+          document.querySelector(".editForm").style.display = "none";
+        }, 3000)
+       
+        formEditBens.reset();
+
+      } else {
+        console.error("Erro ao atualizar bem:", await response.text());
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+    }
+  });
+} editAndUpdateOfBens();
+
+
+
+
+
+
+
+ 
+
+

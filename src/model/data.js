@@ -1,21 +1,46 @@
 const db = require("../database/dataBaseSgt");
-const userDataBase =  require('../database/userDataBase')
+const userDataBase = require("../database/userDataBase");
 
 const AuthController = {
-  autenticateLogin: async (username , password) => {
-    
-      const query = "SELECT * FROM cademp WHERE empmail = $1 AND empsenh = $2 LIMIT 1";
-      const values = [username, password]; 
+  autenticateLogin: async (username, password) => {
+    const query =
+      "SELECT * FROM cademp WHERE empmail = $1 AND empsenh = $2 LIMIT 1";
+    const values = [username, password];
 
-      const result = await db.query(query, values);
-      return result.rows[0];
+    const result = await db.query(query, values);
+    return result.rows[0];
   },
 
- registerOfBens: async (data) => {
-  
-  const { code , name , cofa , model , serial, placa,bensAnmo,dtCompra,valor, ntFiscal, cofo, kmAtual, dtKM, status, dtStatus, hrStatus, chassi, cor, nuMO, rena, bensctep,  bensAtiv, alug, valorAlug, fabri  } = data;
+  registerOfBens: async (data) => {
+    const {
+      code,
+      name,
+      cofa,
+      model,
+      serial,
+      placa,
+      bensAnmo,
+      dtCompra,
+      valor,
+      ntFiscal,
+      cofo,
+      kmAtual,
+      dtKM,
+      status,
+      dtStatus,
+      hrStatus,
+      chassi,
+      cor,
+      nuMO,
+      rena,
+      bensCtep,
+      bensAtiv,
+      alug,
+      valorAlug,
+      fabri,
+    } = data;
 
-  const insert = `
+    const insert = `
     INSERT INTO cadbens(
        benscode , bensnome, benscofa, bensmode, bensnuse, bensplac, bensanmo, bensdtcp, bensvacp, 
       bensnunf, benscofo, benskmat, bensdtkm, bensstat, bensdtus, benshrus, bensnuch, 
@@ -24,48 +49,57 @@ const AuthController = {
       $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25
     ) RETURNING *`;
 
-  const values = [
-    code , name , cofa , model , serial, placa,bensAnmo,dtCompra,valor, ntFiscal, cofo, kmAtual, dtKM, status, dtStatus, hrStatus, chassi, cor, nuMO, rena, bensctep, bensAtiv, alug, valorAlug, fabri
-  ];
+    const values = [
+      code,
+      name,
+      cofa,
+      model,
+      serial,
+      placa,
+      bensAnmo,
+      dtCompra,
+      valor,
+      ntFiscal,
+      cofo,
+      kmAtual,
+      dtKM,
+      status,
+      dtStatus,
+      hrStatus,
+      chassi,
+      cor,
+      nuMO,
+      rena,
+      bensCtep,
+      bensAtiv,
+      alug,
+      valorAlug,
+      fabri,
+    ];
 
-  const result = await userDataBase.query(insert, values);
-  return result.rows[0]
-},
+    const result = await userDataBase.query(insert, values);
+    return result.rows[0];
+  },
 
-listingBens: async()=>{
+  listingBens: async () => {
+    try {
+      const query = "SELECT * FROM cadbens";
+      const result = await userDataBase.query(query);
 
-  try {
-    const query = 'SELECT * FROM cadbens'; 
-    const result = await userDataBase.query(query);
-    
-    return result.rows
-    
-  } catch (error) {
-    console.error("Erro ao listar bens:", error.message);
-    
-  }
-},
-   
-deleteBens: async(id)=>{
-  
-   const delet =  "DELETE FROM cadbens WHERE benscode = $1 RETURNING *"
-   const result = await userDataBase.query(delet , [id]);
+      return result.rows;
+    } catch (error) {
+      console.error("Erro ao listar bens:", error.message);
+    }
+  },
 
-   return result.rows[0]
-},
+  deleteBens: async (id) => {
+    const delet = "DELETE FROM cadbens WHERE benscode = $1 RETURNING *";
+    const result = await userDataBase.query(delet, [id]);
 
-//pegando o ID
-//  getBemByIdModel: async (id)=> {
-//   const query = 'SELECT * FROM cadbens WHERE benscode = $1';
-//   const values = [id];
+    return result.rows[0];
+  },
 
-//   const result = await userDataBase.query(query, values);
-//   return result.rows[0];
-// },
-
-
-updateBens: async(id, updateBem  )=>{
-
+  updateBens: async (id, updateBem) => {
     const query = `
         UPDATE cadbens
         SET 
@@ -75,20 +109,37 @@ updateBens: async(id, updateBem  )=>{
         WHERE benscode = $25
         RETURNING *;
     `;
-    const values = [ 
-      updateBem.bensnome, updateBem.benscofa, updateBem.bensmode, updateBem.bensnuse, updateBem.bensplac, 
-      updateBem.bensanmo, updateBem.bensdtcp, updateBem.bensvacp, updateBem.bensnunf, updateBem.benscofo, 
-      updateBem.benskmat, updateBem.bensdtkm, updateBem.bensstat, updateBem.bensdtus, updateBem.benshrus, 
-      updateBem.bensnuch, updateBem.benscore, updateBem.bensnumo, updateBem.bensrena, updateBem.bensctep, 
-      updateBem.bensativ, updateBem.bensalug, updateBem.bensvaal, updateBem.bensfabr, id   ] ;
+    const values = [
+      updateBem.bensnome || null,
+      updateBem.benscofa || null,
+      updateBem.bensmode || null,
+      updateBem.bensnuse || null,
+      updateBem.bensplac || null,
+      updateBem.bensanmo || null,
+      updateBem.bensdtcp || null,
+      updateBem.bensvacp || null,
+      updateBem.bensnunf || null,
+      updateBem.benscofo || null,
+      updateBem.benskmat || null,
+      updateBem.bensdtkm || null,
+      updateBem.bensstat || null,
+      updateBem.bensdtus || null,
+      updateBem.benshrus || null,
+      updateBem.bensnuch || null,
+      updateBem.benscore || null,
+      updateBem.bensnumo || null,
+      updateBem.bensrena || null,
+      updateBem.bensctep || null,
+      updateBem.bensativ || null,
+      updateBem.bensalug || null,
+      updateBem.bensvaal || null,
+      updateBem.bensfabr || null,
+      id,
+    ];
     const result = await userDataBase.query(query, values);
+
     return result.rows[0];
-
-}
-}
-
-
-
-
+  },
+};
 
 module.exports = AuthController;

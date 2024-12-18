@@ -47,8 +47,9 @@ input{
 /* Container principal da aplicaçao */
 .containerApp{
     display: flex;
- height:600px;
-background-color: darkgray;
+   height:650px;
+   background-color: darkgray;
+   width: 100%;
 
 }
 .workButton{
@@ -148,11 +149,7 @@ ul{
     height: 60%;
     width: 20%;
 }
-.registerGoods{
-    cursor: pointer;
-    height: 60%;
-    width: 35%;
-}
+
 .pageListingBens{
     display: none;
     background-color: darkgray;
@@ -164,6 +161,16 @@ ul{
     flex-direction: column;
     overflow: auto;
 }
+.error-text{
+    color: red;
+    display: block;
+    margin-top: 0.5%;
+    font-size: 13px;
+}
+.error-field{
+    border-color: red;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -205,53 +212,72 @@ table {
     font-size: 13px;
 }
 .editForm{
-    width: 75%;
-    display: flex;
-    background-color: darkgray;
-    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
-     height: 95%;
-    margin-left: 20%;
-    margin-top: 1.2%;
-    gap: 1.5%;
-    flex-direction: column;
-    flex-wrap: wrap;
-} 
-.moveFieldGoodsEdit{
-    display: flex;
-    justify-content: space-around;
-    margin-top: 2.5%;
-    flex-wrap: wrap;
-    width: 105%;
-}
-.submitEditBtn{
-    width: 25%;
-    height: 27px;
-    cursor: pointer;
-    margin-left: 20%;
-    background-color:lightslategray ;
-    border: none;
+    margin-left: 22%;
 }
 .bem-item p {
     margin: 5px 0;
   }
+#formEditBens{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+   background-color:darkgray;
+   padding: 20px;
+   border-radius: 8px;
+   box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
+   max-width: 900px;
+   width: 100%;
+   box-sizing: border-box;
+   margin-left: 3%;
+} 
+.btnPageEdit{
+    display: flex;
+    width:50%;
+     gap: 5.5%;
+     justify-content: center;
+     margin-top: 5%;
+}
+
+.submitEditBtn{
+    cursor: pointer;
+    width: 80px;
+    margin-bottom: 2%;
+    background-color: lightslategray; 
+    border: none;
+    height:27px;
+}
+
+.btnOutPageEdit{
+    cursor: pointer;
+    width: 80px;
+    margin-bottom: 2%;
+    background-color: lightslategray; 
+    border: none;
+    height:27px;
+}
 .btnPageListGoods{
     display: flex;
     height:50px;
     gap: 20px;
     margin-left: 3%;
 }
+.registerGoods{
+    margin-top: 0.5%;
+    height: 30px;
+    cursor: pointer;
+}
 .buttonDelete{
-    margin-top: 1.5%;
+    margin-top: 0.5%;
     height: 30px;
     cursor: pointer;
 }
 .buttonEdit{
-    margin-top: 1.5%;
+    margin-top: 0.5%;
     height: 30px;
     cursor: pointer;
 }
 .buttonExit{
-    margin-top: 1.5%;
+    margin-top: 0.5%;
     height: 30px;
     cursor: pointer;
 }
@@ -260,69 +286,75 @@ table {
     width: 75%;
     display: none;
     background-color: darkgray;
-    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
      height: 95%;
     margin-left: 20%;
     margin-top: 1.2%;
     gap: 1.5%;
 }
-label{
-    margin-bottom: 1.5%;
-    width: auto;
-}
-
-.moveAllFieldsGoods{
-    display: flex;
-    max-width:94%;
-    flex-direction:column;
-    
-}
 
 /* tudo sobre os campos bens */
 
-.moveFieldGoods{
+#formRegisterBens{
     display: flex;
-    justify-content: space-around;
-    margin-top: 2.5%;
+   flex-direction: column;
+   gap: 20px;
+  background-color:darkgray;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-left: 3%;
+}
+.formGroup{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5%;
     flex-wrap: wrap;
-    width: 105%;
+    width: 90%;
+    gap: 5px;
+    margin-bottom: 2px; 
+    margin-left: 3%;
+}
+.inputGroup{
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 calc(33% - 20px); 
+    min-width: 250px; 
+    gap: 7px;
+}
+.inputGroup label{
+    font-weight: bold;
+    margin-bottom: 5px;
+    
 }
 
-#codForne{
-    width: 35%;
-}
-#valor{
-    width: 42%;
-}
-#alug{
-    width: 45%;
-}
-#cor{
-    width: 45%;
-}
+
+
 /* botoes que estao na tela de registro */
 .btnOutNext{
     display: flex;
     width:50%;
-     gap: 4.5%;
+     gap: 5.5%;
      justify-content: center;
-     margin-top: 10%;
+     margin-top: 5%;
 }
 .btnOut{
     cursor: pointer;
-    width: 25%;
+    width: 80px;
     margin-bottom: 2%;
     background-color: lightslategray; 
     border: none;
-    height: 90%;
+    height:27px;
 }
 .btnNext{
     cursor: pointer;
-    width: 25%;
+    width: 80px;
     margin-bottom: 2%;
     background-color: lightslategray; 
     border: none;
-    height: 90%;
+    height: 27px;
 }
 /* Client */
 

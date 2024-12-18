@@ -16,18 +16,16 @@ route.post("/autenticar", (req, res) => {
   AuthController(req, res);
 });
 
-route.post("/submit", (req, res) => {
+route.post("/api/submit", (req, res) => {
   movementGoods.registerBens(req, res)
 });
 
-route.get('/bem/:id' , (req , res)=>{
-  movementGoods.getBemById(req , res)
-})
 
-route.delete('/delete/:id', async (req,res)=>{
+
+route.delete('/api/delete/:id', async (req,res)=>{
   movementGoods.deletarGoods(req , res)
 })
-route.put('/update/:id' , async (req , res)=>{
+route.put('/api/update/:id' , async (req , res)=>{
   movementGoods.updateGoods(req , res)
  
 })
