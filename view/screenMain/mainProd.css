@@ -1,0 +1,58 @@
+.containerAppProd{
+    display: none;
+    background-color: darkgray;
+    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
+    width: 76%;
+    height: 550px;
+    margin-left: 20%;
+    margin-top:1.2% ;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.listingProd{
+    overflow: auto;
+}
+.btnMainPageProd{
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 3%;
+}
+.registerProd{
+    cursor: pointer;
+    width: 15%;
+    margin-bottom: 2%;
+    background-color: lightslategray; 
+    border: none;
+    height:28px;
+}
+.buttonDeleteProd{
+    cursor: pointer;
+    width: 15%;
+    margin-bottom: 2%;
+    background-color: lightslategray; 
+    border: none;
+    height:28px;
+}
+.buttonEditProd{
+    cursor: pointer;
+    width: 15%;
+    margin-bottom: 2%;
+    background-color: lightslategray; 
+    border: none;
+    height:28px;
+}
+.buttonExitProd{
+    cursor: pointer;
+    width: 15%;
+    margin-bottom: 2%;
+    background-color: lightslategray; 
+    border: none;
+    height:28px;
+}
+/* .formRegisterProd{
+    display: flex;
+    flex-direction: column;
+} */

@@ -1,15 +1,16 @@
 //butoes relacionados aos bens
 const buttonStartCadBens = document.querySelector(".btnCadBens");
 buttonStartCadBens.addEventListener("click", () => {
-  const navigatorPageBens = document.querySelector(".pageListingBens");
-  const contentOptionsClient = document.querySelector(".optionsClient");
+  const containerAppBens = document.querySelector(".containerAppBens");
+  const btnMainPage = document.querySelector(".btnPageListGoods");
+  const listBens = document.querySelector(".listingBens");
+  const containerAppProd = document.querySelector('.containerAppProd')
 
-  if ((navigatorPageBens.style.display = "none")) {
-    navigatorPageBens.style.display = "flex";
-  }
-  if ((navigatorPageBens.style.display = "flex")) {
-    contentOptionsClient.style.display = "none";
-  }
+  containerAppProd.style.display = 'none'
+
+  containerAppBens.style.display = "flex";
+  btnMainPage.style.display = "flex";
+  listBens.style.display = "flex";
 });
 
 const buttonOutStart = document.querySelector(".material-symbols-outlined");
@@ -20,26 +21,27 @@ buttonOutStart.addEventListener("click", () => {
 const buttonRegisterGoods = document.querySelector(".registerGoods");
 buttonRegisterGoods.addEventListener("click", () => {
   const registerBens = document.querySelector(".showContentBens");
-  const contentOptions = document.querySelector(".pageListingBens");
+  const btnMainPage = document.querySelector(".btnPageListGoods");
+  const listBens = document.querySelector(".listingBens");
+  const ContentBens = document.querySelector(".showContentBens");
 
-  if ((contentOptions.style.display = "flex")) {
-    contentOptions.style.display = "none";
-    registerBens.style.display = "flex";
-  }
+  registerBens.style.display = "flex";
+  ContentBens.style.display = "flex";
+
+  btnMainPage.style.display = "none";
+  listBens.style.display = "none";
 });
 
 const buttonExit = document.querySelector(".buttonExit");
 buttonExit.addEventListener("click", () => {
-  const pagelistBens = document.querySelector(".pageListingBens");
-  if ((pagelistBens.style.display = "flex")) {
-    pagelistBens.style.display = "none";
-    return;
-  }
+  const containerAppBens = document.querySelector(".containerAppBens");
+  containerAppBens.style.display = "none";
 });
 
 const btnOutPageEdit = document.querySelector(".btnOutPageEdit");
 btnOutPageEdit.addEventListener("click", (e) => {
   e.preventDefault();
+
   const pageEditForm = document.querySelector(".editForm");
   pageEditForm.style.display = "none";
   return;
@@ -49,125 +51,13 @@ const buttonOutGoods = document.querySelector(".btnOut");
 buttonOutGoods.addEventListener("click", (event) => {
   event.preventDefault();
   const ContentBens = document.querySelector(".showContentBens");
-  if ((ContentBens.style.display = "flex")) {
-    ContentBens.style.display = "none";
-  }
+  const containerAppBens = document.querySelector(".containerAppBens");
+
+  ContentBens.style.display = "none";
+  containerAppBens.style.display = "none";
+
   return;
 });
-
-//mascaras para os inputs 
-
-$(document).ready(function(){
-  // Aplica a máscara para o campo de valor
-  $('#valorCp').mask('R$ 000.000.000,00', {reverse: true});
-});
-
-
-//validação dos campos
-$(document).ready(function() {
-  $('#formRegisterBens').validate({
-    rules: {
-      code: {
-        required: true,
-        minlength:3
-      },
-      name: {
-        required: true,
-        minlength:4
-      },
-      cofa:{
-        required: true 
-      },
-      model:{
-        required: true
-      },
-      serial:{
-        required: true,
-        minlength: 5
-      },
-      dtCompra:{
-        date:true,
-        required:true
-      },
-      valor:{
-        required: true
-      },
-      ntFiscal:{
-        required: true,
-        minlength: 5
-      },
-      cofo:{
-        required: true,
-        minlength: 4
-      },
-      valorAlug:{
-        required: true
-      }
-      
-  },
-     
-    messages:{
-      code: {
-        required: "Por favor, insira o codigo",
-        minlength:'Maior que 3 caracteres'
-      },
-      name: {
-        required: "Por favor, insira um Nome",
-        minlength:'Maior que 4 caracteres'
-      },
-
-      cofa:{
-        required: 'Por favor insira o codigo'
-      },
-      model:{
-        required: 'Por favor insira o Modelo'
-      },
-      serial:{
-        required: 'Por favor insira o serial',
-        minlength: 'Maior que 3 caracteres'
-      },
-      dtCompra:{
-          required: 'Por favor insira uma data valida',
-          date: 'Por favor insiar uma data valida'
-      },   
-      valor:{
-        required: 'Por Favor insira o valor'
-      }, 
-      ntFiscal:{
-        required: 'Por favor insira o numero da Nota',
-        minlength:'Sua nota não tem a quantidade de digitos correto'
-      },
-      cofo:{
-        required: 'Por favor insira um codigo do fornecedor valido',
-        minlength: 'Tamanho do Codigo invalido'
-      },
-      valorAlug:{
-        required: 'Coloque o valor'
-      }
-      
-     
-
-  },
-     
-    errorPlacement: function (error, element) {
-      // Adiciona uma mensagem de erro logo abaixo do input
-      error.addClass('error-text'); // Adiciona uma classe para estilização
-      error.insertAfter(element);
-    },
-    highlight: function(element) {
-      // Adiciona uma classe de erro ao campo inválido
-      $(element).addClass('error-field');
-    },
-    unhighlight: function(element) {
-      // Remove a classe de erro do campo válido
-      $(element).removeClass('error-field');
-    },
-    submitHandler: function(form) {
-      form.submit(); // Envia o formulário se for válido
-    }
-  });
-});
-
 
 const formRegister = document
   .querySelector("#formRegisterBens")
@@ -176,41 +66,37 @@ const formRegister = document
 
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
-
+   
     try {
-     const response =  await fetch("/api/submit", {
+      const response = await fetch("/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({data})
-      })
-       if(response.ok){
+        body: JSON.stringify({ data }),
+      });
+      if (response.ok) {
+        console.log("deu certo");
 
-        console.log('deu certo')
-
-         Toastify({
-          text: "Sucesso",
-          duration: 3000,
+        Toastify({
+          text: "Cadastrado com sucesso",
+          duration: 6000,
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor:"red"
+          backgroundColor: "green",
         }).showToast();
 
-       
-        document.querySelector('#formRegisterBens').reset()
-       
-      }else{
+        document.querySelector("#formRegisterBens").reset();
+      } else {
         Toastify({
           text: "Erro no cadastro",
           duration: 3000,
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red"
+          backgroundColor: "red",
         }).showToast();
-        console.log('deu ruim')
+        console.log("deu ruim");
       }
-
     } catch (error) {
       console.log("erro no envio", error);
     }
@@ -226,12 +112,12 @@ async function fetchBens() {
     const bens = await response.json();
 
     const bensListDiv = document.querySelector(".listingBens");
-    bensListDiv.innerHTML = ""; // Limpa a div antes de preencher
+    bensListDiv.innerHTML = "";
 
     if (bens.length > 0) {
       const tabela = document.createElement("table");
       tabela.style.width = "100%";
-      tabela.setAttribute("border", "1"); // Adiciona borda para tabela
+      tabela.setAttribute("border", "1");
 
       // Cabeçalho
       const cabecalho = tabela.createTHead();
@@ -323,7 +209,6 @@ async function fetchBens() {
         linha.insertCell().textContent = bem.bensfabr;
       });
 
-      // Adiciona a tabela à div
       bensListDiv.appendChild(tabela);
     } else {
       bensListDiv.innerHTML = "<p>Nenhum bem cadastrado.</p>";
@@ -345,12 +230,12 @@ deleteButton.addEventListener("click", async () => {
   );
   if (!selectedCheckbox) {
     Toastify({
-      text: "Selecione um item para excluir",
+      text: "Selecione um Bem para excluir",
       duration: 2000,
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red"
+      backgroundColor: "red",
     }).showToast();
     return;
   }
@@ -383,7 +268,7 @@ async function deleteBem(id, bemItem) {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+        backgroundColor: "green",
       }).showToast();
       bemItem.remove();
     } else {
@@ -413,7 +298,7 @@ editButton.addEventListener("click", (event) => {
 
   if (!selectedCheckbox) {
     Toastify({
-      text: "Selecione um item para editar",
+      text: "Selecione um Bem para editar",
       duration: 2000,
       close: true,
       gravity: "top",
@@ -443,7 +328,7 @@ editButton.addEventListener("click", (event) => {
       { id: "placa", valor: bemSelecionado.bensplac },
       { id: "bensAnmo", valor: bemSelecionado.bensanmo },
       { id: "dtCompra", valor: bemSelecionado.bensdtcp },
-      { id: "valor", valor: bemSelecionado.bensvacp },
+      { id: "valorCp", valor: bemSelecionado.bensvacp },
       { id: "ntFiscal", valor: bemSelecionado.bensnunf },
       { id: "cofo", valor: bemSelecionado.benscofo },
       { id: "kmAtual", valor: bemSelecionado.benskmat },
@@ -466,7 +351,7 @@ editButton.addEventListener("click", (event) => {
     campos.forEach(({ id, valor }) => {
       const elemento = document.getElementById(id);
       if (elemento) {
-        elemento.value = valor || ""; // Define o valor ou vazio se indefinido
+        elemento.value = valor || "";
       } else {
         console.warn(`Elemento com ID '${id}' não encontrado.`);
       }
@@ -492,19 +377,16 @@ editButton.addEventListener("click", (event) => {
   }
 });
 
-
 // Função para editar e atualizar os dados
 async function editAndUpdateOfBens() {
   const formEditBens = document.querySelector("#formEditBens");
 
   formEditBens.addEventListener("submit", async (event) => {
-
-    event.preventDefault()
+    event.preventDefault();
 
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
 
-    // Obter o checkbox selecionado
     const selectedCheckbox = document.querySelector(
       'input[name="selectBem"]:checked'
     );
@@ -523,7 +405,7 @@ async function editAndUpdateOfBens() {
 
     let bemIdParsed;
     try {
-      bemIdParsed = JSON.parse(bemId).benscode; // Supondo que benscode seja a identificação
+      bemIdParsed = JSON.parse(bemId).benscode;
     } catch (error) {
       console.error("Erro ao fazer parse de bemId:", error);
       return;
@@ -561,10 +443,10 @@ async function editAndUpdateOfBens() {
       const response = await fetch(`/api/update/${bemIdParsed}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updateBem)
+        body: JSON.stringify(updateBem),
       });
 
-      console.log( 'resposta:' ,response)
+      console.log("resposta:", response);
 
       if (response.ok) {
         console.log("Atualização bem-sucedida");
@@ -575,16 +457,15 @@ async function editAndUpdateOfBens() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+          backgroundColor: "green",
         }).showToast();
 
         setTimeout(() => {
           window.location.reload();
           document.querySelector(".editForm").style.display = "none";
-        }, 3000)
-       
-        formEditBens.reset();
+        }, 3000);
 
+        formEditBens.reset();
       } else {
         console.error("Erro ao atualizar bem:", await response.text());
       }
@@ -592,14 +473,5 @@ async function editAndUpdateOfBens() {
       console.error("Erro na requisição:", error);
     }
   });
-} editAndUpdateOfBens();
-
-
-
-
-
-
-
- 
-
-
+}
+editAndUpdateOfBens();

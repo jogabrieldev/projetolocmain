@@ -1,0 +1,92 @@
+
+.containerAppClient{
+    display: none;
+    background-color: darkgray;
+    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
+    width: 76%;
+    height: 550px;
+    margin-left: 20%;
+    margin-top:1.2% ;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.listClient{
+    overflow: auto;
+}
+.buttonsMainPage {
+    display: flex;
+    justify-content: center; 
+    height: 40px;
+    gap:20px;
+    margin-top: 3%;
+  }
+#formRegisterClient{
+    display: none;
+}
+
+.btnRegisterClient{
+    cursor: pointer;
+    width: 80px;
+    margin-bottom: 2%;
+    background-color: lightslategray; 
+    border: none;
+    height:27px;
+}
+.btnOutInit{
+    cursor: pointer;
+    width: 80px;
+    margin-bottom: 2%;
+    background-color: lightslategray; 
+    border: none;
+    height:27px;
+}
+.registerClient{
+    cursor: pointer;
+    width: 15%;
+    height: 26px;
+    background-color: lightslategray;
+    border: none;
+}
+.buttonDeleteClient{
+    cursor: pointer;
+    width: 15%;
+    height: 26px;
+    background-color: lightslategray;
+    border: none;
+}
+.buttonExitClient{
+    cursor: pointer;
+    width: 15%;
+    height: 26px;
+    background-color: lightslategray;
+    border: none;
+}
+.buttonEditClient{
+    cursor: pointer;
+    width: 15%;
+    height: 26px;
+    background-color: lightslategray;
+    border: none;
+}
+.btnbtn{
+    gap: 15px;
+    justify-content: center;
+    display: flex;
+    margin-top: 10%;
+    width: 65%;
+}
+
+.submitEditClient{
+    cursor: pointer;
+    width: 15%;
+    height: 26px;
+    background-color: lightslategray;
+    border: none;
+}
+.outPageEditClient{
+    cursor: pointer;
+    width: 15%;
+    height: 26px;
+    background-color: lightslategray;
+    border: none;
+}

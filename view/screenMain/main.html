@@ -4,18 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="mainClient.css">
+    <link rel="stylesheet" href="mainForn.css">
+    <link rel="stylesheet" href="mainProd.css">
+
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=exit_to_app" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-mask-plugin@1.14.16/dist/jquery.mask.min.js"></script>
+    <!-- CDN do Inputmask -->
+     <!-- CDN do Inputmask -->
+    <script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.7/dist/inputmask.min.js"></script>
 
 
-    
-
-       
     <title>Screen main</title>
 </head>
 
@@ -31,7 +35,8 @@
 
     </section>
 
-    <section class="containerApp">
+    <div id="ContainerMainApp">
+
         <div class="workButton">
             <ul>
                 <li><button class="btnCadBens">Bens</button></li>
@@ -53,9 +58,9 @@
             </span>
         </div>
 
-        
-        <div class="pageListingBens">
-         
+    <section class="containerAppBens">
+        <!-- <div class="pageListingBens"> -->
+
               <div class="listingBens">
 
                  <!-- informações -->
@@ -68,7 +73,8 @@
                 <button class="buttonDelete">Excluir</button>
                 <button class="buttonExit">Voltar</button>
             </div>
-        </div>
+            
+        <!-- </div> -->
 
             <div class="editForm" style="display: none;">
                <form id="formEditBens">
@@ -270,7 +276,7 @@
                          
                         <div class="inputGroup">
                              <label for="Valor">Valor compra</label>
-                             <input type="number" name="valor" id="valorCp" placeholder="R$ 0,00" maxlength="13">
+                             <input type="text" name="valor" id="valorCp" placeholder="R$ 0,00" maxlength="13">
                          </div>
 
                         <div class="inputGroup">
@@ -359,8 +365,8 @@
                         </div>
                     
                          <div class="inputGroup">
-                            <label for="exe">Valor Alugado</label>
-                            <input type="number" name="valorAlug" id="valorAlug" placeholder="R$ 0,00" maxlength="13" >
+                            <label for="valorAlug">Valor Alugado</label>
+                            <input type="text" name="valorAlug" id="valorAlug" placeholder="R$ 0,00" maxlength="13" >
                         </div>
                            
                         <div class="inputGroup">
@@ -374,72 +380,468 @@
                     </div>
                 </div>
             </form>
+        </div>   
+</section>   
+
+         <!-- Cadastro do client -->
+
+    <section class="containerAppClient">
+          
+          
+
+        <div class="listClient">
+            <!-- informações do cadastro do client -->
         </div>
 
-        <!-- Parte do cadastro de clientes -->
-        <!-- RegisteClient -->
-
-
-        <div class="optionsClient">
-            <p>Cliente</p>
-            <button class="listYouClient">Listar</button>
-            <button class="registerClient">Faça o cadastro</button>
-        </div>
-        <div class="listingClient">
-
+        <div class="buttonsMainPage">
+            <button class="registerClient">incluir</button>
+            <button class="buttonDeleteClient">Excluir</button>
+            <button class="buttonEditClient">Editar</button>
+            <button class="buttonExitClient">Voltar</button>
         </div>
 
-        <div class="showContentClient">
-            <div class="moveAllFieldsClient">
-                <div class="moveFieldsClient">
-                    <label for="nome">
-                        <input type="text" name="clientNome" id="clientNome" placeholder="nome">
-                    </label>
-                    <label for="clientCpf">
-                        <input type="number" name="clientCpf" id="clientCpf" placeholder="CPF">
-                    </label>
-                    <label for="dtCad">
+  
+          
+
+        <div class="formEditClient"style="display: none;" >
+             
+             <form id="formEditRegisterClient" >
+                <div class="formGroup">
+  
+                    <div class="inputGroup">
+                        <label for="cliCode">Codigo</label>
+                        <input type="text" name="clieCode" id="clieCode" placeholder="Codigo" disabled maxlength="15">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="clieNome">Nome</label>
+                        <input type="text" name="clieName" id="clieName" placeholder="Nome" maxlength="80">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="cpf">CPF</label>
+                        <input type="text" name="cpf" id="cpf" placeholder="CPF" maxlength="14">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="dtCad">Data do cadastro</label>
                         <input type="date" name="dtCad" id="dtCad">
-                    </label>
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="dtNasc">Data de Nascimento</label>
+                        <input type="date" name="dtNasc" id="dtNasc">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="clieCelu">Celular</label>
+                        <input type="text" name="clieCelu" id="clieCelu" placeholder="Celular" maxlength="11">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="clieCity">Cidade</label>
+                        <input type="text" name="clieCity" id="clieCity" placeholder="Cidade" maxlength="25">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="clieEstd">Estado</label>
+                        <input type="text" name="clieEstd" id="clieEstd" placeholder="Estado" maxlength="20">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="clieRua ">Rua</label>
+                        <input type="text" name="clieRua" id="clieRua" placeholder="RUA" maxlength="40">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="clieCep ">Cep</label>
+                        <input type="text" name="clieCep" id="clieCep" placeholder="CEP" maxlength="10">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="clieMail ">E-mail</label>
+                        <input type="email" name="clieMail" id="clieMail" placeholder="E-mail" maxlength="35">
+                    </div>
+                      
+                     <div class="btnbtn">
+                        <button class="submitEditClient">Salvar</button>
+                        <button class="outPageEditClient">Voltar</button>
+                     </div>
+                  </div>
+                </form>  
+             </div>
+             
+        <div class="containerOfForm">
+              <form id="formRegisterClient" >
+                  <div class="formGroup">
+
+                  <div class="inputGroup">
+                      <label for="cliCode">Codigo</label>
+                      <input type="text" name="clieCode" id="clieCode" placeholder="Codigo" maxlength="15">
+                  </div>
+
+                  <div class="inputGroup">
+                      <label for="clieNome">Nome</label>
+                      <input type="text" name="clieName" id="clieName" placeholder="Nome" maxlength="80">
+                  </div>
+
+                  <div class="inputGroup">
+                      <label for="cpf">CPF</label>
+                      <input type="text" name="cpf" id="cpf" placeholder="CPF" maxlength="14">
+                  </div>
+
+                  <div class="inputGroup">
+                      <label for="dtCad">Data do cadastro</label>
+                      <input type="date" name="dtCad" id="dtCad">
+                  </div>
+
+                  <div class="inputGroup">
+                      <label for="dtNasc">Data de Nascimento</label>
+                      <input type="date" name="dtNasc" id="dtNasc">
+                  </div>
+
+                  <div class="inputGroup">
+                      <label for="clieCelu">Celular</label>
+                      <input type="text" name="clieCelu" id="clieCelu" placeholder="Celular" maxlength="11">
+                  </div>
+
+                  <div class="inputGroup">
+                      <label for="clieCity">Cidade</label>
+                      <input type="text" name="clieCity" id="clieCity" placeholder="Cidade" maxlength="25">
+                  </div>
+
+                  <div class="inputGroup">
+                      <label for="clieEstd">Estado</label>
+                      <input type="text" name="clieEstd" id="clieEstd" placeholder="Estado" maxlength="20">
+                  </div>
+
+                  <div class="inputGroup">
+                      <label for="clieRua ">Rua</label>
+                      <input type="text" name="clieRua" id="clieRua" placeholder="RUA" maxlength="40">
+                  </div>
+
+                  <div class="inputGroup">
+                      <label for="clieCep ">Cep</label>
+                      <input type="text" name="clieCep" id="clieCep" placeholder="CEP" maxlength="10">
+                  </div>
+
+                  <div class="inputGroup">
+                      <label for="clieMail ">E-mail</label>
+                      <input type="email" name="clieMail" id="clieMail" placeholder="E-mail" maxlength="35">
+                  </div>
+                    
+                  <div class="btnOutNext">
+                     <button class="btnRegisterClient">Cadastrar</button>
+                     <button class="btnOutInit">Voltar</button>
+                  </div>
                 </div>
-                <div class="moveFieldsClient">
-                    <label for="dtNcClient">
-                        <input type="date" name="dtNcClient" id="dtNcClient">
-                    </label>
-                    <label for="clientCelu">
-                        <input type="number" name="clientCelu" id="clientCelu" placeholder="Celular">
-                    </label>
-                    <label for="clientCity">
-                        <input type="text" name="clientCity" id="clientCity" placeholder="Cidade">
-                    </label>
+              </form>
+            </div>
+</section>
+        
+       <!-- Cadastro de fornecedores -->
+<section class="containerAppForn">
+
+     <div class="listingForn">
+              <!-- Informações do fornecedor -->
+        </div>
+
+    <div class="btnMainPageForn">
+        <button class="registerForn">incluir</button>
+        <button class="buttonDeleteForn">Excluir</button>
+        <button class="buttonEditForn">Editar</button>
+        <button class="buttonExitForn">Voltar</button>
+       </div>
+
+           <div class="formRegisterForn" style="display: none;">
+
+             <form id="registerForn">
+                        
+                <div class="formGroup">
+
+                    <div class="inputGroup">
+                        <label for="fornCode">Codigo</label>
+                        <input type="text" name="fornCode" id="fornCode" placeholder="Codigo" maxlength="15">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="clieNome">Nome</label>
+                        <input type="text" name="fornName" id="fornName" placeholder="Nome" maxlength="80">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="nomeFan">Nome fantasia</label>
+                        <input type="text" name="nomeFan" id="nomeFan" placeholder="Nome Fantasia" maxlength="50">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="forCnpj">CNPJ</label>
+                        <input type="text" name="fornCnpj" id="fornCnpj" placeholder="CNPJ" maxlength="14">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="forCep">CEP</label>
+                        <input type="text" name="fornCep" id="fornCep" placeholder="CEP" maxlength="9">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="forRua">Rua</label>
+                        <input type="text" name="fornRua" id="fornRua" placeholder="Rua" maxlength="40">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="forCity">Cidade</label>
+                        <input type="text" name="fornCity" id="fornCity" placeholder="Cidade" maxlength="25">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="fornEstd">Estado</label>
+                        <input type="text" name="fornEstd" id="fornEstd" placeholder="Estado" maxlength="20">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="forCelu">Celular</label>
+                        <input type="number" name="fornCelu" id="fornCelu" placeholder="Celular" maxlength="11">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="forMail ">E-mail</label>
+                        <input type="text" name="fornMail" id="fornMail" placeholder="E-mail" maxlength="35">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="forBank ">Banco</label>
+                        <input type="text" name="fornBank" id="fornBank" placeholder="Banco" maxlength="20">
+                    </div>
+
+                    <div class="inputGroup">
+                        <label for="forAge ">Agencia</label>
+                        <input type="number" name="fornAge" id="fornAge" placeholder="Agencia" maxlength="4">
+                    </div>
+
+                    <div class="inputGroup">
+                        <label for="forCont ">Conta</label>
+                        <input type="number" name="fornCont" id="fornCont" placeholder="Conta" maxlength="8">
+                    </div>
+
+                    <div class="inputGroup">
+                        <label for="forPix ">Pix</label>
+                        <input type="text" name="fornPix" id="fornPix" placeholder="Pix" maxlength="35">
+                    </div>
+
+                    <div class="inputGroup">
+                        <label for="forDtcd ">Data do cadastro</label>
+                        <input type="date" name="fornDtcd " id="fornDtcd ">
+                    </div>
+
+                    <div class="inputGroup">
+                        <label for="forDisPro ">Discrição do produto</label>
+                        <input type="text" name="fornDisPro " id="fornDisPro " placeholder="Discrição do produto" maxlength="85">
+                    </div>
+                      
+                      
+                    <div class="btnOutNext">
+                       <button class="btnRegisterforn">Cadastrar</button>
+                       <button class="btnOutInitForn">Voltar</button>
+                    </div>
                 </div>
-                <div class="moveFieldsClient">
-                    <label for="clientEstd">
-                        <input type="text" name="clientEstd" id="clientEstd" placeholder="Estado">
-                    </label>
-                    <label for="clientRua">
-                        <input type="text" name="clientRua" id="clientRua" placeholder="Rua">
-                    </label>
-                    <label for="clientCep">
-                        <input type="number" name="clientCep" id="clientCep" placeholder="CEP">
-                    </label>
-                    <label for="clientMail">
-                        <input type="email" name="clientMail" id="clientMail" placeholder="E-mail">
-                    </label>
+             </form>
+        </div>
+
+        <div class="formEditRegisterForn" style="display: none;" >
+            <form id="formEditForn">
+                  
+                <div class="formGroup">
+
+                    <div class="inputGroup">
+                        <label for="fornCode">Codigo</label>
+                        <input type="text" name="fornCode" id="fornCode" placeholder="Codigo" maxlength="15" disabled>
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="fornName">Nome</label>
+                        <input type="text" name="fornName" id="fornName" placeholder="Nome" maxlength="80">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="nomeFan">Nome fantasia</label>
+                        <input type="text" name="nomeFan" id="nomeFan" placeholder="Nome Fantasia" maxlength="50">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="fornCnpj">CNPJ</label>
+                        <input type="number" name="fornCnpj" id="fornCnpj" placeholder="CNPJ" maxlength="14">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="fornCep">CEP</label>
+                        <input type="number" name="fornCep" id="fornCep" placeholder="CEP" maxlength="9">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="fornRua">Rua</label>
+                        <input type="text" name="fornRua" id="fornRua" placeholder="Rua" maxlength="40">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="fornCity">Cidade</label>
+                        <input type="text" name="fornCity" id="fornCity" placeholder="Cidade" maxlength="25">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="fornEstd">Estado</label>
+                        <input type="text" name="fornEstd" id="fornEstd" placeholder="Estado" maxlength="20">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="fornCelu">Celular</label>
+                        <input type="number" name="fornCelu" id="fornCelu" placeholder="Celular" maxlength="11">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="fornMail ">E-mail</label>
+                        <input type="text" name="fornMail" id="fornMail" placeholder="E-mail" maxlength="35">
+                    </div>
+  
+                    <div class="inputGroup">
+                        <label for="fornBank ">Banco</label>
+                        <input type="text" name="fornBank" id="fornBank" placeholder="Banco" maxlength="20">
+                    </div>
+
+                    <div class="inputGroup">
+                        <label for="fornAge ">Agencia</label>
+                        <input type="number" name="fornAge" id="fornAge" placeholder="Agencia" maxlength="4">
+                    </div>
+
+                    <div class="inputGroup">
+                        <label for="forncont ">Conta</label>
+                        <input type="text" name="fornCont" id="fornCont" placeholder="Conta" maxlength="8">
+                    </div>
+
+                    <div class="inputGroup">
+                        <label for="fornPix ">Pix</label>
+                        <input type="text" name="fornPix" id="fornPix" placeholder="Pix" maxlength="35">
+                    </div>
+
+                    <div class="inputGroup">
+                        <label for="fornDtcd ">Data do cadastro</label>
+                        <input type="date" name="fornDtcd" id="fornDtcd">
+                    </div>
+
+                    <div class="inputGroup">
+                        <label for="fornDisPro ">Discrição do produto</label>
+                        <input type="text" name="fornDisPro" id="fornDisPro" placeholder="Discrição do produto" maxlength="85">
+                    </div>
+                      
+                    <div class="btnOutNext">
+                       <button class="submitForn">Salvar</button>
+                       <button class="btnOutInitForn">Voltar</button>
+                    </div>
                 </div>
+            </form>
+        </div>
+</section>
+
+     <!-- Cadastro do produto -->
+
+     <section class="containerAppProd">
+ 
+         <div class="listingProd">
+            <!-- Informações do produto-->
+        </div>
+
+        <div class="btnMainPageProd">
+            <button class="registerProd">incluir</button>
+            <button class="buttonDeleteProd">Excluir</button>
+            <button class="buttonEditProd">Editar</button>
+            <button class="buttonExitProd">Voltar</button>
+      </div>
+
+       <div class="formRegisterProd" style="display: none;">
+          <form class="formRegisterProduto">
+           
+            <div class="formGroup">
+
+                <div class="inputGroup">
+                    <label for="prodCode">Codigo</label>
+                    <input type="text" name="prodCode" id="prodCode" placeholder="Codigo" maxlength="10">
+                </div>
+
+                <div class="inputGroup">
+                    <label for="prodDesc">Descrição</label>
+                    <input type="text" name="prodDesc" id="prodDesc" placeholder="Discrição" maxlength="60">
+                </div>
+
+                <div class="inputGroup">
+                    <label for="prodTipo">Tipo</label>
+                    <input type="text" name="prodTipo" id="prodTipo" placeholder="Tipo do produto" maxlength="1">
+                </div>
+
+                <div class="inputGroup">
+                    <label for="prodUni">Unidade</label>
+                    <input type="number" name="prodUni" id="prodUni" placeholder="Unidade" maxlength="2">
+                </div>
+
+                <div class="inputGroup">
+                    <label for="prodCofa">Codigo Fabricante</label>
+                    <input type="number" name="prodCofa" id="prodCofa" placeholder="Codigo Fabricante" maxlength="5">
+                </div>
+
+                <div class="inputGroup">
+                    <label for="prodData">Data</label>
+                    <input type="date" name="prodData" id="prodData" >
+                </div>
+
+                <div class="inputGroup">
+                    <label for="prodValor">Valor</label>
+                    <input type="number" name="prodValor" id="prodValor" placeholder="Valor " maxlength="12">
+                </div>
+
+                <div class="inputGroup">
+                    <label for="prodPeli">prodPeli</label>
+                    <input type="number" name="prodPeli" id="prodPeli" placeholder="" maxlength="6">
+                </div>
+
+                <div class="inputGroup">
+                    <label for="forCelu">prodPebr</label>
+                    <input type="number" name="prodPebr" id="prodPebr" placeholder="" maxlength="10">
+                </div>
+
+                <div class="inputGroup">
+                    <label for="prodAtiv ">Ativo</label>
+                      <select name="prodAtiv" id="prodAtiv">
+                         <option value="S">SIM</option>
+                         <option value="N">NAO</option>
+                      </select>
+                </div>
+
                 <div class="btnOutNext">
-                    <button class="clientRegister">Cadastrar</button>
-                    <button class="outClient">Voltar</button>
+                   <button class="cadProd">Cadastrar</button>
+                   <button class="btnOutInitProd">Voltar</button>
                 </div>
             </div>
-        </div>
-    </section>
+        </form>
+    </div>
+</section>
 
-    
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    
+<!-- fabricante -->
+
+<section class="containerAppFabri">
+
+
+</section>
+
+
+
+</div>  
+
+     <script src="maskFields.js"></script>
+    <script src="validation.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.js"></script>
     <script src="mainGoods.js"></script>
     <script src="mainClient.js"></script>
+    <script src="mainForn.js"></script>
+    <script src="mainProd.js"></script>
 </body>
 
 </html>

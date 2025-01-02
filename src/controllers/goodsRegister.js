@@ -3,6 +3,7 @@ const userRegister = require("../model/data");
 const movementOfBens = {
   registerBens: async (req, res) => {
     try {
+
       const { data } = req.body;
 
       const newUser = await userRegister.registerOfBens(data);
