@@ -62,6 +62,33 @@ const crudRegisterProd = {
        
     },
 
+    updateOfProd: async (id, updateProd) => {
+      const query = `
+          UPDATE cadprod
+          SET 
+               proddesc = $1, prodtipo = $2, produnid = $3, prodcofa = $4, proddtuc = $5, prodvluc = $6, prodpeli = $7, prodpebr = $8, 
+               prodativ = $9
+               WHERE prodcode = $10
+              RETURNING *;
+              `;
+      const values = [
+        updateProd.proddesc || null,
+        updateProd.prodtipo || null,
+        updateProd.produnid || null,
+        updateProd.prodcofa || null,
+        updateProd.proddtuc || null,
+        updateProd.prodvluc || null,
+        updateProd.prodpeli || null,
+        updateProd.prodpebr || null,
+        updateProd.prodativ || null,
+        id
+      ];
+      const result = await userDbProd.query(query, values);
+      // console.log('dados enviados para o model:' ,result)
+  
+      return result.rows[0];
+    },
+
 
 
   }

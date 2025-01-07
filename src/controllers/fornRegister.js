@@ -62,9 +62,11 @@ const fornRegister = require('../model/dataForn')
 
      updateOfForn: async(req , res)=>{
          
-        const fornId = req.params.id;
+        const {fornId} = req.params;
         const updateForn = req.body;
-
+       
+        // console.log('esse e o corpo' , updateForn)
+        
        Object.keys(updateForn).forEach((key) => {
          if (updateForn[key] === "") {
           updateForn[key] = null;
@@ -73,6 +75,8 @@ const fornRegister = require('../model/dataForn')
 
       try {
         const fornUpdate = await fornRegister.updateForn(fornId, updateForn)
+        // console.log("Fornecedor atualizado:", fornUpdate); 
+
         res.json({ message: "Bem atualizado com sucesso", Fornecedor: fornUpdate });
     } catch (error) {
         console.error("Erro ao atualizar o Cliente:", error);

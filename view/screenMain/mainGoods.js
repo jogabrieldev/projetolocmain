@@ -1,16 +1,31 @@
 //butoes relacionados aos bens
 const buttonStartCadBens = document.querySelector(".btnCadBens");
 buttonStartCadBens.addEventListener("click", () => {
+
   const containerAppBens = document.querySelector(".containerAppBens");
+    containerAppBens.style.display = "flex";
+
   const btnMainPage = document.querySelector(".btnPageListGoods");
+    btnMainPage.style.display = "flex";
+
   const listBens = document.querySelector(".listingBens");
+   listBens.style.display = "flex";
+
   const containerAppProd = document.querySelector('.containerAppProd')
+   containerAppProd.style.display = 'none'
 
-  containerAppProd.style.display = 'none'
+  const containerAppFabri = document.querySelector('.containerAppFabri')
+   containerAppFabri.style.display = 'none'
 
-  containerAppBens.style.display = "flex";
-  btnMainPage.style.display = "flex";
-  listBens.style.display = "flex";
+  const containerAppTypeProd = document.querySelector('.containerAppTipoProd')
+  containerAppTypeProd.style.display = 'none'
+
+   const containerAppDriver = document.querySelector('.containerAppDriver')
+    containerAppDriver.style.display = 'none'
+
+    const containerAppClient = document.querySelector(".containerAppClient");
+    containerAppClient.style.display = "none";
+
 });
 
 const buttonOutStart = document.querySelector(".material-symbols-outlined");
@@ -43,18 +58,30 @@ btnOutPageEdit.addEventListener("click", (e) => {
   e.preventDefault();
 
   const pageEditForm = document.querySelector(".editForm");
+  const listingBens = document.querySelector(".listingBens");
+  const btnPageListGoods = document.querySelector('.btnPageListGoods')
+  
+   listingBens.style.display = 'flex'
+   btnPageListGoods.style.display = 'flex'
+
+
   pageEditForm.style.display = "none";
+
   return;
 });
+
+
 
 const buttonOutGoods = document.querySelector(".btnOut");
 buttonOutGoods.addEventListener("click", (event) => {
   event.preventDefault();
   const ContentBens = document.querySelector(".showContentBens");
-  const containerAppBens = document.querySelector(".containerAppBens");
+  const listingBens = document.querySelector(".listingBens");
+  const btnPageListGoods = document.querySelector('.btnPageListGoods')
 
   ContentBens.style.display = "none";
-  containerAppBens.style.display = "none";
+  listingBens.style.display = 'flex'
+  btnPageListGoods.style.display ='flex'
 
   return;
 });
@@ -292,6 +319,8 @@ async function deleteBem(id, bemItem) {
 // Evento para o botão Editar
 const editButton = document.querySelector(".buttonEdit");
 editButton.addEventListener("click", (event) => {
+  
+  
   const selectedCheckbox = document.querySelector(
     'input[name="selectBem"]:checked'
   );
@@ -359,7 +388,8 @@ editButton.addEventListener("click", (event) => {
 
     // Mostrar o formulário de edição e ocultar a lista
     const editForm = document.querySelector(".editForm");
-    const listingBens = document.querySelector(".pageListingBens");
+    const listingBens = document.querySelector(".listingBens");
+    const btnMainPage = document.querySelector('.btnPageListGoods')
 
     if (editForm) {
       editForm.style.display = "flex";
@@ -371,6 +401,10 @@ editButton.addEventListener("click", (event) => {
       listingBens.style.display = "none";
     } else {
       console.error("A lista de bens não foi encontrada.");
+    }
+
+    if(btnMainPage){
+      btnMainPage.style.display = 'none'
     }
   } catch (error) {
     console.error("Erro ao fazer parse de data-bem:", error);

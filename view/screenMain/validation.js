@@ -1,5 +1,5 @@
 
-// Função de validação
+//Função de validação
 function validationFormGoods() {
   $('#formRegisterBens').validate({
     rules: {
@@ -230,6 +230,131 @@ $(function () {
           nomeFan:{
              minlength:5
           },
+          fornCnpj:{
+            required: true,
+            number: true,
+            minlength: 13
+          },
+          fornCep:{
+            required: true,
+            number: true
+          },
+          fornRua:{
+             required:true
+          },
+          fornCity:{
+            required: true
+          },
+          fornEstd:{
+            required: true
+          },
+          fornMail:{
+            required: true,
+            mail: true
+          },
+          fornBank:{
+            required: true
+          },
+          fornAge:{
+             required: true
+          },
+          fornCont:{
+            required: true
+          },
+          fornPix:{
+            required: true
+         },
+         fornDtcd:{
+           required: true,
+           date: true
+         }
+
+      },
+            messages: {
+              fornCode:{
+                required: 'obrigatorio',
+                minlength: 'minimo 4 caracteres'
+              },
+              fornName:{
+                 required:'Obrigatorio'
+              },
+              nomeFan:{
+                minlength:'minimo 5 caracteres'
+             },
+             fornCnpj:{
+               required:'Obrigatorio',
+               number: 'Somente valor numerico',
+               minlength: 'minimo 14 caracteres'
+             },
+             fornCep:{
+                required:'Obrigatorio',
+                number: 'Somente valores numericos'
+             },
+             fornRua:{
+              required:"Obrigatorio"
+           },
+
+           fornCity:{
+            required: "obrigatorio"
+          },
+          fornEstd:{
+            required: "Obrigatorio"
+          },
+          fornMail:{
+            required: 'Obrigatorio'
+          },
+          fornBank:{
+            required: " Obrigatorio"
+          },
+          fornAge:{
+            required: "Obrigatorio"
+         },
+         fornCont:{
+           required: "obrigatorio"
+         },
+         fornPix:{
+            required: 'Obrigatorio'
+         },
+         fornDtcd:{
+          required: 'Obrigatorio',
+          date: 'Insira uma data valida'
+        }
+           
+      },
+
+            errorPlacement: function (error, element) {
+                error.addClass('error-text');
+                error.insertAfter(element);
+              },
+              highlight: function (element) {
+                $(element).addClass('error-field');
+              },
+              unhighlight: function (element) {
+                $(element).removeClass('error-field');
+              },
+              submitHandler: function (form) {
+                form.submit();
+              }
+    })
+}
+$(function () {
+    validationFormForne();
+  });
+
+  function validationFormProd(){
+    $('#registerForn').validate({
+        rules: {
+            
+          fornCode:{
+            required: true ,
+            minlength: 4
+          },
+          fornName:{
+            required: true
+          },
+          nomeFan:{
+             minlength:5
+          },
           forCnpj:{
             required: true,
             number: true
@@ -277,7 +402,8 @@ $(function () {
     })
 }
 $(function () {
-    validationFormForne();
+    validationFormProd();
   });
+
 
 

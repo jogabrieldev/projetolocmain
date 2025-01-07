@@ -48,7 +48,7 @@ const crudRegisterClient = {
         return result.rows;
 
       } catch (error) {
-        console.error('Erro em listar bens:' , error.message)
+        console.error('Erro em listar cliente:' , error.message)
       }
       
     },

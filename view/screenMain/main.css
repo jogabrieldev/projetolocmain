@@ -47,11 +47,7 @@ input{
 }
 /* Container bens*/
 .containerAppBens{
-    /* display: flex;
-   height:650px;
-   background-color: darkgray;
-   width: 100%; */
-
+    
    display: none;
     background-color: darkgray;
     box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
@@ -145,6 +141,12 @@ ul{
     background-color: lightslategray;
     cursor: pointer;
     margin-right: 2.5%;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+.btnCadFabri:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(4px);
 }
 .btnCadTypeProd{
     width: 90%;
@@ -153,6 +155,13 @@ ul{
     background-color: lightslategray;
     cursor: pointer;
     margin-right: 2.5%;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.btnCadTypeProd:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(4px);
 }
 .btnCadMotorista{
     width: 90%;
@@ -161,6 +170,12 @@ ul{
     background-color: lightslategray;
     cursor: pointer;
     margin-right: 2.5%;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+.btnCadMotorista:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(4px);
 }
 
 /* Pagina relacionada aos bens */
@@ -217,8 +232,11 @@ table {
     font-size: 13px;
 }
 .editForm{
-    margin-left: 22%;
+    width:100%;
+  overflow: auto;
 }
+
+
 .bem-item p {
     margin: 5px 0;
   }
@@ -300,35 +318,11 @@ table {
     border: none;
 }
 /* container de registro de bens */
-.showContentBens{
-    width: 75%;
-    display: none;
-    background-color: darkgray;
-     min-height: 95%;
-    margin-left: 20%;
-    margin-top: 1.2%;
-    gap: 1.5%;
+ .showContentBens{
     overflow: auto;
-    box-sizing: border-box;
-   
-  
-}
+} 
 
-/* tudo sobre os campos bens */
-
-#formRegisterBens{
-    display: flex;
-   flex-direction: column;
-   gap: 20px;
-  background-color:darkgray;
-  padding: 20px;
-  border-radius: 8px;
-  max-width: 900px;
-  width: 108%;
-  box-sizing: border-box;
-  margin-right: 5%;
-  
-}
+/* moude de como os inputs vão mostrar */
 .formGroup{
     display: flex;
     justify-content: space-between;
@@ -351,8 +345,6 @@ table {
     margin-bottom: 5px;
     
 }
-
-
 
 /* botoes que estao na tela de registro */
 .btnOutNext{
@@ -378,3 +370,4 @@ table {
     border: none;
     height: 27px;
 }
+

@@ -60,7 +60,22 @@
     background-color: lightslategray;
     border: none;
 }
+.submitForn{
+    cursor: pointer;
+    width: 20%;
+    height: 26px;
+    background-color: lightslategray;
+    border: none;
+}
+
 .btnOutInitForn{
+    cursor: pointer;
+    width: 20%;
+    height: 26px;
+    background-color: lightslategray;
+    border: none;
+}
+.btnOutInitFornEdit{
     cursor: pointer;
     width: 20%;
     height: 26px;

@@ -1,4 +1,4 @@
-.containerAppProd{
+.containerAppTipoProd{
     display: none;
     background-color: darkgray;
     box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
@@ -9,10 +9,10 @@
     flex-direction: column;
     justify-content: space-between;
 }
-.listingProd{
+.listingTipoProd{
     overflow: auto;
 }
-.btnMainPageProd{
+.btnMainPageTipoProd{
     height: 40px;
     display: flex;
     justify-content: center;
@@ -20,7 +20,7 @@
     gap: 20px;
     margin-top: 3%;
 }
-.registerProd{
+.registerTipoProd{
     cursor: pointer;
     width: 15%;
     margin-bottom: 2%;
@@ -28,7 +28,7 @@
     border: none;
     height:28px;
 }
-.buttonDeleteProd{
+.buttonDeleteTipoProd{
     cursor: pointer;
     width: 15%;
     margin-bottom: 2%;
@@ -36,7 +36,7 @@
     border: none;
     height:28px;
 }
-.buttonEditProd{
+.buttonEditTipoProd{
     cursor: pointer;
     width: 15%;
     margin-bottom: 2%;
@@ -44,7 +44,7 @@
     border: none;
     height:28px;
 }
-.buttonExitProd{
+.buttonExitTipoProd{
     cursor: pointer;
     width: 15%;
     margin-bottom: 2%;
@@ -52,7 +52,7 @@
     border: none;
     height:28px;
 }
-.btnOutInitProd{
+.btnOutInitTp{
     cursor: pointer;
     width: 15%;
     margin-bottom: 2%;
@@ -60,7 +60,7 @@
     border: none;
     height:28px;
 }
-.btnOutInitProdEdit{
+.cadTp{
     cursor: pointer;
     width: 15%;
     margin-bottom: 2%;
@@ -68,11 +68,20 @@
     border: none;
     height:28px;
 }
-.cadProd{
+.cadTpEdit{
     cursor: pointer;
-    width: 16%;
+    width: 15%;
     margin-bottom: 2%;
     background-color: lightslategray; 
     border: none;
     height:28px;
 }
+.btnOutInitTpEdit{
+    cursor: pointer;
+    width: 15%;
+    margin-bottom: 2%;
+    background-color: lightslategray; 
+    border: none;
+    height:28px;
+}
+

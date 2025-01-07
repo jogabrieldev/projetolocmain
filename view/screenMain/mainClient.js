@@ -1,37 +1,37 @@
 // botoes relacionado aos clientes
 
-const btnRegisterGoods = document.querySelector(".btnCadBens");
-btnRegisterGoods.addEventListener("click", () => {
-  const containerAppClient = document.querySelector(".containerAppClient");
-  const containerAppBens = document.querySelector(".containerAppBens");
-  const containerAppForn = document.querySelector(".containerAppForn")
-    
-  containerAppForn.style.display = 'none'
-
-  containerAppClient.style.display = "none";
-  containerAppBens.style.display = "flex";
-});
-
-
 const btnRegisterClient = document.querySelector(".btnCadClie");
 btnRegisterClient.addEventListener("click", () => {
 
-  const containerAppBens = document.querySelector(".containerAppBens");
   const containerAppClient = document.querySelector(".containerAppClient");
-  const listingClient = document.querySelector(".listClient");
-  const btnMainPage = document.querySelector(".buttonsMainPage");
-  const containerAppForn = document.querySelector(".containerAppForn")
-  const containerAppProd = document.querySelector('.containerAppProd')
-    
-  containerAppForn.style.display = 'none'
-  containerAppBens.style.display = "none";
-  formRegisterClient.style.display = "none";
-  containerAppProd.style.display = 'none';
-  
+    containerAppClient.style.display = "flex";
 
-  containerAppClient.style.display = "flex";
-  listingClient.style.display = "flex";
-  btnMainPage.style.display = "flex";
+  const listingClient = document.querySelector(".listClient");
+     listingClient.style.display = "flex";
+
+  const btnMainPage = document.querySelector(".buttonsMainPage");
+   btnMainPage.style.display = "flex";
+
+  const containerAppForn = document.querySelector(".containerAppForn")
+    containerAppForn.style.display = 'none'
+
+  const containerAppProd = document.querySelector('.containerAppProd')
+  containerAppProd.style.display = 'none';
+
+  const containerAppFabri = document.querySelector('.containerAppFabri')
+    containerAppFabri.style.display = 'none'
+
+  const containerAppDriver = document.querySelector('.containerAppDriver')
+    containerAppDriver.style.display = 'none'
+    
+  const containerAppTypeProd = document.querySelector('.containerAppTipoProd')
+  containerAppTypeProd.style.display = 'none'
+
+  const containerAppBens = document.querySelector(".containerAppBens");
+   containerAppBens.style.display = "none";
+
+  formRegisterClient.style.display = "none";
+    
 });
 
 const buttonRegisterClient = document.querySelector(".registerClient");
@@ -47,26 +47,31 @@ buttonRegisterClient.addEventListener("click", () => {
 
 const buttonOutPageClient = document.querySelector(".btnOutInit");
 buttonOutPageClient.addEventListener("click", (event) => {
-  event.preventDefault();
-  const containerAppClient = document.querySelector(".containerAppClient");
-  const formEditRegisterClient = document.querySelector(".formEditClient");
+ event.preventDefault()
 
-  formEditRegisterClient.style.display = "none";
+  const listingClient = document.querySelector(".listClient");
+    listingClient.style.display = 'flex'
 
-  containerAppClient.style.display = "none";
-  return;
+  const btnMainPage = document.querySelector(".buttonsMainPage");
+     btnMainPage.style.display  ='flex'
+
+  const containeFormClient = document.querySelector('.containerOfForm')
+  containeFormClient.style.display = 'none'
+
+  
 });
 const buttonOutPageEdit = document.querySelector(".outPageEditClient");
 buttonOutPageEdit.addEventListener("click", (event) => {
   event.preventDefault();
+   
+  const listingClient = document.querySelector(".listClient");
+      listingClient.style.display = 'flex'
 
-  const containerAppClient = document.querySelector(".containerAppClient");
-  const formRegisterClient = document.querySelector("#formRegisterClient");
-  const formEditRegisterClient = document.querySelector(".formEditClient");
+  const btnMainPage = document.querySelector(".buttonsMainPage");
+     btnMainPage.style.display  ='flex'
 
-  formEditRegisterClient.style.display = "none";
-  formRegisterClient.style.display = "none";
-  containerAppClient.style.display = "none";
+  const containerEditClient = document.querySelector('.formEditClient')
+  containerEditClient.style.display = 'none'
 
   return;
 });
@@ -242,7 +247,7 @@ buttonDeleteClient.addEventListener("click", async () => {
   );
   if (!selectedCheckbox) {
     Toastify({
-      text: "Selecione um item para excluir",
+      text: "Selecione um Cliente para excluir",
       duration: 2000,
       close: true,
       gravity: "top",

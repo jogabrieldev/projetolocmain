@@ -58,7 +58,29 @@ const movementOfprod = {
         return res.status(500).json({ message: "erro no servidor" });
 
     }
-   }
+   },
+
+   updateProduct:  async(req, res)=> {
+    const prodId = req.params.id;
+    const updateData = req.body;
+   
+    Object.keys(updateData).forEach((key) => {
+      if (updateData[key] === "") {
+        updateData[key] = null;
+      }
+    });
+
+    try {
+
+      const updateProd = await prodRegister.updateOfProd(prodId, updateData);
+      res.json({ message: "produto atualizado com sucesso", produto: updateProd });
+
+    } catch (error) {
+
+      console.error("Erro ao atualizar o bem:", error);
+      res.status(500).json({ message: "Erro ao atualizar o produto", error });
+    }
+  }
 }
 
 module.exports = movementOfprod

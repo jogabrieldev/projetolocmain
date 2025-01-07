@@ -137,6 +137,7 @@ const AuthController = {
       id,
     ];
     const result = await userDataBase.query(query, values);
+    // console.log('dados enviados para o model:' ,result)
 
     return result.rows[0];
   },

@@ -58,7 +58,7 @@ const crudRegisterForn = {
             return result.rows;
     
           } catch (error) {
-            console.error('Erro em listar bens:' , error.message)
+            console.error('Erro em listar Fornecedor:' , error.message)
           }
       },
 
@@ -77,32 +77,39 @@ const crudRegisterForn = {
          
       },
 
-      updateForn: async(id , updateForn)=>{
+      updateForn: async(id , updateDataForn)=>{
           
         try {
             const query = `UPDATE cadforn SET fornnome = $1 , fornnoft = $2 , forncnpj = $3 , forncep = $4 , fornrua = $5 , forncity = $6 , fornestd = $7  ,forncelu = $8 , fornmail = $9 , fornbanc = $10 , fornagen = $11 , forncont = $12 , fornpix = $13 , forndtcd = $14 , fornptsv = $15 WHERE forncode = $16 RETURNING *; ` 
 
             const value = [
-              updateForn.fornnome || null,
-              updateForn.fornnoft || null,
-              updateForn.forncnpj || null,
-              updateForn.forncep || null,
-              updateForn.fornrua || null,
-              updateForn.forncity || null,
-              updateForn.fornestd || null,
-              updateForn.forncelu || null,
-              updateForn.fornmail || null,
-              updateForn.fornbanc || null,
-              updateForn.fornagen || null,
-              updateForn.forncont || null,
-              updateForn.fornpix || null,
-              updateForn.forndtcd || null,
-              updateForn.fornptsv || null,
+              updateDataForn.fornnome, 
+              updateDataForn.fornnoft, 
+              updateDataForn.forncnpj, 
+              updateDataForn.forncep, 
+              updateDataForn.fornrua, 
+              updateDataForn.forncity, 
+              updateDataForn.fornestd, 
+              updateDataForn.forncelu, 
+              updateDataForn.fornmail, 
+              updateDataForn.fornbanc, 
+              updateDataForn.fornagen,
+              updateDataForn.forncont, 
+              updateDataForn.fornpix,
+              updateDataForn.forndtcd, 
+              updateDataForn.fornptsv, 
               id
             ]
+            
+            // console.log("Valores enviados para o banco:", value);
+
 
             const result = await userDbFo.query(query , value)
+
+            console.log("Resultado da atualização:", result.rows);  // Log para verificar o resultado
             return result.rows[0]
+
+            
         } catch (error) {
            console.error('Erro no model' , error)
         }

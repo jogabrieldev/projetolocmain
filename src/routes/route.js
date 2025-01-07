@@ -7,7 +7,9 @@ const movementGoods = require("../controllers/goodsRegister.js");
 const movementClient = require('../controllers/clientRegister.js')
 const movementForne = require('../controllers/fornRegister.js');
 const movementOfForn = require("../controllers/fornRegister.js");
-const movementOfProd  = require('../controllers/prodRegister.js')
+const movementOfProd  = require('../controllers/prodRegister.js');
+const movementOfFabri = require('../controllers/fabriRegister.js');
+const movementOfTypeProd = require("../controllers/typeProdRegister.js")
 
 route.get("/", () => {
   routeMain.submitStart();
@@ -80,9 +82,52 @@ route.get('/api/listProd' , (req , res)=>{
   movementOfProd.listofProd(req , res)
 })
 
+route.get('/api/produto/:id', (req , res)=>{
+  movementOfProd.listofProd(req , res)
+})
+
 route.delete('/api/deleteprod/:id' , (req , res)=>{
   movementOfProd.deleteProd(req , res)
 })
 
+route.put('/api/updateprod/:id' , (req , res)=>{
+  movementOfProd.updateProduct(req, res)
+})
+
+//fabricante
+
+route.post('/api/fabri/submit' , (req , res)=>{
+  movementOfFabri.registerOfFabri(req , res)
+})
+
+route.get('/api/listfabri' , (req , res)=>{
+  movementOfFabri.listingOfFabri(req ,res)
+})
+
+route.delete('/api/deletefabri/:id' , (req , res )=>{
+  movementOfFabri.deleteOfFabri(req , res)
+})
+
+route.put('/api/updatefabe/:id' ,(req , res)=>{
+  movementOfFabri.updateFabri(req ,res)
+})
+
+// tipo do produto
+
+route.post('/api/typeprod/submit' , (req , res)=>{
+   movementOfTypeProd.registerTyperProd(req , res)
+})
+
+route.get('/api/listingTypeProd' , (req, res )=>{
+  movementOfTypeProd.listingOfTypeProd(req , res)
+})
+
+route.delete('/api/deletetp/:id', (req , res)=>{
+  movementOfTypeProd.deleteOfTypeProd(req , res)
+})
+
+route.put('/api/updatetypeprod/:id', (req , res)=>{
+  movementOfTypeProd.updateOfTypeProd(req , res)
+})
 
 module.exports = route;

@@ -32,6 +32,8 @@ const movementOfBens = {
   async updateGoods(req, res) {
     const bemId = req.params.id;
     const updatedData = req.body;
+   
+    // console.log( "esse e meu corpo" ,updatedData)
 
     Object.keys(updatedData).forEach((key) => {
       if (updatedData[key] === "") {
@@ -40,9 +42,12 @@ const movementOfBens = {
     });
 
     try {
+
       const updatedBem = await userRegister.updateBens(bemId, updatedData);
       res.json({ message: "Bem atualizado com sucesso", bem: updatedBem });
+
     } catch (error) {
+
       console.error("Erro ao atualizar o bem:", error);
       res.status(500).json({ message: "Erro ao atualizar o bem", error });
     }
@@ -70,3 +75,6 @@ const movementOfBens = {
 };
 
 module.exports = movementOfBens;
+
+
+

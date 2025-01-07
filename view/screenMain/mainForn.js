@@ -8,11 +8,16 @@ btnForn.addEventListener('click' , ()=>{
     const containerAppBens = document.querySelector(".containerAppBens");
     const containerAppForn = document.querySelector(".containerAppForn")
     const containerAppProd = document.querySelector('.containerAppProd')
+    const containerAppFabri = document.querySelector('.containerAppFabri')
+    const containerAppTypeProd = document.querySelector('.containerAppTipoProd')
+     const containerAppDriver = document.querySelector('.containerAppDriver')
+    containerAppDriver.style.display = 'none'
     const formRegisterForn = document.querySelector('.formRegisterForn')
     const listingForn = document.querySelector('.listingForn')
     const btnMainPageForm = document.querySelector('.btnMainPageForn')
 
-
+    containerAppTypeProd.style.display = 'none'
+    containerAppFabri.style.display = 'none'
      formRegisterForn.style.display = 'none'
     containerAppBens.style.display = 'none'
     containerAppClient.style.display = 'none'
@@ -47,10 +52,35 @@ btnRegisterForn.addEventListener('click' , ()=>{
 const btnOutPage = document.querySelector('.btnOutInitForn')
 btnOutPage.addEventListener('click' , (e)=>{
     e.preventDefault()
-    const containerAppForn = document.querySelector(".containerAppForn")
 
-    containerAppForn.style.display = 'none'
+       const listingForn = document.querySelector('.listingForn')
+          listingForn.style.display = 'flex'
 
+       const btnMainPageForm = document.querySelector('.btnMainPageForn')
+          btnMainPageForm.style.display = 'flex'
+     
+        const containerFormForn = document.querySelector('.formRegisterForn')
+          containerFormForn.style.display = 'none'
+
+})
+
+const btnOutInitForn = document.querySelector('.btnOutInitFornEdit')
+btnOutInitForn.addEventListener('click' , (event)=>{
+
+    event.preventDefault()
+
+     const caixaForn = document.querySelector('.formEditRegisterForn')
+       caixaForn.style.display = 'none'
+
+
+     const listingForn = document.querySelector('.listingForn')
+       listingForn.style.display = 'flex'
+
+
+     const btnMainPageForm = document.querySelector('.btnMainPageForn')
+        btnMainPageForm.style.display  ='flex'
+   
+   return;
 })
 
 const formRegisterForn = document.querySelector("#registerForn");
@@ -83,9 +113,6 @@ formRegisterForn.addEventListener("submit", async (event) => {
       body: JSON.stringify(data),
     }).then((response) => {
 
-    // console.log('response status: ' , response.status)
-    // console.log('response ok', response.ok)
-
       if (response.ok) {
         console.log("deu certo");
 
@@ -98,7 +125,7 @@ formRegisterForn.addEventListener("submit", async (event) => {
           backgroundColor: "green",
         }).showToast();
     
-        // document.querySelector("#registerForn").reset();
+        document.querySelector("#registerForn").reset();
         return;
         
       } else {
@@ -175,16 +202,15 @@ async function fetchListFornecedores() {
           checkbox.type = "checkbox";
           checkbox.name = "selectFornecedor";
           checkbox.value = fornecedor.forncode;
-          // checkbox.dataset.fornecedor = JSON.stringify(fornecedor);
+          
+          // const fornecedorData = JSON.stringify(fornecedor);
+          // if (fornecedorData) {
+          //   checkbox.dataset.fornecedor = fornecedorData;
+          // } else {
+          //   console.warn(`Fornecedor inválido encontrado:`, fornecedor);
+          // }
 
-  
-          const fornecedorData = JSON.stringify(fornecedor);
-          if (fornecedorData) {
-            checkbox.dataset.fornecedor = fornecedorData;
-          } else {
-            console.warn(`Fornecedor inválido encontrado:`, fornecedor);
-          }
-  
+          checkbox.dataset.fornecedor = JSON.stringify(fornecedor);
           checkboxCell.appendChild(checkbox);
 
           linha.insertCell().textContent = fornecedor.forncode;
@@ -294,170 +320,164 @@ async function fetchListFornecedores() {
     }
   }
 
-  // Atualização
 
+  // // atualização
+ 
   const editButtonForn = document.querySelector(".buttonEditForn");
 
-  editButtonForn.addEventListener("click", () => {
-    const selectedCheckbox = document.querySelector('input[name="selectFornecedor"]:checked');
-  
-    if (!selectedCheckbox) {
-      Toastify({
-        text: "Selecione um fornecedor para editar",
-        duration: 2000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-      document.querySelector('.btnMainPageForn').style.display = 'flex';
-      return;
-    }
-  
-    const fornData = selectedCheckbox.dataset.fornecedor;
-  
-    if (!fornData) {
-      console.error("O atributo data-fornecedor está vazio ou indefinido.");
-      return;
-    }
-  
-    try {
-      const fornecedorSelecionado = JSON.parse(fornData);
-      console.log("Fornecedor selecionado para edição:", fornecedorSelecionado);
-  
-      // Atualizar campos do formulário
-      const campos = [
-        { id: "fornCode", valor: fornecedorSelecionado.forncode },
-        { id: "fornName", valor: fornecedorSelecionado.fornnome },
-        { id: "nomeFan", valor: fornecedorSelecionado.fornnoft },
-        { id: "fornCnpj", valor: fornecedorSelecionado.forncnpj },
-        { id: "fornCep", valor: fornecedorSelecionado.forncep },
-        { id: "fornRua", valor: fornecedorSelecionado.fornrua },
-        { id: "fornCity", valor: fornecedorSelecionado.forncity },
-        { id: "fornEstd", valor: fornecedorSelecionado.fornestd },
-        { id: "fornCelu", valor: fornecedorSelecionado.forncelu },
-        { id: "fornMail", valor: fornecedorSelecionado.fornmail },
-        { id: "fornBank", valor: fornecedorSelecionado.fornbanc },
-        { id: "fornAge", valor: fornecedorSelecionado.fornagen },
-        { id: "fornCont", valor: fornecedorSelecionado.forncont },
-        { id: "fornPix", valor: fornecedorSelecionado.fornpix },
-        { id: "fornDtcd", valor: fornecedorSelecionado.forndtcd },
-        { id: "fornDisPro", valor: fornecedorSelecionado.fornptsv }
-      ];
-  
-      campos.forEach(({ id, valor }) => {
-        const elemento = document.getElementById(id);
-        if (elemento) {
-          elemento.value = valor || ""; // Preencher com valor ou vazio
-        } else {
-          console.warn(`Elemento com ID '${id}' não encontrado.`);
-        }
-      });
-     
-  
-      // Mostrar formulário de edição
-      document.querySelector(".formEditRegisterForn").style.display = "flex";
-      document.querySelector(".listingForn").style.display = "none";
-    } catch (error) {
-      console.error("Erro ao fazer parse de data-fornecedor:", error);
-    }
-  });
-  
+editButtonForn.addEventListener("click", (e) => {
 
-  // atualização
- 
-  async function editAndUpdateOfForn() {
-    const formEditForn = document.querySelector("#formEditForn");
-  
-    formEditForn.addEventListener("submit", async (event) => {
-      event.preventDefault();
-  
-      const formData = new FormData(event.target);
-      const data = Object.fromEntries(formData.entries());
-  
-      const selectedCheckbox = document.querySelector('input[name="selectFornecedor"]:checked');
-  
-      if (!selectedCheckbox) {
-        console.error("Nenhum fornecedor foi selecionado.");
-        return;
-      }
-  
-      const fornData = selectedCheckbox.dataset.fornecedor;
-  
-      let fornIdParsed;
-      try {
-        fornIdParsed = JSON.parse(fornData).forncode;
-        console.log("Fornecedor ID:", fornIdParsed);  // Verifique se o ID está correto
-      } catch (error) {
-        console.error("Erro ao fazer parse de fornId:", error);
-        return;
-      }
-  
-      const updateForn = {
+  e.preventDefault()
+  const selectedCheckbox = document.querySelector('input[name="selectFornecedor"]:checked');
 
-        forncode: document.getElementById("fornCode").value || '',  // Garantir que seja uma string vazia se estiver vazio
-       fornnome: document.getElementById("fornName").value || '',
-  fornnoft: document.getElementById("nomeFan").value || '',
-  forncnpj: document.getElementById("fornCnpj").value || '',
-  forncep: document.getElementById("fornCep").value || '',
-  fornrua: document.getElementById("fornRua").value || '',
-  forncity: document.getElementById("fornCity").value || '',
-  fornestd: document.getElementById("fornEstd").value || '',
-  forncelu: document.getElementById("fornCelu").value || '',
-  fornMail: document.getElementById("fornMail").value || '',
-  fornbanc: document.getElementById('fornBank').value || '',
-  fornagen: document.getElementById('fornAge').value || '',
-  forncont: document.getElementById('fornCont').value || '',
-  fornpix: document.getElementById('fornPix').value || '',
-  forndtcd: document.getElementById('fornDtcd').value || null,
-  fornptsv: document.getElementById('fornDisPro').value || ''
-       
-      };
-  
-      console.log("Dados a serem atualizados:", updateForn);  
-
-      
-      try {
-        const response = await fetch(`/api/updateforn/${fornIdParsed}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updateForn)
-        });
-  
-        if (response.ok) {
-          console.log('atualização bem sucedida')
-          Toastify({
-            text: `Fornecedor '${fornIdParsed}' atualizado com sucesso!`,
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)"
-          }).showToast();
-
-         
-
-          // setTimeout(() => {
-          //   window.location.reload();
-          // }, 3000);
-
-        } else {
-          const errorText = await response.text();
-          console.error("Erro ao atualizar fornecedor:", errorText);
-          Toastify({
-            text: `Erro ao atualizar fornecedor: ${errorText}`,
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "red"
-          }).showToast();
-        }
-      } catch (error) {
-        console.error("Erro na requisição:", error);
-      }
-    });
+  if (!selectedCheckbox) {
+    Toastify({
+      text: "Selecione um fornecedor para editar",
+      duration: 2000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+    document.querySelector('.btnMainPageForn').style.display = 'flex';
+    return;
   }
   
-  editAndUpdateOfForn();
-  
+  const fornData = selectedCheckbox.dataset.fornecedor;
+
+  if (!fornData) {
+    console.error("O atributo data-fornecedor está vazio ou indefinido.");
+    return;
+  }
+
+  try {
+    const fornecedorSelecionado = JSON.parse(fornData);
+    console.log("Fornecedor selecionado para edição:", fornecedorSelecionado);
+
+    const campos = [
+      { id: "editFornCode", valor: fornecedorSelecionado.forncode },
+      { id: "editFornName", valor: fornecedorSelecionado.fornnome },
+      { id: "editNomeFan", valor: fornecedorSelecionado.fornnoft },
+      { id: "editFornCnpj", valor: fornecedorSelecionado.forncnpj },
+      { id: "editFornCep", valor: fornecedorSelecionado.forncep },
+      { id: "editFornRua", valor: fornecedorSelecionado.fornrua },
+      { id: "editFornCity", valor: fornecedorSelecionado.forncity },
+      { id: "editFornEstd", valor: fornecedorSelecionado.fornestd },
+      { id: "editFornCelu", valor: fornecedorSelecionado.forncelu },
+      { id: "editFornMail", valor: fornecedorSelecionado.fornmail },
+      { id: "editFornBank", valor: fornecedorSelecionado.fornbanc },
+      { id: "editFornAge", valor: fornecedorSelecionado.fornagen },
+      { id: "editFornCont", valor: fornecedorSelecionado.forncont },
+      { id: "editFornPix", valor: fornecedorSelecionado.fornpix },
+      { id: "editFornDtcd", valor: fornecedorSelecionado.forndtcd },
+      { id: "editFornDisPro", valor: fornecedorSelecionado.fornptsv }
+    ];
+
+    campos.forEach(({ id, valor }) => {
+      const elemento = document.getElementById(id);
+      if (elemento) {
+        elemento.value = valor || ""; 
+      } else {
+        console.warn(`Elemento com ID '${id}' não encontrado.`);
+      }
+    });
+
+    document.querySelector(".formEditRegisterForn").style.display = "flex";
+    document.querySelector(".listingForn").style.display = "none";
+  } catch (error) {
+    console.error("Erro ao fazer parse de data-fornecedor:", error);
+  }
+});
+
+// função fetch
+
+async function editAndUpdateOfForn() {
+  const formEditForn = document.querySelector("#formEditForn");
+
+  formEditForn.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData.entries());
+
+
+
+    const selectedCheckbox = document.querySelector(
+      'input[name="selectFornecedor"]:checked'
+    );
+
+    if (!selectedCheckbox) {
+      console.error("Nenhum checkbox foi selecionado.");
+      return;
+    }
+
+    const fornecedorId = selectedCheckbox.dataset.fornecedor;
+
+    if (!fornecedorId) {
+      console.error("O atributo data-fornecedor está vazio ou inválido.");
+      return;
+    }
+
+    let fornIdParsed;
+    try {
+      fornIdParsed = JSON.parse(fornecedorId).forncode;
+    } catch (error) {
+      console.error("Erro ao fazer parse de bemId:", error);
+      return;
+    }
+
+    const updateForn = {
+      forncode: document.getElementById("editFornCode").value,
+      fornnome: document.getElementById("editFornName").value,
+      fornnoft: document.getElementById("editNomeFan").value,
+      forncnpj: document.getElementById("editFornCnpj").value,
+      forncep: document.getElementById("editFornCep").value,
+      fornrua: document.getElementById("editFornRua").value, 
+      forncity: document.getElementById("editFornCity").value,
+      fornestd: document.getElementById("editFornEstd").value, 
+      forncelu: document.getElementById("editFornCelu").value,
+      fornmail: document.getElementById("editFornMail").value,
+      fornbanc: document.getElementById('editFornBank').value,
+      fornagen: document.getElementById('editFornAge').value,
+      forncont: document.getElementById('editFornCont').value,
+      fornpix: document.getElementById('editFornPix').value,
+      forndtcd: document.getElementById('editFornDtcd')?.value || null,
+      fornptsv: document.getElementById('editFornDisPro').value
+    };
+
+    try {
+      const response = await fetch(`/api/updateforn/${fornIdParsed}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updateForn)
+      });
+
+      console.log("resposta:", response);
+
+      if (response.ok) {
+        console.log("Atualização bem-sucedida");
+
+        Toastify({
+          text: `Bem '${fornIdParsed}' Atualizado com sucesso!!`,
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "green",
+        }).showToast();
+
+        setTimeout(() => {
+          window.location.reload();
+          document.querySelector(".formEditRegisterForn").style.display = "none";
+        }, 3000);
+
+        formEditForn.reset();
+      } else {
+        console.error("Erro ao atualizar fornecedor:", await response.text());
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+    }
+  });
+}
+editAndUpdateOfForn();

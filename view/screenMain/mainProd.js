@@ -3,15 +3,19 @@ btnProd.addEventListener('click' , ()=>{
 
     const containerAppProd = document.querySelector('.containerAppProd')
     const containerAppClient = document.querySelector(".containerAppClient");
+    const containerAppFabri = document.querySelector('.containerAppFabri')
     const containerAppBens = document.querySelector(".containerAppBens");
     const containerAppForn = document.querySelector(".containerAppForn")
+    const containerAppTypeProd = document.querySelector('.containerAppTipoProd')
     const listingProd  = document.querySelector('.listingProd')
     const btnMainPageProd =  document.querySelector('.btnMainPageProd')
 
     listingProd.style.display = 'flex'
     containerAppProd.style.display = 'flex'
     btnMainPageProd.style.display = 'flex'
-
+     
+    containerAppTypeProd.style.display = 'none'
+    containerAppFabri.style.display = 'none'
     containerAppClient.style.display = 'none'
     containerAppBens.style.display = 'none'
     containerAppForn.style.display = 'none'
@@ -29,24 +33,46 @@ registerProd.addEventListener('click' , ()=>{
     listingProd.style.display = 'none'
     btnMainPageProd.style.display = 'none'
 })
+
 const btnExitProd = document.querySelector('.buttonExitProd')
 btnExitProd.addEventListener('click'  ,()=>{
     const containerAppProd = document.querySelector('.containerAppProd')
 
     containerAppProd.style.display = 'none'
 })
+
+
 const btnOutInitProd = document.querySelector('.btnOutInitProd')
 btnOutInitProd.addEventListener('click', (event)=>{
     event.preventDefault()
-    const formRegisterProduto = document.querySelector('.formRegisterProduto')
-    const containerAppProd = document.querySelector('.containerAppProd')
 
-    containerAppProd.style.display = 'none'
+    const btnMainPageProd =  document.querySelector('.btnMainPageProd')
+       btnMainPageProd.style.display = 'flex'
 
-    formRegisterProduto.style.display = 'none'
+    const listingProd  = document.querySelector('.listingProd')
+        listingProd.style.display = 'flex'
+
+    const containerFormProd = document.querySelector('.formRegisterProd')
+      containerFormProd.style.display = 'none'
+
 })
+ const btnOutEditForm = document.querySelector('.btnOutInitProdEdit')
+ btnOutEditForm .addEventListener('click' , (event)=>{
 
-// registrar no banco
+    event.preventDefault()
+
+  const btnMainPageProd =  document.querySelector('.btnMainPageProd')
+       btnMainPageProd.style.display = 'flex'
+
+    const listingProd  = document.querySelector('.listingProd')
+        listingProd.style.display = 'flex'
+
+    const containerFormEditProd = document.querySelector('.formEditProd')
+    containerFormEditProd.style.display = 'none'
+ })
+
+
+ //registro do produto
 const formRegisterProduto = document.querySelector('.formRegisterProduto')
 formRegisterProduto.addEventListener('submit' , async (event)=>{
   event.preventDefault()
@@ -152,6 +178,9 @@ async function fetchListProdutos() {
           checkbox.type = "checkbox";
           checkbox.name = "selectProduto";
           checkbox.value = produto.prodCode;
+          
+          // checkbox.setAttribute("data-produto", JSON.stringify({ prodcode: produto.prodCode }));
+          //  linha.appendChild(checkbox);
   
           checkbox.dataset.produto = JSON.stringify(produto);
           checkboxCell.appendChild(checkbox);
@@ -181,6 +210,7 @@ async function fetchListProdutos() {
   
   fetchListProdutos();
 
+  // deletar produto
  const btnDeleteProd = document.querySelector('.buttonDeleteProd')
  btnDeleteProd.addEventListener('click' , async ()=>{
          
@@ -189,7 +219,7 @@ async function fetchListProdutos() {
       );
       if (!selectedCheckbox) {
         Toastify({
-          text: "Selecione um Fornecedor para excluir",
+          text: "Selecione um Produto para excluir",
           duration: 2000,
           close: true,
           gravity: "top",
@@ -256,4 +286,171 @@ async function deleteProd(id , rowProd) {
         }).showToast();
       }
 }
+
+//  Editar
+const editProdButton = document.querySelector(".buttonEditProd");
+editProdButton.addEventListener("click", (event) => {
   
+  const selectedCheckbox = document.querySelector(
+    'input[name="selectProduto"]:checked'
+  );
+
+  if (!selectedCheckbox) {
+    Toastify({
+      text: "Selecione um Produto para editar",
+      duration: 2000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+    return;
+  }
+
+  const produtoData = selectedCheckbox.dataset.produto;
+  if (!produtoData) {
+    console.error("O atributo data-bem está vazio ou indefinido.");
+    return;
+  }
+
+  try {
+    const produtoSelecionado = JSON.parse(produtoData);
+    // console.log("Editar item:", produtoSelecionado);
+
+    // Campos e IDs correspondentes
+    const campos = [
+      { id: "editProdCode", valor: produtoSelecionado.prodcode },
+      { id: "editProdDesc", valor: produtoSelecionado.proddesc },
+      { id: "editProdTipo", valor: produtoSelecionado.prodtipo },
+      { id: "editProdUni", valor: produtoSelecionado.produnid },
+      { id: "editProdCofa", valor: produtoSelecionado.prodcofa },
+      { id: "editProdData", valor: produtoSelecionado.proddtuc },
+      { id: "editProdValor", valor: produtoSelecionado.prodvluc },
+      { id: "editProdPeli", valor: produtoSelecionado.prodpeli },
+      { id: "editProdPebr", valor: produtoSelecionado.prodpebr },
+      { id: "editProdAtiv", valor: produtoSelecionado.prodativ },
+    ];
+
+      //  console.log(campos)
+
+    // Atualizar valores no formulário
+    campos.forEach(({ id, valor }) => {
+      const elemento = document.getElementById(id);
+      if (elemento) {
+        elemento.value = valor || "";
+      } else {
+        console.warn(`Elemento com ID '${id}' não encontrado.`);
+      }
+    });
+
+    // Mostrar o formulário de edição e ocultar a lista
+    const spaceEditprod = document.querySelector('.formEditProd')
+    const btnMainPageProd =  document.querySelector('.btnMainPageProd')
+    const listingProd  = document.querySelector('.listingProd')
+
+    if (spaceEditprod) {
+      spaceEditprod.style.display = "flex";
+    } else {
+      console.error("O formulário de edição não foi encontrado.");
+    }
+
+    if ( listingProd ) {
+      listingProd .style.display = "none";
+    } else {
+      console.error("A lista de produto não foi encontrada.");
+    }
+
+    if(btnMainPageProd){
+      btnMainPageProd.style.display = 'none'
+    }
+  } catch (error) {
+    console.error("Erro ao fazer parse de data-bem:", error);
+  }
+});
+
+//função
+async function editAndUpdateOfProduct() {
+  const formEditProd = document.querySelector(".editProd");
+
+  formEditProd.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData.entries());
+
+  
+
+    const selectedCheckbox = document.querySelector(
+      'input[name="selectProduto"]:checked'
+    );
+
+    if (!selectedCheckbox) {
+      console.error("Nenhum checkbox foi selecionado.");
+      return;
+    }
+
+    const produtoId = selectedCheckbox.dataset.produto;
+
+    if (!produtoId) {
+      console.error("O atributo data-bem está vazio ou inválido.");
+      return;
+    }
+
+    let prodIdParsed;
+    try {
+      prodIdParsed = JSON.parse(produtoId).prodcode;
+    } catch (error) {
+      console.error("Erro ao fazer parse de bemId:", error);
+      return;
+    }
+
+    const updateProduct = {
+      prodcode: document.getElementById("editProdCode").value,
+      proddesc: document.getElementById("editProdDesc").value,
+      prodtipo: document.getElementById("editProdTipo").value,
+      produnid: document.getElementById("editProdUni").value,
+      prodcofa: document.getElementById("editProdCofa").value,
+      proddtuc: document.getElementById("editProdData").value || null,
+      prodvluc: document.getElementById("editProdValor").value,
+      prodpeli: document.getElementById("editProdPeli").value, 
+      prodpebr: document.getElementById("editProdPebr").value,
+      prodativ: document.getElementById("editProdAtiv").value,
+    };
+
+    try {
+      const response = await fetch(`/api/updateprod/${prodIdParsed}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updateProduct),
+      });
+
+      console.log("resposta:", response);
+
+      if (response.ok) {
+        console.log("Atualização bem-sucedida");
+
+        Toastify({
+          text: `Bem '${prodIdParsed}' Atualizado com sucesso!!`,
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "green",
+        }).showToast();
+
+        setTimeout(() => {
+          window.location.reload();
+          document.querySelector(".formEditProd").style.display = "none";
+        }, 3000);
+
+        formEditProd.reset();
+      } else {
+        console.error("Erro ao atualizar produto:", await response.text());
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+    }
+  });
+}
+editAndUpdateOfProduct();
+
