@@ -27,7 +27,15 @@
     background-color: lightslategray; 
     border: none;
     height:28px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
 }
+
+.registerTipoProd:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
 .buttonDeleteTipoProd{
     cursor: pointer;
     width: 15%;
@@ -35,7 +43,15 @@
     background-color: lightslategray; 
     border: none;
     height:28px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
 }
+
+.buttonDeleteTipoProd:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
 .buttonEditTipoProd{
     cursor: pointer;
     width: 15%;
@@ -43,7 +59,15 @@
     background-color: lightslategray; 
     border: none;
     height:28px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
 }
+
+.buttonEditTipoProd:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
 .buttonExitTipoProd{
     cursor: pointer;
     width: 15%;
@@ -51,7 +75,15 @@
     background-color: lightslategray; 
     border: none;
     height:28px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
 }
+
+.buttonExitTipoProd:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
 .btnOutInitTp{
     cursor: pointer;
     width: 15%;

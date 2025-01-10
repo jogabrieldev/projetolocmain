@@ -1,5 +1,5 @@
 
-//Função de validação
+// bens
 function validationFormGoods() {
   $('#formRegisterBens').validate({
     rules: {
@@ -42,40 +42,40 @@ function validationFormGoods() {
     },
     messages: {
       code: {
-        required: "Por favor, insira o código.",
+        required: "Obrigatorio",
         minlength: "O código deve ter no mínimo 3 caracteres."
       },
       name: {
-        required: "Por favor, insira um nome.",
+        required: "Obrigatorio",
         minlength: "O nome deve ter no mínimo 4 caracteres."
       },
       cofa: {
-        required: "Por favor, insira o código COFA."
+        required: "Obrigatorio"
       },
       model: {
-        required: "Por favor, insira o modelo."
+        required: "Obrigatorio"
       },
       serial: {
-        required: "Por favor, insira o número de série.",
+        required: "Obrigatorio",
         minlength: "O número de série deve ter no mínimo 5 caracteres."
       },
       dtCompra: {
-        required: "Por favor, insira uma data válida.",
+        required: "Obrigatorio",
         date: "Insira uma data no formato correto."
       },
       valor: {
-        required: "Por favor, insira o valor."
+        required: "Obrigatorio"
       },
       ntFiscal: {
-        required: "Por favor, insira o número da nota fiscal.",
+        required: "Obrigatorio",
         minlength: "O número da nota fiscal deve ter no mínimo 5 caracteres."
       },
       cofo: {
-        required: "Por favor, insira o código do fornecedor.",
+        required: "Obrigatorio",
         minlength: "O código do fornecedor deve ter no mínimo 4 caracteres."
       },
       valorAlug: {
-        required: "Por favor, insira o valor do aluguel."
+        required: "Obrigatorio"
       }
     },
     errorPlacement: function (error, element) {
@@ -94,7 +94,6 @@ function validationFormGoods() {
   });
 }
 
-// Inicialize no carregamento do documento
 $(function () {
   validationFormGoods();
 });
@@ -123,10 +122,10 @@ function validationFormClient(){
                 required: true,
                 date: true
             },
-            clieCelu:{
-              required: true,
-              number: true
-           },
+          //   clieCelu:{
+          //     required: true,
+          //     number: true
+          //  },
            clieCity:{
             required: true,
             minlength:4
@@ -170,10 +169,10 @@ function validationFormClient(){
                     required: 'insira uma data',
                     date: 'insira uma data valida'
                 },
-                clieCelu:{
-                    required: 'Insira o numero de telefone',
-                    number: 'valor tem que ser numerico'
-                },
+                // clieCelu:{
+                //     required: 'Insira o numero de telefone',
+                //     number: 'valor tem que ser numerico'
+                // },
                 clieCity:{
                   required: "Obrigatorio",
                   minlength: 'Caracteres minimos são 4'
@@ -215,7 +214,7 @@ $(function () {
     validationFormClient();
   });
 
-
+ // fornecedor
   function validationFormForne(){
     $('#registerForn').validate({
         rules: {
@@ -233,7 +232,7 @@ $(function () {
           fornCnpj:{
             required: true,
             number: true,
-            minlength: 13
+          
           },
           fornCep:{
             required: true,
@@ -250,7 +249,6 @@ $(function () {
           },
           fornMail:{
             required: true,
-            mail: true
           },
           fornBank:{
             required: true
@@ -341,50 +339,42 @@ $(function () {
     validationFormForne();
   });
 
+  //produto
   function validationFormProd(){
-    $('#registerForn').validate({
+    $('.formRegisterProduto').validate({
         rules: {
             
-          fornCode:{
+          prodCode:{
             required: true ,
-            minlength: 4
           },
-          fornName:{
+          prodDesc:{
             required: true
           },
-          nomeFan:{
-             minlength:5
+          prodValor:{
+             required: true
           },
-          forCnpj:{
-            required: true,
-            number: true
-          },
-          forCep:{
-            required: true,
-            number: true
+          prodData:{
+            date: true
           }
+          
 
       },
             messages: {
-              fornCode:{
+
+              prodCode:{
                 required: 'obrigatorio',
-                minlength: 'minimo 4 caracteres'
               },
-              fornName:{
+              prodDesc:{
                  required:'Obrigatorio'
               },
-              nomeFan:{
-                minlength:'minimo 5 caracteres'
+              prodValor:{
+               required: "Obrigatorio"
              },
-             forCnpj:{
-               required:'Obrigatorio',
-               number: 'Somente valor numerico'
-             },
-             forCep:{
-                required:'Obrigatorio',
-                number: 'Somente valores numericos'
+             prodData:{
+              date: 'Insira uma data valida'
              }
-            },
+
+        },
 
             errorPlacement: function (error, element) {
                 error.addClass('error-text');
@@ -404,6 +394,218 @@ $(function () {
 $(function () {
     validationFormProd();
   });
+
+// fabricante 
+
+function validationFormFabric(){
+  $('.formRegisterFabricante').validate({
+      rules: {
+          
+        fabeCode:{
+          required: true ,
+        },
+        fabeDesc:{
+          required: true
+        },
+        fabeCate:{
+           required: true
+        },
+        fabeCtct:{
+          required: true
+        }
+        
+
+    },
+          messages: {
+
+            fabeCode:{
+              required: 'obrigatorio',
+            },
+            fabeDesc:{
+               required:'Obrigatorio'
+            },
+            fabeCate:{
+             required: "Obrigatorio"
+           },
+           fabeCtct:{
+            required: "Obrigatorio"
+           }
+          
+          },
+
+          errorPlacement: function (error, element) {
+              error.addClass('error-text');
+              error.insertAfter(element);
+            },
+            highlight: function (element) {
+              $(element).addClass('error-field');
+            },
+            unhighlight: function (element) {
+              $(element).removeClass('error-field');
+            },
+            submitHandler: function (form) {
+              form.submit();
+            }
+  })
+}
+$(function () {
+  validationFormFabric();
+});
+
+// motorista 
+
+function  validationFormMoto(){
+  $('.formRegisterDriver').validate({
+      rules: {
+          
+        motoCode:{
+          required: true ,
+        },
+        motoNome:{
+          required: true
+        },
+        motoDtnc:{
+           required: true,
+           date: true
+        },
+        motoCpf:{
+          required: true
+        },
+        motoDtch:{
+          required: true,
+          date: true
+        },
+        motoDtvc:{
+          required: true,
+          date: true
+        },
+        motoOrem:{
+          required: true
+        },
+        motoCep:{
+           required: true
+        },
+        motoRua:{
+           required: true
+        },
+        motoCity:{
+           required: true
+        }
+
+
+    },
+          messages: {
+
+            motoCode:{
+              required: "Obrigatorio" ,
+            },
+            motoNome:{
+              required: "Obrigatorio"
+            },
+            motoDtnc:{
+               required: 'Obrigatorio',
+               date: 'Insira uma data valida'
+            },
+            motoCpf:{
+              required: "Obrigatorio"
+            },
+            motoDtch:{
+              required: "Obrigatorio",
+              date: 'Insira uma data valida'
+            },
+            motoDtvc:{
+              required: 'Obrigatorio',
+              date: "Insira uma data valida"
+            },
+            motoOrem:{
+              required: "Obrigatorio"
+            },
+            motoCep:{
+               required: "Obrigatorio"
+            },
+            motoRua:{
+               required: "Obrigatorio"
+            },
+            motoCity:{
+               required: "Obrigatorio"
+            }
+          
+          },
+
+          errorPlacement: function (error, element) {
+              error.addClass('error-text');
+              error.insertAfter(element);
+            },
+            highlight: function (element) {
+              $(element).addClass('error-field');
+            },
+            unhighlight: function (element) {
+              $(element).removeClass('error-field');
+            },
+            submitHandler: function (form) {
+              form.submit();
+            }
+  })
+}
+$(function () {
+  validationFormMoto();
+});
+
+
+// Tipo de produto
+function  validationFormTipoProd(){
+  $('.formRegisterTipoProd').validate({
+      rules: {
+          
+        tpCode:{
+          required: true 
+        },
+        tpDesc:{
+          required: true
+        },
+        tpObs:{
+           required: true
+          
+        },
+        tpCtct:{
+          required: true
+        },
+    },
+          messages: {
+            tpCode:{
+              required:'Obrigatorio '
+            },
+            tpDesc:{
+              required: 'Obrigatori'
+            },
+            tpObs:{
+               required: 'Obrigatorio',
+              
+            },
+            tpCtct:{
+              required: "Obrigatorio"
+            },
+          
+          },
+
+          errorPlacement: function (error, element) {
+              error.addClass('error-text');
+              error.insertAfter(element);
+            },
+            highlight: function (element) {
+              $(element).addClass('error-field');
+            },
+            unhighlight: function (element) {
+              $(element).removeClass('error-field');
+            },
+            submitHandler: function (form) {
+              form.submit();
+            }
+  })
+}
+$(function () {
+  validationFormTipoProd();
+});
 
 
 

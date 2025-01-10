@@ -1,24 +1,43 @@
 const btnProd = document.querySelector('.btnCadProd')
 btnProd.addEventListener('click' , ()=>{
 
-    const containerAppProd = document.querySelector('.containerAppProd')
-    const containerAppClient = document.querySelector(".containerAppClient");
-    const containerAppFabri = document.querySelector('.containerAppFabri')
-    const containerAppBens = document.querySelector(".containerAppBens");
-    const containerAppForn = document.querySelector(".containerAppForn")
-    const containerAppTypeProd = document.querySelector('.containerAppTipoProd')
-    const listingProd  = document.querySelector('.listingProd')
-    const btnMainPageProd =  document.querySelector('.btnMainPageProd')
+  const listingProd  = document.querySelector('.listingProd')
+       listingProd.style.display = 'flex'
 
-    listingProd.style.display = 'flex'
-    containerAppProd.style.display = 'flex'
-    btnMainPageProd.style.display = 'flex'
-     
-    containerAppTypeProd.style.display = 'none'
-    containerAppFabri.style.display = 'none'
-    containerAppClient.style.display = 'none'
-    containerAppBens.style.display = 'none'
-    containerAppForn.style.display = 'none'
+    const btnMainPageProd =  document.querySelector('.btnMainPageProd')
+     btnMainPageProd.style.display = 'flex'
+
+    const containerAppProd = document.querySelector('.containerAppProd')
+       containerAppProd.style.display = 'flex'
+
+    const containerAppClient = document.querySelector(".containerAppClient");
+     containerAppClient.style.display = 'none'
+
+    const containerAppFabri = document.querySelector('.containerAppFabri')
+       containerAppFabri.style.display = 'none'
+
+    const containerAppBens = document.querySelector(".containerAppBens");
+     containerAppBens.style.display = 'none'
+
+    const containerAppForn = document.querySelector(".containerAppForn")
+       containerAppForn.style.display = 'none'
+
+    const containerAppTypeProd = document.querySelector('.containerAppTipoProd')
+       containerAppTypeProd.style.display = 'none'
+
+    const containerAppDriver = document.querySelector('.containerAppDriver')
+    containerAppDriver.style.display = 'none'
+
+    const containerFormRegisterProd = document.querySelector('.formRegisterProd')
+    containerFormRegisterProd.style.display = 'none'
+
+    const containerFormEdit = document.querySelector('.formEditProd')
+      containerFormEdit.style.display = 'none'
+
+      const informative = document.querySelector('.information')
+       informative.style.display = 'block'
+    informative.textContent = 'SEÇÃO PRODUTO'
+    
 })
 
 const registerProd = document.querySelector('.registerProd')
@@ -155,7 +174,7 @@ async function fetchListProdutos() {
           "Tipo",
           "Unidade",
           "Código Fabricante",
-          "Data",
+          "Data da compra",
           "Valor",
           "prodPeli",
           "prodPebr",
@@ -184,13 +203,23 @@ async function fetchListProdutos() {
   
           checkbox.dataset.produto = JSON.stringify(produto);
           checkboxCell.appendChild(checkbox);
+
+          const formatDate = (isoDate) => {
+            if (!isoDate) return "";
+            const dateObj = new Date(isoDate);
+            const year = dateObj.getFullYear();
+            const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+            const day = String(dateObj.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+          };
+
   
           linha.insertCell().textContent = produto.prodcode;
           linha.insertCell().textContent = produto.proddesc;
           linha.insertCell().textContent = produto.prodtipo;
           linha.insertCell().textContent = produto.produnid;
           linha.insertCell().textContent = produto.prodcofa;
-          linha.insertCell().textContent = produto.proddtuc;
+          linha.insertCell().textContent = formatDate(produto.proddtuc);
           linha.insertCell().textContent = produto.prodvluc;
           linha.insertCell().textContent = produto.prodpeli;
           linha.insertCell().textContent = produto.prodpebr;

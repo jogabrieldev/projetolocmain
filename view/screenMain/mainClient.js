@@ -30,7 +30,14 @@ btnRegisterClient.addEventListener("click", () => {
   const containerAppBens = document.querySelector(".containerAppBens");
    containerAppBens.style.display = "none";
 
+  const containerFormEdit = document.querySelector('.formEditClient')
+    containerFormEdit.style.display = 'none'
+
   formRegisterClient.style.display = "none";
+
+  const informative = document.querySelector('.information')
+   informative.style.display = 'block'
+    informative.textContent = 'SEÇÃO CLIENTE'
     
 });
 
@@ -55,7 +62,7 @@ buttonOutPageClient.addEventListener("click", (event) => {
   const btnMainPage = document.querySelector(".buttonsMainPage");
      btnMainPage.style.display  ='flex'
 
-  const containeFormClient = document.querySelector('.containerOfForm')
+  const containeFormClient = document.querySelector('#formRegisterClient')
   containeFormClient.style.display = 'none'
 
   
@@ -113,6 +120,13 @@ formRegisterClient.addEventListener("submit", async (event) => {
     }).showToast();
     return;
   }
+      
+  const removeMask = (value) => value.replace(/\D/g, ""); 
+  if (data.cpf) data.cpf = removeMask(data.cpf); 
+  if (data.clieCep) data.clieCep = removeMask(data.clieCep); 
+  if (data.telefone) data.telefone = removeMask(data.telefone); 
+
+  // });
 
   try {
     await fetch("/api/client/submit", {
@@ -217,8 +231,18 @@ async function fetchListClientes() {
         linha.insertCell().textContent = cliente.cliecode;
         linha.insertCell().textContent = cliente.clienome;
         linha.insertCell().textContent = cliente.cliecpf;
-        linha.insertCell().textContent = cliente.cliedtcd;
-        linha.insertCell().textContent = cliente.cliedtnc;
+
+        const formatDate = (isoDate) => {
+          if (!isoDate) return "";
+          const dateObj = new Date(isoDate);
+          const year = dateObj.getFullYear();
+          const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+          const day = String(dateObj.getDate()).padStart(2, "0");
+          return `${year}-${month}-${day}`;
+        };
+
+        linha.insertCell().textContent = formatDate(cliente.cliedtcd);
+        linha.insertCell().textContent = formatDate(cliente.cliedtnc);
         linha.insertCell().textContent = cliente.cliecelu;
         linha.insertCell().textContent = cliente.cliecity;
         linha.insertCell().textContent = cliente.clieestd;
@@ -348,17 +372,17 @@ editButtonClient.addEventListener("click", () => {
 
     // Campos e IDs correspondentes
     const campos = [
-      { id: "clieCode", valor: clientSelecionado.cliecode },
-      { id: "clieName", valor: clientSelecionado.clienome },
-      { id: "cpf", valor: clientSelecionado.cliecpf },
-      { id: "dtCad", valor: clientSelecionado.cliedtcd },
-      { id: "dtNasc", valor: clientSelecionado.cliedtnc },
-      { id: "clieCelu", valor: clientSelecionado.cliecelu },
-      { id: "clieCity", valor: clientSelecionado.cliecity },
-      { id: "clieEstd", valor: clientSelecionado.clieestd },
-      { id: "clieRua", valor: clientSelecionado.clierua },
-      { id: "clieCep", valor: clientSelecionado.cliecep },
-      { id: "clieMail", valor: clientSelecionado.cliemail },
+      { id: "editClieCode", valor: clientSelecionado.cliecode },
+      { id: "editClieName", valor: clientSelecionado.clienome },
+      { id: "editCliecpf", valor: clientSelecionado.cliecpf },
+      { id: "editClieDtCad", valor: clientSelecionado.cliedtcd },
+      { id: "editClieDtNasc", valor: clientSelecionado.cliedtnc },
+      { id: "editClieCelu", valor: clientSelecionado.cliecelu },
+      { id: "editClieCity", valor: clientSelecionado.cliecity },
+      { id: "editClieEstd", valor: clientSelecionado.clieestd },
+      { id: "editClieRua", valor: clientSelecionado.clierua },
+      { id: "editClieCep", valor: clientSelecionado.cliecep },
+      { id: "editClieMail", valor: clientSelecionado.cliemail },
     ];
 
     // Atualizar valores no formulário
@@ -413,16 +437,17 @@ async function editAndUpdateOfClient() {
     }
 
     const updateClient = {
-      clienome: document.getElementById("clieName").value,
-      cliecpf: document.getElementById("cpf").value,
-      cliedtcd: document.getElementById("dtCad").value || null,
-      cliedtnc: document.getElementById("dtNasc").value || null,
-      cliecelu: document.getElementById("clieCelu").value,
-      clicity: document.getElementById("clieCity").value,
-      clieestd: document.getElementById("clieEstd").value,
-      clierua: document.getElementById("clieRua").value,
-      cliecep: document.getElementById("clieCep").value,
-      cliemail: document.getElementById("clieMail").value,
+      cliecode: document.getElementById("editClieCode").value,
+      clienome: document.getElementById("editClieName").value,
+      cliecpf: document.getElementById("editCliecpf").value,
+      cliedtcd: document.getElementById("editClieDtCad").value || null,
+      cliedtnc: document.getElementById("editClieDtNasc").value || null,
+      cliecelu: document.getElementById("editClieCelu").value,
+      cliecity: document.getElementById("editClieCity").value,
+      clieestd: document.getElementById("editClieEstd").value,
+      clierua: document.getElementById("editClieRua").value,
+      cliecep: document.getElementById("editClieCep").value,
+      cliemail: document.getElementById("editClieMail").value,
     };
 
     try {
@@ -440,8 +465,10 @@ async function editAndUpdateOfClient() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+          backgroundColor: "green",
         }).showToast();
+
+        document.querySelector("#formEditRegisterClient").reset()
 
         setTimeout(() => {
           window.location.reload();

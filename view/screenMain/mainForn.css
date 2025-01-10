@@ -28,6 +28,12 @@
     background-color: lightslategray; 
     border: none;
     height:28px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
+}
+.registerForn:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
 }
 .buttonDeleteForn{
     cursor: pointer;
@@ -36,7 +42,15 @@
     background-color: lightslategray; 
     border: none;
     height:28px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
 }
+
+.buttonDeleteForn:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
 .buttonEditForn{
     cursor: pointer;
     width: 15%;
@@ -44,7 +58,15 @@
     background-color: lightslategray; 
     border: none;
     height:28px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
 }
+
+.buttonEditForn:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
 .buttonExitForn{
     cursor: pointer;
     width: 15%;
@@ -52,7 +74,15 @@
     background-color: lightslategray; 
     border: none;
     height:28px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
 }
+
+.buttonExitForn:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
 .btnRegisterforn{
     cursor: pointer;
     width: 20%;

@@ -76,10 +76,10 @@ const crudRegisterClient = {
       const values = [
         updateClient.clienome || null,
         updateClient.cliecpf || null,
-        updateClient.clidtcd || null,
+        updateClient.cliedtcd || null,
         updateClient.cliedtnc || null, 
         updateClient.cliecelu || null,
-        updateClient.clicity || null,
+        updateClient.cliecity || null,
         updateClient.clieestd || null,
         updateClient.clierua || null,
         updateClient.cliecep || null,

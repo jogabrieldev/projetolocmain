@@ -5,30 +5,45 @@ const btnForn = document.querySelector('.btnCadForn')
 btnForn.addEventListener('click' , ()=>{
          
     const containerAppClient = document.querySelector(".containerAppClient");
+      containerAppClient.style.display = 'none'
+
     const containerAppBens = document.querySelector(".containerAppBens");
-    const containerAppForn = document.querySelector(".containerAppForn")
+     containerAppBens.style.display = 'none'
+
     const containerAppProd = document.querySelector('.containerAppProd')
+        containerAppProd.style.display = 'none'
+
     const containerAppFabri = document.querySelector('.containerAppFabri')
+       containerAppFabri.style.display = 'none'
+
     const containerAppTypeProd = document.querySelector('.containerAppTipoProd')
+    containerAppTypeProd.style.display = 'none'
+
      const containerAppDriver = document.querySelector('.containerAppDriver')
     containerAppDriver.style.display = 'none'
+
     const formRegisterForn = document.querySelector('.formRegisterForn')
+      formRegisterForn.style.display = 'none'
+
+    const containerFormEdit = document.querySelector('.formEditRegisterForn')
+     containerFormEdit.style.display = 'none'
+
     const listingForn = document.querySelector('.listingForn')
+       listingForn.style.display = 'flex'
+
     const btnMainPageForm = document.querySelector('.btnMainPageForn')
+        btnMainPageForm.style.display =  'flex'
 
-    containerAppTypeProd.style.display = 'none'
-    containerAppFabri.style.display = 'none'
-     formRegisterForn.style.display = 'none'
-    containerAppBens.style.display = 'none'
-    containerAppClient.style.display = 'none'
-    containerAppProd.style.display = 'none'
+    const containerAppForn = document.querySelector(".containerAppForn")
+     containerAppForn.style.display = 'flex'
 
-    containerAppForn.style.display = 'flex'
-      listingForn.style.display = 'flex'
-      btnMainPageForm.style.display =  'flex'
-
-    
+     const informative = document.querySelector('.information')
+      informative.style.display = 'block'
+    informative.textContent = 'SEÇÃO FORNECEDOR'
+   
 })
+
+
 const buttonEditForn = document.querySelector('.buttonEditForn')
 buttonEditForn.addEventListener('click' , ()=>{
 
@@ -90,6 +105,8 @@ formRegisterForn.addEventListener("submit", async (event) => {
   const formData = new FormData(event.target);
   const data = Object.fromEntries(formData.entries());
 
+  console.log(data)
+
   if (
     Object.keys(data).length === 0 ||
     Object.values(data).some((val) => val === "")
@@ -106,7 +123,7 @@ formRegisterForn.addEventListener("submit", async (event) => {
     return;
   }
 
-  // try {
+ 
     await fetch('/api/forne/submit', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -203,15 +220,18 @@ async function fetchListFornecedores() {
           checkbox.name = "selectFornecedor";
           checkbox.value = fornecedor.forncode;
           
-          // const fornecedorData = JSON.stringify(fornecedor);
-          // if (fornecedorData) {
-          //   checkbox.dataset.fornecedor = fornecedorData;
-          // } else {
-          //   console.warn(`Fornecedor inválido encontrado:`, fornecedor);
-          // }
-
+          
           checkbox.dataset.fornecedor = JSON.stringify(fornecedor);
           checkboxCell.appendChild(checkbox);
+
+          const formatDate = (isoDate) => {
+            if (!isoDate) return "";
+            const dateObj = new Date(isoDate);
+            const year = dateObj.getFullYear();
+            const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+            const day = String(dateObj.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+          };
 
           linha.insertCell().textContent = fornecedor.forncode;
           linha.insertCell().textContent = fornecedor.fornnome;
@@ -227,7 +247,7 @@ async function fetchListFornecedores() {
           linha.insertCell().textContent = fornecedor.fornagen;
           linha.insertCell().textContent = fornecedor.forncont;
           linha.insertCell().textContent = fornecedor.fornpix;
-          linha.insertCell().textContent = fornecedor.forndtcd;
+          linha.insertCell().textContent = formatDate(fornecedor.forndtcd);
           linha.insertCell().textContent = fornecedor.fornptsv;
         });
     
@@ -392,7 +412,7 @@ editButtonForn.addEventListener("click", (e) => {
 // função fetch
 
 async function editAndUpdateOfForn() {
-  const formEditForn = document.querySelector("#formEditForn");
+  const formEditForn = document.querySelector(".formEditForn");
 
   formEditForn.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -400,7 +420,7 @@ async function editAndUpdateOfForn() {
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
 
-
+    console.log('ESSE E MEU DADO:' , data)
 
     const selectedCheckbox = document.querySelector(
       'input[name="selectFornecedor"]:checked'
@@ -441,7 +461,7 @@ async function editAndUpdateOfForn() {
       fornagen: document.getElementById('editFornAge').value,
       forncont: document.getElementById('editFornCont').value,
       fornpix: document.getElementById('editFornPix').value,
-      forndtcd: document.getElementById('editFornDtcd')?.value || null,
+      forndtcd: document.getElementById('editFornDtcd').value || null,
       fornptsv: document.getElementById('editFornDisPro').value
     };
 
@@ -452,7 +472,7 @@ async function editAndUpdateOfForn() {
         body: JSON.stringify(updateForn)
       });
 
-      console.log("resposta:", response);
+      console.log("corpo:", updateForn );
 
       if (response.ok) {
         console.log("Atualização bem-sucedida");

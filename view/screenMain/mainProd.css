@@ -27,7 +27,15 @@
     background-color: lightslategray; 
     border: none;
     height:28px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
 }
+
+.registerProd:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
 .buttonDeleteProd{
     cursor: pointer;
     width: 15%;
@@ -35,7 +43,16 @@
     background-color: lightslategray; 
     border: none;
     height:28px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
 }
+
+.buttonDeleteProd:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
+
 .buttonEditProd{
     cursor: pointer;
     width: 15%;
@@ -43,7 +60,15 @@
     background-color: lightslategray; 
     border: none;
     height:28px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
 }
+
+.buttonEditProd:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
 .buttonExitProd{
     cursor: pointer;
     width: 15%;
@@ -51,7 +76,15 @@
     background-color: lightslategray; 
     border: none;
     height:28px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
 }
+
+.buttonExitProd:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
 .btnOutInitProd{
     cursor: pointer;
     width: 15%;

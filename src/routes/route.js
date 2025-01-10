@@ -10,6 +10,7 @@ const movementOfForn = require("../controllers/fornRegister.js");
 const movementOfProd  = require('../controllers/prodRegister.js');
 const movementOfFabri = require('../controllers/fabriRegister.js');
 const movementOfTypeProd = require("../controllers/typeProdRegister.js")
+const movementOfDriver = require('../controllers/driverRegister.js')
 
 route.get("/", () => {
   routeMain.submitStart();
@@ -24,7 +25,7 @@ route.get('/api/listbens',(req , res)=>{
   movementGoods.listBens(req , res)
 })
 
-route.post("/api/submit", (req, res) => {
+route.post("/api/bens/submit", (req, res) => {
   movementGoods.registerBens(req, res)
 });
 
@@ -82,9 +83,9 @@ route.get('/api/listProd' , (req , res)=>{
   movementOfProd.listofProd(req , res)
 })
 
-route.get('/api/produto/:id', (req , res)=>{
-  movementOfProd.listofProd(req , res)
-})
+// route.get('/api/produto/:id', (req , res)=>{
+//   movementOfProd.listofProd(req , res)
+// })
 
 route.delete('/api/deleteprod/:id' , (req , res)=>{
   movementOfProd.deleteProd(req , res)
@@ -129,5 +130,24 @@ route.delete('/api/deletetp/:id', (req , res)=>{
 route.put('/api/updatetypeprod/:id', (req , res)=>{
   movementOfTypeProd.updateOfTypeProd(req , res)
 })
+
+ // motorista 
+
+ route.post('/api/drive/submit' , (req , res)=>{
+  movementOfDriver.registerOfDriver(req , res)
+ })
+
+ route.get('/api/listingdriver' , (req , res)=>{
+  movementOfDriver.listingOfDriver(req , res)
+ })
+
+ route.delete('/api/deletedriver/:id' , (req ,res)=>{
+     movementOfDriver.deleteOfDriver(req , res)
+ })
+
+ route.put('/api/updatemoto/:id' , (req ,res)=>{
+     movementOfDriver.updateOfDrive(req , res)
+ })
+
 
 module.exports = route;

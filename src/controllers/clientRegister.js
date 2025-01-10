@@ -9,6 +9,7 @@ const movementOfClient = {
              if(!dataClient){
                 return res.status(400).json({message:"campos obrigatorios não preenchidos"})
              }
+
             const newClient = clientRegister.registerOfClient(dataClient)
             res.status(201).json({ success: true, user: newClient });
         }catch(error){

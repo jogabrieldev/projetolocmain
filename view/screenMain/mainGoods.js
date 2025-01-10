@@ -5,6 +5,9 @@ buttonStartCadBens.addEventListener("click", () => {
   const containerAppBens = document.querySelector(".containerAppBens");
     containerAppBens.style.display = "flex";
 
+  const showContentBens = document.querySelector('.showContentBens')
+   showContentBens.style.display = 'none'
+
   const btnMainPage = document.querySelector(".btnPageListGoods");
     btnMainPage.style.display = "flex";
 
@@ -25,6 +28,16 @@ buttonStartCadBens.addEventListener("click", () => {
 
     const containerAppClient = document.querySelector(".containerAppClient");
     containerAppClient.style.display = "none";
+
+    const containerAppForn = document.querySelector(".containerAppForn")
+       containerAppForn.style.display = 'none'
+
+    const containerFormEdit = document.querySelector('.editForm')
+    containerFormEdit.style.display = 'none'
+
+    const informative = document.querySelector('.information')
+    informative.style.display = 'block'
+    informative.textContent = 'SEÇÃO BENS'
 
 });
 
@@ -93,19 +106,35 @@ const formRegister = document
 
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
+
+    if (
+      Object.keys(data).length === 0 ||
+      Object.values(data).some((val) => val === "")
+    ) {
+      console.log("Formulario Vazio");
+      Toastify({
+        text: "Por favor, preencha o formulário antes de enviar.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+      return;
+    }
    
     try {
-      const response = await fetch("/api/submit", {
+      const response = await fetch("/api/bens/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data }),
+        body: JSON.stringify({data}),
       });
       if (response.ok) {
         console.log("deu certo");
 
         Toastify({
           text: "Cadastrado com sucesso",
-          duration: 6000,
+          duration: 3000,
           close: true,
           gravity: "top",
           position: "center",
@@ -208,7 +237,17 @@ async function fetchBens() {
 
         checkboxCell.appendChild(checkbox);
 
-        // Adiciona os dados do bem
+        // formatação de data
+        const formatDate = (isoDate) => {
+          if (!isoDate) return "";
+          const dateObj = new Date(isoDate);
+          const year = dateObj.getFullYear();
+          const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+          const day = String(dateObj.getDate()).padStart(2, "0");
+          return `${year}-${month}-${day}`;
+        };
+
+     
         linha.insertCell().textContent = bem.benscode;
         linha.insertCell().textContent = bem.bensnome;
         linha.insertCell().textContent = bem.benscofa;
@@ -216,14 +255,14 @@ async function fetchBens() {
         linha.insertCell().textContent = bem.bensnuse;
         linha.insertCell().textContent = bem.bensplac;
         linha.insertCell().textContent = bem.bensanmo;
-        linha.insertCell().textContent = bem.bensdtcp;
+        linha.insertCell().textContent = formatDate(bem.bensdtcp);
         linha.insertCell().textContent = bem.bensvacp;
         linha.insertCell().textContent = bem.bensnunf;
         linha.insertCell().textContent = bem.benscofo;
         linha.insertCell().textContent = bem.benskmat;
-        linha.insertCell().textContent = bem.bensdtkm;
+        linha.insertCell().textContent = formatDate(bem.bensdtkm);
         linha.insertCell().textContent = bem.bensstat;
-        linha.insertCell().textContent = bem.bensdtus;
+        linha.insertCell().textContent = formatDate(bem.bensdtus);
         linha.insertCell().textContent = bem.benshrus;
         linha.insertCell().textContent = bem.bensnuch;
         linha.insertCell().textContent = bem.benscore;
@@ -363,7 +402,7 @@ editButton.addEventListener("click", (event) => {
       { id: "kmAtual", valor: bemSelecionado.benskmat },
       { id: "dtKm", valor: bemSelecionado.bensdtkm },
       { id: "status", valor: bemSelecionado.bensstat },
-      { id: "dtStatus", valor: bemSelecionado.bensdtst },
+      { id: "dtStatus", valor: bemSelecionado.bensdtus },
       { id: "hrStatus", valor: bemSelecionado.benshrus },
       { id: "chassi", valor: bemSelecionado.bensnuch },
       { id: "cor", valor: bemSelecionado.benscore },
@@ -460,7 +499,7 @@ async function editAndUpdateOfBens() {
       benskmat: document.getElementById("kmAtual").value,
       bensdtkm: document.getElementById("dtKm").value || null,
       bensstat: document.getElementById("status").value,
-      bensdtst: document.getElementById("dtStatus").value || null,
+      bensdtus: document.getElementById("dtStatus").value || null,
       benshrus: document.getElementById("hrStatus").value,
       bensnuch: document.getElementById("chassi").value,
       benscore: document.getElementById("cor").value,

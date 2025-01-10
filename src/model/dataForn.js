@@ -16,7 +16,7 @@ const crudRegisterForn = {
             fornEstd,
             fornCelu,
             fornMail,
-            forBank,
+            fornBank,
             fornAge,
             fornCont,
             fornPix,
@@ -37,7 +37,7 @@ const crudRegisterForn = {
             fornEstd,
             fornCelu,
             fornMail,
-            forBank,
+            fornBank,
             fornAge,
             fornCont,
             fornPix,
@@ -79,41 +79,34 @@ const crudRegisterForn = {
 
       updateForn: async(id , updateDataForn)=>{
           
-        try {
+       
             const query = `UPDATE cadforn SET fornnome = $1 , fornnoft = $2 , forncnpj = $3 , forncep = $4 , fornrua = $5 , forncity = $6 , fornestd = $7  ,forncelu = $8 , fornmail = $9 , fornbanc = $10 , fornagen = $11 , forncont = $12 , fornpix = $13 , forndtcd = $14 , fornptsv = $15 WHERE forncode = $16 RETURNING *; ` 
 
             const value = [
-              updateDataForn.fornnome, 
-              updateDataForn.fornnoft, 
-              updateDataForn.forncnpj, 
-              updateDataForn.forncep, 
-              updateDataForn.fornrua, 
-              updateDataForn.forncity, 
-              updateDataForn.fornestd, 
-              updateDataForn.forncelu, 
-              updateDataForn.fornmail, 
-              updateDataForn.fornbanc, 
-              updateDataForn.fornagen,
-              updateDataForn.forncont, 
-              updateDataForn.fornpix,
-              updateDataForn.forndtcd, 
-              updateDataForn.fornptsv, 
+              updateDataForn.fornnome || null, 
+              updateDataForn.fornnoft || null, 
+              updateDataForn.forncnpj || null, 
+              updateDataForn.forncep || null, 
+              updateDataForn.fornrua || null, 
+              updateDataForn.forncity || null, 
+              updateDataForn.fornestd || null, 
+              updateDataForn.forncelu || null, 
+              updateDataForn.fornmail || null, 
+              updateDataForn.fornbanc || null, 
+              updateDataForn.fornagen || null,
+              updateDataForn.forncont || null, 
+              updateDataForn.fornpix || null,
+              updateDataForn.forndtcd || null, 
+              updateDataForn.fornptsv || null, 
               id
             ]
-            
-            // console.log("Valores enviados para o banco:", value);
-
-
+    
             const result = await userDbFo.query(query , value)
-
-            console.log("Resultado da atualização:", result.rows);  // Log para verificar o resultado
             return result.rows[0]
 
             
-        } catch (error) {
-           console.error('Erro no model' , error)
-        }
+        }  
 
-      }
 };
+
 module.exports = crudRegisterForn

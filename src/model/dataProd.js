@@ -84,7 +84,7 @@ const crudRegisterProd = {
         id
       ];
       const result = await userDbProd.query(query, values);
-      // console.log('dados enviados para o model:' ,result)
+      // console.log('dados enviados para o model:' ,result.rows[0])
   
       return result.rows[0];
     },

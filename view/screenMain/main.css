@@ -42,8 +42,16 @@ input{
     border-radius: 100%;
 }
 .information{
-  width: 60%;
+  font-size: 19px;
+ display: none;
+ border-radius: 15px;
+  width: 15%;
  text-align: center;
+ background-color: lightslategray;
+ margin-right: 10%;
+ padding: 20px;
+ height: 40px;
+ margin-top: 1%;
 }
 /* Container bens*/
 .containerAppBens{
@@ -78,104 +86,104 @@ ul{
 }
 /* Botoes do menu principais */
 .btnCadBens{ 
-    margin-top: 3%;
+    margin-top: 13%;
     width: 90%;
-    height: 30px;
+    height: 35px;
     border: none;
     background-color: lightslategray;
     cursor: pointer;
     margin-right: 2.5%;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.2s;
+    transition: box-shadow 0.2s, transform 0.4s;
 }
 .btnCadBens:active{
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(4px);
+    transform: translateY(6px);
 }
 .btnCadClie{
     width: 90%;
-    height: 30px;
+    height: 35px;
     border: none;
     background-color: lightslategray;
     cursor: pointer;
     margin-right: 2.5%;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.2s;
+    transition: box-shadow 0.2s, transform 0.4s;
 }
 .btnCadClie:active{
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(4px);
+    transform: translateY(6px);
 }
 .btnCadForn{
     width: 90%;
-    height: 30px;
+    height: 35px;
     border: none;
     background-color: lightslategray;
     cursor: pointer;
     margin-right: 2.5%;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.2s;
+    transition: box-shadow 0.2s, transform 0.4s;
 }
 .btnCadForn:active{
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(4px);
+    transform: translateY(6px);
 }
 .btnCadProd{
     width: 90%;
-    height: 30px;
+    height: 35px;
     border: none;
     background-color: lightslategray;
     cursor: pointer;
     margin-right: 2.5%;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.2s;
+    transition: box-shadow 0.2s, transform 0.4s;
 }
 .btnCadProd:active{
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(4px);
+    transform: translateY(6px);
 }
 .btnCadFabri{
     width: 90%;
-    height: 30px;
+    height: 35px;
     border: none;
     background-color: lightslategray;
     cursor: pointer;
     margin-right: 2.5%;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.2s;
+    transition: box-shadow 0.2s, transform 0.4s;
 }
 .btnCadFabri:active{
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(4px);
+    transform: translateY(6px);
 }
 .btnCadTypeProd{
     width: 90%;
-    height: 30px;
+    height: 35px;
     border: none;
     background-color: lightslategray;
     cursor: pointer;
     margin-right: 2.5%;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.2s;
+    transition: box-shadow 0.2s, transform 0.4s;
 }
 
 .btnCadTypeProd:active{
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(4px);
+    transform: translateY(6px);
 }
 .btnCadMotorista{
     width: 90%;
-    height: 30px;
+    height: 35px;
     border: none;
     background-color: lightslategray;
     cursor: pointer;
     margin-right: 2.5%;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.2s;
+    transition: box-shadow 0.2s, transform 0.4s;
 }
 .btnCadMotorista:active{
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(4px);
+    transform: translateY(6px);
 }
 
 /* Pagina relacionada aos bens */
@@ -197,7 +205,7 @@ table {
   }
   
   th, td {
-    padding: 20px; /* Aumenta o espaço interno das células */
+    padding: 15px; /* Aumenta o espaço interno das células */
     text-align: left;
     border: 1px solid #ddd; /* Opcional: para adicionar borda */
   }
@@ -292,6 +300,12 @@ table {
     width: 15%;
     background-color: lightslategray;
     border: none;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
+}
+.registerGoods:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
 }
 .buttonDelete{
     margin-top: 0.8%;
@@ -300,7 +314,14 @@ table {
     width: 15%;
     background-color: lightslategray;
     border: none;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
 }
+.buttonDelete:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
 .buttonEdit{
     margin-top: 0.8%;
     height: 28px;
@@ -308,7 +329,15 @@ table {
     width: 15%;
     background-color: lightslategray;
     border: none;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
 }
+
+.buttonEdit:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
 .buttonExit{
     margin-top: 0.8%;
     height: 28px;
@@ -316,7 +345,15 @@ table {
     width: 15%;
     background-color: lightslategray;
     border: none;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
 }
+
+.buttonExit:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
 /* container de registro de bens */
  .showContentBens{
     overflow: auto;

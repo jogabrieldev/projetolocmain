@@ -1,48 +1,47 @@
 
 
-$(document).ready(function() {
+// $(document).ready(function() {
 
-   maskClient()
-   maskGoods() 
-  //  maskForn()
-});
+//     maskClient()
+//  //    maskGoods() 
+//    //  maskForn()
+//  });
 
 
-function maskClient(){
+// function maskClient(){
 
-  Inputmask("999.999.999-99").mask("#cpf");
+//   Inputmask("999.999.999-99").mask("#cpf");
 
-  Inputmask('99.999-999').mask('#clieCep');
+//   Inputmask('99.999-999').mask('#clieCep');
 
-  Inputmask("email").mask("#clieMail");
+//   Inputmask("email").mask("#clieMail");
 
-  Inputmask("(99) 99999-9999").mask("#clieCelu");
+//   Inputmask("(99) 99999-9999").mask("#clieCelu");
 
-  
-}
+// }
 
-function maskGoods(){
+// function maskGoods(){
      
-  Inputmask({
-    alias: 'currency',
-    groupSeparator: '.',
-    radixPoint: ',',
-    digits: 2,
-    autoGroup: true,
-    prefix: 'R$ ',
-    rightAlign: false
-  }).mask('#valorCp')
+//   Inputmask({
+//     alias: 'currency',
+//     groupSeparator: '.',
+//     radixPoint: ',',
+//     digits: 2,
+//     autoGroup: true,
+//     prefix: 'R$ ',
+//     rightAlign: false
+//   }).mask('#valorCp')
 
-  Inputmask({
-    alias: 'currency',
-    groupSeparator: '.',
-    radixPoint: ',',
-    digits: 2,
-    autoGroup: true,
-    prefix: 'R$ ',
-    rightAlign: false
-  }).mask('#valorAlug')
-}
+//   Inputmask({
+//     alias: 'currency',
+//     groupSeparator: '.',
+//     radixPoint: ',',
+//     digits: 2,
+//     autoGroup: true,
+//     prefix: 'R$ ',
+//     rightAlign: false
+//   }).mask('#valorAlug')
+// }
 
 // function maskForn(){
 //   Inputmask("99.999.999/9999-99").mask('#forCnpj');

@@ -5,6 +5,7 @@ const fornRegister = require('../model/dataForn')
           
           try {
             const dataForn = req.body
+            console.log(dataForn)
 
             if(!dataForn){
                 return res.status(400).json({message:"campos obrigatorios não preenchidos"})
@@ -62,24 +63,26 @@ const fornRegister = require('../model/dataForn')
 
      updateOfForn: async(req , res)=>{
          
-        const {fornId} = req.params;
+        const fornId = req.params.id;
         const updateForn = req.body;
        
-        // console.log('esse e o corpo' , updateForn)
+       
         
        Object.keys(updateForn).forEach((key) => {
          if (updateForn[key] === "") {
           updateForn[key] = null;
       }
     });
+          
+    // console.log("ID recebido:", fornId);
+    // console.log("Dados recebidos para atualização:", updateForn);
 
       try {
         const fornUpdate = await fornRegister.updateForn(fornId, updateForn)
-        // console.log("Fornecedor atualizado:", fornUpdate); 
-
+       
         res.json({ message: "Bem atualizado com sucesso", Fornecedor: fornUpdate });
     } catch (error) {
-        console.error("Erro ao atualizar o Cliente:", error);
+        console.error("Erro ao atualizar o Fornecedor:", error);
         res.status(500).json({ message: "Erro ao atualizar o Cliente", error });
     }
      }

@@ -2,25 +2,42 @@ const btnCadFabri = document.querySelector('.btnCadFabri')
 btnCadFabri.addEventListener('click' , ()=>{
 
     const containerAppFabri = document.querySelector('.containerAppFabri')
+          containerAppFabri.style.display = 'flex'
+
     const containerAppClient = document.querySelector(".containerAppClient");
+          containerAppClient.style.display = 'none'
+
     const containerAppBens = document.querySelector(".containerAppBens");
+           containerAppBens.style.display = 'none'
+
     const containerAppForn = document.querySelector(".containerAppForn")
-    const containerAppProd = document.querySelector('.containerAppProd')
-    const containerAppTypeProd = document.querySelector('.containerAppTipoProd')
+            containerAppForn.style.display = 'none'
+   
     const btnPageInit = document.querySelector('.btnMainPageFabri')
+          btnPageInit.style.display = 'flex'
+
+     const containerFormRegisterFabri = document.querySelector('.listingFabri')
+        containerFormRegisterFabri.style.display = 'flex'
+
     const formRegisterFabri = document.querySelector('.formRegisterFabri')
+           formRegisterFabri.style.display ='none'
+
      const containerAppDriver = document.querySelector('.containerAppDriver')
-    containerAppDriver.style.display = 'none'
+          containerAppDriver.style.display = 'none'
 
-    containerAppTypeProd.style.display = 'none'
-    containerAppClient.style.display = 'none'
-    containerAppBens.style.diplay = 'none'
-    containerAppForn.style.display = 'none'
-    containerAppProd.style.display = 'none'
-    formRegisterFabri.style.display ='none'
+    const containerAppTypeProd = document.querySelector('.containerAppTipoProd')
+           containerAppTypeProd.style.display = 'none'
 
-    containerAppFabri.style.display = 'flex'
-    btnPageInit.style.display = 'flex'
+    const containerAppProd = document.querySelector('.containerAppProd')
+         containerAppProd.style.display = 'none'
+    
+    const containerFormEdit = document.querySelector('.editFabri')
+       containerFormEdit.style.diplay = 'none'
+
+       const informative = document.querySelector('.information')
+        informative.style.display = 'block'
+    informative.textContent = 'SEÇÃO FABRICANTE'
+    
 })
 
 const btnPageRegisterFabri = document.querySelector('.registerFabri')
@@ -90,15 +107,14 @@ formRegisterFabricante.addEventListener('submit' , async (event)=>{
     return;
   }
 
-    await fetch('/api/fabri/submit', {
+    const response = await fetch('/api/fabri/submit', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
-    }).then((response) => {
+    })
 
       if (response.ok) {
-        console.log("deu certo");
-
+        
         Toastify({
           text: "Cadastrado com Sucesso",
           duration: 3000,
@@ -107,7 +123,9 @@ formRegisterFabricante.addEventListener('submit' , async (event)=>{
           position: "center",
           backgroundColor: "green",
         }).showToast();
-    
+      
+        console.log("deu certo");
+
         document.querySelector(".formRegisterFabricante").reset();
         return;
         
@@ -123,9 +141,6 @@ formRegisterFabricante.addEventListener('submit' , async (event)=>{
           backgroundColor: "red",
         }).showToast();
       }
-    }).catch((error)=>{
-      console.error("deu erro no envio", error);
-    });
 })
 
 // listagem de fabricante
@@ -150,8 +165,8 @@ async function fetchListFabricante() {
         "Código",
         "Discrição",
         "Categoria",
-        "Fabesuca",
-        "observação",
+        "Subcategoria",
+        "Observação",
         "Centro de custo"
       ];
   
@@ -347,7 +362,7 @@ btnFormEditFabri.addEventListener('click' , ()=>{
     if (listingFabri ) {
       listingFabri .style.display = "none";
     } else {
-      console.error("A lista de produto não foi encontrada.");
+      console.error("A lista de Fabricantes não foi encontrada.");
     }
 
     if(btnMainPageFabri){

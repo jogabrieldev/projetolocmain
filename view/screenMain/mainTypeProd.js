@@ -2,21 +2,42 @@ const btnInitCadTypeProd = document.querySelector('.btnCadTypeProd')
 btnInitCadTypeProd.addEventListener('click' , ()=>{
 
     const containerAppFabri = document.querySelector('.containerAppFabri')
+         containerAppFabri.style.display = 'none'
+
     const containerAppClient = document.querySelector(".containerAppClient");
+        containerAppClient.style.display = 'none'
+
     const containerAppBens = document.querySelector(".containerAppBens");
+        containerAppBens.style.display = 'none'
+     
     const containerAppForn = document.querySelector(".containerAppForn")
+      containerAppForn.style.display = 'none'
+
     const containerAppProd = document.querySelector('.containerAppProd')
-    const containerAppTypeProd = document.querySelector('.containerAppTipoProd')
+           containerAppProd.style.display = 'none'
+
      const containerAppDriver = document.querySelector('.containerAppDriver')
-    containerAppDriver.style.display = 'none'
+       containerAppDriver.style.display = 'none'
+      
+       const containerFormRegisterTp = document.querySelector('.formRegisterTipoProd')
+          containerFormRegisterTp.style.display = 'none'
 
-    containerAppTypeProd.style.display = 'flex'
+      const containerFormEditTp = document.querySelector('.containerRegisterEdit')
+        containerFormEditTp.style.display = 'none'
 
-    containerAppFabri.style.display = 'none'
-    containerAppClient.style.display = 'none'
-    containerAppBens.style.display = 'none'
-    containerAppForn.style.display = 'none'
-    containerAppProd.style.display = 'none'
+    const containerAppTypeProd = document.querySelector('.containerAppTipoProd')
+      containerAppTypeProd.style.display = 'flex'
+    
+    const listingTp = document.querySelector('.listingTipoProd')
+      listingTp.style.display = 'flex'
+
+    const btnMainPageTp = document.querySelector('.btnMainPageTipoProd')
+      btnMainPageTp.style.display = 'flex'
+
+      const informative = document.querySelector('.information')
+       informative.style.display = 'block'
+    informative.textContent = 'SEÇÃO TIPO DE PRODUTOS'
+
 });
 
 const btnRegisterTp  = document.querySelector('.registerTipoProd')
@@ -229,11 +250,11 @@ btnDeleteTypeProd.addEventListener('click' , async ()=>{
         return;
       }
     
-      await deleteProd(tyoeProdutoId, selectedCheckbox.closest("tr"));
+      await deleteTypeProd(tyoeProdutoId, selectedCheckbox.closest("tr"));
   
 })
 
-async function deleteProd(id , rowProd) {
+async function deleteTypeProd(id , rowProd) {
     
     try {
         const response = await fetch(`/api/deletetp/${id}`, {

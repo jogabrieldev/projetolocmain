@@ -28,7 +28,15 @@
     background-color: lightslategray; 
     border: none;
     height:28px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
 }
+
+.registerDriver:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
 .buttonDeleteDriver{
     cursor: pointer;
     width: 15%;
@@ -36,7 +44,30 @@
     background-color: lightslategray; 
     border: none;
     height:28px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
 }
+
+.buttonDeleteDriver:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+.buttonEditDriver{
+    cursor: pointer;
+    width: 15%;
+    margin-bottom: 2%;
+    background-color: lightslategray; 
+    border: none;
+    height:28px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
+}
+
+.buttonEditDriver:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
 .buttonExitDriver{
     cursor: pointer;
     width: 15%;
@@ -44,7 +75,15 @@
     background-color: lightslategray; 
     border: none;
     height:28px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
 }
+
+.buttonExitDriver:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
 .cadDriver{
     cursor: pointer;
     width: 16%;
