@@ -48,7 +48,7 @@ const movementOfClient = {
              return res
              .status(200)
              .json({
-               message: "componente Apagado com sucesso",
+               message: "Client Apagado com sucesso",
                component: deleteComponent,
              });
            } catch (error) {

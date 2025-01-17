@@ -121,11 +121,6 @@ formRegisterClient.addEventListener("submit", async (event) => {
     return;
   }
       
-  const removeMask = (value) => value.replace(/\D/g, ""); 
-  if (data.cpf) data.cpf = removeMask(data.cpf); 
-  if (data.clieCep) data.clieCep = removeMask(data.clieCep); 
-  if (data.telefone) data.telefone = removeMask(data.telefone); 
-
   // });
 
   try {

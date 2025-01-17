@@ -122,10 +122,6 @@ function validationFormClient(){
                 required: true,
                 date: true
             },
-          //   clieCelu:{
-          //     required: true,
-          //     number: true
-          //  },
            clieCity:{
             required: true,
             minlength:4
@@ -169,10 +165,7 @@ function validationFormClient(){
                     required: 'insira uma data',
                     date: 'insira uma data valida'
                 },
-                // clieCelu:{
-                //     required: 'Insira o numero de telefone',
-                //     number: 'valor tem que ser numerico'
-                // },
+                
                 clieCity:{
                   required: "Obrigatorio",
                   minlength: 'Caracteres minimos são 4'

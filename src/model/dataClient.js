@@ -56,11 +56,14 @@ const crudRegisterClient = {
     deleteClient: async(id)=>{
 
       try {
-            
-        const delet = "DELETE FROM cadclie WHERE cliecode = $1 RETURNING *";
-        const result = await dataUser.query(delet, [id])
+        const deleteRegislo = "DELETE FROM regislo WHERE relococl = $1";
+        await dataUser.query(deleteRegislo, [id]);
+    
+        // Excluir o cliente da tabela "cadclie"
+        const deleteCadclie = "DELETE FROM cadclie WHERE cliecode = $1 RETURNING *";
+        const result = await dataUser.query(deleteCadclie, [id]);
 
-       return result.rows[0]
+        return result.rows[0]
 
       } catch (error) {
         console.error('Erro no model:', error.message)

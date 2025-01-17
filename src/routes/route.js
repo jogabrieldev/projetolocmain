@@ -11,6 +11,7 @@ const movementOfProd  = require('../controllers/prodRegister.js');
 const movementOfFabri = require('../controllers/fabriRegister.js');
 const movementOfTypeProd = require("../controllers/typeProdRegister.js")
 const movementOfDriver = require('../controllers/driverRegister.js')
+const location = require('../controllers/locationController.js')
 
 route.get("/", () => {
   routeMain.submitStart();
@@ -83,10 +84,6 @@ route.get('/api/listProd' , (req , res)=>{
   movementOfProd.listofProd(req , res)
 })
 
-// route.get('/api/produto/:id', (req , res)=>{
-//   movementOfProd.listofProd(req , res)
-// })
-
 route.delete('/api/deleteprod/:id' , (req , res)=>{
   movementOfProd.deleteProd(req , res)
 })
@@ -149,5 +146,27 @@ route.put('/api/updatetypeprod/:id', (req , res)=>{
      movementOfDriver.updateOfDrive(req , res)
  })
 
+ //locação 
+
+//  route.post('/api/locacoes' , (req , res)=>{
+//   location.criarLocacao(req , res)
+//  })
+ route.post('/api/locacoes' , (req , res)=>{
+  location.criarLocacao(req,res)
+ })
+
+ route.post('/api/locbens' , async (req , res)=>{
+  try {
+     await location.locacaoBens(req, res )
+  } catch (error) {
+    console.error("Erro na rota /api/locbens:", error);
+    res.status(500).json({ error: "Erro interno do servidor." });
+  }
+  
+ })
+
+ route.get('/api/codefamilybens',(req , res)=>{
+   location.listarFamilias(req,res)
+ })
 
 module.exports = route;

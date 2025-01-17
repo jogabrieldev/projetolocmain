@@ -68,6 +68,15 @@ btnOutInitTp.addEventListener('click' , (e)=>{
      btnMainPage.style.display = 'flex'
 });
 
+const btnExitSectionTypeProd = document.querySelector('.buttonExitTipoProd')
+btnExitSectionTypeProd.addEventListener('click' , ()=>{
+   
+const containerAppTypeProd = document.querySelector('.containerAppTipoProd')
+      containerAppTypeProd.style.display = 'none'
+
+})
+
+
 const btnOutInitTpEdit = document.querySelector('.btnOutInitTpEdit')
 btnOutInitTpEdit.addEventListener('click' , (e)=>{
      

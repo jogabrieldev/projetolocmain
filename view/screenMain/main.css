@@ -70,7 +70,7 @@ input{
 .workButton{
     display: flex;
     background-color: darkgray;
-    width: 19%;
+    width: 20%;
     height: 100%;
     justify-content: flex-end;
     border-radius: 10px;
@@ -369,9 +369,11 @@ table {
     gap: 5px;
     margin-bottom: 2px; 
     margin-left: 3%;
+    position: relative;
 }
 .inputGroup{
     display: flex;
+    position: relative;
     flex-direction: column;
     flex: 1 1 calc(33% - 20px); 
     min-width: 250px; 
@@ -380,8 +382,8 @@ table {
 .inputGroup label{
     font-weight: bold;
     margin-bottom: 5px;
-    
 }
+
 
 /* botoes que estao na tela de registro */
 .btnOutNext{
@@ -406,5 +408,37 @@ table {
     background-color: lightslategray; 
     border: none;
     height: 27px;
+}
+
+/* Interação no software */
+.btnAtivRegister{
+    margin-top: 3.5%;
+    width: 90%;
+    height: 35px;
+    border: none;
+    background-color: rgb(100, 137, 189);
+    cursor: pointer;
+    margin-right: 2.5%;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
+}
+.btnAtivRegister:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
+.OutOfMainBtn{
+    height: 30px;
+    margin-top: 40%;
+}
+.btnRegisterLocation{
+    width: 90%;
+    height: 35px;
+    border: none;
+    background-color: rgb(100, 137, 189);
+    cursor: pointer;
+    margin-right: 2.5%;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
 }
 

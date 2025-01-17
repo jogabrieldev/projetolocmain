@@ -64,6 +64,16 @@ btnRegisterForn.addEventListener('click' , ()=>{
       btnMainPageForm.style.display =  'none'
 })
 
+const btnOutSectionForn = document.querySelector('.buttonExitForn')
+btnOutSectionForn.addEventListener('click' , (event)=>{
+  event.preventDefault()
+
+  const containerAppForn = document.querySelector(".containerAppForn")
+     containerAppForn.style.display = 'none'
+
+
+})
+
 const btnOutPage = document.querySelector('.btnOutInitForn')
 btnOutPage.addEventListener('click' , (e)=>{
     e.preventDefault()

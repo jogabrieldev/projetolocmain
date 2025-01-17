@@ -45,8 +45,12 @@ const crudRegisterFabri = {
          
         try {
             
-            const delet = "DELETE FROM cadfabe WHERE fabecode = $1 RETURNING *";
-            const result = await userDbFabri.query(delet, [id])
+            const delet = "DELETE FROM regislo WHERE relocofb = $1 RETURNING *";
+             await userDbFabri.query(delet, [id])
+
+              // Excluir o cliente da tabela "cadclie"
+          const deleteCadclie = "DELETE FROM cadfabe WHERE fabecode = $1 RETURNING *";
+           const result = await userDbFabri.query(deleteCadclie, [id]); 
     
             return result.rows[0]
     
@@ -76,6 +80,8 @@ const crudRegisterFabri = {
     
         return result.rows[0];
       },
+       
+     
 
 };
 

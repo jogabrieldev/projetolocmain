@@ -1,95 +1,101 @@
-const btnCadFabri = document.querySelector('.btnCadFabri')
-btnCadFabri.addEventListener('click' , ()=>{
+const btnCadFabri = document.querySelector(".btnCadFabri");
+btnCadFabri.addEventListener("click", () => {
+  const containerAppFabri = document.querySelector(".containerAppFabri");
+  containerAppFabri.style.display = "flex";
 
-    const containerAppFabri = document.querySelector('.containerAppFabri')
-          containerAppFabri.style.display = 'flex'
+  const containerAppClient = document.querySelector(".containerAppClient");
+  containerAppClient.style.display = "none";
 
-    const containerAppClient = document.querySelector(".containerAppClient");
-          containerAppClient.style.display = 'none'
+  const containerAppBens = document.querySelector(".containerAppBens");
+  containerAppBens.style.display = "none";
 
-    const containerAppBens = document.querySelector(".containerAppBens");
-           containerAppBens.style.display = 'none'
+  const containerAppForn = document.querySelector(".containerAppForn");
+  containerAppForn.style.display = "none";
 
-    const containerAppForn = document.querySelector(".containerAppForn")
-            containerAppForn.style.display = 'none'
-   
-    const btnPageInit = document.querySelector('.btnMainPageFabri')
-          btnPageInit.style.display = 'flex'
+  const btnPageInit = document.querySelector(".btnMainPageFabri");
+  btnPageInit.style.display = "flex";
 
-     const containerFormRegisterFabri = document.querySelector('.listingFabri')
-        containerFormRegisterFabri.style.display = 'flex'
+  const containerFormRegisterFabri = document.querySelector(".listingFabri");
+  containerFormRegisterFabri.style.display = "flex";
 
-    const formRegisterFabri = document.querySelector('.formRegisterFabri')
-           formRegisterFabri.style.display ='none'
+  const formRegisterFabri = document.querySelector(".formRegisterFabri");
+  formRegisterFabri.style.display = "none";
 
-     const containerAppDriver = document.querySelector('.containerAppDriver')
-          containerAppDriver.style.display = 'none'
+  const containerAppDriver = document.querySelector(".containerAppDriver");
+  containerAppDriver.style.display = "none";
 
-    const containerAppTypeProd = document.querySelector('.containerAppTipoProd')
-           containerAppTypeProd.style.display = 'none'
+  const containerAppTypeProd = document.querySelector(".containerAppTipoProd");
+  containerAppTypeProd.style.display = "none";
 
-    const containerAppProd = document.querySelector('.containerAppProd')
-         containerAppProd.style.display = 'none'
-    
-    const containerFormEdit = document.querySelector('.editFabri')
-       containerFormEdit.style.diplay = 'none'
+  const containerAppProd = document.querySelector(".containerAppProd");
+  containerAppProd.style.display = "none";
 
-       const informative = document.querySelector('.information')
-        informative.style.display = 'block'
-    informative.textContent = 'SEÇÃO FABRICANTE'
-    
-})
+  const containerFormEdit = document.querySelector(".editFabri");
+  containerFormEdit.style.diplay = "none";
 
-const btnPageRegisterFabri = document.querySelector('.registerFabri')
-btnPageRegisterFabri.addEventListener('click' ,()=>{
+  const informative = document.querySelector(".information");
+  informative.style.display = "block";
+  informative.textContent = "SEÇÃO FAMILIA DE BENS";
+});
 
-  const formRegisterFabri = document.querySelector('.formRegisterFabri')
-  const btnPageInit = document.querySelector('.btnMainPageFabri')
-  const listFabricante = document.querySelector('.listingFabri')
-  
-  listFabricante.style.display = 'none'
-  btnPageInit.style.display = 'none'
+const btnPageRegisterFabri = document.querySelector(".registerFabri");
+btnPageRegisterFabri.addEventListener("click", () => {
+  const formRegisterFabri = document.querySelector(".formRegisterFabri");
+  const btnPageInit = document.querySelector(".btnMainPageFabri");
+  const listFabricante = document.querySelector(".listingFabri");
 
-  formRegisterFabri.style.display = 'flex'
-})
+  listFabricante.style.display = "none";
+  btnPageInit.style.display = "none";
 
-const btnOutOfRegister = document.querySelector('.btnOutInitFabri')
-btnOutOfRegister.addEventListener('click' , (event)=>{
+  formRegisterFabri.style.display = "flex";
+});
 
+const btnOutOfRegister = document.querySelector(".btnOutInitFabri");
+btnOutOfRegister.addEventListener("click", (event) => {
+  event.preventDefault();
+
+  const btnPageInit = document.querySelector(".btnMainPageFabri");
+  btnPageInit.style.display = "flex";
+
+  const listFabricante = document.querySelector(".listingFabri");
+  listFabricante.style.display = "flex";
+
+  const containerFormFabriRegister =
+    document.querySelector(".formRegisterFabri");
+  containerFormFabriRegister.style.display = "none";
+});
+
+const btnExitFamilygoods = document.querySelector('.buttonExitFabri')
+btnExitFamilygoods.addEventListener('click', (event)=>{
    event.preventDefault()
 
-   const btnPageInit = document.querySelector('.btnMainPageFabri')
-   btnPageInit.style.display = 'flex'
-
-    const listFabricante = document.querySelector('.listingFabri')
-    listFabricante.style.display = 'flex'
+   const containerAppFabri = document.querySelector(".containerAppFabri");
+    containerAppFabri.style.display = "none";
     
-
-   const containerFormFabriRegister = document.querySelector('.formRegisterFabri')
-    containerFormFabriRegister.style.display = 'none'
- 
 })
 
-const btnOutInitFabriEdit =  document.querySelector('.btnOutInitFabriEdit')
-btnOutInitFabriEdit.addEventListener('click' , (event)=>{
-   event.preventDefault()
+const btnOutInitFabriEdit = document.querySelector(".btnOutInitFabriEdit");
+btnOutInitFabriEdit.addEventListener("click", (event) => {
+  event.preventDefault();
 
-   const btnPageInit = document.querySelector('.btnMainPageFabri')
-   btnPageInit.style.display = 'flex'
+  const btnPageInit = document.querySelector(".btnMainPageFabri");
+  btnPageInit.style.display = "flex";
 
-    const listFabricante = document.querySelector('.listingFabri')
-    listFabricante.style.display = 'flex'
-    
-   const containerFormFabriRegister = document.querySelector('.editFabri')
-    containerFormFabriRegister.style.display = 'none'
-})
+  const listFabricante = document.querySelector(".listingFabri");
+  listFabricante.style.display = "flex";
 
-const formRegisterFabricante = document.querySelector('.formRegisterFabricante')
-formRegisterFabricante.addEventListener('submit' , async (event)=>{
-    event.preventDefault()
-    
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData.entries());
+  const containerFormFabriRegister = document.querySelector(".editFabri");
+  containerFormFabriRegister.style.display = "none";
+});
+
+const formRegisterFabricante = document.querySelector(
+  ".formRegisterFabricante"
+);
+formRegisterFabricante.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const formData = new FormData(event.target);
+  const data = Object.fromEntries(formData.entries());
 
   if (
     Object.keys(data).length === 0 ||
@@ -107,57 +113,55 @@ formRegisterFabricante.addEventListener('submit' , async (event)=>{
     return;
   }
 
-    const response = await fetch('/api/fabri/submit', {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    })
+  const response = await fetch("/api/fabri/submit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
 
-      if (response.ok) {
-        
-        Toastify({
-          text: "Cadastrado com Sucesso",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "green",
-        }).showToast();
-      
-        console.log("deu certo");
+  if (response.ok) {
+    Toastify({
+      text: "Cadastrado com Sucesso",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "green",
+    }).showToast();
 
-        document.querySelector(".formRegisterFabricante").reset();
-        return;
-        
-      } else {
-        console.log("deu erro viu");
+    console.log("deu certo");
 
-        Toastify({
-          text: "Erro no cadastro",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-      }
-})
+    document.querySelector(".formRegisterFabricante").reset();
+    return;
+  } else {
+    console.log("deu erro viu");
+
+    Toastify({
+      text: "Erro no cadastro",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+  }
+});
 
 // listagem de fabricante
 
 async function fetchListFabricante() {
   try {
     const response = await fetch("/api/listfabri");
-    const fabricante= await response.json();
-  
+    const fabricante = await response.json();
+
     const fabricanteListDiv = document.querySelector(".listingFabri");
     fabricanteListDiv.innerHTML = "";
-  
+
     if (fabricante.length > 0) {
       const tabela = document.createElement("table");
       tabela.style.width = "100%";
       tabela.setAttribute("border", "1");
-  
+
       const cabecalho = tabela.createTHead();
       const linhaCabecalho = cabecalho.insertRow();
       const colunas = [
@@ -167,27 +171,27 @@ async function fetchListFabricante() {
         "Categoria",
         "Subcategoria",
         "Observação",
-        "Centro de custo"
+        "Centro de custo",
       ];
-  
+
       colunas.forEach((coluna) => {
         const th = document.createElement("th");
         th.textContent = coluna;
         linhaCabecalho.appendChild(th);
       });
-  
+
       const corpo = tabela.createTBody();
       fabricante.forEach((fabricante) => {
         const linha = corpo.insertRow();
 
         linha.setAttribute("data-fabecode", fabricante.fabecode);
-  
+
         const checkboxCell = linha.insertCell();
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.name = "selectFabricante";
         checkbox.value = fabricante.fabecode;
-        
+
         const fabricanteData = JSON.stringify(fabricante);
         if (fabricanteData) {
           checkbox.dataset.fabricante = fabricanteData;
@@ -203,9 +207,8 @@ async function fetchListFabricante() {
         linha.insertCell().textContent = fabricante.fabesuca;
         linha.insertCell().textContent = fabricante.fabeobs;
         linha.insertCell().textContent = fabricante.fabectct;
-       
       });
-  
+
       fabricanteListDiv.appendChild(tabela);
     } else {
       fabricanteListDiv.innerHTML = "<p>Nenhum fornecedor cadastrado.</p>";
@@ -216,14 +219,13 @@ async function fetchListFabricante() {
       "<p>Erro ao carregar fornecedores.</p>";
   }
 }
-  
-fetchListFabricante()
+
+fetchListFabricante();
 
 //deletar fabricante
 
-const btnDeleteFabri = document.querySelector('.buttonDeleteFabri')
-btnDeleteFabri.addEventListener('click' , async ()=>{
-
+const btnDeleteFabri = document.querySelector(".buttonDeleteFabri");
+btnDeleteFabri.addEventListener("click", async () => {
   const selectedCheckbox = document.querySelector(
     'input[name="selectFabricante"]:checked'
   );
@@ -250,8 +252,7 @@ btnDeleteFabri.addEventListener('click' , async ()=>{
   }
 
   await deleteFabri(fabricanteId, selectedCheckbox.closest("tr"));
-
-})
+});
 
 async function deleteFabri(id, fabeRow) {
   try {
@@ -296,11 +297,9 @@ async function deleteFabri(id, fabeRow) {
   }
 }
 
-
 // Edição do fabricante
-const btnFormEditFabri = document.querySelector('.buttonEditFabri')
-btnFormEditFabri.addEventListener('click' , ()=>{
-      
+const btnFormEditFabri = document.querySelector(".buttonEditFabri");
+btnFormEditFabri.addEventListener("click", () => {
   const selectedCheckbox = document.querySelector(
     'input[name="selectFabricante"]:checked'
   );
@@ -329,15 +328,15 @@ btnFormEditFabri.addEventListener('click' , ()=>{
 
     // Campos e IDs correspondentes
     const campos = [
-      { id: "editFabeCode", valor:fabricanteSelecionado.fabecode },
+      { id: "editFabeCode", valor: fabricanteSelecionado.fabecode },
       { id: "editFabeDesc", valor: fabricanteSelecionado.fabedesc },
       { id: "editFabeCate", valor: fabricanteSelecionado.fabecate },
-      { id: "editFabeSuca", valor: fabricanteSelecionado.fabesuca},
+      { id: "editFabeSuca", valor: fabricanteSelecionado.fabesuca },
       { id: "editFabeObs", valor: fabricanteSelecionado.fabeobs },
-      { id: "editFabeCtct", valor: fabricanteSelecionado.fabectct }
+      { id: "editFabeCtct", valor: fabricanteSelecionado.fabectct },
     ];
 
-       console.log(campos)
+    console.log(campos);
     // Atualizar valores no formulário
     campos.forEach(({ id, valor }) => {
       const elemento = document.getElementById(id);
@@ -349,9 +348,9 @@ btnFormEditFabri.addEventListener('click' , ()=>{
     });
 
     // Mostrar o formulário de edição e ocultar a lista
-    const spaceEditFabri = document.querySelector('.editFabri')
-    const btnMainPageFabri =  document.querySelector('.btnMainPageFabri')
-    const listingFabri = document.querySelector('.listingFabri')
+    const spaceEditFabri = document.querySelector(".editFabri");
+    const btnMainPageFabri = document.querySelector(".btnMainPageFabri");
+    const listingFabri = document.querySelector(".listingFabri");
 
     if (spaceEditFabri) {
       spaceEditFabri.style.display = "flex";
@@ -359,14 +358,14 @@ btnFormEditFabri.addEventListener('click' , ()=>{
       console.error("O formulário de edição não foi encontrado.");
     }
 
-    if (listingFabri ) {
-      listingFabri .style.display = "none";
+    if (listingFabri) {
+      listingFabri.style.display = "none";
     } else {
       console.error("A lista de Fabricantes não foi encontrada.");
     }
 
-    if(btnMainPageFabri){
-      btnMainPageFabri.style.display = 'none'
+    if (btnMainPageFabri) {
+      btnMainPageFabri.style.display = "none";
     }
   } catch (error) {
     console.error("Erro ao fazer parse de data-bem:", error);
@@ -407,13 +406,13 @@ async function editAndUpdateOfFabric() {
       return;
     }
 
-    const updateFabric= {
+    const updateFabric = {
       fabecode: document.getElementById("editFabeCode").value,
       fabedesc: document.getElementById("editFabeDesc").value,
       fabecate: document.getElementById("editFabeCate").value,
       fabesuca: document.getElementById("editFabeSuca").value,
       fabeobs: document.getElementById("editFabeObs").value,
-      fabectct:document.getElementById("editFabeCtct").value
+      fabectct: document.getElementById("editFabeCtct").value,
     };
 
     try {

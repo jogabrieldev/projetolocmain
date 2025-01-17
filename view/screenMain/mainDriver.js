@@ -1,80 +1,86 @@
-const btnInitCadDrive = document.querySelector('.btnCadMotorista')
-btnInitCadDrive.addEventListener('click' , ()=>{
+const btnInitCadDrive = document.querySelector(".btnCadMotorista");
+btnInitCadDrive.addEventListener("click", () => {
+  const containerAppFabri = document.querySelector(".containerAppFabri");
+  containerAppFabri.style.display = "none";
 
-    const containerAppFabri = document.querySelector('.containerAppFabri')
-      containerAppFabri.style.display = 'none'
+  const containerAppClient = document.querySelector(".containerAppClient");
+  containerAppClient.style.display = "none";
 
-    const containerAppClient = document.querySelector(".containerAppClient");
-      containerAppClient.style.display = 'none'
+  const containerAppBens = document.querySelector(".containerAppBens");
+  containerAppBens.style.display = "none";
 
-    const containerAppBens = document.querySelector(".containerAppBens");
-      containerAppBens.style.display = 'none'
+  const containerAppForn = document.querySelector(".containerAppForn");
+  containerAppForn.style.display = "none";
 
-    const containerAppForn = document.querySelector(".containerAppForn")
-      containerAppForn.style.display = 'none'
+  const containerAppProd = document.querySelector(".containerAppProd");
+  containerAppProd.style.display = "none";
 
-    const containerAppProd = document.querySelector('.containerAppProd')
-    containerAppProd.style.display = 'none'
+  const containerAppTypeProd = document.querySelector(".containerAppTipoProd");
+  containerAppTypeProd.style.display = "none";
 
-    const containerAppTypeProd = document.querySelector('.containerAppTipoProd')
-    containerAppTypeProd.style.display = 'none'
+  const containerForm = document.querySelector(".RegisterDriver");
+  containerForm.style.display = "none";
 
-    const containerForm = document.querySelector('.RegisterDriver')
-       containerForm.style.display = 'none'
+  const containerFormEditDriver = document.querySelector(
+    ".containerFormEditDriver"
+  );
+  containerFormEditDriver.style.display = "none";
 
-    const containerFormEditDriver = document.querySelector('.containerFormEditDriver')
-    containerFormEditDriver.style.display = 'none'
+  const containerAppDriver = document.querySelector(".containerAppDriver");
+  containerAppDriver.style.display = "flex";
 
+  const listingDrive = document.querySelector(".listingDriver");
+  listingDrive.style.display = "flex";
 
-    const containerAppDriver = document.querySelector('.containerAppDriver')
-    containerAppDriver.style.display = 'flex'
+  const btnMainPage = document.querySelector(".btnInitPageMain");
+  btnMainPage.style.display = "flex";
 
-    const listingDrive = document.querySelector('.listingDriver')
-      listingDrive.style.display = 'flex'
-
-   const btnMainPage = document.querySelector('.btnInitPageMain')
-    btnMainPage.style.display = 'flex'
-
-    const informative = document.querySelector('.information')
-     informative.style.display = 'block'
-    informative.textContent = 'SEÇÃO MOTORISTA'
+  const informative = document.querySelector(".information");
+  informative.style.display = "block";
+  informative.textContent = "SEÇÃO MOTORISTA";
 });
 
-const registerDriver = document.querySelector('.registerDriver')
-registerDriver.addEventListener('click' , ()=>{
-     
-    const formRegisterDriver = document.querySelector('.RegisterDriver')
-     formRegisterDriver.style.display = 'flex'
+const registerDriver = document.querySelector(".registerDriver");
+registerDriver.addEventListener("click", () => {
+  const formRegisterDriver = document.querySelector(".RegisterDriver");
+  formRegisterDriver.style.display = "flex";
 
-     const listingDriver = document.querySelector('.listingDriver')
-      listingDriver.style.display = 'none'
+  const listingDriver = document.querySelector(".listingDriver");
+  listingDriver.style.display = "none";
 
-     const btnPageMain = document.querySelector('.btnInitPageMain')
-     btnPageMain.style.display = 'none'
+  const btnPageMain = document.querySelector(".btnInitPageMain");
+  btnPageMain.style.display = "none";
 });
 
-const btnOutPageEditDrive = document.querySelector('.btnOutPageRegister')
-btnOutPageEditDrive.addEventListener('click' , (event )=>{
-   
-    event.preventDefault()
-   
-    const formRegisterDriver = document.querySelector('.RegisterDriver')
-     formRegisterDriver.style.display = 'none'
+const btnOutSectionDriver = document.querySelector('.buttonExitDriver')
+btnOutSectionDriver.addEventListener('click', ()=>{
 
-     const listingDriver = document.querySelector('.listingDriver')
-      listingDriver.style.display = 'flex'
+  const containerAppDriver = document.querySelector(".containerAppDriver");
+  containerAppDriver.style.display = "none";
 
-     const btnPageMain = document.querySelector('.btnInitPageMain')
-     btnPageMain.style.display = 'flex'
+})
 
+
+const btnOutPageEditDrive = document.querySelector(".btnOutPageRegister");
+btnOutPageEditDrive.addEventListener("click", (event) => {
+  event.preventDefault();
+
+  const formRegisterDriver = document.querySelector(".RegisterDriver");
+  formRegisterDriver.style.display = "none";
+
+  const listingDriver = document.querySelector(".listingDriver");
+  listingDriver.style.display = "flex";
+
+  const btnPageMain = document.querySelector(".btnInitPageMain");
+  btnPageMain.style.display = "flex";
 });
 
-const formRegisterDriver = document.querySelector('.formRegisterDriver')
-formRegisterDriver.addEventListener('submit' , async (event)=>{
-    event.preventDefault()
-    
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData.entries());
+const formRegisterDriver = document.querySelector(".formRegisterDriver");
+formRegisterDriver.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const formData = new FormData(event.target);
+  const data = Object.fromEntries(formData.entries());
 
   if (
     Object.keys(data).length === 0 ||
@@ -92,12 +98,12 @@ formRegisterDriver.addEventListener('submit' , async (event)=>{
     return;
   }
 
-    await fetch('/api/drive/submit', {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    }).then((response) => {
-
+  await fetch("/api/drive/submit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  })
+    .then((response) => {
       if (response.ok) {
         console.log("deu certo");
 
@@ -109,10 +115,9 @@ formRegisterDriver.addEventListener('submit' , async (event)=>{
           position: "center",
           backgroundColor: "green",
         }).showToast();
-    
+
         document.querySelector(".formRegisterDriver").reset();
         return;
-        
       } else {
         console.log("deu erro viu");
 
@@ -125,7 +130,8 @@ formRegisterDriver.addEventListener('submit' , async (event)=>{
           backgroundColor: "red",
         }).showToast();
       }
-    }).catch((error)=>{
+    })
+    .catch((error) => {
       console.error("deu erro no envio", error);
     });
 });
@@ -136,15 +142,15 @@ async function fetchListMotorista() {
   try {
     const response = await fetch("/api/listingdriver");
     const motorista = await response.json();
-  
+
     const motoristaListDiv = document.querySelector(".listingDriver");
     motoristaListDiv.innerHTML = "";
-  
+
     if (motorista.length > 0) {
       const tabela = document.createElement("table");
       tabela.style.width = "100%";
       tabela.setAttribute("border", "1");
-  
+
       const cabecalho = tabela.createTHead();
       const linhaCabecalho = cabecalho.insertRow();
       const colunas = [
@@ -163,30 +169,30 @@ async function fetchListMotorista() {
         "Rua",
         "Cidade",
         "Estado",
-        "E-mail"
+        "E-mail",
       ];
-  
+
       colunas.forEach((coluna) => {
         const th = document.createElement("th");
         th.textContent = coluna;
         linhaCabecalho.appendChild(th);
       });
-  
+
       const corpo = tabela.createTBody();
       motorista.forEach((motorista) => {
         const linha = corpo.insertRow();
 
         linha.setAttribute("data-motocode", motorista.motocode);
-  
+
         const checkboxCell = linha.insertCell();
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.name = "selectDriver";
         checkbox.value = motorista.motocode;
-        
+
         const motoristaData = JSON.stringify(motorista);
-        if (motoristaData ) {
-          checkbox.dataset.motorista= motoristaData ;
+        if (motoristaData) {
+          checkbox.dataset.motorista = motoristaData;
         } else {
           console.warn(`Fornecedor inválido encontrado:`, motorista);
         }
@@ -201,7 +207,6 @@ async function fetchListMotorista() {
           const day = String(dateObj.getDate()).padStart(2, "0");
           return `${year}-${month}-${day}`;
         };
-
 
         linha.insertCell().textContent = motorista.motocode;
         linha.insertCell().textContent = motorista.motoname;
@@ -219,7 +224,7 @@ async function fetchListMotorista() {
         linha.insertCell().textContent = motorista.motoestd;
         linha.insertCell().textContent = motorista.motomail;
       });
-  
+
       motoristaListDiv.appendChild(tabela);
     } else {
       motoristaListDiv.innerHTML = "<p>Nenhum fornecedor cadastrado.</p>";
@@ -230,13 +235,12 @@ async function fetchListMotorista() {
       "<p>Erro ao carregar fornecedores.</p>";
   }
 }
-fetchListMotorista()
+fetchListMotorista();
 
 //delete motorista
 
-const btnDeleteDriver = document.querySelector('.buttonDeleteDriver')
-btnDeleteDriver.addEventListener('click' , async ()=>{
-
+const btnDeleteDriver = document.querySelector(".buttonDeleteDriver");
+btnDeleteDriver.addEventListener("click", async () => {
   const selectedCheckbox = document.querySelector(
     'input[name="selectDriver"]:checked'
   );
@@ -263,8 +267,7 @@ btnDeleteDriver.addEventListener('click' , async ()=>{
   }
 
   await deleteDriver(motoristaId, selectedCheckbox.closest("tr"));
-
-})
+});
 
 async function deleteDriver(id, driverRow) {
   try {
@@ -310,9 +313,8 @@ async function deleteDriver(id, driverRow) {
 }
 
 // botão de editar
-const btnFormEditDrive = document.querySelector('.buttonEditDriver')
-btnFormEditDrive.addEventListener('click' , ()=>{
-      
+const btnFormEditDrive = document.querySelector(".buttonEditDriver");
+btnFormEditDrive.addEventListener("click", () => {
   const selectedCheckbox = document.querySelector(
     'input[name="selectDriver"]:checked'
   );
@@ -336,29 +338,29 @@ btnFormEditDrive.addEventListener('click' , ()=>{
   }
 
   try {
-    const motoristaSelecionado = JSON.parse(motoristaData );
+    const motoristaSelecionado = JSON.parse(motoristaData);
     // console.log("Editar item:", fabricanteSelecionado);
 
     // Campos e IDs correspondentes
     const campos = [
-      { id: "editMotoCode", valor:motoristaSelecionado.motocode },
+      { id: "editMotoCode", valor: motoristaSelecionado.motocode },
       { id: "editMotoNome", valor: motoristaSelecionado.motoname },
-      { id: "editMotoDtnc", valor: motoristaSelecionado.motodtnc},
-      { id: "editMotoCpf", valor: motoristaSelecionado.motocpf},
+      { id: "editMotoDtnc", valor: motoristaSelecionado.motodtnc },
+      { id: "editMotoCpf", valor: motoristaSelecionado.motocpf },
       { id: "editMotoDtch", valor: motoristaSelecionado.motodtch },
-      { id: "editMotoctch", valor: motoristaSelecionado.motoctch},
-      { id: "editMotoDtvc", valor: motoristaSelecionado.motodtvc},
-      { id: "editMotoRest", valor: motoristaSelecionado.motorest},
-      { id: "editMotoOrem", valor: motoristaSelecionado.motoorem},
-      { id: "editMotoCelu", valor: motoristaSelecionado.motocelu},
-      { id: "editMotoCep", valor: motoristaSelecionado.motocep},
-      { id: "editMotoRua", valor: motoristaSelecionado.motorua},
-      { id: "editMotoCity", valor: motoristaSelecionado.motorua},
-      { id: "editMotoEstd", valor: motoristaSelecionado.motoestd},
-      { id: "editMotoMail", valor: motoristaSelecionado.motomail},
+      { id: "editMotoctch", valor: motoristaSelecionado.motoctch },
+      { id: "editMotoDtvc", valor: motoristaSelecionado.motodtvc },
+      { id: "editMotoRest", valor: motoristaSelecionado.motorest },
+      { id: "editMotoOrem", valor: motoristaSelecionado.motoorem },
+      { id: "editMotoCelu", valor: motoristaSelecionado.motocelu },
+      { id: "editMotoCep", valor: motoristaSelecionado.motocep },
+      { id: "editMotoRua", valor: motoristaSelecionado.motorua },
+      { id: "editMotoCity", valor: motoristaSelecionado.motorua },
+      { id: "editMotoEstd", valor: motoristaSelecionado.motoestd },
+      { id: "editMotoMail", valor: motoristaSelecionado.motomail },
     ];
 
-       console.log(campos)
+    console.log(campos);
 
     // Atualizar valores no formulário
     campos.forEach(({ id, valor }) => {
@@ -371,9 +373,9 @@ btnFormEditDrive.addEventListener('click' , ()=>{
     });
 
     // Mostrar o formulário de edição e ocultar a lista
-    const spaceEditDriver = document.querySelector('.containerFormEditDriver')
-    const btnMainPageDriver =  document.querySelector('.btnInitPageMain')
-    const listingDriver = document.querySelector('.listingDriver')
+    const spaceEditDriver = document.querySelector(".containerFormEditDriver");
+    const btnMainPageDriver = document.querySelector(".btnInitPageMain");
+    const listingDriver = document.querySelector(".listingDriver");
 
     if (spaceEditDriver) {
       spaceEditDriver.style.display = "flex";
@@ -381,14 +383,14 @@ btnFormEditDrive.addEventListener('click' , ()=>{
       console.error("O formulário de edição não foi encontrado.");
     }
 
-    if (listingDriver ) {
-      listingDriver .style.display = "none";
+    if (listingDriver) {
+      listingDriver.style.display = "none";
     } else {
       console.error("A lista de motoristas não foi encontrada.");
     }
 
-    if(btnMainPageDriver){
-      btnMainPageDriver.style.display = 'none'
+    if (btnMainPageDriver) {
+      btnMainPageDriver.style.display = "none";
     }
   } catch (error) {
     console.error("Erro ao fazer parse de data-bem:", error);
@@ -428,23 +430,23 @@ async function editAndUpdateOfDriver() {
       return;
     }
 
-    const updateDriver= {
+    const updateDriver = {
       motocode: document.getElementById("editMotoCode").value,
       motoname: document.getElementById("editMotoNome").value,
       motodtnc: document.getElementById("editMotoDtnc").value,
       motocpf: document.getElementById("editMotoCpf").value,
       motodtch: document.getElementById("editMotoDtch").value,
-      motoctch:document.getElementById("editMotoDtch").value,
-      motoctch:document.getElementById("editMotoctch").value,
-      motodtvc:document.getElementById("editMotoDtvc").value,
-      motorest:document.getElementById("editMotoRest").value,
-      motoorem:document.getElementById("editMotoOrem").value,
-      motocelu:document.getElementById("editMotoCelu").value,
-      motocep:document.getElementById("editMotoCep").value,
-      motorua:document.getElementById("editMotoRua").value,
-      motocity:document.getElementById("editMotoCity").value,
-      motoestd:document.getElementById("editMotoEstd").value,
-      motomail:document.getElementById("editMotoMail").value,
+      motoctch: document.getElementById("editMotoDtch").value,
+      motoctch: document.getElementById("editMotoctch").value,
+      motodtvc: document.getElementById("editMotoDtvc").value,
+      motorest: document.getElementById("editMotoRest").value,
+      motoorem: document.getElementById("editMotoOrem").value,
+      motocelu: document.getElementById("editMotoCelu").value,
+      motocep: document.getElementById("editMotoCep").value,
+      motorua: document.getElementById("editMotoRua").value,
+      motocity: document.getElementById("editMotoCity").value,
+      motoestd: document.getElementById("editMotoEstd").value,
+      motomail: document.getElementById("editMotoMail").value,
     };
 
     try {
@@ -470,7 +472,8 @@ async function editAndUpdateOfDriver() {
 
         setTimeout(() => {
           window.location.reload();
-          document.querySelector(".containerFormEditDriver").style.display = "none";
+          document.querySelector(".containerFormEditDriver").style.display =
+            "none";
         }, 3000);
 
         formEditDrive.reset();
@@ -483,4 +486,3 @@ async function editAndUpdateOfDriver() {
   });
 }
 editAndUpdateOfDriver();
-
