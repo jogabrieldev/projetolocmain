@@ -33,6 +33,10 @@ btnLocation.addEventListener("click", () => {
 
   const containerAppLocation = document.querySelector(".containerAppLocation");
   containerAppLocation.style.display = "flex";
+
+  const btnlocationFinish = document.querySelector('.btnlocationFinish')
+   btnlocationFinish.style.display = 'flex'
+
 });
 
 const locBtnRegisterClient = document.querySelector(".locCadClient");
@@ -63,7 +67,7 @@ btnOutInitLoc.addEventListener("click", (event) => {
   informationClient.style.display = "flex";
 });
 
-// buscar cliente
+// buscar cliente para verificar se tem cadastro.
 const searchClient = document.querySelector("#search");
 searchClient.addEventListener("click", async (event) => {
   event.preventDefault();
@@ -109,7 +113,7 @@ searchClient.addEventListener("click", async (event) => {
 
       const thead = document.createElement("thead");
       const headerRow = document.createElement("tr");
-      ["Nome", "CPF", "Data de Cadastro"].forEach((headerText) => {
+      ["Nome", "CPF","Rua" , "CEP", "Data de Cadastro"].forEach((headerText) => {
         const th = document.createElement("th");
         th.textContent = headerText;
         th.style.border = "1px solid #ccc";
@@ -123,8 +127,19 @@ searchClient.addEventListener("click", async (event) => {
       const tbody = document.createElement("tbody");
       const dataRow = document.createElement("tr");
 
+    // formatação de data
+      const formData = (data) => {
+        if (!data) return 'Data não informada';
+        const dateObj = new Date(data);
+        return new Intl.DateTimeFormat('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+        }).format(dateObj);
+      };
+
       // Preencher dados do cliente
-      [clientGeral.clienome, clientGeral.cliecpf, clientGeral.cliedtcd].forEach(
+      [clientGeral.clienome, clientGeral.cliecpf, clientGeral.clierua, clientGeral.cliecep, formData(clientGeral.cliedtcd)].forEach(
         (cellData) => {
           const td = document.createElement("td");
           td.textContent = cellData;
@@ -163,161 +178,6 @@ searchClient.addEventListener("click", async (event) => {
   }
 });
 
-//Carregamento do codigo do ben
-// async function carregarCodigosBens() {
-//   try {
-//     const response = await fetch("/api/codefamilybens");
-//     if (!response.ok) {
-//       throw new Error("Erro ao carregar os códigos dos bens.");
-//     }
-//     const bens = await response.json();
-
-//     const select = document.querySelectorAll("[id^='codeBen']");
-//     select.innerHTML = ""; // Limpar opções existentes
-     
-//     select.forEach((select) => {
-//       select.innerHTML = "";
-//     bens.forEach((bem) => {
-//       const option = document.createElement("option");
-//       option.value = bem.fabecode;
-//       option.textContent = `${bem.fabecode}`;
-//       select.appendChild(option);
-//     });
-//   })
-//   } catch (error) {
-//     console.error("Erro ao carregar códigos dos bens:", error);
-//     alert("Erro ao carregar códigos dos bens.");
-//   }
-// }
-// document.addEventListener("DOMContentLoaded", carregarCodigosBens);
-
-// PROCESSO DE LOCAÇÃO
-// async function handleSubmit(event) {
-
-//   event.preventDefault()
-
- 
-//   const totalGrups = 3
-//   const groups = [];
-
-
-   
-//     console.log( ' Esse e meu total:',totalGrups)
- 
-
-
-//  for (let i = 1; i <=  totalGrups; i++) {
-//    const codeBen = document.getElementById(`codeBen${i}`)?.value;
-//    const produto = document.getElementById(`produto${i}`)?.value;
-//    const quantidade = document.getElementById(`quantidade${i}`)?.value;
-//    const descricao = document.getElementById(`descricao${i}`)?.value;
-
-//    if (codeBen && produto && quantidade && descricao) {
-//      groups.push({ codeBen, produto, quantidade, descricao });
-//    }
-//  }
-
-//  if (groups.length === 0) {
-//    alert("Por favor, preencha pelo menos um grupo completo.");
-//    return;
-//  }
-
-//  console.log("Grupos preenchidos:", groups);
-
-//  // Enviar os dados ao backend
-//  try {
-//    const response = await fetch("/api/locacoes", {
-//      method: "POST",
-//      headers: { "Content-Type": "application/json" },
-//      body: JSON.stringify(groups),
-//    });
-
-//    const result = await response.json();
-//    console.log("Dados enviados:", result);
-
-
-//    if (response.ok) {
-//     alert("Dados cadastrados com sucesso!");
-//   } else {
-//     alert("Erro ao cadastrar dados: " + result.error);
-//   }
-// } catch (error) {
-//   console.error("Erro ao enviar os dados:", error);
-//   alert("Erro ao enviar os dados.");
-// }
-  
-//   const userClientValidade = document.querySelector("#numCpf").value;
-//   const client = document.getElementById("client").value;
-//   const dataLoc = document.getElementById("dataLoc").value;
-//   const dataDevo = document.getElementById("DataDevo").value;
-//   const horaLoc = document.getElementById("horaLoc").value;
-//   const pagament = document.getElementById("pagament").value;
-
-//   const payload = {
-//     userClientValidade,
-//     dataLoc,
-//     dataDevo,
-//     horaLoc,
-//     pagament,
-    
-//   };
-//   console.log(payload)
-
-
-//   try {
-//     // Enviar os dados ao backend
-//     const response = await fetch("/api/locacoes", {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify(payload),
-//     });
-
-//     const data = await response.json();
-//     console.log(data);
-//   } catch (error) {
-//     console.error("erro no fetch que envia loc para database:", error);
-//   }
-
-//   try {
-//     const response = await fetch("/api/listclient");
-//     if (!response.ok) {
-//       throw new Error("Erro ao buscar dados dos clientes.");
-//     }
-
-//     const clients = await response.json();
-//     const isCPFRegistered = clients.find(
-//       (client) => client.cliecpf === userClientValidade
-//     );
-
-//     if (isCPFRegistered) {
-//       const clientName = isCPFRegistered.clienome;
-
-//       Toastify({
-//         text: `Contrato de locação gerado`,
-//         duration: 4000,
-//         close: true,
-//         gravity: "top",
-//         position: "center",
-//         backgroundColor: "green",
-//       }).showToast();
-
-    
-//     } else {
-//       Toastify({
-//         text: `Usuário não cadastrado`,
-//         duration: 2000,
-//         close: true,
-//         gravity: "top",
-//         position: "center",
-//         backgroundColor: "red",
-//       }).showToast();
-//     }
-//   } catch (error) {
-//     console.error("Erro ao validar CPF:", error);
-//     alert("Ocorreu um erro ao validar o CPF. Tente novamente mais tarde.");
-//   }
-// }
-
 async function carregarFamilias() {
   try {
     const response = await fetch("/api/codefamilybens");
@@ -327,7 +187,7 @@ async function carregarFamilias() {
 
     const familias = await response.json();
 
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 1; i <= 4; i++) {
       const select = document.getElementById(`family${i}`);
       familias.forEach(({ fabecode }) => {
         const option = document.createElement("option");
@@ -348,8 +208,8 @@ document.addEventListener("DOMContentLoaded", carregarFamilias);
 async function handleSubmit(event) {
   event.preventDefault();
 
-  const totalGrups = 3;
-  const groups = [];
+  const totalGrups = 4;
+  const bens = [];
 
   // Capturar dados dos grupos
   for (let i = 1; i <= totalGrups; i++) {
@@ -361,24 +221,23 @@ async function handleSubmit(event) {
     console.log(`Dados do grupo ${i}:`, { codeBen, produto, quantidade, descricao });
 
     if (codeBen && produto && quantidade && descricao) {
-      groups.push({ codeBen, produto, quantidade, descricao });
+      bens.push({ codeBen, produto, quantidade, descricao });
     }
   }
 
-  if (groups.length === 0) {
+  if (bens.length === 0) {
     console.error("Nenhum grupo válido foi preenchido.");
     alert("Preencha ao menos um grupo corretamente.");
     return;
   }
 
-  // console.log("Grupos preenchidos:", groups);
 
   const result = await fetch("/api/locBens" , {
     method: "POST",
     headers:{
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({groups})
+    body: JSON.stringify({bens} )
   })
    if(result.ok){
     console.log('bens enviados com sucesso!! ')
@@ -400,20 +259,16 @@ async function handleSubmit(event) {
       dataDevo,
       horaLoc,
       pagament,
-      groups
+      bens
     }
 
-    console.log("Payload completo enviado:", payload);
+    console.log("Payload Cliente:", payload);
 
-    const response = await fetch("/api/locacoes", {
+    const response = await fetch('/api/locclient', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload )
+      body: JSON.stringify(payload)
     });
-
-    // const result = await response.json();
-
-    // console.log("Resposta do backend para locação:", result);
 
     if (response.ok) {
       Toastify({
@@ -424,15 +279,17 @@ async function handleSubmit(event) {
         position: "center",
         backgroundColor: "green",
       }).showToast();
-     
-    } else {
+
+      gerarContrato()
+       
+    } else {  
       Toastify({
         text: "Erro na locaçao : " + result.error || "Erro desconhecido.",
         duration: 2000,
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "Red",
       }).showToast();
     
     }
@@ -448,14 +305,105 @@ async function handleSubmit(event) {
       backgroundColor: "red",
     }).showToast();
   }
+
+  
+}
+
+async function buscarNomeCliente(cpf) {
+  try {
+    const response = await fetch(`/api/client?cpf=${cpf}`);
+    if (response.ok) {
+      const data = await response.json();
+      return data.nome || "Nome não encontrado";
+    } else {
+      console.error("Erro ao buscar cliente:", response.statusText);
+      return "Nome não encontrado";
+    }
+  } catch (error) {
+    console.error("Erro ao conectar à API:", error);
+    return "Erro ao buscar cliente";
+  }
+}
+
+async function gerarContrato() {
+ 
+  const cpfCliente = document.getElementById("numCpf")?.value || "Não informado";
+
+  const nomeCliente = cpfCliente !== "Não informado" ? await buscarNomeCliente(cpfCliente) : "CPF não informado";
+
+  const dataLocacao = document.getElementById("dataLoc")?.value || "Não informado";
+  const dataDevolucao = document.getElementById("DataDevo")?.value || "Não informado";
+  const horaLocacao = document.getElementById("horaLoc")?.value || "Não informado";
+  const pagamento = document.getElementById("pagament")?.value || "Não informado";
+
+  const gruposBens = [];
+  for (let i = 1; i <= 4; i++) {
+    const codeBen = document.getElementById(`family${i}`)?.value || "Não informado";
+    const produto = document.getElementById(`produto${i}`)?.value || "Não informado";
+    const quantidade = document.getElementById(`quantidade${i}`)?.value || "Não informado";
+    const descricao = document.getElementById(`descricao${i}`)?.value || "Não informado";
+
+    if (produto !== "Não informado") {
+      gruposBens.push(`
+        <tr>
+          <td>${codeBen}</td>
+          <td>${produto}</td>
+          <td>${quantidade}</td>
+          <td>${descricao}</td>
+        </tr>
+      `);
+    }
+  }
+
+  // Esconder as outras divs
+  document.querySelector(".informationMainClient").style.display = "none";
+  document.querySelector(".familyBens").style.display = "none";
+  document.querySelector(".LocRegisterClient").style.display = "none";
+
+  // Gerar conteúdo do contrato
+  const contratoDiv = document.getElementById("contrato");
+  contratoDiv.innerHTML = `
+    <h2>Contrato de Locação</h2>
+    <hr>
+    <p><strong>Nome do Cliente:</strong> ${nomeCliente}</p>
+    <p><strong>CPF do Cliente:</strong> ${cpfCliente}</p>
+    <p><strong>Data da Locação:</strong> ${dataLocacao}</p>
+    <p><strong>Data de Devolução:</strong> ${dataDevolucao}</p>
+    <p><strong>Hora da Locação:</strong> ${horaLocacao}</p>
+    <p><strong>Forma de Pagamento:</strong> ${pagamento}</p>
+    <hr>
+    <p><strong>Itens Locados:</strong></p>
+    ${
+      gruposBens.length > 0
+        ? `<table border="1" style="width: 100%; text-align: left; border-collapse: collapse;">
+            <thead>
+              <tr>
+                <th>Código do Bem</th>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Descrição</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${gruposBens.join("")}
+            </tbody>
+          </table>`
+        : "<p>Nenhum item informado.</p>"
+    }
+    <button id="voltar">Voltar</button>
+  `;
+  contratoDiv.style.display = "block";
+
+  
+  // Adicionar evento ao botão de voltar
+  document.getElementById("voltar").addEventListener("click", () => {
+    contratoDiv.style.display = "none";
+    document.querySelector(".informationMainClient").style.display = "block";
+    document.querySelector(".familyBens").style.display = "block";
+  });
 }
 
 
-
-
-
-
-// formulario da tela de locação caso o cliente não tenha cadastro
 
 const formRegisterClientLoc = document.querySelector("#formRegisterClientLoc");
 formRegisterClientLoc.addEventListener("submit", async (event) => {

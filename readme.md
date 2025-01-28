@@ -38,3 +38,9 @@ meu html princpal e o main.html , nele esta todas as seções de cadastro e cada
 ## execute o projeto 
  npm run dev   
 
+
+## locação
+
+* meu processo de locação esta envolvendo 2 tabelas , uma para registrar o cliente que locou e outra para registrar o bem locado , estou pegando os ID dessas tabelas e colocando numa terceira tabela chamada (locfim) e la seria minha tabela de registro de locação unindo o bem locado e o clinte que locou aquele bem, e junto com isso temos datas e dados de ambos , para literalmente ligar aquele cliente a aquele bem.
+
+

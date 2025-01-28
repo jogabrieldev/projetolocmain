@@ -1,4 +1,4 @@
-const auth = require("../model/data.js");
+const auth = require("../model/dataAuth.js");
 
 async function Controlautenticate(req, res) {
   try {

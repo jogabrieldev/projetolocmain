@@ -136,7 +136,7 @@ formRegisterTypeProd.addEventListener('submit' , async (event)=>{
           backgroundColor: "green",
         }).showToast();
     
-        document.querySelector(".formRegisterTipoProd").reset();
+        document.querySelector(".formRegisterTipoProdu").reset();
         return;
         
       } else {

@@ -148,25 +148,29 @@ route.put('/api/updatetypeprod/:id', (req , res)=>{
 
  //locação 
 
-//  route.post('/api/locacoes' , (req , res)=>{
-//   location.criarLocacao(req , res)
-//  })
- route.post('/api/locacoes' , (req , res)=>{
-  location.criarLocacao(req,res)
+// rota para cadastrar client que locou!
+
+ route.post('/api/locclient' , (req , res)=>{
+  location.LocacaoClient(req ,res)
  })
 
+// rota para cadastrar o bem locado !
  route.post('/api/locbens' , async (req , res)=>{
-  try {
      await location.locacaoBens(req, res )
-  } catch (error) {
-    console.error("Erro na rota /api/locbens:", error);
-    res.status(500).json({ error: "Erro interno do servidor." });
-  }
-  
  })
 
- route.get('/api/codefamilybens',(req , res)=>{
+ route.get('/api/locationfinish' , (req , res)=>{
+  location.listarLocacoes(req ,res)
+ })
+
+route.get('/api/codefamilybens',(req , res)=>{
    location.listarFamilias(req,res)
  })
+
+ route.get('/api/client' , (req , res)=>{
+  location.getClientByCPF(req, res)
+ })
+
+
 
 module.exports = route;

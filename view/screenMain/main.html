@@ -49,7 +49,9 @@
                 <li> <button class="btnAtivRegister">Cadastros</button></li>
                 <br>
                 <li> <button class="btnRegisterLocation">Locação</button></li>
-                
+                <br>
+                <li><button class="btnlocationFinish" style="display: none;" onclick="goodsLocation()"> Bens Locados</button></li>
+                <br>
                 <li><button class="btnCadBens" >Bens</button></li>
                 <br>
                 <li><button class="btnCadClie" >Clientes</button></li>
@@ -1027,7 +1029,7 @@
         
          <div class="formRegisterTipoProd" style="display: none;">
                
-             <form class="formRegisterTipoProd" >
+             <form class="formRegisterTipoProdu" >
          
                   <div class="formGroup">
       
@@ -1409,11 +1411,21 @@
              <option value="">code</option>
         </select>
         <input type="text"  id="produto3" placeholder="Produto" >
-        <input type="text"  id="quantidade3" placeholder="Ex.: 10" >
+        <input type="number"  id="quantidade3" placeholder="Ex.: 10" >
         <input type="text"  id="descricao3" placeholder="Ex.: TV, Computadores">
-       </div>
+
+        <select id="family4">
+            <!-- informações  -->
+             <option value="">code</option>
+        </select>
+        <input type="text"  id="produto4" placeholder="Produto" >
+        <input type="number"  id="quantidade4" placeholder="Ex.: 10" >
+        <input type="text"  id="descricao4" placeholder="Ex.: TV, Computadores">
   
-       <div class="formGroupBtn">
+  
+ </div>
+ 
+      <div class="formGroupBtn">
          <button type="submit"class="finish">Finalizar</button>
          
        </div> 
@@ -1491,9 +1503,22 @@
          </form>
      </div>
       
-     <div id="contrato" style="display: none;">
+            <div id="contrato" style="display: none;">
+             <!-- Contrato de locação -->
 
-     </div>
+
+         </div>
+
+</section>
+
+
+           <section class="containerLocationFinish">
+                      
+             <div class="tableLocation">
+
+                <!-- informações de locação -->
+             </div>
+
 
   </section>
 
@@ -1508,7 +1533,8 @@
     <script src="mainFabri.js"></script>
     <script src="mainTypeProd.js"></script>
     <script src="mainDriver.js"></script>
-    <script src="../screenLocation/interaction.js"></script>
+    <script src="../screenLocation/toDoLocation.js"></script>
+    <script src="../screenLocation/locationFinish.js"></script>
 </body>
 
 </html>
