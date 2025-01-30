@@ -1,6 +1,8 @@
-const driverRegister = require("../model/dataDriver");
+import  {crudRegisterDriver} from "../model/dataDriver.js";
+const driverRegister = crudRegisterDriver
 
-const movementOfDriver = {
+
+ export const movementOfDriver = {
   async registerOfDriver(req, res) {
     try {
       const dataDriver = req.body;
@@ -74,4 +76,3 @@ const movementOfDriver = {
   },
 };
 
-module.exports = movementOfDriver;

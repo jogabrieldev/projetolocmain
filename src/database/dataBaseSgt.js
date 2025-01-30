@@ -1,15 +1,17 @@
 
-const database =  require('../config/config.js')
-const Pool = require("pg").Pool
+import {dbConfigUser} from '../config/dbConfigUser.js';
+import pkg from 'pg';
 
-const pool = new Pool(database)
+const  { Pool } =  pkg;
+
+const pool =  new Pool(dbConfigUser)
     
 pool.connect().then(client=>{
     console.log('Conexão estabelecida')
     client.release()
 }).catch(err => {
     console.log('Erro ao conectar ao banco:', err)
-})
+});
 
-module.exports = pool
+export {pool}
 

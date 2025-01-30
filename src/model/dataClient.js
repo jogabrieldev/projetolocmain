@@ -1,7 +1,9 @@
-const database = require('../database/dataBaseSgt')
-const dataUser = require('../database/userDataBase')
+// const database = require('../database/dataBaseSgt')
 
-const crudRegisterClient = {
+import {client} from '../database/userDataBase.js';
+const dataClient = client
+
+ export const clientRegister = {
 
     registerOfClient: async(data)=>{
        
@@ -35,7 +37,7 @@ const crudRegisterClient = {
         clieMail
       ]
        
-      const result = await dataUser.query(insert , values)
+      const result = await dataClient.query(insert , values)
       return result.rows[0];
     },
 
@@ -44,7 +46,7 @@ const crudRegisterClient = {
       try {
         const query = 'SELECT * FROM cadclie';
 
-        const result = await dataUser.query(query)
+        const result = await dataClient.query(query)
         return result.rows;
 
       } catch (error) {
@@ -57,11 +59,11 @@ const crudRegisterClient = {
 
       try {
         const deleteRegislo = "DELETE FROM regislo WHERE relococl = $1";
-        await dataUser.query(deleteRegislo, [id]);
+        await dataClient.query(deleteRegislo, [id]);
     
         // Excluir o cliente da tabela "cadclie"
         const deleteCadclie = "DELETE FROM cadclie WHERE cliecode = $1 RETURNING *";
-        const result = await dataUser.query(deleteCadclie, [id]);
+        const result = await dataClient.query(deleteCadclie, [id]);
 
         return result.rows[0]
 
@@ -90,7 +92,7 @@ const crudRegisterClient = {
         id
       ]
 
-      const result = await dataUser.query(query , values)
+      const result = await dataClient.query(query , values)
       return result.rows[0]
 
       } catch (error) {
@@ -99,10 +101,4 @@ const crudRegisterClient = {
       }
       
     }
-
-
-
-}
-
-
-module.exports = crudRegisterClient
+};

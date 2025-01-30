@@ -1,4 +1,4 @@
-module.exports ={
+export const dbClient ={
     host:"127.0.0.1",
     user:"postgres",
     password:"101010",

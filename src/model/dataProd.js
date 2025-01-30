@@ -1,7 +1,9 @@
-const dataBaseM = require('../database/dataBaseSgt')
-const  userDbProd = require('../database/userDataBase')
+// const dataBaseM = require('../database/dataBaseSgt')
+import {client} from '../database/userDataBase.js';
+const userDbProd = client
 
-const crudRegisterProd = {
+
+ export const crudRegisterProd = {
     
     registerOfProd: async (data)=>{
           const {
@@ -88,11 +90,7 @@ const crudRegisterProd = {
   
       return result.rows[0];
     },
-
-
-
-  }
+};
    
 
 
-module.exports = crudRegisterProd

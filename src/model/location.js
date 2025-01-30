@@ -1,7 +1,8 @@
-const database = require("../database/dataBaseSgt");
-const dataLocation = require("../database/userDataBase");
+// const database = require("../database/dataBaseSgt");
+import {client} from "../database/userDataBase.js";
+const dataLocation = client
 
-const LocacaoModel = {
+ export const LocacaoModel = {
 
   async clientLoc({ clloclit, cllodtlo, cllodtdv, cllohrlo, cllofmpg }) {
 
@@ -115,7 +116,7 @@ const LocacaoModel = {
 FROM 
     clieloc
 JOIN 
-    bensloc ON clieloc.clloid = bensloc.beloid
+    bensloc ON clieloc.clloid = bensloc.clloid
 ORDER BY 
     clieloc.clloid, bensloc.beloid;
     `;
@@ -168,4 +169,3 @@ ORDER BY
   },
 
 };
-module.exports = LocacaoModel;

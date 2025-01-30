@@ -1,6 +1,6 @@
-const auth = require("../model/dataAuth.js");
+import {autenticateLogin} from "../model/dataAuth.js"
 
-async function Controlautenticate(req, res) {
+async function AuthController(req, res) {
   try {
     const { username, password } = req.body;
 
@@ -10,7 +10,7 @@ async function Controlautenticate(req, res) {
         .json({ message: "usuario e senha são obrigatorios" });
     }
 
-    const user = await auth.autenticateLogin(username, password);
+    const user = await autenticateLogin(username, password);
 
     if (!user) {
       return res.status(401).json({ message: "Usuario ou senha invalidos" });
@@ -26,4 +26,4 @@ async function Controlautenticate(req, res) {
   }
 }
 
-module.exports = Controlautenticate;
+export {AuthController}

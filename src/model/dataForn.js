@@ -1,7 +1,8 @@
-const dataBaseM = require('../database/dataBaseSgt')
-const  userDbFo = require('../database/userDataBase')
+// const dataBaseM = require('../database/dataBaseSgt')
+import {client}  from '../database/userDataBase.js';
+const userDbFo = client
 
-const crudRegisterForn = {
+ export const crudRegisterForn = {
         
       registerOfForn: async(data)=>{
           
@@ -108,5 +109,3 @@ const crudRegisterForn = {
         }  
 
 };
-
-module.exports = crudRegisterForn

@@ -1,11 +1,14 @@
-const express = require('express')
+import  express from 'express'
 const app = express()
-const route = require('./src/routes/route.js')
-const path = require('path')
-const bodyParser = require('body-parser')
-require('dotenv').config()
+
+import {route}  from './src/routes/route.js'
+
+import path from'path' 
+import { fileURLToPath } from 'url'
 
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(express.static(path.join(__dirname , 'view', )))
 

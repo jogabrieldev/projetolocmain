@@ -1,6 +1,9 @@
-const prodRegister = require("../model/dataProd");
+import {crudRegisterProd} from "../model/dataProd.js";
+const prodRegister = crudRegisterProd
 
-const movementOfprod = {
+
+ export const movementOfProd = {
+
   async registerProd(req, res) {
     try {
       const dataProd = req.body;
@@ -74,4 +77,3 @@ const movementOfprod = {
   },
 };
 
-module.exports = movementOfprod;

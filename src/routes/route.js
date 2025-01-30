@@ -1,20 +1,20 @@
-const express = require("express");
-const route = express.Router();
+import express from "express";
+const route = express.Router()
 
-const routeMain = require("../controllers/controller.js");
-const AuthController = require("../controllers/authController.js");
-const movementGoods = require("../controllers/goodsRegister.js");
-const movementClient = require('../controllers/clientRegister.js')
-const movementForne = require('../controllers/fornRegister.js');
-const movementOfForn = require("../controllers/fornRegister.js");
-const movementOfProd  = require('../controllers/prodRegister.js');
-const movementOfFabri = require('../controllers/fabriRegister.js');
-const movementOfTypeProd = require("../controllers/typeProdRegister.js")
-const movementOfDriver = require('../controllers/driverRegister.js')
-const location = require('../controllers/locationController.js')
+import { control} from "../controllers/controller.js";
+import {AuthController} from "../controllers/authController.js";
+import {movementGoods} from "../controllers/goodsRegister.js";
+import {movementClient} from '../controllers/clientRegister.js';
+import {movementForne} from '../controllers/fornRegister.js';
+import {movementOfProd} from '../controllers/prodRegister.js';
+import {movementOfFamilyGoods} from '../controllers/familyGoods.js';
+import {movementOfTypeProd} from "../controllers/typeProdRegister.js";
+import {movementOfDriver} from '../controllers/driverRegister.js';
+import {location} from '../controllers/locationController.js';
 
+// Olhar pois e uma classe
 route.get("/", () => {
-  routeMain.submitStart();
+  control.submitStart();
 });
 
 route.post("/autenticar", (req, res) => {
@@ -59,7 +59,7 @@ route.put('/api/updateclient/:id' , (req , res)=>{
 
 // fornecedor
 route.post('/api/forne/submit' , (req , res)=>{
-movementOfForn.registerForn(req, res)
+movementForne.registerForn(req, res)
 })
 
 route.get('/api/listForn' , (req , res)=>{
@@ -71,7 +71,7 @@ route.delete('/api/deleteForn/:id' , (req , res)=>{
 })
 
 route.put('/api/updateforn/:id' , (req , res)=>{
-  movementOfForn.updateOfForn(req , res)
+  movementForne.updateOfForn(req , res)
 })
 
 // produto
@@ -95,19 +95,19 @@ route.put('/api/updateprod/:id' , (req , res)=>{
 //fabricante
 
 route.post('/api/fabri/submit' , (req , res)=>{
-  movementOfFabri.registerOfFabri(req , res)
+  movementOfFamilyGoods.registerOfFabri(req , res)
 })
 
 route.get('/api/listfabri' , (req , res)=>{
-  movementOfFabri.listingOfFabri(req ,res)
+  movementOfFamilyGoods.listingOfFabri(req ,res)
 })
 
 route.delete('/api/deletefabri/:id' , (req , res )=>{
-  movementOfFabri.deleteOfFabri(req , res)
+  movementOfFamilyGoods.deleteOfFabri(req , res)
 })
 
 route.put('/api/updatefabe/:id' ,(req , res)=>{
-  movementOfFabri.updateFabri(req ,res)
+  movementOfFamilyGoods.updateFabri(req ,res)
 })
 
 // tipo do produto
@@ -171,6 +171,6 @@ route.get('/api/codefamilybens',(req , res)=>{
   location.getClientByCPF(req, res)
  })
 
+ export {route}
 
-
-module.exports = route;
+// module.exports = route;

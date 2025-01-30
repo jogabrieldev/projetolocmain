@@ -1,7 +1,8 @@
-const dataBaseM = require('../database/dataBaseSgt')
-const  userDbFabri = require('../database/userDataBase')
+// const dataBaseM = require('../database/dataBaseSgt')
+import  {client } from '../database/userDataBase.js';
+const dbFamilyGoods = client
 
-const crudRegisterFabri = {
+ export const crudRegisterFamilyGoods = {
       
       registerOfFabri: async(data)=>{
 
@@ -25,7 +26,7 @@ const crudRegisterFabri = {
         fabeCtct
       ]
 
-      const result = await userDbFabri.query(insert , values)
+      const result = await dbFamilyGoods.query(insert , values)
       return result.rows[0];
     },
 
@@ -33,7 +34,7 @@ const crudRegisterFabri = {
         try {
             const query = 'SELECT * FROM cadfabe';
     
-            const result = await userDbFabri.query(query)
+            const result = await dbFamilyGoods.query(query)
             return result.rows;
     
           } catch (error) {
@@ -46,11 +47,11 @@ const crudRegisterFabri = {
         try {
             
             const delet = "DELETE FROM regislo WHERE relocofb = $1 RETURNING *";
-             await userDbFabri.query(delet, [id])
+             await dbFamilyGoods.query(delet, [id])
 
               // Excluir o cliente da tabela "cadclie"
           const deleteCadclie = "DELETE FROM cadfabe WHERE fabecode = $1 RETURNING *";
-           const result = await userDbFabri.query(deleteCadclie, [id]); 
+           const result = await dbFamilyGoods.query(deleteCadclie, [id]); 
     
             return result.rows[0]
     
@@ -75,14 +76,11 @@ const crudRegisterFabri = {
             updateFabri.fabectct || null,
           id
         ];
-        const result = await userDbFabri.query(query, values);
+        const result = await dbFamilyGoods.query(query, values);
         
     
         return result.rows[0];
       },
-       
-     
 
 };
 
-module.exports = crudRegisterFabri

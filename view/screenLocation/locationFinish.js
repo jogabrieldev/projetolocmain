@@ -106,34 +106,4 @@ btnlocationFinish.addEventListener('click' , ()=>{
   }
  
 
- // Função que envia a requisição para o backend
-// // async function insertLocationFinish(bemCode, clienteCode) {
-// //   try {
-// //     // Envia os códigos do bem e do cliente para o backend
-// //     const response = await fetch("/api/locationfinish", {
-// //       method: "POST",
-// //       headers: {
-// //         "Content-Type": "application/json",
-// //       },
-// //       body: JSON.stringify({
-// //         bemCode,    // Código do Bem
-// //         clienteCode // Código do Cliente
-// //       }),
-// //     });
-
-// //     if (!response.ok) {
-// //       const error = await response.json();
-// //       throw new Error(error.message || "Erro ao inserir registro na tabela locfim.");
-// //     }
-
-// //     // Registro inserido com sucesso
-// //     const data = await response.json();
-// //     console.log("Registro inserido com sucesso:", data);
-// //     alert("Registro inserido com sucesso!");
-// //   } catch (error) {
-// //     console.error("Erro ao criar registro na tabela locfim:", error);
-// //     alert("Erro ao criar o registro. Tente novamente.");
-// //   }
-// }
-
 

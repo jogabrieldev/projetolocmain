@@ -16,14 +16,12 @@
 
     <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=exit_to_app,search" />
-
-
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
-    <!-- CDN do Inputmask -->
-     <!-- CDN do Inputmask -->
-    <script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.7/dist/inputmask.min.js"></script>
-
+     
+      
+    
+         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+         <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script> 
+   
 
     <title>Screen main</title>
 </head>
@@ -1362,7 +1360,14 @@
 
           <div class="inputGroupPagament">
             <label for="pagament">Forma de pagamento</label>
-            <input type="text" name="pagament" id="pagament" required placeholder="Forma de pagamento">
+
+            <select name="pagament" id="pagament">
+                <option value="Pix">Pix</option>
+                <option value="Credito">Credito</option>
+                <option value="Debito">Debito</option>
+                <option value="Boleto">Boleto</option>
+            </select>
+
         </div>
 
           <div class="inputGroupClient"> 
@@ -1524,7 +1529,7 @@
 
 </main>  
      <script src="maskFields.js"></script>
-    <script src="validation.js"></script>
+    <script  src="validation.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.js"></script>
     <script src="mainGoods.js"></script>
     <script src="mainClient.js"></script>
@@ -1535,6 +1540,9 @@
     <script src="mainDriver.js"></script>
     <script src="../screenLocation/toDoLocation.js"></script>
     <script src="../screenLocation/locationFinish.js"></script>
+
+
+
 </body>
 
 </html>

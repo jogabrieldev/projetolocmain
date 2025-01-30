@@ -1,6 +1,7 @@
-const fabriRegister = require("../model/dataFabri");
+import  {crudRegisterFamilyGoods} from "../model/dataFamilyGoods.js";
+const fabriRegister = crudRegisterFamilyGoods
 
-const movementOfFabri = {
+ export const movementOfFamilyGoods= {
   async registerOfFabri(req, res) {
     try {
       const dataFabri = req.body;
@@ -76,4 +77,3 @@ const movementOfFabri = {
   },
 };
 
-module.exports = movementOfFabri;

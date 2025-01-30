@@ -1,8 +1,8 @@
-const express = require('express')
-const path = require('path')
+import express from 'express' 
+import path from  'path'
 const app = express()
 
-class models  {
+class renderingMain  {
 
     start(){
        app.get('/' , (req ,res)=>{
@@ -13,4 +13,4 @@ class models  {
 }
 
 
-module.exports = new models()
+export {renderingMain}

@@ -1,9 +1,9 @@
-const response = require('../model/index')
+import {renderingMain} from '../model/index.js';
 
 class control  {
     submitStart(){
-        response.start()
+        renderingMain.start()
     }
 }
 
-module.exports = new control()
+export { control} 

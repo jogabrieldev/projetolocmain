@@ -1,11 +1,12 @@
-const userRegister = require("../model/dataGoods");
+import {goodsRegister} from "../model/dataGoods.js";
 
-const movementOfBens = {
+ export const movementGoods = {
+
   async registerBens(req, res) {
     try {
       const { data } = req.body;
 
-      const newUser = await userRegister.registerOfBens(data);
+      const newUser = await goodsRegister.registerOfBens(data);
       res.status(201).json({ success: true, user: newUser });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
@@ -14,7 +15,7 @@ const movementOfBens = {
 
   async listBens(req, res) {
     try {
-      const bens = await userRegister.listingBens();
+      const bens = await goodsRegister.listingBens();
       res.json(bens).status(200);
     } catch (error) {
       console.error("Erro no controller:", error.message);
@@ -39,7 +40,7 @@ const movementOfBens = {
     });
 
     try {
-      const updatedBem = await userRegister.updateBens(bemId, updatedData);
+      const updatedBem = await goodsRegister.updateBens(bemId, updatedData);
       res.json({ message: "Bem atualizado com sucesso", bem: updatedBem });
     } catch (error) {
       console.error("Erro ao atualizar o bem:", error);
@@ -50,7 +51,7 @@ const movementOfBens = {
   async deletarGoods(req, res) {
     try {
       const { id } = req.params;
-      const deleteComponent = await userRegister.deleteBens(id);
+      const deleteComponent = await goodsRegister.deleteBens(id);
 
       if (!deleteComponent) {
         return res.status(404).json({ message: "Componente Não encontrado" });
@@ -66,4 +67,4 @@ const movementOfBens = {
   },
 };
 
-module.exports = movementOfBens;
+

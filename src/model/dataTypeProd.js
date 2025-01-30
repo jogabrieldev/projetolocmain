@@ -1,7 +1,8 @@
-const dataBaseM = require('../database/dataBaseSgt')
-const  userDbTypeProd = require('../database/userDataBase')
+// const dataBaseM = require('../database/dataBaseSgt')
+import {client} from '../database/userDataBase.js';
+const userDbTypeProd = client
 
-const crudRegisterTypeProd = {
+ export const crudRegisterTypeProd = {
      
      registerTypeProd: async (data)=>{
           const{
@@ -78,5 +79,3 @@ const crudRegisterTypeProd = {
      }
 
 }
-
-module.exports = crudRegisterTypeProd

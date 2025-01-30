@@ -1,6 +1,7 @@
-const fornRegister = require("../model/dataForn");
+import {crudRegisterForn} from "../model/dataForn.js";
+const fornRegister = crudRegisterForn
 
-const movementOfForn = {
+ export const movementForne = {
   async registerForn(req, res) {
     try {
       const dataForn = req.body;
@@ -75,4 +76,4 @@ const movementOfForn = {
     }
   },
 };
-module.exports = movementOfForn;
+

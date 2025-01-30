@@ -1,10 +1,11 @@
-const userDb = require('../config/userData.js')
-const Pool = require('pg').Pool
+import {dbClient } from '../config/dbConfigClient.js'
+import pgk from 'pg'
+const {Pool} = pgk
 
-const client = new Pool(userDb)
+const client = new Pool(dbClient )
 client.connect().then((res)=>{
     console.log('conectou no db server03')
         res.release()
     }).catch((erro)=>{console.log('erro na conexao do cliente')})
     
-module.exports = client
+export {client}

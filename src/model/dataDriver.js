@@ -1,7 +1,8 @@
-const dataBaseM = require('../database/dataBaseSgt')
-const  userDbDriver = require('../database/userDataBase')
+// const dataBaseM = require('../database/dataBaseSgt')
+import {client} from '../database/userDataBase.js';
+const userDbDriver = client
 
-const crudRegisterDriver = {
+ export const crudRegisterDriver = {
       
     registerDriver: async (data)=>{
          
@@ -109,9 +110,5 @@ const crudRegisterDriver = {
     
     return result.rows[0];
     }
+};
 
-
-    
-}
-
-module.exports = crudRegisterDriver

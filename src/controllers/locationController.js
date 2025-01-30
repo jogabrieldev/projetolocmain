@@ -1,21 +1,24 @@
 
-const LocacaoModel = require("../model/location");
+import {LocacaoModel} from "../model/location.js";
 
-const LocacaoController = {
-
+ export const location = {
   async LocacaoClient(req, res) {
 
     const { userClientValidade, dataLoc, dataDevo, horaLoc, pagament , bens } =
       req.body;
 
     try {
+
+      if (!bens || bens.length === 0) {
+            return res.status(400).json({ error: "Nenhum dado de bens enviado." });
+          }
+
       if (!userClientValidade) {
         return res.status(400).json({ error: "CPF do cliente e Obrigatorio" });
       }
       // Buscar o cliente pelo CPF
-      const cliente = await LocacaoModel.buscarClientePorCPF(
-        userClientValidade
-      );
+      const cliente = await LocacaoModel.buscarClientePorCPF(userClientValidade);
+        
       if (!cliente) {
         return res.status(404).json({ error: "Cliente não encontrado." });
       }
@@ -30,7 +33,7 @@ const LocacaoController = {
 
       console.log('clloid gerado' , novaLocacao)
      
-      const addIdClient = await LocacaoModel.inserirBens(bens , novaLocacao)
+       await LocacaoModel.inserirBens(bens , novaLocacao)
 
       return res
         .status(201)
@@ -73,39 +76,6 @@ const LocacaoController = {
     }
   },
 
-  async locacaoBens(req, res) {
-    const { bens } = req.body;
-   
-  
-    if (!bens || bens.length === 0) {
-      return res.status(400).json({ error: "Nenhum dado enviado." });
-    }
-
-    if (!Array.isArray(bens)) {
-      return res
-        .status(400)
-        .json({ error: 'A propriedade "bens" deve ser um array.' });
-    }
-
-    try {
-      const novaLocacao = await LocacaoModel.inserirBens(bens);
-
-      console.log( " Esssa locação agora tem client" ,novaLocacao)
-
-      res
-        .status(201)
-        .json({
-          message: "Dados cadastrados com sucesso.",
-          locacao: novaLocacao,
-        });
-
-       
-    } catch (error) {
-      console.error("Erro ao cadastrar bens:", error);
-      res.status(500).json({ error: "Erro interno do servidor." });
-    }
-  },
-
   async listarFamilias(req, res) {
     try {
       const familias = await LocacaoModel.buscarCodigosBens();
@@ -131,4 +101,4 @@ const LocacaoController = {
 
 };
 
-module.exports = LocacaoController;
+

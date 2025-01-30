@@ -1,6 +1,8 @@
-const typeProdRegister = require("../model/dataTypeProd");
+import  {crudRegisterTypeProd} from "../model/dataTypeProd.js";
+const typeProdRegister = crudRegisterTypeProd
 
-const movementOfTypeProd = {
+ export const movementOfTypeProd = {
+
   async registerTyperProd(req, res) {
     try {
       try {
@@ -80,4 +82,3 @@ const movementOfTypeProd = {
     }
   },
 };
-module.exports = movementOfTypeProd;

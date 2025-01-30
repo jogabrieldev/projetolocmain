@@ -1,5 +1,5 @@
 
-// bens
+
 function validationFormGoods() {
   $('#formRegisterBens').validate({
     rules: {

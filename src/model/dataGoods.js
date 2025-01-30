@@ -1,8 +1,8 @@
-const db = require("../database/dataBaseSgt");
-const userDataBase = require("../database/userDataBase");
+// const db = require("../database/dataBaseSgt");
+import {client} from "../database/userDataBase.js";
 
 
-const crudGoods =  {
+ export const goodsRegister  =  {
    
     registerOfBens: async (data) => {
         const {
@@ -70,14 +70,14 @@ const crudGoods =  {
           fabri,
         ];
     
-        const result = await userDataBase.query(insert, values);
+        const result = await client.query(insert, values);
         return result.rows[0];
       },
     
       listingBens: async () => {
         try {
           const query = "SELECT * FROM cadbens";
-          const result = await userDataBase.query(query);
+          const result = await client.query(query);
     
           return result.rows;
         } catch (error) {
@@ -87,7 +87,7 @@ const crudGoods =  {
     
       deleteBens: async (id) => {
         const delet = "DELETE FROM cadbens WHERE benscode = $1 RETURNING *";
-        const result = await userDataBase.query(delet, [id]);
+        const result = await client.query(delet, [id]);
     
         return result.rows[0];
       },
@@ -129,11 +129,9 @@ const crudGoods =  {
           updateBem.bensfabr || null,
           id,
         ];
-        const result = await userDataBase.query(query, values);
+        const result = await client.query(query, values);
         // console.log('dados enviados para o model:' ,result)
     
         return result.rows[0];
       },
  };
-
-module.exports = crudGoods

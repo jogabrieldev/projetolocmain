@@ -227,25 +227,19 @@ async function handleSubmit(event) {
 
   if (bens.length === 0) {
     console.error("Nenhum grupo válido foi preenchido.");
-    alert("Preencha ao menos um grupo corretamente.");
+    Toastify({
+      text: "Preencha ao menos um grupo de bens corretamente.",
+      duration: 2000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
     return;
   }
 
-
-  const result = await fetch("/api/locBens" , {
-    method: "POST",
-    headers:{
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({bens} )
-  })
-   if(result.ok){
-    console.log('bens enviados com sucesso!! ')
-   }
-
   try {
   
-
     // Enviar dados do cliente
     const userClientValidade = document.querySelector("#numCpf")?.value || null;
     const dataLoc = document.getElementById("dataLoc")?.value || null;
@@ -262,7 +256,7 @@ async function handleSubmit(event) {
       bens
     }
 
-    console.log("Payload Cliente:", payload);
+    console.log("Payload Locação:", payload);
 
     const response = await fetch('/api/locclient', {
       method: "POST",
@@ -284,7 +278,7 @@ async function handleSubmit(event) {
        
     } else {  
       Toastify({
-        text: "Erro na locaçao : " + result.error || "Erro desconhecido.",
+        text: "Erro na locaçao!",
         duration: 2000,
         close: true,
         gravity: "top",
@@ -297,8 +291,8 @@ async function handleSubmit(event) {
 
     console.error("Erro ao enviar os dados:", error);
     Toastify({
-      text: "Erro ao enviar os dados verifique conexão",
-      duration: 3000,
+      text: "Erro ao enviar os dados, verifique se os campos estão todos preechidos!",
+      duration: 4000,
       close: true,
       gravity: "top",
       position: "center",
@@ -306,7 +300,6 @@ async function handleSubmit(event) {
     }).showToast();
   }
 
-  
 }
 
 async function buscarNomeCliente(cpf) {

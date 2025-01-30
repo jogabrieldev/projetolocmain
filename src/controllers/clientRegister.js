@@ -1,6 +1,7 @@
-const clientRegister = require("../model/dataClient");
+import  {clientRegister} from "../model/dataClient.js";
 
-const movementOfClient = {
+ export const movementClient = {
+
   async registerClient(req, res) {
     try {
       const dataClient = req.body;
@@ -76,4 +77,4 @@ const movementOfClient = {
     }
   },
 };
-module.exports = movementOfClient;
+
