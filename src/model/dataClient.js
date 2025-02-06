@@ -58,9 +58,7 @@ const dataClient = client
     deleteClient: async(id)=>{
 
       try {
-        const deleteRegislo = "DELETE FROM regislo WHERE relococl = $1";
-        await dataClient.query(deleteRegislo, [id]);
-    
+     
         // Excluir o cliente da tabela "cadclie"
         const deleteCadclie = "DELETE FROM cadclie WHERE cliecode = $1 RETURNING *";
         const result = await dataClient.query(deleteCadclie, [id]);

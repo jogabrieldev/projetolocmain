@@ -45,8 +45,15 @@ const dbFamilyGoods = client
     deleteFabri: async(id)=>{
          
         try {
+
+          const checkQuery = "SELECT COUNT(*) FROM bensloc WHERE bencodb = $1";
+          const checkResult = await dbFamilyGoods.query(checkQuery, [id]);
+      
+          if (checkResult.rows[0].count > 0) {
+            return { error: "Não é possível excluir. Existem bens vinculados a este fornecedor." };
+          }
             
-            const delet = "DELETE FROM regislo WHERE relocofb = $1 RETURNING *";
+            const delet = "DELETE FROM cadfabe WHERE fabecode = $1 RETURNING *";
              await dbFamilyGoods.query(delet, [id])
 
               // Excluir o cliente da tabela "cadclie"

@@ -26,6 +26,13 @@ route.get('/api/listbens',(req , res)=>{
   movementGoods.listBens(req , res)
 })
 
+route.get('/api/codeforn' , (req , res)=>{
+  movementGoods.codeForn(req , res)
+})
+
+route.get('/api/codefamilyben' , (req, res)=>{
+  movementGoods.codeFamilyBens(req, res)
+})
 route.post("/api/bens/submit", (req, res) => {
   movementGoods.registerBens(req, res)
 });
@@ -78,6 +85,10 @@ route.put('/api/updateforn/:id' , (req , res)=>{
 
 route.post('/api/prod/submit' , (req , res)=>{
   movementOfProd.registerProd(req ,res)
+})
+
+route.get('/api/codetipoprod' , (req , res)=>{
+movementOfProd.codeTipoProd(req , res)
 })
 
 route.get('/api/listProd' , (req , res)=>{
@@ -147,20 +158,19 @@ route.put('/api/updatetypeprod/:id', (req , res)=>{
  })
 
  //locação 
+// rota para enviar dados de locação
 
-// rota para cadastrar client que locou!
-
- route.post('/api/locclient' , (req , res)=>{
-  location.LocacaoClient(req ,res)
+ route.post('/api/datalocation' , (req , res)=>{
+  location.dataLocacao(req , res)
  })
 
 // rota para cadastrar o bem locado !
- route.post('/api/locbens' , async (req , res)=>{
-     await location.locacaoBens(req, res )
- })
+//  route.post('/api/locbens' , async (req , res)=>{
+//      await location.locacaoBens(req, res )
+//  })
 
- route.get('/api/locationfinish' , (req , res)=>{
-  location.listarLocacoes(req ,res)
+ route.get('/api/location' , (req , res)=>{
+   location.buscarLocationFinish(req ,res)
  })
 
 route.get('/api/codefamilybens',(req , res)=>{

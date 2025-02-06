@@ -6,6 +6,8 @@ const fabriRegister = crudRegisterFamilyGoods
     try {
       const dataFabri = req.body;
 
+     
+
       if (!dataFabri) {
         return res
           .status(400)
@@ -19,6 +21,7 @@ const fabriRegister = crudRegisterFamilyGoods
       res.status(500).json({ success: false, message: error.message });
     }
   },
+
 
   async listingOfFabri(req, res) {
     try {

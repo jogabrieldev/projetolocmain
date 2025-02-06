@@ -34,11 +34,8 @@ function validationFormGoods() {
       },
       cofo: {
         required: true,
-        minlength: 4
       },
-      valorAlug: {
-        required: true
-      }
+     
     },
     messages: {
       code: {
@@ -74,9 +71,7 @@ function validationFormGoods() {
         required: "Obrigatorio",
         minlength: "O código do fornecedor deve ter no mínimo 4 caracteres."
       },
-      valorAlug: {
-        required: "Obrigatorio"
-      }
+      
     },
     errorPlacement: function (error, element) {
       error.addClass('error-text');
@@ -405,6 +400,9 @@ function validationFormFabric(){
         },
         fabeCtct:{
           required: true
+        },
+        fabeSuca:{
+          required: true
         }
         
 
@@ -421,6 +419,9 @@ function validationFormFabric(){
              required: "Obrigatorio"
            },
            fabeCtct:{
+            required: "Obrigatorio"
+           },
+           fabeSuca:{
             required: "Obrigatorio"
            }
           

@@ -34,6 +34,8 @@ const userDbProd = client
             prodAtiv
          ]
          const result = await userDbProd.query(insert, values);
+
+         console.log('resultado model: ' , result)
          return result.rows[0];
   },
 
@@ -90,6 +92,25 @@ const userDbProd = client
   
       return result.rows[0];
     },
+
+    buscarIdFamiliaBens: async()=>{
+         
+      try {
+        const result = await userDbProd.query('SELECT fabecode FROM cadfabe')
+        return result.rows
+      } catch (error) {
+         console.log('error no model family bens' , error)
+      }
+    },
+   buscartipoProd: async ()=>{
+
+    try {
+      const result = await userDbProd.query('SELECT tiprcode FROM cadtipr')
+      return result.rows
+    } catch (error) {
+       console.error('Erro no model tipo prod')
+    }
+   }
 };
    
 

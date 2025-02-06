@@ -240,7 +240,7 @@ async function fetchListFornecedores() {
             const year = dateObj.getFullYear();
             const month = String(dateObj.getMonth() + 1).padStart(2, "0");
             const day = String(dateObj.getDate()).padStart(2, "0");
-            return `${year}-${month}-${day}`;
+            return `${year}/${month}/${day}`;
           };
 
           linha.insertCell().textContent = fornecedor.forncode;
@@ -324,8 +324,11 @@ async function fetchListFornecedores() {
           position: "center",
           backgroundColor: "green",
         }).showToast();
-  
-        fornRow.remove();
+
+        if(!data.error){
+          fornRow.remove();
+       }
+        
       } else {
         console.log("Erro para excluir:", data);
         Toastify({
@@ -362,7 +365,7 @@ editButtonForn.addEventListener("click", (e) => {
 
   if (!selectedCheckbox) {
     Toastify({
-      text: "Selecione um fornecedor para editar",
+      text: "Selecione um Fornecedor para editar",
       duration: 2000,
       close: true,
       gravity: "top",
@@ -488,7 +491,7 @@ async function editAndUpdateOfForn() {
         console.log("Atualização bem-sucedida");
 
         Toastify({
-          text: `Bem '${fornIdParsed}' Atualizado com sucesso!!`,
+          text: `Fonecedor '${fornIdParsed}' Atualizado com sucesso!!`,
           duration: 3000,
           close: true,
           gravity: "top",
@@ -496,10 +499,10 @@ async function editAndUpdateOfForn() {
           backgroundColor: "green",
         }).showToast();
 
-        setTimeout(() => {
-          window.location.reload();
-          document.querySelector(".formEditRegisterForn").style.display = "none";
-        }, 3000);
+        // setTimeout(() => {
+        //   window.location.reload();
+        //   document.querySelector(".formEditRegisterForn").style.display = "none";
+        // }, 3000);
 
         formEditForn.reset();
       } else {

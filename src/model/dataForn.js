@@ -63,20 +63,32 @@ const userDbFo = client
           }
       },
 
-      deleteForn: async(id)=>{
-         
+       deleteForn: async (id) => {
         try {
-            
-          const delet = "DELETE FROM cadforn WHERE forncode = $1 RETURNING *";
-          const result = await userDbFo.query(delet, [id])
-  
-          return result.rows[0]
-  
+          // Verifica se existem bens cadastrados para esse fornecedor
+          const checkQuery = "SELECT COUNT(*) FROM cadbens WHERE benscofo = $1";
+          const checkResult = await userDbFo.query(checkQuery, [id]);
+      
+          if (checkResult.rows[0].count > 0) {
+            return { error: "Não é possível excluir. Existem bens vinculados a este fornecedor." };
+          }
+      
+          // Exclui o fornecedor se não houver bens associados
+          const deleteQuery = "DELETE FROM cadforn WHERE forncode = $1 RETURNING *";
+          const result = await userDbFo.query(deleteQuery, [id]);
+      
+          if (result.rows.length === 0) {
+            return { error: "Fornecedor não encontrado." };
+          }
+      
+          return { success: true, data: result.rows[0] };
+      
         } catch (error) {
-          console.error('Erro no model:', error.message)
+          console.error("Erro no model:", error.message);
+          return { error: "Erro interno no servidor." };
         }
-         
       },
+      
 
       updateForn: async(id , updateDataForn)=>{
           

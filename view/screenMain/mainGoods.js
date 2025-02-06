@@ -83,6 +83,12 @@ btnOutPageEdit.addEventListener("click", (e) => {
   return;
 });
 
+// const buttonEdit = document.querySelector('.buttonEdit')
+// buttonEdit.addEventListener('click' , ()=>{
+//   const formEdit = document.querySelector('#formEditBens')
+//   formEdit.style.display = 'flex'
+// })
+
 
 
 const buttonOutGoods = document.querySelector(".btnOut");
@@ -99,9 +105,8 @@ buttonOutGoods.addEventListener("click", (event) => {
   return;
 });
 
-const formRegister = document
-  .querySelector("#formRegisterBens")
-  .addEventListener("submit", async (event) => {
+const formRegister = document.querySelector("#formRegisterBens")
+  formRegister.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const formData = new FormData(event.target);
@@ -122,7 +127,7 @@ const formRegister = document
       }).showToast();
       return;
     }
-   
+
     try {
       const response = await fetch("/api/bens/submit", {
         method: "POST",
@@ -158,6 +163,53 @@ const formRegister = document
     }
   });
 
+  async function loadSelectOptions(url, selectId, fieldName) {
+    try {
+        const response = await fetch(url);
+        const result = await response.json();
+        
+        console.log(`Dados recebidos de ${url}:`, result);
+
+        // Caso os dados venham aninhados dentro de "data"
+        const data = Array.isArray(result) ? result : result.data;
+
+        if (!Array.isArray(data)) {
+            throw new Error(`Formato de dados inesperado de ${url}: ` + JSON.stringify(result));
+        }
+
+        const select = document.getElementById(selectId);
+        if (!select) {
+            throw new Error(`Elemento select com ID '${selectId}' não encontrado.`);
+        }
+
+        data.forEach(item => {
+
+          console.log("Adicionando opção:", item[fieldName]); 
+          // Debug
+            if (!item.hasOwnProperty(fieldName)) {
+                console.warn(`Campo '${fieldName}' não encontrado em`, item);
+                return;
+            }
+
+            const option = document.createElement("option");
+            option.value = item[fieldName];
+            option.textContent = item[fieldName];
+            select.appendChild(option);
+        });
+
+    } catch (error) {
+        console.error(`Erro ao carregar os dados para ${selectId}:`, error);
+    }
+};
+
+// Chamar a função corretamente ao carregar a página
+document.querySelector('.registerGoods').addEventListener('click' , ()=>{
+  loadSelectOptions("/api/codefamilyben", "cofa", 'fabecode');
+  loadSelectOptions("/api/codeforn", "cofo", 'forncode');
+});
+
+
+
 // fazendo listagens
 
 let bensData = {};
@@ -182,11 +234,11 @@ async function fetchBens() {
         "Selecionar",
         "Código",
         "Nome",
-        "Código Fabricante",
+        "Familida do Bem",
         "Modelo",
         "Número de Série",
         "Placa",
-        "Ano",
+        "Ano do Modelo",
         "Data da Compra",
         "valor de Compra",
         "Nota Fiscal",
@@ -244,7 +296,7 @@ async function fetchBens() {
           const year = dateObj.getFullYear();
           const month = String(dateObj.getMonth() + 1).padStart(2, "0");
           const day = String(dateObj.getDate()).padStart(2, "0");
-          return `${year}-${month}-${day}`;
+          return `${year}/${month}/${day}`;
         };
 
      
@@ -254,7 +306,7 @@ async function fetchBens() {
         linha.insertCell().textContent = bem.bensmode;
         linha.insertCell().textContent = bem.bensnuse;
         linha.insertCell().textContent = bem.bensplac;
-        linha.insertCell().textContent = bem.bensanmo;
+        linha.insertCell().textContent = formatDate(bem.bensanmo);
         linha.insertCell().textContent = formatDate(bem.bensdtcp);
         linha.insertCell().textContent = bem.bensvacp;
         linha.insertCell().textContent = bem.bensnunf;
@@ -359,6 +411,8 @@ async function deleteBem(id, bemItem) {
 const editButton = document.querySelector(".buttonEdit");
 editButton.addEventListener("click", (event) => {
   
+  loadSelectOptions("/api/codefamilyben", "cofaEdit", 'fabecode');
+  loadSelectOptions("/api/codeforn", "cofoEdit", 'forncode');
   
   const selectedCheckbox = document.querySelector(
     'input[name="selectBem"]:checked'
@@ -390,7 +444,7 @@ editButton.addEventListener("click", (event) => {
     const campos = [
       { id: "code", valor: bemSelecionado.benscode },
       { id: "name", valor: bemSelecionado.bensnome },
-      { id: "cofa", valor: bemSelecionado.benscofa },
+      { id: "cofaEdit", valor: bemSelecionado.benscofa },
       { id: "model", valor: bemSelecionado.bensmode },
       { id: "serial", valor: bemSelecionado.bensnuse },
       { id: "placa", valor: bemSelecionado.bensplac },
@@ -398,7 +452,7 @@ editButton.addEventListener("click", (event) => {
       { id: "dtCompra", valor: bemSelecionado.bensdtcp },
       { id: "valorCp", valor: bemSelecionado.bensvacp },
       { id: "ntFiscal", valor: bemSelecionado.bensnunf },
-      { id: "cofo", valor: bemSelecionado.benscofo },
+      { id: "cofoEdit", valor: bemSelecionado.benscofo },
       { id: "kmAtual", valor: bemSelecionado.benskmat },
       { id: "dtKm", valor: bemSelecionado.bensdtkm },
       { id: "status", valor: bemSelecionado.bensstat },
@@ -487,7 +541,7 @@ async function editAndUpdateOfBens() {
     const updateBem = {
       benscode: document.getElementById("code").value,
       bensnome: document.getElementById("name").value,
-      benscofa: document.getElementById("cofa").value,
+      benscofa: document.getElementById("cofaEdit").value,
       bensmode: document.getElementById("model").value,
       bensnuse: document.getElementById("serial").value,
       bensplac: document.getElementById("placa").value,
@@ -495,7 +549,7 @@ async function editAndUpdateOfBens() {
       bensdtcp: document.getElementById("dtCompra").value || null,
       bensvacp: document.getElementById("valorCp").value,
       bensnunf: document.getElementById("ntFiscal").value,
-      benscofo: document.getElementById("cofo").value,
+      benscofo: document.getElementById("cofoEdit").value,
       benskmat: document.getElementById("kmAtual").value,
       bensdtkm: document.getElementById("dtKm").value || null,
       bensstat: document.getElementById("status").value,
@@ -533,12 +587,10 @@ async function editAndUpdateOfBens() {
           backgroundColor: "green",
         }).showToast();
 
-        setTimeout(() => {
-          window.location.reload();
-          document.querySelector(".editForm").style.display = "none";
-        }, 3000);
+          // document.querySelector(".editForm").style.display = "none";
+    
+          formEditBens.reset();
 
-        formEditBens.reset();
       } else {
         console.error("Erro ao atualizar bem:", await response.text());
       }

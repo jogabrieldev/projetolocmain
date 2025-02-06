@@ -8,6 +8,8 @@ const prodRegister = crudRegisterProd
     try {
       const dataProd = req.body;
 
+      console.log('dados do corpo:' ,req.body)
+
       if (!dataProd) {
         return res
           .status(400)
@@ -20,6 +22,24 @@ const prodRegister = crudRegisterProd
       console.log("erro no controller");
       res.status(500).json({ success: false, message: error.message });
     }
+  },
+
+  async codeTipoProd(req , res){
+     try {
+           const dataTyperod = await prodRegister.buscartipoProd()
+     
+           if(dataTyperod){
+           res.status(200).json(dataTyperod)
+           return dataTyperod
+     
+         }else{
+           return req.status(400).json({error: "Nenhum dado encontrado"})
+         }
+           
+         } catch (error) {
+            console.error("Erro ao buscar tipo do produto:", error);
+            return res.status(500).json({ error: "Erro interno do servidor" });
+         }
   },
 
   async listofProd(req, res) {

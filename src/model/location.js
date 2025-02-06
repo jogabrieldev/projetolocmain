@@ -4,74 +4,69 @@ const dataLocation = client
 
  export const LocacaoModel = {
 
-  async clientLoc({ clloclit, cllodtlo, cllodtdv, cllohrlo, cllofmpg }) {
-
+  
+  async clientLoc({  cllonmlo, clloidcl, cllodtdv, cllodtlo, cllopgmt, clloclno, cllocpf }) {
     try {
-      const clienteQuery = `
-        SELECT clienome FROM cadclie WHERE cliecode = $1;
-      `;
-      const clienteResult = await dataLocation.query(clienteQuery, [clloclit]);
+      console.log("Verificando cliente no banco com código:", clloidcl);
+  
+      const clienteQuery = `SELECT cliecode FROM cadclie WHERE clienome = $1 AND cliecpf = $2`;
 
-      if (clienteResult.rows.length === 0) {
-        throw new Error("Cliente não encontrado.");
+     
+  
+      if (!cllonmlo || !cllodtdv || !cllodtlo || !cllopgmt || !clloidcl || !clloclno ||  !cllocpf) {
+        console.error("Erro: Algum valor está indefinido!", { cllonmlo, cllodtdv, cllodtlo, cllopgmt, clloidcl,  cllocpf });
+        return;
       }
-
-      const cllonome = clienteResult.rows[0].clienome;
-
+  
       const insertQuery = `
-        INSERT INTO clieloc(clloclit, cllodtlo, cllodtdv, cllohrlo, cllofmpg)
-        VALUES ($1, $2, $3, $4, $5)
-        RETURNING clloid;
-      `;
-      const values = [
-        clloclit,
-        cllodtlo,
-        cllodtdv,
-        cllohrlo,
-        cllofmpg,
-      ];
+      INSERT INTO clieloc(clloidcl, cllonmlo, cllodtdv, cllodtlo, cllopgmt, clloclno, cllocpf)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING *;
+    `;
+      const values = [clloidcl, cllonmlo, cllodtdv, cllodtlo, cllopgmt, clloclno, cllocpf];
+  
       const result = await dataLocation.query(insertQuery, values);
-
-      console.log( " Esse são os valores passados do meu client" ,result.rows)
-
+  
+      console.log("Resultado da inserção:", result.rows);
       return result.rows[0].clloid;
     } catch (error) {
-      console.error("Erro ao criar locação na parte do cliente:", error);
+      console.error("Erro ao criar locação:", error);
       throw error;
     }
   },
-
-  async inserirBens(bens , clloid) {
+  
+  
+  async inserirBens(bens, clloid) {
     const query = `
-      INSERT INTO bensloc (belofmbn, beloben, beloqntd, belodesc, clloid )
-      VALUES ($1, $2, $3, $4 , $5) RETURNING beloid
+      INSERT INTO bensloc (bencodb, beloben, belodtin, belodtfi, beloqntd, beloobsv, beloidcl)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING belocode;
     `;
-
+  
     try {
       await dataLocation.query("BEGIN");
-
-
+  
       const resultados = [];
-      for (const { codeBen, produto, quantidade, descricao, } of bens) {
-        const resultado = await dataLocation.query(query, [
-          codeBen,
-          produto,
-          quantidade,
-          descricao,
-          clloid
-        ]);
-        resultados.push(resultado.rows[0])
+      for (const { codeBen, produto, dataInicio, dataFim, quantidade, observacao } of bens) {
+        const valoresBens = [codeBen, produto, dataInicio, dataFim, quantidade, observacao, clloid];
+  
+        console.log("Inserindo bens com valores:", valoresBens);
+  
+        const resultado = await dataLocation.query(query, valoresBens);
+        resultados.push(resultado.rows[0]);
       }
-
-
-      await dataLocation.query("COMMIT"); 
-      return resultados; 
-
+  
+      console.log("Resultado da inserção de bens:", resultados);
+  
+      await dataLocation.query("COMMIT");
+      return resultados;
     } catch (error) {
-      await dataLocation.query("ROLLBACK"); 
+      await dataLocation.query("ROLLBACK");
+      console.error("Erro ao inserir bens:", error);
       throw error;
     }
   },
+  
 
 
  async getClientByCPF (cpf) {
@@ -88,13 +83,13 @@ const dataLocation = client
   },
 
   async buscarClientePorCPF(cpf) {
-    const query = `SELECT cliecode FROM cadclie WHERE cliecpf = $1`;
+    const query = `SELECT cliecode, clienome FROM cadclie WHERE cliecpf = $1; `;
     const { rows } = await dataLocation.query(query, [cpf]);
     return rows[0];
   },
 
   async buscarCodigosBens() {
-    const query = `SELECT fabecode FROM cadfabe `;
+    const query = `SELECT fabecode , fabedesc FROM cadfabe `;
     try {
       const result = await dataLocation.query(query);
       return result.rows; // Retorna todos os códigos
@@ -103,69 +98,24 @@ const dataLocation = client
     }
   },
 
-  async buscarLocacoes() {
-    try {
-      // Consulta para buscar os dados com JOIN entre clieloc e bensloc
-      const query = `
-      SELECT 
-    clieloc.clloid AS clienteid,
-    clieloc.cllodtlo AS datalocacao,
-    clieloc.cllodtdv AS datadevolucao,
-    bensloc.beloid AS bemID,
-    bensloc.beloqntd AS quantidade
-FROM 
-    clieloc
-JOIN 
-    bensloc ON clieloc.clloid = bensloc.clloid
-ORDER BY 
-    clieloc.clloid, bensloc.beloid;
-    `;
-
-      const result = await dataLocation.query(query);
-
-      console.log('dados retornados do Join:' ,result.rows)
-
-      // Verificar se existem registros retornados
-      if (result.rows.length === 0) {
-        console.log(
-          "Nenhuma locação encontrada para inserir na tabela locfim."
-        );
-        return [];
-      }
-
-      await dataLocation.query("BEGIN");
-
-      for (const row of result.rows) {
-        const insertQuery = `
-        INSERT INTO locfim (
-          lofiben, loficlie, lofidtlo, lofidtdv, lofiqntd
-        ) VALUES ($1, $2, $3, $4, $5)
-      `;
-        const values = [
-          row.bemid,
-          row.clienteid,
-          row.datalocacao,
-          row.datadevolucao,
-          row.quantidade,
-        ]
-
-        console.log('valores indo para tabela' ,values)
-        // Inserir o registro na tabela locfim
-        await dataLocation.query(insertQuery, values);
-      }
-
-
-      // Confirmar a transação
-      await dataLocation.query("COMMIT");
-
-      console.log("Dados inseridos com sucesso na tabela locfim.");
-      return result.rows; // Retornar os dados inseridos
-    } catch (error) {
-      // Em caso de erro, desfazer a transação
-      await dataLocation.query("ROLLBACK");
-      console.error("Erro ao inserir dados na tabela locfim:", error);
-      throw error;
-    }
+  async buscarLocationClient(){
+    const queryClient = `SELECT * FROM clieloc`
+     try {
+       const {rows} = await dataLocation.query(queryClient)
+       return rows
+     } catch (error) {
+       console.error('erro ao buscar cliente de locação:'  ,error)
+     }
   },
 
+  async buscarLocationGoods(){
+    const queryGoods = `SELECT * FROM bensloc`
+    try {
+      const {rows} = await dataLocation.query(queryGoods)
+      return rows
+    } catch (error) {
+       console.error('erro ao buscar bens de locação' , error)
+    }
+  }
+  
 };

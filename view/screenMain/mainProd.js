@@ -114,6 +114,7 @@ formRegisterProduto.addEventListener('submit' , async (event)=>{
         }).showToast();
         return;
       }
+        console.log('Esse e os dados produto:', data)
 
       await fetch('/api/prod/submit' , {
         method: "POST",
@@ -148,8 +149,52 @@ formRegisterProduto.addEventListener('submit' , async (event)=>{
   }).catch((error)=>{
     console.error('deu errro', error)
   })
+});
 
+
+async function loadSelectOptions(url, selectId, fieldName) {
+  try {
+      const response = await fetch(url);
+      const result = await response.json();
+      
+      console.log(`Dados recebidos de ${url}:`, result);
+
+      // Caso os dados venham aninhados dentro de "data"
+      const data = Array.isArray(result) ? result : result.data;
+
+      if (!Array.isArray(data)) {
+          throw new Error(`Formato de dados inesperado de ${url}: ` + JSON.stringify(result));
+      }
+
+      const select = document.getElementById(selectId);
+      if (!select) {
+          throw new Error(`Elemento select com ID '${selectId}' não encontrado.`);
+      }
+
+      data.forEach(item => {
+
+        // Debug
+          if (!item.hasOwnProperty(fieldName)) {
+              console.warn(`Campo '${fieldName}' não encontrado em`, item);
+              return;
+          }
+
+          const option = document.createElement("option");
+          option.value = item[fieldName];
+          option.textContent = item[fieldName];
+          select.appendChild(option);
+      });
+
+  } catch (error) {
+      console.error(`Erro ao carregar os dados para ${selectId}:`, error);
+  }
+}
+
+document.querySelector('.registerProd').addEventListener('click' ,()=>{
+  loadSelectOptions("/api/codefamilyben", "prodCofa", 'fabecode');
+  loadSelectOptions("/api/codetipoprod", "prodTipo", 'tiprcode');
 })
+
 
 // listagem de produtos
 async function fetchListProdutos() {
@@ -173,11 +218,11 @@ async function fetchListProdutos() {
           "Descrição",
           "Tipo",
           "Unidade",
-          "Código Fabricante",
+          "familia de bens",
           "Data da compra",
           "Valor",
-          "prodPeli",
-          "prodPebr",
+          "Preço Liguido",
+          "Preço Bruto",
           "Ativo"
         ];
   
@@ -197,9 +242,6 @@ async function fetchListProdutos() {
           checkbox.type = "checkbox";
           checkbox.name = "selectProduto";
           checkbox.value = produto.prodCode;
-          
-          // checkbox.setAttribute("data-produto", JSON.stringify({ prodcode: produto.prodCode }));
-          //  linha.appendChild(checkbox);
   
           checkbox.dataset.produto = JSON.stringify(produto);
           checkboxCell.appendChild(checkbox);
@@ -210,7 +252,7 @@ async function fetchListProdutos() {
             const year = dateObj.getFullYear();
             const month = String(dateObj.getMonth() + 1).padStart(2, "0");
             const day = String(dateObj.getDate()).padStart(2, "0");
-            return `${year}-${month}-${day}`;
+            return `${year}/${month}/${day}`;
           };
 
   
@@ -319,6 +361,9 @@ async function deleteProd(id , rowProd) {
 //  Editar
 const editProdButton = document.querySelector(".buttonEditProd");
 editProdButton.addEventListener("click", (event) => {
+
+  loadSelectOptions("/api/codefamilyben", "editProdCofa", 'fabecode');
+  loadSelectOptions("/api/codetipoprod", "editProdTipo", 'tiprcode');
   
   const selectedCheckbox = document.querySelector(
     'input[name="selectProduto"]:checked'
@@ -344,7 +389,7 @@ editProdButton.addEventListener("click", (event) => {
 
   try {
     const produtoSelecionado = JSON.parse(produtoData);
-    // console.log("Editar item:", produtoSelecionado);
+    
 
     // Campos e IDs correspondentes
     const campos = [
@@ -408,7 +453,6 @@ async function editAndUpdateOfProduct() {
     const data = Object.fromEntries(formData.entries());
 
   
-
     const selectedCheckbox = document.querySelector(
       'input[name="selectProduto"]:checked'
     );
@@ -466,13 +510,9 @@ async function editAndUpdateOfProduct() {
           position: "center",
           backgroundColor: "green",
         }).showToast();
-
-        setTimeout(() => {
-          window.location.reload();
-          document.querySelector(".formEditProd").style.display = "none";
-        }, 3000);
-
+      
         formEditProd.reset();
+
       } else {
         console.error("Erro ao atualizar produto:", await response.text());
       }

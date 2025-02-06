@@ -131,8 +131,8 @@ formRegisterFabricante.addEventListener("submit", async (event) => {
 
     console.log("deu certo");
 
-    document.querySelector(".formRegisterFabricante").reset();
-    return;
+    formRegisterFabricante.reset();
+   
   } else {
     console.log("deu erro viu");
 

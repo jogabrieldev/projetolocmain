@@ -44,13 +44,13 @@ const btnRegisterTp  = document.querySelector('.registerTipoProd')
 btnRegisterTp.addEventListener('click' , ()=>{
 
      const registerTp = document.querySelector('.formRegisterTipoProd')
+      registerTp.style.display = 'flex'
      const listingTp = document.querySelector('.listingTipoProd')
+      btnMainPage.style.display = 'none'
      const btnMainPage = document.querySelector('.btnMainPageTipoProd')
+      listingTp.style.display = 'none'
+     
 
-     registerTp.style.display = 'flex'
-
-     btnMainPage.style.display = 'none'
-     listingTp.style.display = 'none'
 });
 
 const btnOutInitTp = document.querySelector('.btnOutInitTp')
@@ -61,7 +61,7 @@ btnOutInitTp.addEventListener('click' , (e)=>{
     const registerTp = document.querySelector('.formRegisterTipoProd') 
      registerTp.style.display = 'none'
 
-    const listingTp = document.querySelector('.listingTipoProd')//flex
+    const listingTp = document.querySelector('.listingTipoProd')
      listingTp.style.display = 'flex'
 
      const btnMainPage = document.querySelector('.btnMainPageTipoProd')
@@ -82,7 +82,7 @@ btnOutInitTpEdit.addEventListener('click' , (e)=>{
      
     e.preventDefault()
 
-    const registerTpEdit = document.querySelector('.formEditTp') 
+    const registerTpEdit = document.querySelector('.containerRegisterEdit') 
       registerTpEdit.style.display = 'none'
       
 
@@ -92,6 +92,19 @@ btnOutInitTpEdit.addEventListener('click' , (e)=>{
      const btnMainPage = document.querySelector('.btnMainPageTipoProd')
       btnMainPage.style.display = 'flex'
 })
+
+// const buttonEditTipoProd = document.querySelector('.buttonEditTipoProd')
+// buttonEditTipoProd.addEventListener('click' , ()=>{
+  
+//      const containerRegisterEdit = document.querySelector('.containerRegisterEdit')
+//       containerRegisterEdit.style.display = 'flex'
+
+//      const listingTp = document.querySelector('.listingTipoProd')
+//       listingTp.style.display = 'none'
+
+//      const btnMainPage = document.querySelector('.btnMainPageTipoProd')
+//       btnMainPage.style.display = 'none'
+// })
 
 
 //registro do tipo do produto
@@ -318,7 +331,7 @@ btnEditTp.addEventListener('click' , ()=>{
 
   if (!selectedCheckbox) {
     Toastify({
-      text: "Selecione um Produto para editar",
+      text: "Selecione o tipo de Produto para editar",
       duration: 2000,
       close: true,
       gravity: "top",
@@ -359,6 +372,7 @@ btnEditTp.addEventListener('click' , ()=>{
         console.warn(`Elemento com ID '${id}' não encontrado.`);
       }
     });
+  
 
     // Mostrar o formulário de edição e ocultar a lista
     const spaceEditTypeprod = document.querySelector('.containerRegisterEdit')
@@ -451,10 +465,10 @@ async function editAndUpdateOfTypeProduct() {
           backgroundColor: "green",
         }).showToast();
 
-        setTimeout(() => {
-          window.location.reload();
-          document.querySelector(".containerRegisterEdit").style.display = "none";
-        }, 3000);
+        // setTimeout(() => {
+        //   window.location.reload();
+        //   document.querySelector(".containerRegisterEdit").style.display = "none";
+        // }, 3000);
 
         formEditProd.reset();
       } else {

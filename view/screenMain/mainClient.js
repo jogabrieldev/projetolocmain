@@ -52,6 +52,7 @@ buttonRegisterClient.addEventListener("click", () => {
   listingClient.style.display = "none";
 });
 
+
 const buttonOutPageClient = document.querySelector(".btnOutInit");
 buttonOutPageClient.addEventListener("click", (event) => {
  event.preventDefault()
@@ -67,6 +68,7 @@ buttonOutPageClient.addEventListener("click", (event) => {
 
   
 });
+
 const buttonOutPageEdit = document.querySelector(".outPageEditClient");
 buttonOutPageEdit.addEventListener("click", (event) => {
   event.preventDefault();
@@ -101,7 +103,7 @@ buttonToBack.addEventListener("click", () => {
 const formRegisterClient = document.querySelector("#formRegisterClient");
 formRegisterClient.addEventListener("submit", async (event) => {
   event.preventDefault();
-
+ 
   const formData = new FormData(event.target);
   const data = Object.fromEntries(formData.entries());
 
@@ -121,16 +123,15 @@ formRegisterClient.addEventListener("submit", async (event) => {
     return;
   }
       
-  // });
-
   try {
-    await fetch("/api/client/submit", {
+     const response = await fetch("/api/client/submit", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
-    }).then((response) => {
+    });
       if (response.ok) {
-        console.log("deu certo");
+
+        console.log("Cadastro concluido co sucesso");
 
         Toastify({
           text: "Cadastrado com Sucesso",
@@ -141,8 +142,10 @@ formRegisterClient.addEventListener("submit", async (event) => {
           backgroundColor: "green",
         }).showToast();
 
-        document.querySelector("#formRegisterClient").reset();
+        formRegisterClient.reset();
+
       } else {
+
         console.log("deu erro viu");
 
         Toastify({
@@ -154,13 +157,15 @@ formRegisterClient.addEventListener("submit", async (event) => {
           backgroundColor: "red",
         }).showToast();
       }
-    });
+    
   } catch (error) {
     console.error("deu erro no envio", error);
   }
 });
 
 //fetch listClient
+
+
 let clientesData = {};
 async function fetchListClientes() {
   try {
@@ -233,7 +238,7 @@ async function fetchListClientes() {
           const year = dateObj.getFullYear();
           const month = String(dateObj.getMonth() + 1).padStart(2, "0");
           const day = String(dateObj.getDate()).padStart(2, "0");
-          return `${year}-${month}-${day}`;
+          return `${year}/${month}/${day}`;
         };
 
         linha.insertCell().textContent = formatDate(cliente.cliedtcd);
@@ -299,7 +304,7 @@ async function deleteClient(id, clientRow) {
 
     if (response.ok) {
       Toastify({
-        text: "O cliente foi excluído com sucesso!",
+        text: "O Cliente foi excluído com sucesso!",
         duration: 2000,
         close: true,
         gravity: "top",
@@ -311,7 +316,7 @@ async function deleteClient(id, clientRow) {
     } else {
       console.log("Erro para excluir:", data);
       Toastify({
-        text: "Erro na exclusão do cliente",
+        text: "Erro na exclusão do Cliente",
         duration: 2000,
         close: true,
         gravity: "top",
@@ -342,7 +347,7 @@ editButtonClient.addEventListener("click", () => {
 
   if (!selectedCheckbox) {
     Toastify({
-      text: "Selecione um cliente para editar",
+      text: "Selecione um Cliente para editar",
       duration: 2000,
       close: true,
       gravity: "top",
@@ -365,13 +370,22 @@ editButtonClient.addEventListener("click", () => {
     const clientSelecionado = JSON.parse(clientData);
     console.log("Editar cliente:", clientSelecionado);
 
+    const formatDate = (isoDate) => {
+      if (!isoDate) return "";
+      const dateObj = new Date(isoDate);
+      const year = dateObj.getFullYear();
+      const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+      const day = String(dateObj.getDate()).padStart(2, "0");
+      return `${year}/${month}/${day}`;
+    };
+
     // Campos e IDs correspondentes
     const campos = [
       { id: "editClieCode", valor: clientSelecionado.cliecode },
       { id: "editClieName", valor: clientSelecionado.clienome },
       { id: "editCliecpf", valor: clientSelecionado.cliecpf },
-      { id: "editClieDtCad", valor: clientSelecionado.cliedtcd },
-      { id: "editClieDtNasc", valor: clientSelecionado.cliedtnc },
+      { id: "editClieDtCad", valor: formatDate(clientSelecionado.cliedtcd) },
+      { id: "editClieDtNasc", valor: formatDate(clientSelecionado.cliedtnc) },
       { id: "editClieCelu", valor: clientSelecionado.cliecelu },
       { id: "editClieCity", valor: clientSelecionado.cliecity },
       { id: "editClieEstd", valor: clientSelecionado.clieestd },
@@ -384,7 +398,7 @@ editButtonClient.addEventListener("click", () => {
     campos.forEach(({ id, valor }) => {
       const elemento = document.getElementById(id);
       if (elemento) {
-        elemento.value = valor || ""; // Preencher com valor ou vazio
+        elemento.value = valor !== null && valor !== undefined ? valor : "";; // Preencher com valor ou vazio
       } else {
         console.warn(`Elemento com ID '${id}' não encontrado.`);
       }
@@ -435,7 +449,7 @@ async function editAndUpdateOfClient() {
       cliecode: document.getElementById("editClieCode").value,
       clienome: document.getElementById("editClieName").value,
       cliecpf: document.getElementById("editCliecpf").value,
-      cliedtcd: document.getElementById("editClieDtCad").value || null,
+      cliedtcd: document.getElementById ("editClieDtCad").value || null,
       cliedtnc: document.getElementById("editClieDtNasc").value || null,
       cliecelu: document.getElementById("editClieCelu").value,
       cliecity: document.getElementById("editClieCity").value,
@@ -463,11 +477,8 @@ async function editAndUpdateOfClient() {
           backgroundColor: "green",
         }).showToast();
 
-        document.querySelector("#formEditRegisterClient").reset()
+        formEditClient.reset()
 
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
       } else {
         console.error("Erro ao atualizar cliente:", await response.text());
         Toastify({

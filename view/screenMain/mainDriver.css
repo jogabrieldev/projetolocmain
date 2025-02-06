@@ -9,6 +9,20 @@
     flex-direction: column;
     justify-content: space-between;
 }
+.cadDriverEdit{
+    cursor: pointer;
+    width: 20%;
+    height: 26px;
+    background-color: lightslategray;
+    border: none;
+}
+.btnOutPageRegisterEdit{
+    cursor: pointer;
+    width: 20%;
+    height: 26px;
+    background-color: lightslategray;
+    border: none;
+}
 
 .listingDriver{
     overflow: auto;

@@ -1,5 +1,6 @@
 // const db = require("../database/dataBaseSgt");
 import {client} from "../database/userDataBase.js";
+const dbGoods = client
 
 
  export const goodsRegister  =  {
@@ -18,7 +19,7 @@ import {client} from "../database/userDataBase.js";
           ntFiscal,
           cofo,
           kmAtual,
-          dtKM,
+          dtKm,
           status,
           dtStatus,
           hrStatus,
@@ -55,7 +56,7 @@ import {client} from "../database/userDataBase.js";
           ntFiscal,
           cofo,
           kmAtual,
-          dtKM,
+          dtKm,
           status,
           dtStatus,
           hrStatus,
@@ -69,15 +70,22 @@ import {client} from "../database/userDataBase.js";
           valorAlug,
           fabri,
         ];
+        console.log('Esse e o valor no meu model:' , values)
+
+        await dbGoods.query("BEGIN")
     
-        const result = await client.query(insert, values);
+        const result = await dbGoods.query(insert, values);
+
+        console.log('resultado:', result)
+
+        await dbGoods.query("COMMIT")
         return result.rows[0];
       },
     
       listingBens: async () => {
         try {
           const query = "SELECT * FROM cadbens";
-          const result = await client.query(query);
+          const result = await dbGoods.query(query);
     
           return result.rows;
         } catch (error) {
@@ -87,7 +95,7 @@ import {client} from "../database/userDataBase.js";
     
       deleteBens: async (id) => {
         const delet = "DELETE FROM cadbens WHERE benscode = $1 RETURNING *";
-        const result = await client.query(delet, [id]);
+        const result = await dbGoods.query(delet, [id]);
     
         return result.rows[0];
       },
@@ -129,9 +137,29 @@ import {client} from "../database/userDataBase.js";
           updateBem.bensfabr || null,
           id,
         ];
-        const result = await client.query(query, values);
+        const result = await dbGoods.query(query, values);
         // console.log('dados enviados para o model:' ,result)
     
         return result.rows[0];
       },
+
+      buscarIdFamiliaBens: async()=>{
+         
+        try {
+          const result = await dbGoods.query('SELECT fabecode FROM cadfabe')
+          return result.rows
+        } catch (error) {
+           console.log('error no model family bens' , error)
+        }
+      },
+
+      buscarIdForn: async()=>{
+         
+        try {
+          const result = await dbGoods.query('SELECT forncode FROM cadforn')
+          return result.rows
+        } catch (error) {
+           console.log('error no model fornecedor' , error)
+        }
+      }
  };

@@ -1,5 +1,6 @@
 const btnInitCadDrive = document.querySelector(".btnCadMotorista");
 btnInitCadDrive.addEventListener("click", () => {
+
   const containerAppFabri = document.querySelector(".containerAppFabri");
   containerAppFabri.style.display = "none";
 
@@ -21,9 +22,7 @@ btnInitCadDrive.addEventListener("click", () => {
   const containerForm = document.querySelector(".RegisterDriver");
   containerForm.style.display = "none";
 
-  const containerFormEditDriver = document.querySelector(
-    ".containerFormEditDriver"
-  );
+  const containerFormEditDriver = document.querySelector(".containerFormEditDriver");
   containerFormEditDriver.style.display = "none";
 
   const containerAppDriver = document.querySelector(".containerAppDriver");
@@ -42,6 +41,7 @@ btnInitCadDrive.addEventListener("click", () => {
 
 const registerDriver = document.querySelector(".registerDriver");
 registerDriver.addEventListener("click", () => {
+
   const formRegisterDriver = document.querySelector(".RegisterDriver");
   formRegisterDriver.style.display = "flex";
 
@@ -60,9 +60,8 @@ btnOutSectionDriver.addEventListener('click', ()=>{
 
 })
 
-
-const btnOutPageEditDrive = document.querySelector(".btnOutPageRegister");
-btnOutPageEditDrive.addEventListener("click", (event) => {
+const btnOutPageDrive = document.querySelector(".btnOutPageRegister");
+btnOutPageDrive.addEventListener("click", (event) => {
   event.preventDefault();
 
   const formRegisterDriver = document.querySelector(".RegisterDriver");
@@ -73,6 +72,20 @@ btnOutPageEditDrive.addEventListener("click", (event) => {
 
   const btnPageMain = document.querySelector(".btnInitPageMain");
   btnPageMain.style.display = "flex";
+});
+
+const btnOutformPageEdit = document.querySelector('.btnOutPageRegisterEdit')
+btnOutformPageEdit.addEventListener('click' , (event)=>{
+    event.preventDefault()
+
+    const containerFormEditDriver = document.querySelector('.containerFormEditDriver')
+    containerFormEditDriver.style.display = 'none'
+
+    const listingDriver = document.querySelector(".listingDriver");
+    listingDriver.style.display = "flex";
+
+    const btnPageMain = document.querySelector(".btnInitPageMain");
+     btnPageMain.style.display = "flex";
 });
 
 const formRegisterDriver = document.querySelector(".formRegisterDriver");
@@ -98,7 +111,7 @@ formRegisterDriver.addEventListener("submit", async (event) => {
     return;
   }
 
-  await fetch("/api/drive/submit", {
+    await fetch("/api/drive/submit", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -205,7 +218,7 @@ async function fetchListMotorista() {
           const year = dateObj.getFullYear();
           const month = String(dateObj.getMonth() + 1).padStart(2, "0");
           const day = String(dateObj.getDate()).padStart(2, "0");
-          return `${year}-${month}-${day}`;
+          return `${year}/${month}/${day}`;
         };
 
         linha.insertCell().textContent = motorista.motocode;

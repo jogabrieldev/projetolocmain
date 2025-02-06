@@ -34,10 +34,20 @@ btnLocation.addEventListener("click", () => {
   const containerAppLocation = document.querySelector(".containerAppLocation");
   containerAppLocation.style.display = "flex";
 
-  const btnlocationFinish = document.querySelector('.btnlocationFinish')
-   btnlocationFinish.style.display = 'flex'
-
 });
+
+const registerLocation = document.querySelector('.registerLocation')
+registerLocation.addEventListener('click' , ()=>{
+     
+   const contentLocation = document.querySelector('.content')
+   contentLocation.style.display = 'flex'
+
+   const tableLocation = document.querySelector('.tableLocation')
+   tableLocation.style.display = 'none'
+
+   const btnInitPageMainLoc = document.querySelector('.btnInitPageMainLoc')
+   btnInitPageMainLoc.style.display = 'none'
+})
 
 const locBtnRegisterClient = document.querySelector(".locCadClient");
 locBtnRegisterClient.addEventListener("click", (event) => {
@@ -67,7 +77,63 @@ btnOutInitLoc.addEventListener("click", (event) => {
   informationClient.style.display = "flex";
 });
 
-// buscar cliente para verificar se tem cadastro.
+
+// data e hora em tempo REAL
+function atualizarDataHora() {
+  const agora = new Date();
+
+  // Formata data e hora no padrão YYYY-MM-DDTHH:MM
+  const ano = agora.getFullYear();
+  const mes = String(agora.getMonth() + 1).padStart(2, '0');
+  const dia = String(agora.getDate()).padStart(2, '0');
+  const horas = String(agora.getHours()).padStart(2, '0');
+  const minutos = String(agora.getMinutes()).padStart(2, '0');
+
+  const dataHoraFormatada = `${ano}-${mes}-${dia}T${horas}:${minutos}`;
+
+  document.getElementById("dataLoc").value = dataHoraFormatada;
+}
+
+setInterval(atualizarDataHora, 1000);
+
+function gerarNumeroLocacao() {
+  let numerosGerados = JSON.parse(localStorage.getItem("numerosLocacao")) || []; // Busca os números já gerados
+  let novoNumero;
+
+  do {
+    novoNumero = Math.floor(Math.random() * 1000000); // Gera um número aleatório de 0 a 999999
+  } while (numerosGerados.includes(novoNumero)); // Verifica se já foi gerado antes
+
+  numerosGerados.push(novoNumero); // Adiciona o novo número na lista
+  localStorage.setItem("numerosLocacao", JSON.stringify(numerosGerados)); // Salva no localStorage
+
+  document.getElementById("numeroLocation").value = novoNumero; // Atualiza o campo input
+}
+
+// Função para verificar se os inputs do cliente foram preenchidos
+function verificarPreenchimentoCliente() {
+  const inputsCliente = [
+    "nameClient",
+    "cpfClient",
+    "ruaClient",
+    "cityClient",
+    "cepClient",
+    "mailClient",
+  ];
+
+  // Verifica se algum campo está vazio
+  const todosPreenchidos = inputsCliente.every((id) => {
+    const input = document.getElementById(id);
+    return input && input.value.trim() !== "";
+  });
+
+  // Se todos estiverem preenchidos, gera o número de locação
+  if (todosPreenchidos) {
+    gerarNumeroLocacao();
+  }
+}
+
+// Buscar cliente para verificar se tem cadastro
 const searchClient = document.querySelector("#search");
 searchClient.addEventListener("click", async (event) => {
   event.preventDefault();
@@ -103,63 +169,31 @@ searchClient.addEventListener("click", async (event) => {
         backgroundColor: "green",
       }).showToast();
 
-      const informationClientDiv = document.querySelector(".informationClient");
-      informationClientDiv.style.display = "flex";
-      informationClientDiv.innerHTML = "";
+      const infoClientDiv = document.querySelector(".infoClient");
 
-      const table = document.createElement("table");
-      table.style.borderCollapse = "collapse";
-      table.style.width = "100%";
-
-      const thead = document.createElement("thead");
-      const headerRow = document.createElement("tr");
-      ["Nome", "CPF","Rua" , "CEP", "Data de Cadastro"].forEach((headerText) => {
-        const th = document.createElement("th");
-        th.textContent = headerText;
-        th.style.border = "1px solid #ccc";
-        th.style.padding = "";
-        th.style.textAlign = "left";
-        headerRow.appendChild(th);
-      });
-      thead.appendChild(headerRow);
-      table.appendChild(thead);
-
-      const tbody = document.createElement("tbody");
-      const dataRow = document.createElement("tr");
-
-    // formatação de data
-      const formData = (data) => {
-        if (!data) return 'Data não informada';
+      // Formatação de data
+      const formatData = (data) => {
+        if (!data) return "";
         const dateObj = new Date(data);
-        return new Intl.DateTimeFormat('pt-BR', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
+        return new Intl.DateTimeFormat("pt-BR", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
         }).format(dateObj);
       };
 
-      // Preencher dados do cliente
-      [clientGeral.clienome, clientGeral.cliecpf, clientGeral.clierua, clientGeral.cliecep, formData(clientGeral.cliedtcd)].forEach(
-        (cellData) => {
-          const td = document.createElement("td");
-          td.textContent = cellData;
-          td.style.border = "1px solid #ccc";
-          td.style.padding = "8px";
+      // Preencher os inputs com os dados do cliente
+      document.getElementById("nameClient").value = clientGeral.clienome || "";
+      document.getElementById("cpfClient").value = clientGeral.cliecpf || "";
+      document.getElementById("ruaClient").value = clientGeral.clierua || "";
+      document.getElementById("cityClient").value = clientGeral.cliecity || "";
+      document.getElementById("cepClient").value = clientGeral.cliecep || "";
+      document.getElementById("mailClient").value = clientGeral.cliemail || "";
 
-          dataRow.appendChild(td);
-        }
-      );
 
-      tbody.appendChild(dataRow);
-      table.appendChild(tbody);
+      // Verifica se todos os campos foram preenchidos antes de gerar número de locação
+      verificarPreenchimentoCliente();
 
-      informationClientDiv.appendChild(table);
-
-      setTimeout(() => {
-        if (table) {
-          table.remove();
-        }
-      }, 5000);
       return;
     } else {
       console.log("Cliente não encontrado");
@@ -189,12 +223,16 @@ async function carregarFamilias() {
 
     for (let i = 1; i <= 4; i++) {
       const select = document.getElementById(`family${i}`);
+
+      select.addEventListener("change", () => preencherProduto(i, familias));
+
       familias.forEach(({ fabecode }) => {
         const option = document.createElement("option");
         option.value = fabecode;
         option.textContent = fabecode;
         select.appendChild(option);
       });
+
     }
   } catch (error) {
     console.error("Erro ao carregar famílias de bens:", error);
@@ -202,26 +240,57 @@ async function carregarFamilias() {
   }
 }
 
-// Chama a função ao carregar a página
+ function preencherProduto(index, familias) {
+  const select = document.getElementById(`family${index}`);
+  const inputProduto = document.getElementById(`produto${index}`);
+  const codigoSelecionado = select.value;
+
+  // Encontra a família correspondente ao código selecionado
+  const familiaSelecionada = familias.find(familia => familia.fabecode === codigoSelecionado);
+
+  if (familiaSelecionada) {
+    console.log("Família selecionada:", familiaSelecionada); // Verifique os dados retornados
+    inputProduto.value = familiaSelecionada.fabedesc|| "Sem nome definido"; // Altere "nome" se necessário
+  } else {
+    inputProduto.value = "";
+  }
+}
+
+
 document.addEventListener("DOMContentLoaded", carregarFamilias);
 
-async function handleSubmit(event) {
-  event.preventDefault();
-
+async function handleSubmit() {
+ 
+ 
   const totalGrups = 4;
   const bens = [];
 
   // Capturar dados dos grupos
   for (let i = 1; i <= totalGrups; i++) {
-    const codeBen = document.getElementById(`family${i}`)?.value;
-    const produto = document.getElementById(`produto${i}`)?.value;
-    const quantidade = document.getElementById(`quantidade${i}`)?.value;
-    const descricao = document.getElementById(`descricao${i}`)?.value;
+    const codeBen = document.getElementById(`family${i}`)?.value || "";
+    const produto = document.getElementById(`produto${i}`)?.value || "";
+    const quantidade = document.getElementById(`quantidade${i}`)?.value || "";
+    const observacao = document.getElementById(`observacao${i}`)?.value || "";
+    const dataInicio = document.getElementById(`dataInicio${i}`)?.value || "";
+    const dataFim = document.getElementById(`dataFim${i}`)?.value || "";
 
-    console.log(`Dados do grupo ${i}:`, { codeBen, produto, quantidade, descricao });
+    console.log(`Dados do grupo ${i}:`, {  codeBen,
+      observacao,
+      dataInicio,
+      dataFim,
+      quantidade,
+      produto });
 
-    if (codeBen && produto && quantidade && descricao) {
-      bens.push({ codeBen, produto, quantidade, descricao });
+    // Só adiciona ao array se pelo menos um campo estiver preenchido
+    if (codeBen || dataFim || dataInicio || observacao|| produto|| quantidade ) {
+      bens.push({
+        codeBen,
+        observacao,
+        dataInicio,
+        dataFim,
+        quantidade,
+        produto
+      });
     }
   }
 
@@ -229,7 +298,7 @@ async function handleSubmit(event) {
     console.error("Nenhum grupo válido foi preenchido.");
     Toastify({
       text: "Preencha ao menos um grupo de bens corretamente.",
-      duration: 2000,
+      duration: 3000,
       close: true,
       gravity: "top",
       position: "center",
@@ -238,27 +307,34 @@ async function handleSubmit(event) {
     return;
   }
 
+  console.log("Array de bens final:", bens);
+
   try {
-  
-    // Enviar dados do cliente
-    const userClientValidade = document.querySelector("#numCpf")?.value || null;
+
+      const numericLocation = document.querySelector('#numeroLocation').value
+      const nameClient = document.querySelector('#nameClient').value
+      const cpfClient = document.querySelector('#cpfClient').value
+
+    const userClientValidade = [
+     nameClient, cpfClient
+    ]
+    // console.log( " NOME:" , nameClient ,  "CPF: ", cpfClient)
     const dataLoc = document.getElementById("dataLoc")?.value || null;
     const dataDevo = document.getElementById("DataDevo")?.value || null;
-    const horaLoc = document.getElementById("horaLoc")?.value || null;
     const pagament = document.getElementById("pagament")?.value || null;
 
     const payload = {
+      numericLocation,
       userClientValidade,
       dataLoc,
       dataDevo,
-      horaLoc,
       pagament,
       bens
     }
 
     console.log("Payload Locação:", payload);
 
-    const response = await fetch('/api/locclient', {
+    const response = await fetch('/api/datalocation', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
@@ -319,14 +395,13 @@ async function buscarNomeCliente(cpf) {
 }
 
 async function gerarContrato() {
- 
-  const cpfCliente = document.getElementById("numCpf")?.value || "Não informado";
 
-  const nomeCliente = cpfCliente !== "Não informado" ? await buscarNomeCliente(cpfCliente) : "CPF não informado";
+  const cpfCliente = document.getElementById("cpfClient")?.value || "Não informado";
+  const nomeCliente = document.getElementById('nameClient')?.value || "Não informado"
 
   const dataLocacao = document.getElementById("dataLoc")?.value || "Não informado";
   const dataDevolucao = document.getElementById("DataDevo")?.value || "Não informado";
-  const horaLocacao = document.getElementById("horaLoc")?.value || "Não informado";
+  const numericLocation= document.getElementById("numeroLocation")?.value || "Não informado";
   const pagamento = document.getElementById("pagament")?.value || "Não informado";
 
   const gruposBens = [];
@@ -334,7 +409,9 @@ async function gerarContrato() {
     const codeBen = document.getElementById(`family${i}`)?.value || "Não informado";
     const produto = document.getElementById(`produto${i}`)?.value || "Não informado";
     const quantidade = document.getElementById(`quantidade${i}`)?.value || "Não informado";
-    const descricao = document.getElementById(`descricao${i}`)?.value || "Não informado";
+    const observacao = document.getElementById(`observacao${i}`)?.value || "Não informado";
+    const dataInit = document.getElementById(`dataInicio${i}`)?.value || "Não informado";
+    const dataFim = document.getElementById(`dataFim${i}`)?.value || "Não informado";
 
     if (produto !== "Não informado") {
       gruposBens.push(`
@@ -342,27 +419,28 @@ async function gerarContrato() {
           <td>${codeBen}</td>
           <td>${produto}</td>
           <td>${quantidade}</td>
-          <td>${descricao}</td>
+          <td>${observacao}</td>
+          <td>${dataInit}</td>
+          <td>${dataFim}</td>
         </tr>
       `);
     }
   }
 
   // Esconder as outras divs
-  document.querySelector(".informationMainClient").style.display = "none";
-  document.querySelector(".familyBens").style.display = "none";
-  document.querySelector(".LocRegisterClient").style.display = "none";
+  document.querySelector('.content').style.display = 'none'
 
   // Gerar conteúdo do contrato
   const contratoDiv = document.getElementById("contrato");
   contratoDiv.innerHTML = `
     <h2>Contrato de Locação</h2>
     <hr>
+    <p><strong>Numero da locação:</strong>${numericLocation}</p>
     <p><strong>Nome do Cliente:</strong> ${nomeCliente}</p>
     <p><strong>CPF do Cliente:</strong> ${cpfCliente}</p>
     <p><strong>Data da Locação:</strong> ${dataLocacao}</p>
     <p><strong>Data de Devolução:</strong> ${dataDevolucao}</p>
-    <p><strong>Hora da Locação:</strong> ${horaLocacao}</p>
+    <p><strong>Numero da Locação:</strong> ${numericLocation}</p>
     <p><strong>Forma de Pagamento:</strong> ${pagamento}</p>
     <hr>
     <p><strong>Itens Locados:</strong></p>
@@ -375,6 +453,8 @@ async function gerarContrato() {
                 <th>Produto</th>
                 <th>Quantidade</th>
                 <th>Descrição</th>
+                <th>Data de Inicio</th>
+                <th>Data Final</th>
               </tr>
             </thead>
             <tbody>
@@ -396,8 +476,7 @@ async function gerarContrato() {
   });
 }
 
-
-
+// cadastrar o cliente pela a tela de locação
 const formRegisterClientLoc = document.querySelector("#formRegisterClientLoc");
 formRegisterClientLoc.addEventListener("submit", async (event) => {
   event.preventDefault();

@@ -19,7 +19,13 @@
     background-color: lightslategray;
     border: none;
 }
-
+.cadFabriEdit{
+    cursor: pointer;
+    width: 20%;
+    height: 26px;
+    background-color: lightslategray;
+    border: none;
+}
 .btnOutInitFabri{
     cursor: pointer;
     width: 20%;
@@ -57,7 +63,6 @@
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
     transform: translateY(6px);
 }
-
 
 .buttonDeleteFabri{
     cursor: pointer;

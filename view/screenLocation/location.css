@@ -10,10 +10,87 @@
     justify-content: space-between;
 }
 
-.informationMainClient{
-    display: flex;
-    flex-wrap: wrap;
-    height: 40%;
+.btnRegisterLocation{
+  width: 90%;
+  height: 35px;
+  border: none;
+  background-color: rgb(100, 137, 189);
+  cursor: pointer;
+  margin-right: 2.5%;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 0.2s, transform 0.4s;
+}
+
+
+.btnInitPageMainLoc{
+  display: flex;
+  justify-content: center; 
+  height: 40px;
+  gap:20px;
+  margin-top: 3%;
+}
+.registerLocation{
+  cursor: pointer;
+  width: 80px;
+  margin-bottom: 2%;
+  background-color: lightslategray; 
+  border: none;
+  height:27px;
+}
+
+.buttonDeleteLocation{
+  cursor: pointer;
+  width: 80px;
+  margin-bottom: 2%;
+  background-color: lightslategray; 
+  border: none;
+  height:27px;
+}
+
+.buttonEditLocation{
+  cursor: pointer;
+  width: 80px;
+  margin-bottom: 2%;
+  background-color: lightslategray; 
+  border: none;
+  height:27px;
+}
+
+.buttonExitLocation{
+  cursor: pointer;
+  width: 80px;
+  margin-bottom: 2%;
+  background-color: lightslategray; 
+  border: none;
+  height:27px;
+}
+
+.content{
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+/* .infoClient{
+  margin-left: 3%;
+} */
+
+.infoClient {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.infoClient label {
+  font-size: 12px;
+  color: #0f0e0e;
+  display: block;
+}
+
+.infoClient input {
+  width: 20%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .familyBens {
@@ -92,6 +169,44 @@
   margin-top: 1%;
 }
 
+/* Botoes da tela principal */
+.registerLocation{
+  /* margin-top: 0.8%; */
+    height: 28px;
+    cursor: pointer;
+    width: 15%;
+    background-color: lightslategray;
+    border: none;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
+}
+.buttonDeleteLocation{
+  height: 28px;
+  cursor: pointer;
+  width: 15%;
+  background-color: lightslategray;
+  border: none;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 0.2s, transform 0.4s;
+}
+.buttonEditLocation{
+  height: 28px;
+  cursor: pointer;
+  width: 15%;
+  background-color: lightslategray;
+  border: none;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 0.2s, transform 0.4s;
+}
+.buttonExitLocation{
+  height: 28px;
+  cursor: pointer;
+  width: 15%;
+  background-color: lightslategray;
+  border: none;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 0.2s, transform 0.4s;
+}
 
 .formGroupBtn{
   margin-top: 1.5%;
@@ -127,23 +242,23 @@
   
    .tableGrid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(6, 2fr);
     gap: 20px;
-    max-width: 600px;
+    max-width: 900px;
     margin: 0 auto;
   }
 
   .tableGrid label {
     font-weight: bold;
     text-align: center;
-  }
+}
 
   .tableGrid input {
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
-  }
+}
 
 
 #formClient{
@@ -191,11 +306,18 @@
   pointer-events: none; 
   font-size: 24px; 
 }
+
 .inputGroupDataEvolu {
   display: flex;
   flex-direction: column; 
   gap: 5px; 
+}
 
+.Numeric{
+  display: flex;
+  flex-direction: column; 
+  gap: 5px; 
+  width: 10%;
 }
 .inputGroupDataLoc{
   display: flex;
@@ -253,6 +375,16 @@
     cursor: pointer;
   }
 
+.outLocation{
+  height: 30px;
+  width: 35%;
+  background-color:  rgb(100, 137, 189);
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
   .locCadClient{
     height: 24px;
     background-color: rgb(100, 137, 189);
@@ -289,14 +421,6 @@
 
 /* Location finish */
 
-.containerLocationFinish{
-  display: none;
-    background-color: darkgray;
-    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
-    width: 76%;
-    height: 550px;
-    margin-left: 20%;
-    margin-top:1.2% ;
-    flex-direction: column;
-    justify-content: space-between;
+.tableLocation{
+  overflow: auto;
 }

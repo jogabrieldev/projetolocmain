@@ -1,16 +1,61 @@
+
 import {goodsRegister} from "../model/dataGoods.js";
 
  export const movementGoods = {
 
   async registerBens(req, res) {
     try {
-      const { data } = req.body;
+      const {data}  = req.body;
+
+      console.log('dados do bem:', req.body)
 
       const newUser = await goodsRegister.registerOfBens(data);
       res.status(201).json({ success: true, user: newUser });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
+  },
+
+  
+
+  async codeForn(req ,res){
+
+    try {
+      const dataforn = await  goodsRegister.buscarIdForn()
+       if(dataforn){
+      res.status(200).json(dataforn)
+       return dataforn
+    }else{
+      return req.status(400).json({error: "Nenhum dado encontrado"})
+    }
+      
+    } catch (error) {
+       console.error('Erro ao buscar fornecedor', error)
+       return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    
+    
+  },
+
+  async codeFamilyBens(req ,res){
+
+    try {
+      const dataFamilybens = await goodsRegister.buscarIdFamiliaBens()
+
+      if(dataFamilybens){
+      res.status(200).json(dataFamilybens)
+      return dataFamilybens
+
+    }else{
+      return req.status(400).json({error: "Nenhum dado encontrado"})
+    }
+      
+    } catch (error) {
+       console.error("Erro ao buscar família de bens:", error);
+       return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    
+    
   },
 
   async listBens(req, res) {

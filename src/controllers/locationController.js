@@ -2,47 +2,56 @@
 import {LocacaoModel} from "../model/location.js";
 
  export const location = {
-  async LocacaoClient(req, res) {
 
-    const { userClientValidade, dataLoc, dataDevo, horaLoc, pagament , bens } =
-      req.body;
 
+
+  async dataLocacao(req, res) {
+    const { userClientValidade, numericLocation, dataLoc, dataDevo, pagament, bens } = req.body;
+  
+    console.log("Corpo da requisição recebido:", req.body);
+  
     try {
-
       if (!bens || bens.length === 0) {
-            return res.status(400).json({ error: "Nenhum dado de bens enviado." });
-          }
-
-      if (!userClientValidade) {
-        return res.status(400).json({ error: "CPF do cliente e Obrigatorio" });
+        return res.status(400).json({ error: "Nenhum dado de bens enviado." });
       }
-      // Buscar o cliente pelo CPF
-      const cliente = await LocacaoModel.buscarClientePorCPF(userClientValidade);
-        
+  
+      if (!userClientValidade || userClientValidade.length < 2) {
+        return res.status(400).json({ error: "CPF do cliente é obrigatório" });
+      }
+  
+      // const nameClient = userClientValidade[0]
+      const cpfClient = userClientValidade[1]
+  
+      const cliente = await LocacaoModel.buscarClientePorCPF(cpfClient);
+      console.log('Esse e o cliente: ' ,cliente)
+  
       if (!cliente) {
         return res.status(404).json({ error: "Cliente não encontrado." });
       }
 
-      const novaLocacao = await LocacaoModel.clientLoc({
-        clloclit: cliente.cliecode,
-        cllodtlo: dataLoc,
+    
+      const locationClient = await LocacaoModel.clientLoc({
+        cllonmlo:numericLocation,
+        clloidcl: cliente.cliecode,
         cllodtdv: dataDevo,
-        cllohrlo: horaLoc,
-        cllofmpg: pagament,
-      });
-
-      console.log('clloid gerado' , novaLocacao)
-     
-       await LocacaoModel.inserirBens(bens , novaLocacao)
-
-      return res
-        .status(201)
-        .json({ message: "Locação criada com sucesso.", locacao: novaLocacao });
+        cllodtlo: dataLoc,
+        cllopgmt: pagament,
+        clloclno: cliente.clienome,
+        cllocpf: cpfClient
+      })
+      
+  
+      console.log("clloid gerado:", locationClient);
+  
+      await LocacaoModel.inserirBens(bens , locationClient);
+  
+      return res.status(201).json({ message: "Locação criada com sucesso." });
     } catch (error) {
       console.error("Erro ao criar locação:", error);
       return res.status(500).json({ error: "Erro interno do servidor." });
     }
   },
+  
 
    async getClientByCPF (req, res){
     try {
@@ -85,17 +94,17 @@ import {LocacaoModel} from "../model/location.js";
       res.status(500).json({ error: "Erro ao buscar famílias de bens." });
     }
   },
-
-  async listarLocacoes(req, res) {
+  
+  async buscarLocationFinish(req, res) {
     try {
-      const locacoes = await LocacaoModel.buscarLocacoes();
-      res.status(200).json({
-        message: "Locações listadas e inseridas com sucesso na tabela locfim.",
-        data: locacoes,
-      });
+      const [clientes, bens] = await Promise.all([
+        LocacaoModel.buscarLocationClient(),
+        LocacaoModel.buscarLocationGoods(),
+      ]);
+
+      res.status(200).json({ clientes, bens });
     } catch (error) {
-      console.error("Erro ao listar locações:", error);
-      res.status(500).json({ error: "Erro interno do servidor." });
+      res.status(500).json({ error: 'Erro ao buscar os dados' });
     }
   },
 

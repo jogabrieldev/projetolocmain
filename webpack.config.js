@@ -1,9 +1,14 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+import path from "path";
+import { fileURLToPath } from "url";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import { CleanWebpackPlugin } from "clean-webpack-plugin";
 
-module.exports = {
-  entry: "./src/index.js", // Arquivo principal do frontend
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default  {
+  entry: path.resolve (__dirname ,"./src/view/screenMain"), // Arquivo principal do frontend
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
@@ -19,20 +24,31 @@ module.exports = {
           options: {
             presets: ["@babel/preset-env"],
           },
+          
         },
       },
     ],
   },
   plugins: [
-    new CleanWebpackPlugin(), // Limpa a pasta dist antes de cada build
+    new CleanWebpackPlugin({
+
+    }), // Limpa a pasta dist antes de cada build
+
     new HtmlWebpackPlugin({
-      template: "./src/index.html", // HTML base do frontend
+      template: "./src/view/index.html", // HTML base do frontend
       filename: "index.html",
     }),
+
   ],
   devServer: {
     static: path.join(__dirname, "dist"),
     compress: true,
     port: 9000, // Porta do servidor Webpack DevServer
   },
+
+  resolve:{
+    alias:{
+      Inputmask: path.resolve(__dirname , "node_modules/inputmask/dist/inputmask.min.js")
+    }
+  }
 };
