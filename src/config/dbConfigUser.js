@@ -5,7 +5,7 @@ export const dbConfigUser = {
     password:"101010",
     database:"sgttec",
     port: 5432
-  }
+  };
 
   //passwordLogin 123123
 

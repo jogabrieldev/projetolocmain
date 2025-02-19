@@ -218,7 +218,6 @@ async function fetchListProdutos() {
           "Descrição",
           "Tipo",
           "Unidade",
-          "familia de bens",
           "Data da compra",
           "Valor",
           "Preço Liguido",
@@ -260,7 +259,6 @@ async function fetchListProdutos() {
           linha.insertCell().textContent = produto.proddesc;
           linha.insertCell().textContent = produto.prodtipo;
           linha.insertCell().textContent = produto.produnid;
-          linha.insertCell().textContent = produto.prodcofa;
           linha.insertCell().textContent = formatDate(produto.proddtuc);
           linha.insertCell().textContent = produto.prodvluc;
           linha.insertCell().textContent = produto.prodpeli;
@@ -362,7 +360,6 @@ async function deleteProd(id , rowProd) {
 const editProdButton = document.querySelector(".buttonEditProd");
 editProdButton.addEventListener("click", (event) => {
 
-  loadSelectOptions("/api/codefamilyben", "editProdCofa", 'fabecode');
   loadSelectOptions("/api/codetipoprod", "editProdTipo", 'tiprcode');
   
   const selectedCheckbox = document.querySelector(
@@ -397,15 +394,12 @@ editProdButton.addEventListener("click", (event) => {
       { id: "editProdDesc", valor: produtoSelecionado.proddesc },
       { id: "editProdTipo", valor: produtoSelecionado.prodtipo },
       { id: "editProdUni", valor: produtoSelecionado.produnid },
-      { id: "editProdCofa", valor: produtoSelecionado.prodcofa },
       { id: "editProdData", valor: produtoSelecionado.proddtuc },
       { id: "editProdValor", valor: produtoSelecionado.prodvluc },
       { id: "editProdPeli", valor: produtoSelecionado.prodpeli },
       { id: "editProdPebr", valor: produtoSelecionado.prodpebr },
       { id: "editProdAtiv", valor: produtoSelecionado.prodativ },
     ];
-
-      //  console.log(campos)
 
     // Atualizar valores no formulário
     campos.forEach(({ id, valor }) => {
@@ -482,7 +476,6 @@ async function editAndUpdateOfProduct() {
       proddesc: document.getElementById("editProdDesc").value,
       prodtipo: document.getElementById("editProdTipo").value,
       produnid: document.getElementById("editProdUni").value,
-      prodcofa: document.getElementById("editProdCofa").value,
       proddtuc: document.getElementById("editProdData").value || null,
       prodvluc: document.getElementById("editProdValor").value,
       prodpeli: document.getElementById("editProdPeli").value, 

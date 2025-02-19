@@ -83,13 +83,6 @@ btnOutPageEdit.addEventListener("click", (e) => {
   return;
 });
 
-// const buttonEdit = document.querySelector('.buttonEdit')
-// buttonEdit.addEventListener('click' , ()=>{
-//   const formEdit = document.querySelector('#formEditBens')
-//   formEdit.style.display = 'flex'
-// })
-
-
 
 const buttonOutGoods = document.querySelector(".btnOut");
 buttonOutGoods.addEventListener("click", (event) => {
@@ -105,36 +98,24 @@ buttonOutGoods.addEventListener("click", (event) => {
   return;
 });
 
+const buttonSubmitRegisterGoods = document.querySelector('.btnNext')
+buttonSubmitRegisterGoods.addEventListener("submit" , (event)=>{
+  event.preventDefault()
+})
+
 const formRegister = document.querySelector("#formRegisterBens")
   formRegister.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
+ event.preventDefault()
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
 
-    if (
-      Object.keys(data).length === 0 ||
-      Object.values(data).some((val) => val === "")
-    ) {
-      console.log("Formulario Vazio");
-      Toastify({
-        text: "Por favor, preencha o formulário antes de enviar.",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-      return;
-    }
-
     try {
-      const response = await fetch("/api/bens/submit", {
+      const responseBens = await fetch("/api/bens/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({data}),
       });
-      if (response.ok) {
+      if (responseBens.ok) {
         console.log("deu certo");
 
         Toastify({
@@ -158,6 +139,7 @@ const formRegister = document.querySelector("#formRegisterBens")
         }).showToast();
         console.log("deu ruim");
       }
+
     } catch (error) {
       console.log("erro no envio", error);
     }
@@ -168,8 +150,6 @@ const formRegister = document.querySelector("#formRegisterBens")
         const response = await fetch(url);
         const result = await response.json();
         
-        console.log(`Dados recebidos de ${url}:`, result);
-
         // Caso os dados venham aninhados dentro de "data"
         const data = Array.isArray(result) ? result : result.data;
 

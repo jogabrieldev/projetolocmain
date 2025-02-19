@@ -4,4 +4,4 @@ export const dbClient ={
     password:"101010",
     database:"server03",
     port: 5432
-}
+};

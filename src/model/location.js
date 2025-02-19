@@ -38,8 +38,8 @@ const dataLocation = client
   
   async inserirBens(bens, clloid) {
     const query = `
-      INSERT INTO bensloc (bencodb, beloben, belodtin, belodtfi, beloqntd, beloobsv, beloidcl)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      INSERT INTO bensloc (bencodb, beloben, belodtin, belodtfi, beloqntd, beloobsv, belostat, beloidcl)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING belocode;
     `;
   
@@ -47,8 +47,8 @@ const dataLocation = client
       await dataLocation.query("BEGIN");
   
       const resultados = [];
-      for (const { codeBen, produto, dataInicio, dataFim, quantidade, observacao } of bens) {
-        const valoresBens = [codeBen, produto, dataInicio, dataFim, quantidade, observacao, clloid];
+      for (const { codeBen, produto, dataInicio, dataFim, quantidade, observacao , status } of bens) {
+        const valoresBens = [codeBen, produto, dataInicio, dataFim, quantidade, observacao, status, clloid];
   
         console.log("Inserindo bens com valores:", valoresBens);
   
@@ -116,6 +116,57 @@ const dataLocation = client
     } catch (error) {
        console.error('erro ao buscar bens de locação' , error)
     }
-  }
+  },
+
+  async deleteLocation(numeroLocacao) {
+    try {
+      console.log('Número da locação recebido:', numeroLocacao);
   
-};
+      // 1. Buscar o ID da locação correspondente ao número da locação
+      const result = await dataLocation.query(
+        'SELECT clloid FROM clieloc WHERE cllonmlo = $1',
+        [numeroLocacao]  // Certifique-se de passar o parâmetro corretamente
+      );
+  
+      if (result.rows.length === 0) {
+        console.log('Nenhuma locação encontrada com o número fornecido.');
+        return false;
+      }
+  
+      console.log('Linhas:', result.rows);
+  
+      // Extraindo o ID da locação corretamente
+      const idLocacao = result.rows[0].clloid;
+      console.log('ID da locação encontrado:', idLocacao);
+  
+      // 2. Excluir os registros relacionados na tabela bensloc
+      await dataLocation.query('DELETE FROM bensloc WHERE beloidcl = $1', [idLocacao]);
+  
+      // 3. Excluir o registro principal na tabela clienteLoc
+      await dataLocation.query('DELETE FROM clieloc WHERE clloid = $1', [idLocacao]);
+  
+      console.log('Locação excluída com sucesso.');
+      return true;
+    } catch (error) {
+      console.error('Erro no model:', error.message);
+      throw error;
+    }
+  },
+
+  async editLocation(){
+
+    const query = `
+    INSERT INTO bensloc (bencodb, beloben, belodtin, belodtfi, beloqntd, beloobsv, beloidcl)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    RETURNING belocode;
+  `;
+
+   const insertQuery = `
+   INSERT INTO clieloc(clloidcl, cllonmlo, cllodtdv, cllodtlo, cllopgmt, clloclno, cllocpf)
+  VALUES ($1, $2, $3, $4, $5, $6, $7)
+  RETURNING *;
+`;
+
+ }
+   
+}  

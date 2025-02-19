@@ -70,13 +70,10 @@ const dbGoods = client
           valorAlug,
           fabri,
         ];
-        console.log('Esse e o valor no meu model:' , values)
 
         await dbGoods.query("BEGIN")
     
         const result = await dbGoods.query(insert, values);
-
-        console.log('resultado:', result)
 
         await dbGoods.query("COMMIT")
         return result.rows[0];
@@ -138,7 +135,6 @@ const dbGoods = client
           id,
         ];
         const result = await dbGoods.query(query, values);
-        // console.log('dados enviados para o model:' ,result)
     
         return result.rows[0];
       },

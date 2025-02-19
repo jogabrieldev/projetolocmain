@@ -103,7 +103,7 @@ route.put('/api/updateprod/:id' , (req , res)=>{
   movementOfProd.updateProduct(req, res)
 })
 
-//fabricante
+//Familia do bem
 
 route.post('/api/fabri/submit' , (req , res)=>{
   movementOfFamilyGoods.registerOfFabri(req , res)
@@ -158,16 +158,10 @@ route.put('/api/updatetypeprod/:id', (req , res)=>{
  })
 
  //locação 
-// rota para enviar dados de locação
 
  route.post('/api/datalocation' , (req , res)=>{
   location.dataLocacao(req , res)
  })
-
-// rota para cadastrar o bem locado !
-//  route.post('/api/locbens' , async (req , res)=>{
-//      await location.locacaoBens(req, res )
-//  })
 
  route.get('/api/location' , (req , res)=>{
    location.buscarLocationFinish(req ,res)
@@ -179,6 +173,10 @@ route.get('/api/codefamilybens',(req , res)=>{
 
  route.get('/api/client' , (req , res)=>{
   location.getClientByCPF(req, res)
+ })
+
+ route.delete('/api/deletelocation/:id' , (req , res)=>{
+  location.DeleteLocationFinish(req , res)
  })
 
  export {route}

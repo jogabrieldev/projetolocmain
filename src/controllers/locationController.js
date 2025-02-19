@@ -3,8 +3,6 @@ import {LocacaoModel} from "../model/location.js";
 
  export const location = {
 
-
-
   async dataLocacao(req, res) {
     const { userClientValidade, numericLocation, dataLoc, dataDevo, pagament, bens } = req.body;
   
@@ -19,7 +17,6 @@ import {LocacaoModel} from "../model/location.js";
         return res.status(400).json({ error: "CPF do cliente é obrigatório" });
       }
   
-      // const nameClient = userClientValidade[0]
       const cpfClient = userClientValidade[1]
   
       const cliente = await LocacaoModel.buscarClientePorCPF(cpfClient);
@@ -107,7 +104,25 @@ import {LocacaoModel} from "../model/location.js";
       res.status(500).json({ error: 'Erro ao buscar os dados' });
     }
   },
-
+   
+  async DeleteLocationFinish(req, res) {
+    try {
+      const { id } = req.params;
+      const deleteSuccess = await LocacaoModel.deleteLocation(id);
+  
+      if (!deleteSuccess) {
+        return res.status(404).json({ message: "Locação não encontrada" });
+      }
+  
+      return res.status(200).json({
+        message: "Locação apagada com sucesso",
+      });
+    } catch (error) {
+      console.error("Erro ao apagar locação:", error);
+      return res.status(500).json({ message: "Erro no servidor" });
+    }
+  },
+  
 };
 
 

@@ -13,14 +13,15 @@
     <link rel="stylesheet" href="mainTypeProd.css">
     <link rel="stylesheet" href="mainDriver.css">
     <link rel="stylesheet" href="../screenLocation/location.css">
+    <link rel="stylesheet" href="../logistics/logistics.css">
 
-    <link rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=exit_to_app,search" />
+       <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=exit_to_app,search" />
      
       
-    
          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
          <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script> 
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
    
 
     <title>Screen main</title>
@@ -46,7 +47,9 @@
             <ul>
                 <li> <button class="btnAtivRegister">Cadastros</button></li>
                 <br>
-                <li> <button class="btnRegisterLocation">Locação</button></li>
+                <li> <button class="btnRegisterLocation"onclick="frontLocation()">Locação</button></li>
+                <br>
+                <li><button class="btnLogistic" onclick=" locationPendente()">Logistica</button></li>
                 <br>
                 <li><button class="btnCadBens" >Bens</button></li>
                 <br>
@@ -167,12 +170,14 @@
                     <div class="inputGroup">
                            <label for="status">Status</label>
                         <select name="status" id="status">
-                           <option value="EL">EL</option>
-                           <option value="SC">SC</option>
-                           <option value="SA">SA</option>
-                           <option value="AC">AC</option>
-                           <option value="TC">TC</option>
-                           <option value="CA">CA</option>
+                            <option value="">Selecione...</option>
+                           <option value="Disponivel">DP</option>
+                           <option value="Em locação">EL</option>
+                           <option value="Saida do cliente">SC</option>
+                           <option value="Saida do aterro">SA</option>
+                           <option value="Saida do aterro para o cliente">AC</option>
+                           <option value="Transito para o cliente">TC</option>
+                           <option value="Cliente para o aterro">CA</option>
                         </select>
                    </div>
 
@@ -214,16 +219,18 @@
                    <div class="inputGroup">
                            <label for="fabri">Ativo</label>
                            <select name="bensAtiv" id="bensAtiv">
-                               <option value="S">Sim</option>
-                               <option value="N">Nao</option>
+                             <option value="">Selecione...</option> 
+                               <option value="Sim">Sim</option>
+                               <option value="Não">Nao</option>
                            </select>
                    </div>
                   
                    <div class="inputGroup">
                          <label for="alug">Alugado</label>
                             <select name="alug" id="alug">
-                               <option value="S">Sim</option>
-                               <option value="N">Nao</option>
+                                <option value="">Selecione...</option>
+                               <option value="Sim">Sim</option>
+                               <option value="Não">Nao</option>
                             </select>
                    </div>
                
@@ -323,12 +330,14 @@
                          <div class="inputGroup">
                                 <label for="status">Status</label>
                              <select name="status" id="status">
-                                <option value="EL">EL</option>
-                                <option value="SC">SC</option>
-                                <option value="SA">SA</option>
-                                <option value="AC">AC</option>
-                                <option value="TC">TC</option>
-                                <option value="CA">CA</option>
+                                <option value="">Selecione...</option>
+                                <option value="Disponivel">DP</option>
+                                <option value="Em locação">EL</option>
+                                <option value="Saida do cliente">SC</option>
+                                <option value="Saida do aterro">SA</option>
+                                <option value="Saida do aterro para o cliente">AC</option>
+                                <option value="Transito para o cliente">TC</option>
+                                <option value="Cliente para o aterro">CA</option>
                              </select>
                         </div>
 
@@ -368,29 +377,31 @@
                         </div>
 
                         <div class="inputGroup">
-                                <label for="fabri">Ativo</label>
+                                <label for="bensAtiv">Ativo</label>
                                 <select name="bensAtiv" id="bensAtiv">
-                                    <option value="S">Sim</option>
-                                    <option value="N">Nao</option>
+                                    <option value="">Selecione...</option>
+                                    <option value="Sim">Sim</option>
+                                    <option value="Não">Nao</option>
                                 </select>
                         </div>
                        
                         <div class="inputGroup">
                               <label for="alug">Alugado</label>
                                  <select name="alug" id="alug">
-                                    <option value="S">Sim</option>
-                                    <option value="N">Nao</option>
+                                    <option value="">Selecione</option>
+                                    <option value="Sim">Sim</option>
+                                    <option value="Não">Nao</option>
                                  </select>
                         </div>
                     
                          <div class="inputGroup">
                             <label for="valorAlug">Valor Alugado</label>
-                            <input type="text" name="valorAlug" id="valorAlug" placeholder="R$ 0,00" maxlength="13" >
+                            <input type="text" name="valorAlug" id="valorAlug" placeholder="R$ 0,00" maxlength="13">
                         </div>
                            
                         <div class="inputGroup">
                             <label for="fabri">Fabricante</label>
-                                <input type="text" name="fabri" id="fabri" placeholder="Fabricante" maxlength="25">
+                            <input type="text" name="fabri" id="fabri" placeholder="Fabricante" maxlength="25">
                         </div>
                     
                     <div class="btnOutNext">
@@ -403,11 +414,8 @@
 </section>   
 
          <!-- Cadastro do client -->
-
     <section class="containerAppClient">
           
-          
-
         <div class="listClient">
             <!-- informações do cadastro do client -->
         </div>
@@ -538,7 +546,7 @@
 
                   <div class="inputGroup">
                       <label for="clieCep ">Cep</label>
-                      <input type="number" name="clieCep" id="clieCep" placeholder="CEP" maxlength="10">
+                      <input type="text" name="clieCep" id="clieCep" placeholder="CEP" maxlength="10">
                   </div>
 
                   <div class="inputGroup">
@@ -563,7 +571,7 @@
         </div>
 
     <div class="btnMainPageForn">
-        <button class="registerForn">incluir</button>
+        <button class="registerForn">Incluir</button>
         <button class="buttonDeleteForn">Excluir</button>
         <button class="buttonEditForn">Editar</button>
         <button class="buttonExitForn">Voltar</button>
@@ -767,7 +775,7 @@
         </div>
 
         <div class="btnMainPageProd">
-            <button class="registerProd">incluir</button>
+            <button class="registerProd">Incluir</button>
             <button class="buttonDeleteProd">Excluir</button>
             <button class="buttonEditProd">Editar</button>
             <button class="buttonExitProd">Voltar</button>
@@ -798,13 +806,6 @@
                 <div class="inputGroup">
                     <label for="prodUni">Unidade</label>
                     <input type="number" name="prodUni" id="prodUni" placeholder="Unidade" maxlength="8">
-                </div>
-
-                <div class="inputGroup">
-                    <label for="prodCofa">Codigo Fabricante</label>
-                    <select name="prodCofa" id="prodCofa">
-                        <option value="">Selecione...</option>
-                    </select>
                 </div>
 
                 <div class="inputGroup">
@@ -869,13 +870,6 @@
                     <div class="inputGroup">
                         <label for="prodUni">Unidade</label>
                         <input type="number" name="prodUni" id="editProdUni" placeholder="Unidade" maxlength="2">
-                    </div>
-    
-                    <div class="inputGroup">
-                        <label for="prodCofa">Familia de bem</label>
-                        <select name="editProdCofa" id="editProdCofa">
-                        <option value="">Selecione...</option>
-                       </select>
                     </div>
     
                     <div class="inputGroup">
@@ -1029,7 +1023,7 @@
     </div>
 
     <div class="btnMainPageTipoProd">
-        <button class="registerTipoProd">incluir</button>
+        <button class="registerTipoProd">Incluir</button>
         <button class="buttonDeleteTipoProd">Excluir</button>
         <button class="buttonEditTipoProd">Editar</button>
         <button class="buttonExitTipoProd">Voltar</button>
@@ -1341,6 +1335,7 @@
     </div>
           
     <div class="btnInitPageMainLoc">
+      
         <button class="registerLocation">incluir</button>
         <button class="buttonDeleteLocation">Excluir</button>
         <button class="buttonEditLocation">Editar</button>
@@ -1349,13 +1344,18 @@
 
 
   <main class="content" style="display: none;">
+
+    <div class="searchClient" style= "display: none;" >
+        <!-- Informações caso tenha mais e um cliente -->
+         
+    </div>
    
         <!-- <h3>Informações do Cliente</h3> -->
       <div id="formClient">
         <div class="formGroup">
           
           <div class="inputGroupSearchClient ">
-              <label for="client">Pesquise o Cliente</label>
+              <label for="client"> <b>Pesquise o Cliente</b></label>
              <div class="inputWrapper">
                   <input type="text" name="client" id="client" placeholder="CPF ou Nome" required>
                    <span class="material-symbols-outlined" id="search">
@@ -1367,24 +1367,25 @@
           </div>
 
            <div class="Numeric">
-            <label for="numeroLocation">Locação</label>
+            <label for="numeroLocation"> <b>Locação</b></label>
               <input type="number" name="numeroLocation" id="numeroLocation" placeholder="Locação" readonly>
             </div>
 
            <div class="inputGroupDataLoc">
-             <label for="dataLoc">Data da locação</label>
+             <label for="dataLoc"> <b>Data da locação</b></label>
              <input type="datetime-local" name="dataLoc" id="dataLoc" required>
            </div>
 
            <div class="inputGroupDataEvolu">
-              <label for="DataDevo">Data de devolução</label>
+              <label for="DataDevo"> <b>Data de devolução</b></label>
               <input type="date" name="dataDevo" id="DataDevo" required>
            </div>
 
           <div class="inputGroupPagament">
-            <label for="pagament">Forma de pagamento</label>
+            <label for="pagament"> <b>Forma de pagamento</b></label>
 
             <select name="pagament" id="pagament">
+                <option value="">Selecione...</option>
                 <option value="Pix">Pix</option>
                 <option value="Credito">Credito</option>
                 <option value="Debito">Debito</option>
@@ -1396,22 +1397,22 @@
  </div>
 
     <div class="infoClient">
-        <label for="nameClient">Nome do Cliente</label>
+        <label for="nameClient"> <b>Nome do Cliente</b></label>
         <input type="text" id="nameClient" placeholder="Nome do cliente" readonly required>
     
-        <label for="cpfClient">CPF do Cliente</label>
-        <input type="number" id="cpfClient" placeholder="CPF do cliente" readonly required>
+        <label for="cpfClient"> <b>CPF do Cliente</b></label>
+        <input type="text" id="cpfClient" placeholder="CPF do cliente" readonly required>
     
-        <label for="ruaClient">Rua do Cliente</label>
+        <label for="ruaClient"> <b>Rua do Cliente</b></label>
         <input type="text" id="ruaClient" placeholder="Rua do cliente" readonly required> 
     
-        <label for="cityClient">Cidade do Cliente</label>
+        <label for="cityClient"> <b>Cidade do Cliente</b></label>
         <input type="text" id="cityClient" placeholder="Cidade do cliente" readonly required>
     
-        <label for="cepClient">CEP do Cliente</label>
+        <label for="cepClient"> <b>CEP do Cliente</b></label>
         <input type="text" id="cepClient" placeholder="CEP do cliente" readonly required>
     
-        <label for="mailClient">E-mail do Cliente</label>
+        <label for="mailClient"> <b>E-mail do Cliente</b></label>
         <input type="text" id="mailClient" placeholder="E-mail do cliente" readonly required>
     </div>
     
@@ -1419,7 +1420,6 @@
    
     <div class="familyBens">
 
-     <div class="submitFamilyGoods">
            <div class="tableGrid">
       
         <label for="codeBen1">Família de bens</label>
@@ -1430,7 +1430,7 @@
         <label for="dataFim1">Data Fim</label>
       
               <select  id="family1">
-                <option value="">code</option>
+                <option value="">Selecione...</option>
             <!-- informações  -->
              </select>
               <input type="text"  id="produto1" placeholder="Produto" readonly >
@@ -1441,7 +1441,7 @@
 
 
         <select  id="family2">
-            <option value="">code</option>
+            <option value="">Selecione...</option>
             <!-- informações  -->
         </select>
         <input type="text"  id="produto2" placeholder="produto" readonly>
@@ -1453,7 +1453,7 @@
 
         <select id="family3">
             <!-- informações  -->
-             <option value="">code</option>
+             <option value="">Selecione...</option>
         </select>
         <input type="text"  id="produto3" placeholder="Produto" readonly>
         <input type="number"  id="quantidade3" placeholder="Ex.: 10" required >
@@ -1463,7 +1463,7 @@
 
         <select id="family4">
             <!-- informações  -->
-             <option value="">code</option>
+             <option value="">Selecione...</option>
         </select>
         <input type="text"  id="produto4" placeholder="Produto" readonly>
         <input type="number"  id="quantidade4" placeholder="Ex.: 10" required >
@@ -1474,12 +1474,148 @@
    </div>
  
           <div class="formGroupBtn">
-            <button type="submit" class="finish" onclick=" handleSubmit()">Finalizar</button>
+            <button class="finish" onclick=" handleSubmit()">Finalizar</button>
             <button class="outLocation">Voltar</button>
           </div> 
-       </div>
+       
     </div>
 </main>
+
+<!-- Edição de locação -->
+
+<main class="contentEditlocation" style="display: none;">
+
+        <!-- <h3>Informações do Cliente</h3> -->
+      <div id="formClient">
+        <div class="formGroup">
+          
+          <div class="inputGroupSearchClient ">
+              <label for="clientEdit"> <b>Pesquise o Cliente</b></label>
+             <div class="inputWrapper">
+                  <input type="text" name="client" id="clientEdit" placeholder="CPF ou Nome" required>
+                   <span class="material-symbols-outlined" id="search">
+                   search
+                  </span>
+                  <button type="button" class="locCadClient">Cadastrar Cliente</button>
+                  
+              </div>
+          </div>
+
+           <div class="Numeric">
+            <label for="numeroLocationEdit"> <b>Locação</b></label>
+              <input type="number" name="numeroLocation" id="numeroLocationEdit" placeholder="Locação" readonly>
+            </div>
+
+           <div class="inputGroupDataLoc">
+             <label for="dataLocEdit"> <b>Data da locação</b></label>
+             <input type="datetime-local" name="dataLoc" id="dataLocEdit" required>
+           </div>
+
+           <div class="inputGroupDataEvolu">
+              <label for="DataDevo"> <b>Data de devolução</b></label>
+              <input type="date" name="dataDevo" id="DataDevoEdit" required>
+           </div>
+
+          <div class="inputGroupPagament">
+            <label for="pagamentdit"> <b>Forma de pagamento</b></label>
+
+            <select name="pagament" id="pagamentEdit">
+                <option value="">Selecione...</option>
+                <option value="Pix">Pix</option>
+                <option value="Credito">Credito</option>
+                <option value="Debito">Debito</option>
+                <option value="Boleto">Boleto</option>
+            </select>
+
+        </div>
+    </div>      
+ </div>
+
+    <div class="infoClient">
+        <label for="nameClient"> <b>Nome do Cliente</b></label>
+        <input type="text" id="nameClientEdit" placeholder="Nome do cliente" readonly required>
+    
+        <label for="cpfClient"> <b>CPF do Cliente</b></label>
+        <input type="number" id="cpfClientEdit" placeholder="CPF do cliente" readonly required>
+    
+        <label for="ruaClient"> <b>Rua do Cliente</b></label>
+        <input type="text" id="ruaClientEdit" placeholder="Rua do cliente" readonly required> 
+    
+        <label for="cityClient"> <b>Cidade do Cliente</b></label>
+        <input type="text" id="cityClientEdit" placeholder="Cidade do cliente" readonly required>
+    
+        <label for="cepClient"> <b>CEP do Cliente</b></label>
+        <input type="text" id="cepClientEdit" placeholder="CEP do cliente" readonly required>
+    
+        <label for="mailClient"> <b>E-mail do Cliente</b></label>
+        <input type="text" id="mailClientEdit" placeholder="E-mail do cliente" readonly required>
+    </div>
+    
+    <!--  Familia de Bens -->
+   
+    <div class="familyBens">
+
+           <div class="tableGrid">
+      
+        <label for="codeBen1">Família de bens</label>
+        <label for="prod1">Nome da familia </label>
+        <label for="quantidade1">Quantidade</label>
+        <label for="descricao1">Observação</label>
+        <label for="dataInicio1">Data Início</label>
+        <label for="dataFim1">Data Fim</label>
+      
+              <select  id="family1">
+                <option value="">Selecione...</option>
+            <!-- informações  -->
+             </select>
+              <input type="text"  id="produto1" placeholder="Produto" readonly >
+             <input type="number"  id="quantidade1" placeholder="quantidade" required>
+             <input type="text" id="observacao1" placeholder="Ex.: TV, Computadores" >
+             <input type="date" id="dataInicio1" required>
+             <input type="date" id="dataFim1" required>
+
+
+        <select  id="family2">
+            <option value="">Selecione...</option>
+            <!-- informações  -->
+        </select>
+        <input type="text"  id="produto2" placeholder="produto" readonly>
+        <input type="number" id="quantidade2" placeholder="Ex.: 10" required>
+        <input type="text"  id="observacao2" placeholder="Ex.: Eletrônicos">
+        <input type="date" id="dataInicio2" required>
+        <input type="date" id="dataFim2" required>
+
+
+        <select id="family3">
+            <!-- informações  -->
+             <option value="">Selecione...</option>
+        </select>
+        <input type="text"  id="produto3" placeholder="Produto" readonly>
+        <input type="number"  id="quantidade3" placeholder="Ex.: 10" required >
+        <input type="text"  id="observacao3" placeholder="Ex.: TV, Computadores">
+        <input type="date" id="dataInicio3" required>
+        <input type="date" id="dataFim3" required>
+
+        <select id="family4">
+            <!-- informações  -->
+             <option value="">Selecione...</option>
+        </select>
+        <input type="text"  id="produto4" placeholder="Produto" readonly>
+        <input type="number"  id="quantidade4" placeholder="Ex.: 10" required >
+        <input type="text"  id="observacao4" placeholder="Ex.: TV, Computadores">
+        <input type="date" id="dataInicio4" required>
+        <input type="date" id="dataFim4" required>
+  
+   </div>
+ 
+          <div class="formGroupBtn">
+            <button  class="finish">Finalizar</button>
+            <button class="outLocation">Voltar</button>
+          </div> 
+       
+    </div>
+</main>
+<!--  -->
 
       <div class="informationClient" style="display: none;">
         <!-- informação do client na tabela -->
@@ -1553,16 +1689,62 @@
      </div>
       
             <div id="contrato" style="display: none;">
-             <!-- Contrato de locação -->
+             <!-- Contrato de locação front-->
          </div>
+</section>
+
+<!-- Buscar locação -->
+
+    <div class="searchLocation" style="display: none;">
+
+        <h4>Escolhar um formato de Pesquisa:</h4>
+        
+      <label for="numberLocation">Numero da locação</label>
+      <input type="number" name="numberLocation" id="numberLocation">
+
+      <label for="nameClient"> Nome do Cliente</label>
+      <input type="text" name="nameClient" id="nameClientSearch">
+
+      <label for="">Data da locação</label>
+      <input type="date" name="dateLocation" id="dateLocation">
+      <br>
+      
+     <div class="btnMainTheSearch">
+       <button class="submitSearchLocation" onclick=" filterTable()" >Pesquisar</button>
+       <button class="outPageSearchLocation">Voltar</button>
+     </div>
+ </div>
+
+    
+<!-- Logistica -->
+ 
+  <section class="containerLogistica" style="display: none;">
+
+      <div class="logisticsMainTop">
+          <div class="orders">
+           
+            <!-- table de Necessidade -->
+          </div>
+
+          <div class="need">
+             <!-- <p>Necessidade x disponibilidade</p> -->
+          </div>
+    </div>
+
+    <div class="logisticsMainBottom">
+         <div class="validadeFamily">
+
+         </div>
+    </div>
 
 </section>
 
+         
+  
 
-           
 </main>  
-     <script src="maskFields.js"></script>
-    <script  src="validation.js"></script>
+     <script type = "module" src="maskFields.js"></script>
+    <script type="module" src="validation.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.js"></script>
     <script src="mainGoods.js"></script>
     <script src="mainClient.js"></script>
@@ -1573,6 +1755,7 @@
     <script src="mainDriver.js"></script>
     <script src="../screenLocation/toDoLocation.js"></script>
     <script src="../screenLocation/locationFinish.js"></script>
+    <script src="../logistics/mainLogistics.js"></script>
 
 
 

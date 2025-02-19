@@ -1,13 +1,21 @@
-// import Inputmask from "inputmask";
 
-// document.addEventListener("DOMContentLoaded" , ()=>{
+$(document).ready(function () {
 
-//   const clientCpf = document.querySelector('#cpf')
-//   Inputmask("999.999.999-99").mask(clientCpf)
+  $("#cpf").mask("000.000.000-00")
   
 
-// })
+ 
+  $("#clieCelu").mask("(00) 00000-0000");
 
+ 
+  $("#clieCep").mask("00000-000");
+
+});
+
+$("#formRegisterClient").submit(function (e) {
+    const celular = $("#clieCelu").val().replace(/\D/g, ""); 
+    $("#clieCelu").val(celular); 
+});
 
 
 

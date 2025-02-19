@@ -34,21 +34,45 @@ btnLocation.addEventListener("click", () => {
   const containerAppLocation = document.querySelector(".containerAppLocation");
   containerAppLocation.style.display = "flex";
 
+  const btnInitPageMainLoc = document.querySelector(".btnInitPageMainLoc");
+  btnInitPageMainLoc.style.display = "flex";
+
+  const containerLogistica = document.querySelector(".containerLogistica");
+  containerLogistica.style.display = "none";
 });
 
-const registerLocation = document.querySelector('.registerLocation')
-registerLocation.addEventListener('click' , ()=>{
-     
-   const contentLocation = document.querySelector('.content')
-   contentLocation.style.display = 'flex'
+const registerLocation = document.querySelector(".registerLocation");
+registerLocation.addEventListener("click", () => {
+  const contentLocation = document.querySelector(".content");
+  contentLocation.style.display = "flex";
 
-   const tableLocation = document.querySelector('.tableLocation')
-   tableLocation.style.display = 'none'
+  const formClient = document.querySelector("#formClient");
+  formClient.style.display = "flex";
 
-   const btnInitPageMainLoc = document.querySelector('.btnInitPageMainLoc')
-   btnInitPageMainLoc.style.display = 'none'
-})
+  const infoClient = document.querySelector(".infoClient");
+  infoClient.style.display = "flex";
 
+  const familyBens = document.querySelector(".familyBens");
+  familyBens.style.display = "flex";
+
+  const tableLocation = document.querySelector(".tableLocation");
+  tableLocation.style.display = "none";
+
+  const btnInitPageMainLoc = document.querySelector(".btnInitPageMainLoc");
+  btnInitPageMainLoc.style.display = "none";
+});
+
+const outPageRegisterLocation = document.querySelector(".outLocation");
+outPageRegisterLocation.addEventListener("click", () => {
+  const contentLocation = document.querySelector(".content");
+  contentLocation.style.display = "none";
+
+  const tableLocation = document.querySelector(".tableLocation");
+  tableLocation.style.display = "flex";
+
+  const btnInitPageMainLoc = document.querySelector(".btnInitPageMainLoc");
+  btnInitPageMainLoc.style.display = "flex";
+});
 const locBtnRegisterClient = document.querySelector(".locCadClient");
 locBtnRegisterClient.addEventListener("click", (event) => {
   event.preventDefault();
@@ -77,17 +101,33 @@ btnOutInitLoc.addEventListener("click", (event) => {
   informationClient.style.display = "flex";
 });
 
+const buttonOutPageLocation = document.querySelector(".outLocation");
+buttonOutPageLocation.addEventListener("click", () => {
+  const formClientLocation = document.querySelector("#formClient");
+  formClientLocation.style.display = "none";
+
+  const informationClient = document.querySelector(".infoClient");
+  informationClient.style.display = "none";
+
+  const containerFamilyBens = document.querySelector(".familyBens");
+  containerFamilyBens.style.display = "none";
+
+  const tableDivLocation = document.querySelector(".tableLocation");
+  tableDivLocation.style.display = "block";
+
+  const containerMainBtnPage = document.querySelector(".btnInitPageMainLoc");
+  containerMainBtnPage.style.display = "flex";
+});
 
 // data e hora em tempo REAL
 function atualizarDataHora() {
   const agora = new Date();
 
-  // Formata data e hora no padrão YYYY-MM-DDTHH:MM
   const ano = agora.getFullYear();
-  const mes = String(agora.getMonth() + 1).padStart(2, '0');
-  const dia = String(agora.getDate()).padStart(2, '0');
-  const horas = String(agora.getHours()).padStart(2, '0');
-  const minutos = String(agora.getMinutes()).padStart(2, '0');
+  const mes = String(agora.getMonth() + 1).padStart(2, "0");
+  const dia = String(agora.getDate()).padStart(2, "0");
+  const horas = String(agora.getHours()).padStart(2, "0");
+  const minutos = String(agora.getMinutes()).padStart(2, "0");
 
   const dataHoraFormatada = `${ano}-${mes}-${dia}T${horas}:${minutos}`;
 
@@ -127,13 +167,11 @@ function verificarPreenchimentoCliente() {
     return input && input.value.trim() !== "";
   });
 
-  // Se todos estiverem preenchidos, gera o número de locação
   if (todosPreenchidos) {
     gerarNumeroLocacao();
   }
 }
 
-// Buscar cliente para verificar se tem cadastro
 const searchClient = document.querySelector("#search");
 searchClient.addEventListener("click", async (event) => {
   event.preventDefault();
@@ -148,58 +186,90 @@ searchClient.addEventListener("click", async (event) => {
 
     const clientes = await response.json();
 
-    const clienteEncontrado = clientes.find(
-      (cliente) => cliente.clienome === inputSearchClient
-    );
-    const clienteEncontradoCpf = clientes.find(
-      (cliente) => cliente.cliecpf === inputSearchClient
+    console.log("Clientes da API", clientes);
+
+    const clienteEncontrado = clientes.filter(
+      (cliente) =>
+        cliente.clienome.toLowerCase().includes(inputSearchClient.toLowerCase()) ||
+      cliente.cliecpf === inputSearchClient
     );
 
-    const clientGeral = clienteEncontrado || clienteEncontradoCpf;
+    const resultDiv = document.querySelector(".searchClient");
 
-    if (clientGeral) {
-      console.log("Cliente encontrado:", clientGeral);
+    if (clienteEncontrado.length > 1) {
+      resultDiv.innerHTML = "";
+
+      clienteEncontrado.forEach((cliente) => {
+        const clienteDiv = document.createElement("div");
+        clienteDiv.classList.add("cliente-info");
+        clienteDiv.style.border = "2px solid  #000000";
+        clienteDiv.style.margin = "10px";
+        clienteDiv.style.padding = "10px";
+        clienteDiv.style.borderRadius = "5px";
+        clienteDiv.style.backgroundColor = "#f9f9f9";
+
+        clienteDiv.innerHTML = `
+          <p><strong>Nome:</strong> ${cliente.clienome}</p>
+          <p><strong>CPF:</strong> ${cliente.cliecpf}</p>
+          <p><strong>Rua:</strong> ${cliente.clierua}</p>
+          <p><strong>Cidade:</strong> ${cliente.cliecity}</p>
+          <p><strong>CEP:</strong> ${cliente.cliecep}</p>
+          <p><strong>Email:</strong> ${cliente.cliemail}</p>
+        `;
+
+        resultDiv.appendChild(clienteDiv);
+      });
+
+      const buttonVoltar = document.createElement("button");
+      buttonVoltar.type = "button";
+      buttonVoltar.textContent = "Voltar";
+      buttonVoltar.classList.add("btnOutSearchClient");
+      buttonVoltar.addEventListener("click", () => {
+        resultDiv.style.display = "none";
+      });
+
+      resultDiv.appendChild(buttonVoltar);
+
+      resultDiv.style.display = "flex";
+
+      Toastify({
+        text: `Foram encontrados ${clienteEncontrado.length} clientes com o critério "${inputSearchClient}"`,
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "orange",
+      }).showToast();
+    } else if (clienteEncontrado.length === 1) {
+      // Preencher os campos com os dados do único cliente encontrado
+      const primeiroCliente = clienteEncontrado[0];
+      document.getElementById("nameClient").value =
+        primeiroCliente.clienome || "";
+      document.getElementById("cpfClient").value =
+        primeiroCliente.cliecpf || "";
+      document.getElementById("ruaClient").value =
+        primeiroCliente.clierua || "";
+      document.getElementById("cityClient").value =
+        primeiroCliente.cliecity || "";
+      document.getElementById("cepClient").value =
+        primeiroCliente.cliecep || "";
+      document.getElementById("mailClient").value =
+        primeiroCliente.cliemail || "";
+
+      verificarPreenchimentoCliente();
 
       Toastify({
         text: `Cliente "${inputSearchClient}" encontrado com sucesso!`,
-        duration: 2000,
+        duration: 3000,
         close: true,
         gravity: "top",
         position: "center",
         backgroundColor: "green",
       }).showToast();
-
-      const infoClientDiv = document.querySelector(".infoClient");
-
-      // Formatação de data
-      const formatData = (data) => {
-        if (!data) return "";
-        const dateObj = new Date(data);
-        return new Intl.DateTimeFormat("pt-BR", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        }).format(dateObj);
-      };
-
-      // Preencher os inputs com os dados do cliente
-      document.getElementById("nameClient").value = clientGeral.clienome || "";
-      document.getElementById("cpfClient").value = clientGeral.cliecpf || "";
-      document.getElementById("ruaClient").value = clientGeral.clierua || "";
-      document.getElementById("cityClient").value = clientGeral.cliecity || "";
-      document.getElementById("cepClient").value = clientGeral.cliecep || "";
-      document.getElementById("mailClient").value = clientGeral.cliemail || "";
-
-
-      // Verifica se todos os campos foram preenchidos antes de gerar número de locação
-      verificarPreenchimentoCliente();
-
-      return;
     } else {
-      console.log("Cliente não encontrado");
       Toastify({
         text: `Cliente "${inputSearchClient}" não encontrado.`,
-        duration: 2000,
+        duration: 3000,
         close: true,
         gravity: "top",
         position: "center",
@@ -208,10 +278,18 @@ searchClient.addEventListener("click", async (event) => {
     }
   } catch (error) {
     console.error("Erro ao validar o cliente:", error);
-    alert("Erro ao validar o cliente. Tente novamente mais tarde.");
+    Toastify({
+      text: "Erro ao validar o cliente. Tente novamente mais tarde.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
   }
 });
 
+// familia de bens locados
 async function carregarFamilias() {
   try {
     const response = await fetch("/api/codefamilybens");
@@ -232,36 +310,40 @@ async function carregarFamilias() {
         option.textContent = fabecode;
         select.appendChild(option);
       });
-
     }
   } catch (error) {
     console.error("Erro ao carregar famílias de bens:", error);
-    alert("Erro ao carregar famílias de bens. Tente novamente mais tarde.");
+    Toastify({
+      text: "Erro ao carregar famílias de bens. Tente novamente mais tarde.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
   }
 }
 
- function preencherProduto(index, familias) {
+function preencherProduto(index, familias) {
   const select = document.getElementById(`family${index}`);
   const inputProduto = document.getElementById(`produto${index}`);
   const codigoSelecionado = select.value;
 
   // Encontra a família correspondente ao código selecionado
-  const familiaSelecionada = familias.find(familia => familia.fabecode === codigoSelecionado);
+  const familiaSelecionada = familias.find(
+    (familia) => familia.fabecode === codigoSelecionado
+  );
 
   if (familiaSelecionada) {
-    console.log("Família selecionada:", familiaSelecionada); // Verifique os dados retornados
-    inputProduto.value = familiaSelecionada.fabedesc|| "Sem nome definido"; // Altere "nome" se necessário
+    inputProduto.value = familiaSelecionada.fabedesc || "Sem nome definido"; 
   } else {
     inputProduto.value = "";
   }
 }
 
-
 document.addEventListener("DOMContentLoaded", carregarFamilias);
 
 async function handleSubmit() {
- 
- 
   const totalGrups = 4;
   const bens = [];
 
@@ -274,22 +356,31 @@ async function handleSubmit() {
     const dataInicio = document.getElementById(`dataInicio${i}`)?.value || "";
     const dataFim = document.getElementById(`dataFim${i}`)?.value || "";
 
-    console.log(`Dados do grupo ${i}:`, {  codeBen,
+    console.log(`Dados do grupo ${i}:`, {
+      codeBen,
       observacao,
       dataInicio,
       dataFim,
       quantidade,
-      produto });
+      produto,
+    });
 
-    // Só adiciona ao array se pelo menos um campo estiver preenchido
-    if (codeBen || dataFim || dataInicio || observacao|| produto|| quantidade ) {
+    if (
+      codeBen &&
+      dataFim &&
+      dataInicio &&
+      observacao &&
+      produto &&
+      quantidade
+    ) {
       bens.push({
         codeBen,
         observacao,
         dataInicio,
         dataFim,
         quantidade,
-        produto
+        produto,
+        status: "Pendente"
       });
     }
   }
@@ -310,18 +401,28 @@ async function handleSubmit() {
   console.log("Array de bens final:", bens);
 
   try {
+    const numericLocation = document.querySelector("#numeroLocation").value;
+    const nameClient = document.querySelector("#nameClient").value;
+    const cpfClient = document.querySelector("#cpfClient").value;
 
-      const numericLocation = document.querySelector('#numeroLocation').value
-      const nameClient = document.querySelector('#nameClient').value
-      const cpfClient = document.querySelector('#cpfClient').value
-
-    const userClientValidade = [
-     nameClient, cpfClient
-    ]
-    // console.log( " NOME:" , nameClient ,  "CPF: ", cpfClient)
+    const userClientValidade = [nameClient, cpfClient];
     const dataLoc = document.getElementById("dataLoc")?.value || null;
     const dataDevo = document.getElementById("DataDevo")?.value || null;
     const pagament = document.getElementById("pagament")?.value || null;
+
+    if(!dataDevo  || !pagament ){
+        
+      Toastify({
+        text: "Insira a data de devolução e a Forma de pagamento",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "Red",
+      }).showToast();
+
+      return;
+    }
 
     const payload = {
       numericLocation,
@@ -329,42 +430,38 @@ async function handleSubmit() {
       dataLoc,
       dataDevo,
       pagament,
-      bens
-    }
+      bens,
+    };
 
-    console.log("Payload Locação:", payload);
-
-    const response = await fetch('/api/datalocation', {
+    const response = await fetch("/api/datalocation", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     });
 
     if (response.ok) {
       Toastify({
         text: "Contrato de locação gerado com sucesso!",
-        duration: 2000,
+        duration: 3000,
         close: true,
         gravity: "top",
         position: "center",
         backgroundColor: "green",
       }).showToast();
 
-      gerarContrato()
-       
-    } else {  
+      gerarContrato();
+      
+    } else {
       Toastify({
         text: "Erro na locaçao!",
-        duration: 2000,
+        duration: 3000,
         close: true,
         gravity: "top",
         position: "center",
         backgroundColor: "Red",
       }).showToast();
-    
     }
   } catch (error) {
-
     console.error("Erro ao enviar os dados:", error);
     Toastify({
       text: "Erro ao enviar os dados, verifique se os campos estão todos preechidos!",
@@ -375,7 +472,6 @@ async function handleSubmit() {
       backgroundColor: "red",
     }).showToast();
   }
-
 }
 
 async function buscarNomeCliente(cpf) {
@@ -393,25 +489,56 @@ async function buscarNomeCliente(cpf) {
     return "Erro ao buscar cliente";
   }
 }
-
+ 
+// CONTRATO COM OS DADOS A LOCAÇÃO
 async function gerarContrato() {
 
-  const cpfCliente = document.getElementById("cpfClient")?.value || "Não informado";
-  const nomeCliente = document.getElementById('nameClient')?.value || "Não informado"
+  const formatDate = (isoDate) => {
+    if (!isoDate) return "";
+    const dateObj = new Date(isoDate);
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+    const day = String(dateObj.getDate()).padStart(2, "0");
+    return `${year}/${month}/${day}`;
+  };
 
-  const dataLocacao = document.getElementById("dataLoc")?.value || "Não informado";
-  const dataDevolucao = document.getElementById("DataDevo")?.value || "Não informado";
-  const numericLocation= document.getElementById("numeroLocation")?.value || "Não informado";
-  const pagamento = document.getElementById("pagament")?.value || "Não informado";
+  const cpfCliente =
+    document.getElementById("cpfClient")?.value || "Não informado";
+
+  const nomeCliente =
+    document.getElementById("nameClient")?.value || "Não informado";
+
+  const dataLocacao =
+    document.getElementById("dataLoc")?.value || "Não informado";
+
+  const dataDevolucao =
+    document.getElementById("DataDevo")?.value || "Não informado";
+
+  const numericLocation =
+    document.getElementById("numeroLocation")?.value || "Não informado";
+
+  const pagamento =
+    document.getElementById("pagament")?.value || "Não informado";
 
   const gruposBens = [];
   for (let i = 1; i <= 4; i++) {
-    const codeBen = document.getElementById(`family${i}`)?.value || "Não informado";
-    const produto = document.getElementById(`produto${i}`)?.value || "Não informado";
-    const quantidade = document.getElementById(`quantidade${i}`)?.value || "Não informado";
-    const observacao = document.getElementById(`observacao${i}`)?.value || "Não informado";
-    const dataInit = document.getElementById(`dataInicio${i}`)?.value || "Não informado";
-    const dataFim = document.getElementById(`dataFim${i}`)?.value || "Não informado";
+    const codeBen =
+      document.getElementById(`family${i}`)?.value || "Não informado";
+
+    const produto =
+      document.getElementById(`produto${i}`)?.value || "Não informado";
+
+    const quantidade =
+      document.getElementById(`quantidade${i}`)?.value || "Não informado";
+
+    const observacao =
+      document.getElementById(`observacao${i}`)?.value || "Não informado";
+
+    const dataInit =
+      document.getElementById(`dataInicio${i}`)?.value || "Não informado";
+
+    const dataFim =
+      document.getElementById(`dataFim${i}`)?.value || "Não informado";
 
     if (produto !== "Não informado") {
       gruposBens.push(`
@@ -428,7 +555,7 @@ async function gerarContrato() {
   }
 
   // Esconder as outras divs
-  document.querySelector('.content').style.display = 'none'
+  document.querySelector(".content").style.display = "none";
 
   // Gerar conteúdo do contrato
   const contratoDiv = document.getElementById("contrato");
@@ -446,7 +573,7 @@ async function gerarContrato() {
     <p><strong>Itens Locados:</strong></p>
     ${
       gruposBens.length > 0
-        ? `<table border="1" style="width: 100%; text-align: left; border-collapse: collapse;">
+        ? `<table border="1" style="width: 30%; text-align: left; border-collapse: collapse;" class = "tableContrato">
             <thead>
               <tr>
                 <th>Código do Bem</th>
@@ -467,12 +594,11 @@ async function gerarContrato() {
   `;
   contratoDiv.style.display = "block";
 
-  
   // Adicionar evento ao botão de voltar
   document.getElementById("voltar").addEventListener("click", () => {
     contratoDiv.style.display = "none";
-    document.querySelector(".informationMainClient").style.display = "block";
-    document.querySelector(".familyBens").style.display = "block";
+
+    document.querySelector(".content").style.display = "flex";
   });
 }
 
@@ -534,5 +660,126 @@ formRegisterClientLoc.addEventListener("submit", async (event) => {
     });
   } catch (error) {
     console.error("deu erro no envio", error);
+  }
+});
+ 
+
+
+// Editar locação
+
+const buttonEditLocation = document.querySelector(".buttonEditLocation");
+
+buttonEditLocation.addEventListener("click", async () => {
+  // Obter o checkbox selecionado
+  const selectedCheckbox = document.querySelector(
+    'input[name="selecionarLocacao"]:checked'
+  );
+
+  if (!selectedCheckbox) {
+    Toastify({
+      text: "Selecione uma Locação para editar",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+    return;
+  }
+
+  // ID da locação selecionada
+  const locationId = selectedCheckbox.value;
+
+  const formatDate = (isoDate) => {
+    if (!isoDate) return "";
+    const dateObj = new Date(isoDate);
+    return `${dateObj.getFullYear()}/${String(
+      dateObj.getMonth() + 1
+    ).padStart(2, "0")}/${String(dateObj.getDate()).padStart(2, "0")}`;
+  };
+
+  // Buscar os dados da API
+  try {
+    const response = await fetch("/api/location");
+    const result = await response.json();
+
+    const clientLoc = await result.clientes
+    const goodsLoc = await result.bens
+    
+    console.log('cliente' , clientLoc)
+    console.log('bens' , goodsLoc)
+
+    // Procurar a locação correspondente ao ID
+    const consolidatedLocations = clientLoc.map((cliente) => {
+      const bensCliente = goodsLoc.filter(
+        (ben) => ben.beloidcl === cliente.clloid
+      );
+
+      return {
+         ...cliente,           // Inclui os dados do cliente
+        ... bensCliente,    // Adiciona os bens associados ao cliente
+      };
+    });
+
+    // Procurar a locação correspondente ao ID
+    const locationToEdit = consolidatedLocations.find(
+      (loc) => loc.cllonmlo === locationId
+    );
+
+    console.log('locação final' , locationToEdit)
+
+    if (locationToEdit) {
+      // Mostrar a área de edição
+      const contentMain = document.querySelector(".contentEditlocation");
+      contentMain.style.display = "flex";
+
+      // Esconder o botão inicial
+      const btnInitPageMainLoc = document.querySelector(".btnInitPageMainLoc");
+      btnInitPageMainLoc.style.display = "none";
+
+      // Preencher os campos com os dados obtidos
+      document.querySelector("#numeroLocationEdit").value = locationToEdit.cllonmlo || "";
+      document.querySelector("#dataLocEdit").value = locationToEdit.cllodtlo
+        
+      document.querySelector("#DataDevoEdit").value = locationToEdit.cllodtdv
+        
+      document.querySelector("#pagamentEdit").value = locationToEdit.cllopgmt || "";
+
+      // Preencher os campos adicionais da família de bens
+      document.querySelector("#family1").value = locationToEdit.bencodb || "";
+      document.querySelector("#produto1").value = locationToEdit.beloben || "";
+      document.querySelector("#dataInicio1").value = formatDate((locationToEdit.belodtin))
+        
+      document.querySelector("#dataFim1").value = formatDate((locationToEdit.belodtfi))
+     
+
+      Toastify({
+        text: "Locação carregada para edição!",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "green",
+      }).showToast();
+    } else {
+      Toastify({
+        text: "Erro ao carregar a locação. Tente novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+    }
+  } catch (error) {
+    console.error("Erro ao buscar os dados da API:", error);
+    Toastify({
+      text: "Erro ao buscar os dados. Verifique a conexão.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
   }
 });

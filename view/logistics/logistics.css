@@ -1,0 +1,64 @@
+
+.containerLogistica{
+  background-color: darkgray;
+  box-shadow: 4px 5px 8px rgba(0, 0, 0, 0.929);
+  width: 76%;
+  height: 550px;
+  margin-left: 20%;
+  margin-top: 1.2%;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.logisticsMainTop{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.orders{
+  margin-left: 0.5%;
+  display: flex;
+  background-color:  darkgray;
+  width:50%;
+  height: 250px;
+  overflow: auto;
+  border: 2px solid white;
+}
+
+#tableWithAllLocation{
+  padding: 8px;
+  width: 50%;
+  height: 50px;
+}
+.need{
+  margin-left: 0.5%;
+  display: flex;
+  background-color:  darkgray;
+  width:50%;
+  height: 250px;
+  overflow: auto;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
+#tableGoodsVsRequestPending{
+  width: 40%;
+  height: 50px;
+}
+#tableGoodsVsRequestPending thead{
+  background-color: aliceblue;
+}
+#tableGoodsVsRequestPending th{
+  color: rgb(224, 216, 216);
+}
+
+.logisticsMainBottom{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.validadeFamily{
+  width:50%;
+  height: 250px;
+  border: 2px solid white;
+}

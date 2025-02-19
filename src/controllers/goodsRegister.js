@@ -7,16 +7,12 @@ import {goodsRegister} from "../model/dataGoods.js";
     try {
       const {data}  = req.body;
 
-      console.log('dados do bem:', req.body)
-
       const newUser = await goodsRegister.registerOfBens(data);
       res.status(201).json({ success: true, user: newUser });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
   },
-
-  
 
   async codeForn(req ,res){
 
@@ -55,7 +51,6 @@ import {goodsRegister} from "../model/dataGoods.js";
        return res.status(500).json({ error: "Erro interno do servidor" });
     }
     
-    
   },
 
   async listBens(req, res) {
@@ -75,8 +70,6 @@ import {goodsRegister} from "../model/dataGoods.js";
   async updateGoods(req, res) {
     const bemId = req.params.id;
     const updatedData = req.body;
-
-    // console.log( "esse e meu corpo" ,updatedData)
 
     Object.keys(updatedData).forEach((key) => {
       if (updatedData[key] === "") {

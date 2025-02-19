@@ -43,6 +43,7 @@ btnRegisterClient.addEventListener("click", () => {
 
 const buttonRegisterClient = document.querySelector(".registerClient");
 buttonRegisterClient.addEventListener("click", () => {
+  
   const formRegisterClient = document.querySelector("#formRegisterClient");
   const listingClient = document.querySelector(".listClient");
   const btnMainPage = document.querySelector(".buttonsMainPage");
@@ -99,11 +100,24 @@ buttonToBack.addEventListener("click", () => {
   containerAppClient.style.display = "none";
 });
 
+
+// $('#formRegisterClient').on('submit' , function(event){
+//    event.preventDefault()
+
+//    var valorSemMascara = $('#cpf').cleanVal(); 
+
+//   console.log(" cpf sem mascara" , valorSemMascara)
+// })
+
 //fetch register
 const formRegisterClient = document.querySelector("#formRegisterClient");
 formRegisterClient.addEventListener("submit", async (event) => {
   event.preventDefault();
  
+  var valorSemMascara = $('#cpf').cleanVal(); 
+
+  console.log(" cpf sem mascara" , valorSemMascara)
+
   const formData = new FormData(event.target);
   const data = Object.fromEntries(formData.entries());
 
@@ -126,7 +140,7 @@ formRegisterClient.addEventListener("submit", async (event) => {
   try {
      const response = await fetch("/api/client/submit", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {"Content-Type": "application/json"},
       body: JSON.stringify(data),
     });
       if (response.ok) {
@@ -411,7 +425,7 @@ editButtonClient.addEventListener("click", () => {
   }
 });
 
-// Função para enviar os dados atualizados
+// // Função para enviar os dados atualizados
 async function editAndUpdateOfClient() {
   const formEditClient = document.querySelector("#formEditRegisterClient");
 
