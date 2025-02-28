@@ -22,6 +22,9 @@ btnForn.addEventListener('click' , ()=>{
      const containerAppDriver = document.querySelector('.containerAppDriver')
     containerAppDriver.style.display = 'none'
 
+     const containerAppAutomo = document.querySelector('.containerAppAutomo')
+       containerAppAutomo.style.display = 'none'
+
     const formRegisterForn = document.querySelector('.formRegisterForn')
       formRegisterForn.style.display = 'none'
 
@@ -108,70 +111,106 @@ btnOutInitForn.addEventListener('click' , (event)=>{
    return;
 })
 
-const formRegisterForn = document.querySelector("#registerForn");
-formRegisterForn.addEventListener("submit", async (event) => {
-  event.preventDefault();
- 
-  const formData = new FormData(event.target);
-  const data = Object.fromEntries(formData.entries());
-
-  console.log(data)
-
-  if (
-    Object.keys(data).length === 0 ||
-    Object.values(data).some((val) => val === "")
-  ) {
-    console.log("Formulario Vazio");
-    Toastify({
-      text: "Por favor, preencha o formulário antes de enviar.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
+function isTokenExpired(token) {
+  try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expTime = payload.exp * 1000; 
+      return Date.now() > expTime; 
+  } catch (error) {
+      return true; 
   }
+};
 
- 
-    await fetch('/api/forne/submit', {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    }).then((response) => {
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelector('.btnRegisterforn').addEventListener('click', async (event) => {
+      event.preventDefault(); // Evita que o formulário recarregue a página
 
-      if (response.ok) {
-        console.log("deu certo");
+      const token = localStorage.getItem('token'); // Pega o token armazenado no login
 
+      if (!token || isTokenExpired(token)) {
         Toastify({
-          text: "Cadastrado com Sucesso",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "green",
+            text: "Sessão expirada. Faça login novamente.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
         }).showToast();
     
-        document.querySelector("#registerForn").reset();
+        localStorage.removeItem("token"); 
+        setTimeout(() => {
+            window.location.href = "/index.html"; 
+        }, 2000); 
         return;
-        
-      } else {
-        console.log("deu erro viu");
+    }
 
-        Toastify({
-          text: "Erro no cadastro",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
+      if (!$('#registerForn').valid()) {
+        return;
+    }
+      // Captura os valores do formulário
+      const formData = {
+          fornCode: document.querySelector('#fornCode').value,         // Código
+          fornName: document.querySelector('#fornName').value,         // Nome
+          nomeFan: document.querySelector('#nomeFan').value,           // Nome Fantasia
+          fornCnpj: document.querySelector('#fornCnpj').value,         // CNPJ
+          fornCep: document.querySelector('#fornCep').value,           // CEP
+          fornRua: document.querySelector('#fornRua').value,           // Rua
+          fornCity: document.querySelector('#fornCity').value,         // Cidade
+          fornEstd: document.querySelector('#fornEstd').value,         // Estado
+          fornCelu: document.querySelector('#fornCelu').value,         // Celular
+          fornMail: document.querySelector('#fornMail').value,         // E-mail
+          fornBank: document.querySelector('#fornBank').value,         // Banco
+          fornAge: document.querySelector('#fornAge').value,           // Agência
+          fornCont: document.querySelector('#fornCont').value,         // Conta
+          fornPix: document.querySelector('#fornPix').value,           // Pix
+          fornDtcd: document.querySelector('#fornDtcd').value,         // Data do Cadastro
+          fornDisPro: document.querySelector('#fornDisPro').value      // Descrição do Produto
+      };
+
+      try {
+          const response = await fetch('http://localhost:3000/api/forne/submit', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify(formData)
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+              Toastify({
+                  text: "Fornecedor cadastrado com sucesso!",
+                  duration: 3000,
+                  close: true,
+                  gravity: "top",
+                  position: "center",
+                  backgroundColor: "green",
+              }).showToast();
+
+              // Limpar o formulário após o sucesso
+              document.querySelector('#registerForn').reset();
+          } else {
+
+            Toastify({
+              text: `Erro para Cadastrar fornecedor`,
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "red",
+          }).showToast();
+              alert();
+          }
+      } catch (error) {
+          console.error('Erro ao enviar formulário:', error);
+          alert('Erro ao enviar os dados para o server.');
       }
-    }).catch((error)=>{
-      console.error("deu erro no envio", error);
-    });
- 
+  });
+  validationFormForne()
 });
+
 
 // lista de fornecedor
 
@@ -409,7 +448,14 @@ editButtonForn.addEventListener("click", (e) => {
     campos.forEach(({ id, valor }) => {
       const elemento = document.getElementById(id);
       if (elemento) {
-        elemento.value = valor || ""; 
+        if (elemento.type === "date" && valor) {
+          // Formata a data para YYYY-MM-DD, caso seja necessário
+          const dataFormatada = new Date(valor).toISOString().split('T')[0];
+          elemento.value = dataFormatada;
+        } else {
+          elemento.value = valor || ""; 
+        }
+        // elemento.value = valor || ""; 
       } else {
         console.warn(`Elemento com ID '${id}' não encontrado.`);
       }

@@ -57,6 +57,13 @@ const dataClient = client
 
     deleteClient: async(id)=>{
 
+      const checkQuery = "SELECT COUNT(*) FROM clieloc WHERE clloidcl= $1";
+      const checkResult = await dataClient.query(checkQuery, [id]);
+  
+      if (checkResult.rows[0].count > 0) {
+        return { error: "Não é possível excluir. Existem bens vinculados a este fornecedor." };
+      }
+
       try {
      
         // Excluir o cliente da tabela "cadclie"

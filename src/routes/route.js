@@ -1,5 +1,6 @@
 import express from "express";
 const route = express.Router()
+import  authenticateToken from '../middleware/authMiddleware.js'
 
 import { control} from "../controllers/controller.js";
 import {AuthController} from "../controllers/authController.js";
@@ -10,14 +11,16 @@ import {movementOfProd} from '../controllers/prodRegister.js';
 import {movementOfFamilyGoods} from '../controllers/familyGoods.js';
 import {movementOfTypeProd} from "../controllers/typeProdRegister.js";
 import {movementOfDriver} from '../controllers/driverRegister.js';
+import { movementAuto } from '../controllers/automovelController.js';
 import {location} from '../controllers/locationController.js';
+
 
 // Olhar pois e uma classe
 route.get("/", () => {
   control.submitStart();
 });
 
-route.post("/autenticar", (req, res) => {
+route.post("/autenticar",  (req, res) => {
   AuthController(req, res);
 });
 
@@ -156,6 +159,22 @@ route.put('/api/updatetypeprod/:id', (req , res)=>{
  route.put('/api/updatemoto/:id' , (req ,res)=>{
      movementOfDriver.updateOfDrive(req , res)
  })
+
+ // Veiculo
+
+ route.post('/api/cadauto', authenticateToken, (req , res)=>{
+  movementAuto.registerAuto(req, res)
+ });
+ 
+ route.get('/api/listauto', (req , res)=>{
+  movementAuto.listingOfAuto(req, res)
+ });
+ route.put('/api/cadauto/:id',  authenticateToken, (req ,res)=>{
+  movementAuto.updateOfAuto(req ,res)
+ });
+ route.delete('/api/cadauto/:id',  authenticateToken, (req ,res)=>{
+  movementAuto.deleteOfAuto(req , res)
+ }); 
 
  //locação 
 

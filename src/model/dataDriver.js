@@ -65,6 +65,14 @@ const userDbDriver = client
     },
 
     deleteDriver: async(id)=>{
+
+      const checkQuery = "SELECT COUNT(*) FROM cadauto WHERE caaumoto= $1";
+      const checkResult = await userDbDriver.query(checkQuery, [id]);
+  
+      if (checkResult.rows[0].count > 0) {
+        return { error: "Não é possível excluir. Existem bens vinculados a este fornecedor." };
+      }
+  
           
         try {
             

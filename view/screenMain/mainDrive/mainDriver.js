@@ -22,6 +22,9 @@ btnInitCadDrive.addEventListener("click", () => {
   const containerForm = document.querySelector(".RegisterDriver");
   containerForm.style.display = "none";
 
+   const containerAppAutomo = document.querySelector('.containerAppAutomo')
+      containerAppAutomo.style.display = 'none'
+
   const containerFormEditDriver = document.querySelector(".containerFormEditDriver");
   containerFormEditDriver.style.display = "none";
 
@@ -88,66 +91,97 @@ btnOutformPageEdit.addEventListener('click' , (event)=>{
      btnPageMain.style.display = "flex";
 });
 
-const formRegisterDriver = document.querySelector(".formRegisterDriver");
-formRegisterDriver.addEventListener("submit", async (event) => {
-  event.preventDefault();
-
-  const formData = new FormData(event.target);
-  const data = Object.fromEntries(formData.entries());
-
-  if (
-    Object.keys(data).length === 0 ||
-    Object.values(data).some((val) => val === "")
-  ) {
-    console.log("Formulario Vazio");
-    Toastify({
-      text: "Por favor, preencha o formulário antes de enviar.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
+function isTokenExpired(token) {
+  try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expTime = payload.exp * 1000; 
+      return Date.now() > expTime; 
+  } catch (error) {
+      return true; 
   }
+};
 
-    await fetch("/api/drive/submit", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  })
-    .then((response) => {
-      if (response.ok) {
-        console.log("deu certo");
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelector('.cadDriver').addEventListener('click', async (event) => {
+      event.preventDefault(); // Evita recarregar a página
 
+      const token = localStorage.getItem('token'); // Recupera o token armazenado
+
+      if (!token || isTokenExpired(token)) {
         Toastify({
-          text: "Cadastrado com Sucesso",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "green",
+            text: "Sessão expirada. Faça login novamente.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
         }).showToast();
-
-        document.querySelector(".formRegisterDriver").reset();
+    
+        localStorage.removeItem("token"); 
+        setTimeout(() => {
+            window.location.href = "/index.html"; 
+        }, 2000); 
         return;
-      } else {
-        console.log("deu erro viu");
+    }
 
-        Toastify({
-          text: "Erro no cadastro",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
+      if (!$('.formRegisterDriver').valid()) {
+        return;
+    }
+
+      // Captura os valores do formulário
+      const formData = {
+          motoCode: document.querySelector('#motoCode').value,     // Código
+          motoNome: document.querySelector('#motoNome').value,     // Nome
+          motoDtnc: document.querySelector('#motoDtnc').value,     // Data de nascimento
+          motoCpf: document.querySelector('#motoCpf').value,       // CPF
+          motoDtch: document.querySelector('#motoDtch').value,     // Data de emissão da CNH
+          motoctch: document.querySelector('#motoctch').value,     // Categoria da CNH
+          motoDtvc: document.querySelector('#motoDtvc').value,     // Data de vencimento
+          motoRest: document.querySelector('#motoRest').value,     // Restrições
+          motoOrem: document.querySelector('#motoOrem').value,     // Órgão emissor
+          motoCelu: document.querySelector('#motoCelu').value,     // Celular
+          motoCep: document.querySelector('#motoCep').value,       // CEP
+          motoRua: document.querySelector('#motoRua').value,       // Rua
+          motoCity: document.querySelector('#motoCity').value,     // Cidade
+          motoEstd: document.querySelector('#motoEstd').value,     // Estado
+          motoMail: document.querySelector('#motoMail').value      // E-mail
+      };
+
+      try {
+          const response = await fetch('http://localhost:3000/api/drive/submit', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify(formData)
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+              Toastify({
+                  text: "Motorista cadastrado com sucesso!",
+                  duration: 3000,
+                  close: true,
+                  gravity: "top",
+                  position: "center",
+                  backgroundColor: "green",
+              }).showToast();
+
+              // Limpar o formulário após o sucesso
+              document.querySelector('.formRegisterDriver').reset();
+          } else {
+              alert(`Erro: ${result.message}`);
+          }
+      } catch (error) {
+          console.error('Erro ao enviar formulário:', error);
+          alert('Erro ao enviar os dados.');
       }
-    })
-    .catch((error) => {
-      console.error("deu erro no envio", error);
-    });
+  });
+  validationFormMoto()
 });
+
 
 //listagem de motorista
 
@@ -379,7 +413,14 @@ btnFormEditDrive.addEventListener("click", () => {
     campos.forEach(({ id, valor }) => {
       const elemento = document.getElementById(id);
       if (elemento) {
-        elemento.value = valor || "";
+        if (elemento.type === "date" && valor) {
+          // Formata a data para YYYY-MM-DD, caso seja necessário
+          const dataFormatada = new Date(valor).toISOString().split('T')[0];
+          elemento.value = dataFormatada;
+        } else {
+          elemento.value = valor || ""; 
+        }
+        
       } else {
         console.warn(`Elemento com ID '${id}' não encontrado.`);
       }

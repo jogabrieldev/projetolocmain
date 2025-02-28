@@ -28,6 +28,9 @@ btnProd.addEventListener('click' , ()=>{
     const containerAppDriver = document.querySelector('.containerAppDriver')
     containerAppDriver.style.display = 'none'
 
+    const containerAppAutomo = document.querySelector('.containerAppAutomo')
+       containerAppAutomo.style.display = 'none'
+
     const containerFormRegisterProd = document.querySelector('.formRegisterProd')
     containerFormRegisterProd.style.display = 'none'
 
@@ -90,65 +93,95 @@ btnOutInitProd.addEventListener('click', (event)=>{
     containerFormEditProd.style.display = 'none'
  })
 
+ function isTokenExpired(token) {
+  try {
+      const payload = JSON.parse(atob(token.split('.')[1])); 
+      const expTime = payload.exp * 1000; 
+      return Date.now() > expTime; 
+  } catch (error) {
+      return true; 
+  } 
+}
 
- //registro do produto
-const formRegisterProduto = document.querySelector('.formRegisterProduto')
-formRegisterProduto.addEventListener('submit' , async (event)=>{
-  event.preventDefault()
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelector('.cadProd').addEventListener('click', async (event) => {
+      event.preventDefault(); // Evita que o formulário recarregue a página
 
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData.entries());
-   
-    if (
-        Object.keys(data).length === 0 ||
-        Object.values(data).some((val) => val === "")
-      ) {
-        console.log("Formulario Vazio");
+      const token = localStorage.getItem('token'); // Pega o token armazenado no login
+
+      if (!token || isTokenExpired(token)) {
         Toastify({
-          text: "Por favor, preencha o formulário antes de enviar.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
+            text: "Sessão expirada. Faça login novamente.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
         }).showToast();
+    
+        localStorage.removeItem("token"); 
+        setTimeout(() => {
+            window.location.href = "/index.html"; 
+        }, 2000); 
         return;
+    }
+
+      if (!$('.formRegisterProduto').valid()) {
+        return;
+    }
+
+      const formData = {
+          prodCode: document.querySelector('#prodCode').value,         // Código
+          prodDesc: document.querySelector('#prodDesc').value,         // Descrição
+          prodTipo: document.querySelector('#prodTipo').value,         // Tipo de Produto
+          prodUni: document.querySelector('#prodUni').value,           // Unidade
+          prodData: document.querySelector('#prodData').value,         // Data
+          prodValor: document.querySelector('#prodValor').value,       // Valor de Compra
+          prodPeli: document.querySelector('#prodPeli').value,         // Preço Líquido
+          prodPebr: document.querySelector('#prodPebr').value,         // Preço Bruto
+          prodAtiv: document.querySelector('#prodAtiv').value          // Ativo
+      };
+
+      try {
+          const response = await fetch('http://localhost:3000/api/prod/submit', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify(formData)
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+              Toastify({
+                  text: "Produto cadastrado com sucesso!",
+                  duration: 3000,
+                  close: true,
+                  gravity: "top",
+                  position: "center",
+                  backgroundColor: "green",
+              }).showToast();
+
+              // Limpar o formulário após o sucesso
+              document.querySelector('.formRegisterProduto').reset();
+          } else {
+            Toastify({
+              text: `Erro ao cadastrar produto`,
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "red",
+          }).showToast();
+          }
+      } catch (error) {
+          console.error('Erro ao enviar formulário:', error);
+          alert('Erro ao enviar os dados para o server.');
       }
-        console.log('Esse e os dados produto:', data)
-
-      await fetch('/api/prod/submit' , {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      }).then((response)=>{
-        if(response.ok){
-          console.log("deu certo");
-
-         Toastify({
-          text: "Cadastrado com Sucesso",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "green",
-        }).showToast();
-        
-        document.querySelector('.formRegisterProduto').reset();
-     }else{
-        console.log("deu erro viu");
-
-        Toastify({
-          text: "Erro no cadastro",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-      }
-  }).catch((error)=>{
-    console.error('deu errro', error)
-  })
+  });
+  validationFormProd()
 });
 
 
@@ -405,7 +438,15 @@ editProdButton.addEventListener("click", (event) => {
     campos.forEach(({ id, valor }) => {
       const elemento = document.getElementById(id);
       if (elemento) {
-        elemento.value = valor || "";
+
+        if (elemento.type === "date" && valor) {
+          // Formata a data para YYYY-MM-DD, caso seja necessário
+          const dataFormatada = new Date(valor).toISOString().split('T')[0];
+          elemento.value = dataFormatada;
+        } else {
+          elemento.value = valor || ""; 
+        }
+        
       } else {
         console.warn(`Elemento com ID '${id}' não encontrado.`);
       }

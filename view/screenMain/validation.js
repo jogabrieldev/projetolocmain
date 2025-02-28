@@ -136,7 +136,6 @@ function validationFormClient(){
             required: true
            }
            
-
       },
             messages: {
                 clieCode: {
@@ -148,7 +147,7 @@ function validationFormClient(){
                   minlength: "O nome deve ter no mínimo 4 caracteres."
                 },
                 cpf: {
-                    required: "Por favor, insira o cpf valido",
+                    required: "Por favor, insira um CPF valido",
                   minlength: "Insira a quantidade correta de numeros"
                 },
                 dtCad:{
@@ -208,7 +207,7 @@ $(function () {
             
           fornCode:{
             required: true ,
-            minlength: 4
+            minlength: 5
           },
           fornName:{
             required: true
@@ -218,12 +217,10 @@ $(function () {
           },
           fornCnpj:{
             required: true,
-            number: true,
           
           },
           fornCep:{
             required: true,
-            number: true
           },
           fornRua:{
              required:true
@@ -241,10 +238,12 @@ $(function () {
             required: true
           },
           fornAge:{
-             required: true
+             required: true,
+             maxlength: 4
           },
           fornCont:{
-            required: true
+            required: true,
+            maxlength:8
           },
           fornPix:{
             required: true
@@ -292,10 +291,12 @@ $(function () {
             required: " Obrigatorio"
           },
           fornAge:{
-            required: "Obrigatorio"
+            required: "Obrigatorio",
+            maxlength: 'Maximo 4 caracteres'
          },
          fornCont:{
-           required: "obrigatorio"
+           required: "obrigatorio",
+           maxlength: 'Maximo 8 caracteres'
          },
          fornPix:{
             required: 'Obrigatorio'
@@ -337,10 +338,27 @@ $(function () {
           prodDesc:{
             required: true
           },
+          prodTipo:{
+            required: true,
+          },
+          prodUni:{
+            required: true,
+            number: true
+          },
           prodValor:{
              required: true
           },
+          prodPeli:{
+            required: true
+          },
+          prodPebr:{
+            required: true
+          },
+          prodAtiv:{
+            required: true
+          },
           prodData:{
+            required:true,
             date: true
           }
           
@@ -354,10 +372,27 @@ $(function () {
               prodDesc:{
                  required:'Obrigatorio'
               },
+              prodTipo:{
+                required:"Obrigatorio",
+              },
+              prodUni:{
+                required: "Obrigatorio",
+                number: "Insira o valor numerico"
+              },
               prodValor:{
                required: "Obrigatorio"
              },
+             prodPeli:{
+              required: "Obrigatorio"
+            },
+            prodPebr:{
+              required: "Obrigatorio"
+            },
+            prodAtiv:{
+              required: "Obrigatorio"
+            },
              prodData:{
+              required: "Obrigatorio",
               date: 'Insira uma data valida'
              }
 
@@ -445,6 +480,70 @@ $(function () {
   validationFormFabric();
 });
 
+// tipo de produto
+
+function validationFormTipoProd(){
+  $('.formRegisterTipoProdu').validate({
+      rules: {
+          
+        tpCode:{
+          required: true ,
+        },
+        tpDesc:{
+          required: true
+        },
+        tpCat:{
+           required: true
+        },
+        tpSubCat:{
+          required: true
+        },
+        tpCtct:{
+          required: true
+        }
+        
+
+    },
+          messages: {
+
+            tpCode:{
+              required: "Obrigatorio" ,
+            },
+            tpDesc:{
+              required: "Obrigatorio"
+            },
+            tpCat:{
+               required: "Obrigatorio"
+            },
+            tpSubCat:{
+              required: "Obrigatorio"
+            },
+            tpCtct:{
+              required: "Obrigatorio"
+            }
+          
+          },
+
+          errorPlacement: function (error, element) {
+              error.addClass('error-text');
+              error.insertAfter(element);
+            },
+            highlight: function (element) {
+              $(element).addClass('error-field');
+            },
+            unhighlight: function (element) {
+              $(element).removeClass('error-field');
+            },
+            submitHandler: function (form) {
+              form.submit();
+            }
+  })
+}
+$(function () {
+  validationFormTipoProd();
+});
+
+
 // motorista 
 
 function  validationFormMoto(){
@@ -471,6 +570,9 @@ function  validationFormMoto(){
         motoDtvc:{
           required: true,
           date: true
+        },
+        motoctch:{
+          required: true
         },
         motoOrem:{
           required: true
@@ -510,6 +612,9 @@ function  validationFormMoto(){
               required: 'Obrigatorio',
               date: "Insira uma data valida"
             },
+            motoctch:{
+              required: "Obrigatorio"
+            },
             motoOrem:{
               required: "Obrigatorio"
             },
@@ -546,59 +651,59 @@ $(function () {
 
 
 // Tipo de produto
-function  validationFormTipoProd(){
-  $('.formRegisterTipoProd').validate({
-      rules: {
+// function  validationFormTipoProd(){
+//   $('.formRegisterTipoProd').validate({
+//       rules: {
           
-        tpCode:{
-          required: true 
-        },
-        tpDesc:{
-          required: true
-        },
-        tpObs:{
-           required: true
+//         tpCode:{
+//           required: true 
+//         },
+//         tpDesc:{
+//           required: true
+//         },
+//         tpObs:{
+//            required: true
           
-        },
-        tpCtct:{
-          required: true
-        },
-    },
-          messages: {
-            tpCode:{
-              required:'Obrigatorio '
-            },
-            tpDesc:{
-              required: 'Obrigatori'
-            },
-            tpObs:{
-               required: 'Obrigatorio',
+//         },
+//         tpCtct:{
+//           required: true
+//         },
+//     },
+//           messages: {
+//             tpCode:{
+//               required:'Obrigatorio '
+//             },
+//             tpDesc:{
+//               required: 'Obrigatori'
+//             },
+//             tpObs:{
+//                required: 'Obrigatorio',
               
-            },
-            tpCtct:{
-              required: "Obrigatorio"
-            },
+//             },
+//             tpCtct:{
+//               required: "Obrigatorio"
+//             },
           
-          },
+//           },
 
-          errorPlacement: function (error, element) {
-              error.addClass('error-text');
-              error.insertAfter(element);
-            },
-            highlight: function (element) {
-              $(element).addClass('error-field');
-            },
-            unhighlight: function (element) {
-              $(element).removeClass('error-field');
-            },
-            submitHandler: function (form) {
-              form.submit();
-            }
-  })
-}
-$(function () {
-  validationFormTipoProd();
-});
+//           errorPlacement: function (error, element) {
+//               error.addClass('error-text');
+//               error.insertAfter(element);
+//             },
+//             highlight: function (element) {
+//               $(element).addClass('error-field');
+//             },
+//             unhighlight: function (element) {
+//               $(element).removeClass('error-field');
+//             },
+//             submitHandler: function (form) {
+//               form.submit();
+//             }
+//   })
+// }
+// $(function () {
+//   validationFormTipoProd();
+// });
 
 
 

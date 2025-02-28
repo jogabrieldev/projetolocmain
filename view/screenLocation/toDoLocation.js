@@ -1,18 +1,20 @@
-document.querySelector(".btnCadBens").style.display = "none";
-document.querySelector(".btnCadClie").style.display = "none";
-document.querySelector(".btnCadForn").style.display = "none";
-document.querySelector(".btnCadProd").style.display = "none";
-document.querySelector(".btnCadFabri").style.display = "none";
-document.querySelector(".btnCadTypeProd").style.display = "none";
-document.querySelector(".btnCadMotorista").style.display = "none";
+// document.querySelector(".btnCadBens").style.display = "none";
+// document.querySelector(".btnCadClie").style.display = "none";
+// document.querySelector(".btnCadForn").style.display = "none";
+// document.querySelector(".btnCadProd").style.display = "none";
+// document.querySelector(".btnCadFabri").style.display = "none";
+// document.querySelector(".btnCadTypeProd").style.display = "none";
+// document.querySelector(".btnCadMotorista").style.display = "none";
+
 
 const btnAtivRegister = document.querySelector(".btnAtivRegister");
 btnAtivRegister.addEventListener("click", () => {
   const informative = document.querySelector(".information");
   informative.style.display = "block";
   informative.textContent = "SEÇÃO CADASTROS";
-
+  
   document.querySelector(".btnCadBens").style.display = "flex";
+  document.querySelector(".btnCadAutomo").style.display = "flex"
   document.querySelector(".btnCadClie").style.display = "flex";
   document.querySelector(".btnCadForn").style.display = "flex";
   document.querySelector(".btnCadProd").style.display = "flex";
@@ -21,6 +23,7 @@ btnAtivRegister.addEventListener("click", () => {
   document.querySelector(".btnCadMotorista").style.display = "flex";
 
   //none
+  document.querySelector('.btnLogistic').style.display = 'none'
   document.querySelector(".btnRegisterLocation").style.display = "none";
   document.querySelector(".containerAppLocation").style.display = "none";
 });

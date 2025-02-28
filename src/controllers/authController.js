@@ -1,4 +1,7 @@
-import {autenticateLogin} from "../model/dataAuth.js"
+import {authenticateLogin} from "../model/dataAuth.js"
+import jwt from 'jsonwebtoken';
+
+const secretKey = process.env.JWT_SECRET_KEY
 
 async function AuthController(req, res) {
   try {
@@ -10,16 +13,15 @@ async function AuthController(req, res) {
         .json({ message: "usuario e senha são obrigatorios" });
     }
 
-    const user = await autenticateLogin(username, password);
+    const user = await authenticateLogin(username, password);
 
     if (!user) {
       return res.status(401).json({ message: "Usuario ou senha invalidos" });
     }
 
-    return res.status(200).json({
-      message: "Login realizado com sucesso",
-      user: { id: user.id, username: user.empmail },
-    });
+    const token = jwt.sign({ id: user.username, password: user.password }, secretKey, { expiresIn: '1h' });
+
+    return res.json({  token });
   } catch (error) {
     console.error("erro na autenticação do usuario:", error);
     return res.status(500).json({ message: "erro interno" });

@@ -6,24 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="main.css">
-    <link rel="stylesheet" href="mainClient.css">
-    <link rel="stylesheet" href="mainForn.css">
-    <link rel="stylesheet" href="mainProd.css">
-    <link rel="stylesheet" href="mainFabri.css">
-    <link rel="stylesheet" href="mainTypeProd.css">
-    <link rel="stylesheet" href="mainDriver.css">
+    <link rel="stylesheet" href="./mainGoods/mainGoods.css">
+    <link rel="stylesheet" href="./mainClient/mainClient.css">
+    <link rel="stylesheet" href="./mainForn/mainForn.css">
+    <link rel="stylesheet" href="./mainProd/mainProd.css">
+    <link rel="stylesheet" href="./mainFabe/mainFabri.css">
+    <link rel="stylesheet" href="./mainTypeProd/mainTypeProd.css">
+    <link rel="stylesheet" href="./mainDrive/mainDriver.css">
+    <link rel="stylesheet" href="./mainAutomovel/mainAuto.css">
     <link rel="stylesheet" href="../screenLocation/location.css">
-    <link rel="stylesheet" href="../logistics/logistics.css">
-
+    <link rel="stylesheet" href="../screenLogistics/logistics.css">
+    
        <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=exit_to_app,search" />
-     
+        
       
          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
          <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script> 
          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
    
-
     <title>Screen main</title>
 </head>
 
@@ -51,19 +52,22 @@
                 <br>
                 <li><button class="btnLogistic" onclick=" locationPendente()">Logistica</button></li>
                 <br>
-                <li><button class="btnCadBens" >Bens</button></li>
+                <li><button class="btnCadBens" style="display: none;" >Bens</button></li>
                 <br>
-                <li><button class="btnCadClie" >Clientes</button></li>
+                <li><button class="btnCadClie" style="display: none;" >Clientes</button></li>
                 <br>
-                <li><button class="btnCadForn" >Fornecedor</button></li>
+                <li><button class="btnCadForn" style="display: none;" >Fornecedor</button></li>
                 <br>
-                <li><button class="btnCadProd" >Produto</button></li>
+                <li><button class="btnCadProd" style="display: none;" >Produto</button></li>
                 <br>
-                <li><button class="btnCadFabri" >Familia de bens</button></li>
+                <li><button class="btnCadFabri" style="display: none;">Familia de bens</button></li>
                 <br>
-                <li><button class="btnCadTypeProd" > Tipo do produto</button></li>
+                <li><button class="btnCadTypeProd" style="display: none;" > Tipo do produto</button></li>
                 <br>
-                <li><button class="btnCadMotorista">Motorista</button></li>
+                <li><button class="btnCadMotorista" style="display: none;">Motorista</button></li>
+                <br>
+                <li><button class="btnCadAutomo" style="display: none;">Veiculos</button></li>
+                
                 
             </ul>
 
@@ -98,13 +102,13 @@
                 <div class="formGroup">               
 
                     <div class="inputGroup">
-                       <label for="code">Codigo</label>
-                       <input type="text" name="code" id="code" placeholder="bensCode" maxlength="15" readonly>
+                       <label for="codeEdit">Codigo</label>
+                       <input type="text" name="codeEdit" id="codeEdit" placeholder="bensCode" maxlength="15" readonly>
                     </div> 
 
                     <div class="inputGroup">
-                          <label for="name">Nome</label>
-                          <input type="text" name="name" id="name" placeholder="bensnome" maxlength="80" >
+                          <label for="nameEdit">Nome</label>
+                          <input type="text" name="nameEdit" id="nameEdit" placeholder="bensnome" maxlength="80" >
                    </div>
 
                    <div class="inputGroup">
@@ -115,38 +119,38 @@
                   </div>
 
                   <div class="inputGroup">
-                      <label for="model">Modelo</label>
-                       <input type="text" name="model" id="model" placeholder="bensMode" maxlength="20"  >
+                      <label for="modelEdit">Modelo</label>
+                       <input type="text" name="modelEdit" id="modelEdit" placeholder="bensMode" maxlength="20"  >
                   </div>
 
                    <div class="inputGroup">
-                       <label for="serial">Numero de Serie</label>
-                       <input type="number" name="serial" id="serial" placeholder="bensNuse" maxlength="25">
+                       <label for="serialEdit">Numero de Serie</label>
+                       <input type="number" name="serialEdit" id="serialEdit" placeholder="bensNuse" maxlength="25">
                    </div>
                       
                    <div class="inputGroup">
-                        <label for="placa">Placa </label>
-                        <input type="text" name="placa" id="placa" placeholder="bensPlac" maxlength="7" >
+                        <label for="placaEdit">Placa </label>
+                        <input type="text" name="placaEdit" id="placaEdit" placeholder="bensPlac" maxlength="7" >
                   </div>
                
                    <div class="inputGroup">
-                        <label for="bensAnmo">Ano do modelo</label>
-                        <input type="date" name="bensAnmo" id="bensAnmo">
+                        <label for="bensAnmoEdit">Ano do modelo</label>
+                        <input type="date" name="bensAnmoEdit" id="bensAnmoEdit">
                    </div>
                       
                    <div class="inputGroup">
-                       <label for="dtCompra" > Data da compra</label>
-                       <input type="date" name="dtCompra" id="dtCompra"  class="fields" >
+                       <label for="dtCompraEdit"> Data da compra</label>
+                       <input type="date" name="dtCompraEdit" id="dtCompraEdit" >
                     </div>
                     
                    <div class="inputGroup">
-                        <label for="ValorCp">Valor compra</label>
-                        <input type="text" name="valorCp" id="valorCp" placeholder="bensVacp" maxlength="13">
+                        <label for="valorCpEdit">Valor compra</label>
+                        <input type="text" name="valorCpEdit" id="valorCpEdit" placeholder="R$" maxlength="25">
                     </div>
 
                    <div class="inputGroup">
-                       <label for="ntFiscal">Nota Fiscal</label>
-                       <input type="number" name="ntFiscal" id="ntFiscal" placeholder="bensNunf" maxlength="11" >
+                       <label for="ntFiscalEdit">Nota Fiscal</label>
+                       <input type="number" name="ntFiscalEdit" id="ntFiscalEdit" placeholder="bensNunf" maxlength="11" >
                    </div>
                       
                    <div class="inputGroup">
@@ -157,19 +161,19 @@
                     </div>
 
                     <div class="inputGroup">
-                        <label for="kmAtual">KM Atual </label>
-                        <input type="number" name="kmAtual" id="kmAtual"
+                        <label for="kmAtualEdit">KM Atual </label>
+                        <input type="number" name="kmAtualEdit" id="kmAtualEdit"
                            placeholder="bensKmat" maxlength="7" >
                     </div>
                
                     <div class="inputGroup">
-                       <label for="dtKm">Data do KM</label>
-                       <input type="date" name="dtKm" id="dtKm">
+                       <label for="dtKmEdit">Data do KM</label>
+                       <input type="date" name="dtKmEdit" id="dtKmEdit">
                     </div>
                           
                     <div class="inputGroup">
-                           <label for="status">Status</label>
-                        <select name="status" id="status">
+                           <label for="statusEdit">Status</label>
+                        <select name="statusEdit" id="statusEdit">
                             <option value="">Selecione...</option>
                            <option value="Disponivel">DP</option>
                            <option value="Em locação">EL</option>
@@ -182,43 +186,43 @@
                    </div>
 
                     <div class="inputGroup">
-                         <label for="dtStatus">Data do Status</label>
-                         <input type="date" name="dtStatus" id="dtStatus">
+                         <label for="dtStatusEdit">Data do Status</label>
+                         <input type="date" name="dtStatusEdit" id="dtStatusEdit">
                     </div>
                       
                     <div class="inputGroup">
-                        <label for="hrStatus">Hora do Status</label>
-                        <input type="time" name="hrStatus" id="hrStatus" placeholder="bensHrus">
+                        <label for="hrStatusEdit">Hora do Status</label>
+                        <input type="time" name="hrStatusEdit" id="hrStatusEdit" placeholder="bensHrus">
                     </div>
                     
                     <div class="inputGroup">
-                        <label for="chassi">Chassi</label>
-                        <input type="number" name="chassi" id="chassi" placeholder="Chassi" maxlength="20">
+                        <label for="chassiEdit">Chassi</label>
+                        <input type="number" name="chassiEdit" id="chassiEdit" placeholder="Chassi" maxlength="20">
                     </div>
                   
                     <div class="inputGroup">
-                       <label for="Cor" id="COR">Cor</label>
-                       <input type="text" name="cor" id="cor" placeholder="bensCore" maxlength="10">
+                       <label for="corEdit">Cor</label>
+                       <input type="text" name="corEdit" id="corEdit" placeholder="bensCore" maxlength="10">
                    </div>
 
                    <div class="inputGroup">
-                       <label for="nuMO" id="nuMO">nuMO </label>
-                       <input type="number" name="nuMO" id="nuMO" placeholder="bensNumo" maxlength="15">
+                       <label for="nuMOEdit">nuMO </label>
+                       <input type="number" name="nuMOEdit" id="nuMOEdit" placeholder="bensNumo" maxlength="15">
                    </div>
 
                    <div class="inputGroup">
-                          <label for="rena">Renavam</label>
-                          <input type="number" name="rena" id="rena" placeholder="bensRena" maxlength="15">
+                          <label for="renaEdit">Renavam</label>
+                          <input type="number" name="renaEdit" id="renaEdit" placeholder="bensRena" maxlength="15">
                    </div>
 
                    <div class="inputGroup">
-                          <label for="bensCtep">bensCtep </label>
-                           <input type="text" name="bensCtep" id="bensCtep" placeholder="bensCtep" maxlength="40">
+                          <label for="bensCtepEdit">bensCtep </label>
+                           <input type="text" name="bensCtepEdit" id="bensCtepEdit" placeholder="bensCtep" maxlength="40">
                    </div>
 
                    <div class="inputGroup">
-                           <label for="fabri">Ativo</label>
-                           <select name="bensAtiv" id="bensAtiv">
+                           <label for="bensAtivEdit">Ativo</label>
+                           <select name="bensAtivEdit" id="bensAtivEdit">
                              <option value="">Selecione...</option> 
                                <option value="Sim">Sim</option>
                                <option value="Não">Nao</option>
@@ -226,8 +230,8 @@
                    </div>
                   
                    <div class="inputGroup">
-                         <label for="alug">Alugado</label>
-                            <select name="alug" id="alug">
+                         <label for="alugEdit">Alugado</label>
+                            <select name="alugEdit" id="alugEdit">
                                 <option value="">Selecione...</option>
                                <option value="Sim">Sim</option>
                                <option value="Não">Nao</option>
@@ -235,13 +239,13 @@
                    </div>
                
                     <div class="inputGroup">
-                       <label for="valorAlug">Valor Alugado</label>
-                       <input type="number" name="valorAlug" id="valorAlug" placeholder="bensVaal" maxlength="13" >
+                       <label for="valorAlugEdit">Valor Alugado</label>
+                       <input type="text" name="valorAlugEdit" id="valorAlugEdit" placeholder="R$" maxlength="25" >
                    </div>
                       
                    <div class="inputGroup">
-                       <label for="fabri">Fabricante</label>
-                        <input type="text" name="fabri" id="fabri" placeholder="bensFabr" maxlength="25">
+                       <label for="fabriEdit">Fabricante</label>
+                        <input type="text" name="fabriEdit" id="fabriEdit" placeholder="bensFabr" maxlength="25">
                    </div>
                 <div class="btnPageEdit">
                      <button class="submitEditBtn">Salvar</button>
@@ -289,18 +293,18 @@
                        </div>
                     
                         <div class="inputGroup">
-                             <label for="Valor">Ano do modelo</label>
+                             <label for="bensAnmo">Ano do modelo</label>
                              <input type="date" name="bensAnmo" id="bensAnmo" >
                         </div>
                            
                         <div class="inputGroup">
                             <label for="dtCompra"> Data da compra</label>
-                            <input type="date" name="dtCompra" id="dtCompra"  class="fields" >
+                            <input type="date" name="dtCompra" id="dtCompra" >
                          </div>
                          
                         <div class="inputGroup">
-                             <label for="Valor">Valor compra</label>
-                             <input type="text" name="valor" id="valorCp" placeholder="R$ 0,00" maxlength="12">
+                             <label for="valorCpMain">Valor compra</label>
+                             <input type="text" name="valorCpMain" id="valorCpMain" placeholder="R$ 0,00" maxlength="12">
                          </div>
 
                         <div class="inputGroup">
@@ -362,7 +366,7 @@
                         </div>
 
                         <div class="inputGroup">
-                            <label for="nuMO" id="nuMO">nuMO </label>
+                            <label for="nuMO">nuMO </label>
                             <input type="number" name="nuMO" id="nuMO" placeholder="bensNumo" maxlength="15">
                         </div>
 
@@ -396,7 +400,7 @@
                     
                          <div class="inputGroup">
                             <label for="valorAlug">Valor Alugado</label>
-                            <input type="text" name="valorAlug" id="valorAlug" placeholder="R$ 0,00" maxlength="13">
+                            <input type="text" name="valorAlugMain" id="valorAlugMain" placeholder="R$ 0,00" maxlength="13">
                         </div>
                            
                         <div class="inputGroup">
@@ -444,7 +448,7 @@
   
                     <div class="inputGroup">
                         <label for="cpf">CPF</label>
-                        <input type="text" name="cpf" id="editCliecpf" placeholder="CPF" maxlength="14">
+                        <input type="text" name="cpf" id="editCliecpf" placeholder="CPF" maxlength="15">
                     </div>
   
                     <div class="inputGroup">
@@ -459,7 +463,7 @@
   
                     <div class="inputGroup">
                         <label for="clieCelu">Celular</label>
-                        <input type="text" name="clieCelu" id="editClieCelu" placeholder="Celular" maxlength="11">
+                        <input type="text" name="clieCelu" id="editClieCelu" placeholder="Celular" maxlength="20">
                     </div>
   
                     <div class="inputGroup">
@@ -479,7 +483,7 @@
   
                     <div class="inputGroup">
                         <label for="clieCep ">Cep</label>
-                        <input type="text" name="clieCep" id="editClieCep" placeholder="CEP" maxlength="10">
+                        <input type="text" name="clieCep" id="editClieCep" placeholder="CEP" maxlength="13">
                     </div>
   
                     <div class="inputGroup">
@@ -625,12 +629,12 @@
   
                     <div class="inputGroup">
                         <label for="fornCelu">Celular</label>
-                        <input type="number" name="fornCelu" id="fornCelu" placeholder="Celular" maxlength="11">
+                        <input type="text" name="fornCelu" id="fornCelu" placeholder="Celular" maxlength="11">
                     </div>
   
                     <div class="inputGroup">
                         <label for="fornMail ">E-mail</label>
-                        <input type="text" name="fornMail" id="fornMail" placeholder="E-mail" maxlength="35">
+                        <input type="email" name="fornMail" id="fornMail" placeholder="E-mail" maxlength="35">
                     </div>
   
                     <div class="inputGroup">
@@ -640,7 +644,7 @@
 
                     <div class="inputGroup">
                         <label for="fornAge ">Agencia</label>
-                        <input type="number" name="fornAge" id="fornAge" placeholder="Agencia" maxlength="4">
+                        <input type="number" name="fornAge" id="fornAge" placeholder="Agencia"  >
                     </div>
 
                     <div class="inputGroup">
@@ -694,12 +698,12 @@
   
                     <div class="inputGroup">
                         <label for="fornCnpj">CNPJ</label>
-                        <input type="number" name="fornCnpj" id="editFornCnpj" placeholder="CNPJ" maxlength="14">
+                        <input type="text" name="fornCnpj" id="editFornCnpj" placeholder="CNPJ" maxlength="20">
                     </div>
   
                     <div class="inputGroup">
                         <label for="fornCep">CEP</label>
-                        <input type="number" name="fornCep" id="editFornCep" placeholder="CEP" maxlength="9">
+                        <input type="text" name="fornCep" id="editFornCep" placeholder="CEP" maxlength="13">
                     </div>
   
                     <div class="inputGroup">
@@ -719,12 +723,12 @@
   
                     <div class="inputGroup">
                         <label for="fornCelu">Celular</label>
-                        <input type="number" name="fornCelu" id="editFornCelu" placeholder="Celular" maxlength="11">
+                        <input type="text" name="fornCelu" id="editFornCelu" placeholder="Celular" maxlength="15">
                     </div>
   
                     <div class="inputGroup">
                         <label for="fornMail ">E-mail</label>
-                        <input type="text" name="fornMail" id="editFornMail" placeholder="E-mail" maxlength="35">
+                        <input type="email" name="fornMail" id="editFornMail" placeholder="E-mail" maxlength="35">
                     </div>
   
                     <div class="inputGroup">
@@ -739,22 +743,22 @@
 
                     <div class="inputGroup">
                         <label for="forncont ">Conta</label>
-                        <input type="text" name="fornCont" id="editFornCont" placeholder="Conta" maxlength="8">
+                        <input type="number" name="fornCont" id="editFornCont" placeholder="Conta" maxlength="8">
                     </div>
 
                     <div class="inputGroup">
-                        <label for="fornPix ">Pix</label>
-                        <input type="text" name="fornPix" id="editFornPix" placeholder="Pix" maxlength="35">
+                        <label for="editFornPix">Pix</label>
+                        <input type="text" name="editFornPix" id="editFornPix" placeholder="Pix" maxlength="35">
                     </div>
 
                     <div class="inputGroup">
-                        <label for="fornDtcd ">Data do cadastro</label>
-                        <input type="date" name="fornDtcd" id="editFornDtcd">
+                        <label for="editFornDtcd">Data do cadastro</label>
+                        <input type="date" name="editFornDtcd" id="editFornDtcd">
                     </div>
 
                     <div class="inputGroup">
-                        <label for="fornDisPro ">Discrição do produto</label>
-                        <input type="text" name="fornDisPro" id="editFornDisPro" placeholder="Discrição do produto" maxlength="85">
+                        <label for="editFornDisPro">Discrição do produto</label>
+                        <input type="text" name="editFornDisPro" id="editFornDisPro" placeholder="Discrição do produto" maxlength="85">
                     </div>
                       
                     <div class="btnOutNext">
@@ -809,31 +813,31 @@
                 </div>
 
                 <div class="inputGroup">
-                    <label for="prodData">Data</label>
+                    <label for="prodData">Data do cadastro</label>
                     <input type="date" name="prodData" id="prodData" >
                 </div>
 
                 <div class="inputGroup">
                     <label for="prodValor">Valor Compra</label>
-                    <input type="number" name="prodValor" id="prodValor" placeholder="Valor " maxlength="12">
+                    <input type="text" name="prodValor" id="prodValor" placeholder="R$" maxlength="12">
                 </div>
 
                 <div class="inputGroup">
                     <label for="prodPeli">Preço Liguido</label>
-                    <input type="number" name="prodPeli" id="prodPeli" placeholder="" maxlength="6">
+                    <input type="text" name="prodPeli" id="prodPeli" placeholder="R$" maxlength="6">
                 </div>
 
                 <div class="inputGroup">
                     <label for="forCelu">Preço Bruto</label>
-                    <input type="number" name="prodPebr" id="prodPebr" placeholder="" maxlength="10">
+                    <input type="text" name="prodPebr" id="prodPebr" placeholder="R$" maxlength="10">
                 </div>
 
                 <div class="inputGroup">
-                    <label for="prodAtiv ">Ativo</label>
+                    <label for="prodAtiv">Ativo</label>
                       <select name="prodAtiv" id="prodAtiv">
                         <option value="">Selecione...</option>
-                         <option value="S">SIM</option>
-                         <option value="N">NAO</option>
+                         <option value="Sim">SIM</option>
+                         <option value="Não">NAO</option>
                       </select>
                 </div>
 
@@ -879,17 +883,17 @@
     
                     <div class="inputGroup">
                         <label for="prodValor">Valor</label>
-                        <input type="number" name="prodValor" id="editProdValor" placeholder="Valor " maxlength="12">
+                        <input type="text" name="prodValor" id="editProdValor" placeholder="Valor " maxlength="12">
                     </div>
     
                     <div class="inputGroup">
                         <label for="prodPeli">prodPeli</label>
-                        <input type="number" name="prodPeli" id="editProdPeli" placeholder="" maxlength="6">
+                        <input type="text" name="prodPeli" id="editProdPeli" placeholder="" maxlength="6">
                     </div>
     
                     <div class="inputGroup">
                         <label for="forCelu">prodPebr</label>
-                        <input type="number" name="prodPebr" id="editProdPebr" placeholder="" maxlength="10">
+                        <input type="text" name="prodPebr" id="editProdPebr" placeholder="" maxlength="10">
                     </div>
     
                     <div class="inputGroup">
@@ -902,7 +906,7 @@
                     </div>
     
                     <div class="btnOutNext">
-                       <button class="cadProd">Cadastrar</button>
+                       <button class="cadProd">Salvar</button>
                        <button class="btnOutInitProdEdit">Voltar</button>
                     </div>
                 </div>
@@ -1052,8 +1056,9 @@
       
                      <div class="inputGroup">
                         <label for="tpSubCat">Subcategoria</label>
-                        <input type="number" name="tpSubCat" id="tpSubCat" placeholder="Subcategoria" maxlength="30">
+                        <input type="text" name="tpSubCat" id="tpSubCat" placeholder="Subcategoria" maxlength="30">
                      </div>
+
       
                      <div class="inputGroup">
                         <label for="tpObs">Observação</label>
@@ -1164,6 +1169,7 @@
                          <div class="inputGroup">
                              <label for="motoctch">Categoria da CNH</label>
                              <select name="motoctch" id="motoctch">
+                                <option value="">Selecione...</option>
                                 <option value="A">A</option>
                                 <option value="B">B</option>
                                 <option value="C">C</option>
@@ -1326,7 +1332,177 @@
 
      </section>
 
+  <section class="containerAppAutomo">
+      
+    <div class="listingAutomo">
+        <!-- informações -->
+     </div>
 
+     <div class="btnInitAutoPageMain">
+        <button class="registerAuto">incluir</button>
+        <button class="buttonDeleteAuto">Excluir</button>
+        <button class="buttonEditAuto">Editar</button>
+        <button class="buttonExitAuto">Voltar</button>
+     </div>
+      <div class="formCadAuto" style="display: none;"> 
+          <form class="foorm" >
+            <div class="formGroup">
+      
+                <div class="inputGroup">
+                   <label for="codeAuto">Codigo</label>
+                   <input type="text" name="codeAuto" id="codeAuto" placeholder="Codigo" maxlength="15">
+                </div>
+
+                <div class="inputGroup">
+                  <label for="placAuto">Placa</label>
+                  <input type="text" name="placAuto" id="placAuto" placeholder="Placa" maxlength="8">
+                </div>
+
+               <div class="inputGroup">
+                  <label for="chassAuto">Chassi</label>
+                  <input type="number" name="chassAuto" id="chassAuto" placeholder="Chassi" maxlength="20">
+              </div>
+
+              <div class="inputGroup">
+                 <label for="renaAuto">Renavam</label>
+                 <input type="number" name="renaAuto" id="renaAuto" placeholder="Renavam" maxlength="20">
+              </div>
+
+             <div class="inputGroup">
+                 <label for="macaAuto">Marca</label>
+                 <input type="text" name="macaAuto" id="macaAuto" placeholder="Marca" maxlength="25">
+             </div>
+
+             <div class="inputGroup">
+                 <label for="modeAuto">Modelo</label>
+                 <input type="text" name="modeAuto" id="modeAuto"  placeholder="Modelo" maxlength="30">
+             </div>
+
+             <div class="inputGroup">
+                <label for="corAuto">Cor</label>
+                <input type="text" name="corAuto" id="corAuto"  placeholder="Cor" maxlength="20">
+            </div>
+
+            <div class="inputGroup">
+                <label for="tpCombusAuto">Tipo de Combustivel</label>
+                <input type="text" name="tpCombusAuto" id="tpCombusAuto"  placeholder="Tipo de Combustivel" maxlength="12">
+            </div>
+
+            <div class="inputGroup">
+                <label for="kmAtAuto">Km atual</label>
+                <input type="number" name="kmAtAuto" id="kmAtAuto"  placeholder="Quilometragem Atual" maxlength="8">
+            </div>
+             
+            <div class="inputGroup">
+                <label for="motoAuto">Motorista</label>
+                <select name="motoAuto" id="motoAuto" >
+                    <option value="">Selecione...</option>
+                </select>
+            </div>
+
+            <div class="inputGroup">
+                <label for="statAuto">Status</label>
+                <select name="statAuto" id="statAuto" >
+                    <option value="">Selecione...</option>
+                    <option value="Ativo">Ativo </option>
+                    <option value="Desativo">Desativo</option>
+                </select>
+            </div>
+
+            <div class="inputGroup">
+                <label for="dtCadAuto">Data do cadastro</label>
+                <input type="date" name="dtCadAuto" id="dtCadAuto">
+            </div>
+
+             <div class="btnOutNext">
+                <button class="cadAutomo">Salvar</button>
+                <button class="btnOutCadAuto">Voltar</button>
+             </div>
+         </div>
+     </form>
+ </div>
+ <!-- Edição de veiculos -->
+   <div class="editFormAuto" style="display: none;">
+    <form class="foormEditVeicu" >
+        <div class="formGroup">
+  
+            <div class="inputGroup">
+               <label for="codeAutoEdit">Codigo</label>
+               <input type="text" name="codeAutoEdit" id="codeAutoEdit" placeholder="Codigo" maxlength="15" readonly>
+            </div>
+
+            <div class="inputGroup">
+              <label for="placAutoEdit">Placa</label>
+              <input type="text" name="placAutoEdit" id="placAutoEdit" placeholder="Placa" maxlength="8">
+            </div>
+
+           <div class="inputGroup">
+              <label for="chassAutoEdit">Chassi</label>
+              <input type="number" name="chassAutoEdit" id="chassAutoEdit" placeholder="Chassi" maxlength="20">
+          </div>
+
+          <div class="inputGroup">
+             <label for="renaAutoEdit">Renavam</label>
+             <input type="number" name="renaAutoEdit" id="renaAutoEdit" placeholder="Renavam" maxlength="20">
+          </div>
+
+         <div class="inputGroup">
+             <label for="macaAutoEdit">Marca</label>
+             <input type="text" name="macaAutoEdit" id="macaAutoEdit" placeholder="Marca" maxlength="25">
+         </div>
+
+         <div class="inputGroup">
+             <label for="modeAutoEdit">Modelo</label>
+             <input type="text" name="modeAutoEdit" id="modeAutoEdit"  placeholder="Modelo" maxlength="30">
+         </div>
+
+         <div class="inputGroup">
+            <label for="corAutoEdit">Cor</label>
+            <input type="text" name="corAutoEdit" id="corAutoEdit"  placeholder="Cor" maxlength="20">
+        </div>
+
+        <div class="inputGroup">
+            <label for="tpCombusAutoEdit">Tipo de Combustivel</label>
+            <input type="text" name="tpCombusAutoEdit" id="tpCombusAutoEdit"  placeholder="Tipo de Combustivel" maxlength="12">
+        </div>
+
+        <div class="inputGroup">
+            <label for="kmAtAutoEdit">Km atual</label>
+            <input type="number" name="kmAtAutoEdit" id="kmAtAutoEdit"  placeholder="Quilometragem Atual" maxlength="8">
+        </div>
+         
+        <div class="inputGroup">
+            <label for="motoAutoEdit">Motorista</label>
+            <select name="motoAutoEdit" id="motoAutoEdit" >
+                <option value="">Selecione...</option>
+            </select>
+        </div>
+
+        <div class="inputGroup">
+            <label for="statAutoEdit">Status</label>
+            <select name="statAutoEdit" id="statAutoEdit" >
+                <option value="">Selecione...</option>
+                <option value="Ativo">Ativo </option>
+                <option value="Desativo">Desativo</option>
+            </select>
+        </div>
+
+        <div class="inputGroup">
+            <label for="dtCadAutoEdit">Data do cadastro</label>
+            <input type="date" name="dtCadAutoEdit" id="dtCadAutoEdit">
+        </div>
+
+         <div class="btnOutNext">
+            <button class="cadAutomoEdit">Salvar</button>
+            <button class="btnOutCadAutoEdit">Voltar</button>
+         </div>
+     </div>
+  </form>
+</div>
+ 
+     
+
+</section> 
 
 <section class="containerAppLocation">
 
@@ -1735,6 +1911,10 @@
          <div class="validadeFamily">
 
          </div>
+
+         <!-- <div class="availabilityCheck">
+
+         </div> -->
     </div>
 
 </section>
@@ -1744,18 +1924,19 @@
 
 </main>  
      <script type = "module" src="maskFields.js"></script>
-    <script type="module" src="validation.js"></script>
+    <script  src="validation.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.js"></script>
-    <script src="mainGoods.js"></script>
-    <script src="mainClient.js"></script>
-    <script src="mainForn.js"></script>
-    <script src="mainProd.js"></script>
-    <script src="mainFabri.js"></script>
-    <script src="mainTypeProd.js"></script>
-    <script src="mainDriver.js"></script>
+    <script src="./mainGoods/mainGoods.js"></script>
+    <script src="./mainClient/mainClient.js"></script>
+    <script src="./mainForn/mainForn.js"></script>
+    <script src="./mainProd/mainProd.js"></script>
+    <script src="./mainFabe/mainFabri.js"></script>
+    <script src="./mainTypeProd/mainTypeProd.js"></script>
+    <script src="./mainDrive/mainDriver.js"></script>
+    <script src="./mainAutomovel/mainAuto.js"></script>
     <script src="../screenLocation/toDoLocation.js"></script>
     <script src="../screenLocation/locationFinish.js"></script>
-    <script src="../logistics/mainLogistics.js"></script>
+    <script src="../screenLogistics/mainLogistics.js"></script>
 
 
 

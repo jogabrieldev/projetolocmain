@@ -25,7 +25,10 @@ buttonStartCadBens.addEventListener("click", () => {
 
    const containerAppDriver = document.querySelector('.containerAppDriver')
     containerAppDriver.style.display = 'none'
-
+    
+     const containerAppAutomo = document.querySelector('.containerAppAutomo')
+       containerAppAutomo.style.display = 'none'
+       
     const containerAppClient = document.querySelector(".containerAppClient");
     containerAppClient.style.display = "none";
 
@@ -103,52 +106,124 @@ buttonSubmitRegisterGoods.addEventListener("submit" , (event)=>{
   event.preventDefault()
 })
 
-const formRegister = document.querySelector("#formRegisterBens")
-  formRegister.addEventListener("submit", async (event) => {
- event.preventDefault()
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData.entries());
+function isTokenExpired(token) {
+  try {
+      const payload = JSON.parse(atob(token.split('.')[1])); 
+      const expTime = payload.exp * 1000; 
+      return Date.now() > expTime; 
+  } catch (error) {
+      return true; 
+  }
+}
 
-    try {
-      const responseBens = await fetch("/api/bens/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({data}),
-      });
-      if (responseBens.ok) {
-        console.log("deu certo");
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelector('.btnNext').addEventListener('click', async (event) => {
+      event.preventDefault(); // Evita que o formulário recarregue a página
 
+      const token = localStorage.getItem('token'); // Pega o token armazenado no login
+
+      if (!token || isTokenExpired(token)) {
         Toastify({
-          text: "Cadastrado com sucesso",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "green",
+            text: "Sessão expirada. Faça login novamente.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
         }).showToast();
-
-        document.querySelector("#formRegisterBens").reset();
-      } else {
-        Toastify({
-          text: "Erro no cadastro",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-        console.log("deu ruim");
-      }
-
-    } catch (error) {
-      console.log("erro no envio", error);
+    
+        localStorage.removeItem("token"); // Remove o token expirado
+        setTimeout(() => {
+            window.location.href = "/index.html"; // Redireciona para a página de login
+        }, 2000); // Espera 2 segundos para exibir a notificação antes do redirecionamento
+        return;
     }
-  });
 
-  async function loadSelectOptions(url, selectId, fieldName) {
+      if (!$('#formRegisterBens').valid()) {
+        return;
+    }
+      // Captura os valores do formulário
+      const formData = {
+          code: document.querySelector('#code').value,               // Código
+          name: document.querySelector('#name').value,               // Nome
+          cofa: document.querySelector('#cofa').value,               // Família de bem
+          model: document.querySelector('#model').value,             // Modelo
+          serial: document.querySelector('#serial').value,           // Número de Série
+          placa: document.querySelector('#placa').value,             // Placa
+          bensAnmo: document.querySelector('#bensAnmo').value,       // Ano do modelo
+          dtCompra: document.querySelector('#dtCompra').value,       // Data da compra
+          valorCp: document.querySelector('#valorCpMain').value,         // Valor de compra
+          ntFiscal: document.querySelector('#ntFiscal').value,       // Nota Fiscal
+          cofo: document.querySelector('#cofo').value,               // Código do fornecedor
+          kmAtual: document.querySelector('#kmAtual').value,         // KM Atual
+          dtKm: document.querySelector('#dtKm').value,               // Data do KM
+          status: document.querySelector('#status').value,           // Status
+          dtStatus: document.querySelector('#dtStatus').value,       // Data do Status
+          hrStatus: document.querySelector('#hrStatus').value,       // Hora do Status
+          chassi: document.querySelector('#chassi').value,           // Chassi
+          cor: document.querySelector('#cor').value,                 // Cor
+          nuMO: document.querySelector('#nuMO').value,               // nuMO
+          rena: document.querySelector('#rena').value,               // Renavam
+          bensCtep: document.querySelector('#bensCtep').value,       // bensCtep
+          bensAtiv: document.querySelector('#bensAtiv').value,       // Ativo
+          alug: document.querySelector('#alug').value,               // Alugado
+          valorAlug: document.querySelector('#valorAlugMain').value,     // Valor Alugado
+          fabri: document.querySelector('#fabri').value              // Fabricante
+      };
+
+      try {
+          const response = await fetch('http://localhost:3000/api/bens/submit', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify(formData)
+          });
+
+          const result = await response.json();
+
+          console.log('DADOS BENS:' ,formData)
+
+          if (response.ok) {
+              Toastify({
+                  text: "Bem cadastrado com sucesso!",
+                  duration: 3000,
+                  close: true,
+                  gravity: "top",
+                  position: "center",
+                  backgroundColor: "green",
+              }).showToast();
+
+              // Limpar o formulário após o sucesso
+              document.querySelector('#formRegisterBens').reset();
+          } else {
+
+            Toastify({
+              text: `Erro ao cadastrar o bem`,
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "red",
+          }).showToast();
+             
+          }
+      } catch (error) {
+          console.error('Erro ao enviar formulário:', error);
+          alert('Erro ao enviar os dados.');
+      }
+  });
+  validationFormGoods()
+});
+
+
+  async function loadSelectOptions(url, selectId, fieldName , name) {
     try {
         const response = await fetch(url);
         const result = await response.json();
+        
+        console.log('resposta da api:' , result)
         
         // Caso os dados venham aninhados dentro de "data"
         const data = Array.isArray(result) ? result : result.data;
@@ -171,12 +246,17 @@ const formRegister = document.querySelector("#formRegisterBens")
                 return;
             }
 
+            if (!item.hasOwnProperty(name)) {
+              console.warn(`Campo '${name}' não encontrado em`, item);
+              return;
+          }
+
             const option = document.createElement("option");
             option.value = item[fieldName];
-            option.textContent = item[fieldName];
+            option.textContent = item[name];
             select.appendChild(option);
         });
-
+ 
     } catch (error) {
         console.error(`Erro ao carregar os dados para ${selectId}:`, error);
     }
@@ -184,8 +264,8 @@ const formRegister = document.querySelector("#formRegisterBens")
 
 // Chamar a função corretamente ao carregar a página
 document.querySelector('.registerGoods').addEventListener('click' , ()=>{
-  loadSelectOptions("/api/codefamilyben", "cofa", 'fabecode');
-  loadSelectOptions("/api/codeforn", "cofo", 'forncode');
+  loadSelectOptions("/api/codefamilyben", "cofa", 'fabecode'  ,"fabedesc");
+  loadSelectOptions("/api/codeforn", "cofo", 'forncode' , "fornnome");
 });
 
 
@@ -326,6 +406,20 @@ deleteButton.addEventListener("click", async () => {
   const selectedCheckbox = document.querySelector(
     'input[name="selectBem"]:checked'
   );
+
+  const token = localStorage.getItem('token'); 
+
+  if (!token) {
+    Toastify({
+      text: "Você precisa estar autenticado para deletar o bem!",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+      return;
+  }
   if (!selectedCheckbox) {
     Toastify({
       text: "Selecione um Bem para excluir",
@@ -348,14 +442,18 @@ deleteButton.addEventListener("click", async () => {
     return;
   }
 
-  await deleteBem(bemId, selectedCheckbox.closest("tr"));
+  await deleteBem(bemId, selectedCheckbox.closest("tr") , token);
 });
 
 //deleteBens
-async function deleteBem(id, bemItem) {
+async function deleteBem(id, bemItem , token) {
   try {
     const response = await fetch(`/api/delete/${id}`, {
       method: "DELETE",
+      headers:{ 
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`
+      }
     });
     const data = await response.json();
 
@@ -453,7 +551,15 @@ editButton.addEventListener("click", (event) => {
     campos.forEach(({ id, valor }) => {
       const elemento = document.getElementById(id);
       if (elemento) {
-        elemento.value = valor || "";
+
+        if (elemento.type === "date" && valor) {
+          // Formata a data para YYYY-MM-DD, caso seja necessário
+          const dataFormatada = new Date(valor).toISOString().split('T')[0];
+          elemento.value = dataFormatada;
+        } else {
+          elemento.value = valor || ""; 
+        }
+  
       } else {
         console.warn(`Elemento com ID '${id}' não encontrado.`);
       }

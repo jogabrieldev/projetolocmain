@@ -24,6 +24,9 @@ btnCadFabri.addEventListener("click", () => {
   const containerAppDriver = document.querySelector(".containerAppDriver");
   containerAppDriver.style.display = "none";
 
+   const containerAppAutomo = document.querySelector('.containerAppAutomo')
+       containerAppAutomo.style.display = 'none'
+
   const containerAppTypeProd = document.querySelector(".containerAppTipoProd");
   containerAppTypeProd.style.display = "none";
 
@@ -88,64 +91,88 @@ btnOutInitFabriEdit.addEventListener("click", (event) => {
   containerFormFabriRegister.style.display = "none";
 });
 
-const formRegisterFabricante = document.querySelector(
-  ".formRegisterFabricante"
-);
-formRegisterFabricante.addEventListener("submit", async (event) => {
-  event.preventDefault();
-
-  const formData = new FormData(event.target);
-  const data = Object.fromEntries(formData.entries());
-
-  if (
-    Object.keys(data).length === 0 ||
-    Object.values(data).some((val) => val === "")
-  ) {
-    console.log("Formulario Vazio");
-    Toastify({
-      text: "Por favor, preencha o formulário antes de enviar.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
+function isTokenExpired(token) {
+  try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expTime = payload.exp * 1000; 
+      return Date.now() > expTime; 
+  } catch (error) {
+      return true; 
   }
+};
 
-  const response = await fetch("/api/fabri/submit", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelector('.cadFabri').addEventListener('click', async (event) => {
+      event.preventDefault(); 
+
+      const token = localStorage.getItem('token'); 
+
+      if (!token || isTokenExpired(token)) {
+        Toastify({
+            text: "Sessão expirada. Faça login novamente.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+        }).showToast();
+    
+        localStorage.removeItem("token"); 
+        setTimeout(() => {
+            window.location.href = "/index.html"; 
+        }, 2000); 
+        return;
+    }
+
+      if (!$('.formRegisterFabricante').valid()) {
+        return;
+    }
+
+      // Captura os valores do formulário
+      const formData = {
+          fabeCode: document.querySelector('#fabeCode').value,         // Código
+          fabeDesc: document.querySelector('#fabeDesc').value,         // Descrição
+          fabeCate: document.querySelector('#fabeCate').value,         // Categoria
+          fabeSuca: document.querySelector('#fabeSuca').value,         // Subcategoria
+          fabeObs: document.querySelector('#fabeObs').value,           // Observação
+          fabeCtct: document.querySelector('#fabeCtct').value          // Centro de Custo
+      };
+
+      try {
+          const response = await fetch('http://localhost:3000/api/fabri/submit', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify(formData)
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+              Toastify({
+                  text: "Familia do bem cadastrado com sucesso!",
+                  duration: 3000,
+                  close: true,
+                  gravity: "top",
+                  position: "center",
+                  backgroundColor: "green",
+              }).showToast();
+
+              // Limpar o formulário após o sucesso
+              document.querySelector('.formRegisterFabricante').reset();
+          } else {
+              alert(`Erro: ${result.message}`);
+          }
+      } catch (error) {
+          console.error('Erro ao enviar formulário:', error);
+          alert('Erro ao enviar os dados.');
+      }
   });
-
-  if (response.ok) {
-    Toastify({
-      text: "Cadastrado com Sucesso",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "green",
-    }).showToast();
-
-    console.log("deu certo");
-
-    formRegisterFabricante.reset();
-   
-  } else {
-    console.log("deu erro viu");
-
-    Toastify({
-      text: "Erro no cadastro",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-  }
+  validationFormFabric()
 });
+
 
 // listagem de fabricante
 
@@ -243,6 +270,8 @@ btnDeleteFabri.addEventListener("click", async () => {
 
   const fabricanteSelecionado = JSON.parse(selectedCheckbox.dataset.fabricante);
   const fabricanteId = fabricanteSelecionado.fabecode;
+
+  console.log("ID Family", fabricanteId)
 
   const confirmacao = confirm(
     `Tem certeza de que deseja excluir o Fabricante com código ${fabricanteId}?`

@@ -142,7 +142,7 @@ const dbGoods = client
       buscarIdFamiliaBens: async()=>{
          
         try {
-          const result = await dbGoods.query('SELECT fabecode FROM cadfabe')
+          const result = await dbGoods.query('SELECT fabecode , fabedesc FROM cadfabe')
           return result.rows
         } catch (error) {
            console.log('error no model family bens' , error)
@@ -152,7 +152,7 @@ const dbGoods = client
       buscarIdForn: async()=>{
          
         try {
-          const result = await dbGoods.query('SELECT forncode FROM cadforn')
+          const result = await dbGoods.query('SELECT forncode, fornnome FROM cadforn')
           return result.rows
         } catch (error) {
            console.log('error no model fornecedor' , error)

@@ -18,38 +18,33 @@
   margin-left: 0.5%;
   display: flex;
   background-color:  darkgray;
-  width:50%;
+  width:60%;
   height: 250px;
   overflow: auto;
   border: 2px solid white;
 }
 
-#tableWithAllLocation{
-  padding: 8px;
-  width: 50%;
-  height: 50px;
-}
+
 .need{
-  margin-left: 0.5%;
+  margin-right: 0.5%;
   display: flex;
   background-color:  darkgray;
-  width:50%;
-  height: 250px;
-  overflow: auto;
+  width:30%;
+  height: 200px;
   align-items: center;
   justify-content: center;
   border: 2px solid white;
 }
 #tableGoodsVsRequestPending{
-  width: 40%;
-  height: 50px;
-}
-#tableGoodsVsRequestPending thead{
-  background-color: aliceblue;
+  width:70%;
 }
 #tableGoodsVsRequestPending th{
-  color: rgb(224, 216, 216);
+  width: 100%;
 }
+#tableGoodsVsRequestPending td{
+  width: 100%;
+}
+
 
 .logisticsMainBottom{
   display: flex;
@@ -58,7 +53,11 @@
 }
 
 .validadeFamily{
-  width:50%;
-  height: 250px;
+  width:70%;
+  height: 220px;
   border: 2px solid white;
+}
+
+thead{
+  width:10%;
 }

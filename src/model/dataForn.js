@@ -65,7 +65,7 @@ const userDbFo = client
 
        deleteForn: async (id) => {
         try {
-          // Verifica se existem bens cadastrados para esse fornecedor
+          
           const checkQuery = "SELECT COUNT(*) FROM cadbens WHERE benscofo = $1";
           const checkResult = await userDbFo.query(checkQuery, [id]);
       
@@ -73,7 +73,7 @@ const userDbFo = client
             return { error: "Não é possível excluir. Existem bens vinculados a este fornecedor." };
           }
       
-          // Exclui o fornecedor se não houver bens associados
+         
           const deleteQuery = "DELETE FROM cadforn WHERE forncode = $1 RETURNING *";
           const result = await userDbFo.query(deleteQuery, [id]);
       

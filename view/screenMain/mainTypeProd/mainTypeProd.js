@@ -18,6 +18,9 @@ btnInitCadTypeProd.addEventListener('click' , ()=>{
 
      const containerAppDriver = document.querySelector('.containerAppDriver')
        containerAppDriver.style.display = 'none'
+
+       const containerAppAutomo = document.querySelector('.containerAppAutomo')
+       containerAppAutomo.style.display = 'none'
       
        const containerFormRegisterTp = document.querySelector('.formRegisterTipoProd')
           containerFormRegisterTp.style.display = 'none'
@@ -46,9 +49,9 @@ btnRegisterTp.addEventListener('click' , ()=>{
      const registerTp = document.querySelector('.formRegisterTipoProd')
       registerTp.style.display = 'flex'
      const listingTp = document.querySelector('.listingTipoProd')
-      btnMainPage.style.display = 'none'
+     listingTp.style.display = 'none'
      const btnMainPage = document.querySelector('.btnMainPageTipoProd')
-      listingTp.style.display = 'none'
+     btnMainPage.style.display = 'none'
      
 
 });
@@ -91,82 +94,87 @@ btnOutInitTpEdit.addEventListener('click' , (e)=>{
 
      const btnMainPage = document.querySelector('.btnMainPageTipoProd')
       btnMainPage.style.display = 'flex'
-})
+});
 
-// const buttonEditTipoProd = document.querySelector('.buttonEditTipoProd')
-// buttonEditTipoProd.addEventListener('click' , ()=>{
-  
-//      const containerRegisterEdit = document.querySelector('.containerRegisterEdit')
-//       containerRegisterEdit.style.display = 'flex'
-
-//      const listingTp = document.querySelector('.listingTipoProd')
-//       listingTp.style.display = 'none'
-
-//      const btnMainPage = document.querySelector('.btnMainPageTipoProd')
-//       btnMainPage.style.display = 'none'
-// })
-
-
-//registro do tipo do produto
-const formRegisterTypeProd = document.querySelector('.formRegisterTipoProd')
-formRegisterTypeProd.addEventListener('submit' , async (event)=>{
-    event.preventDefault()
-    
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData.entries());
-
-  if (
-    Object.keys(data).length === 0 ||
-    Object.values(data).some((val) => val === "")
-  ) {
-    console.log("Formulario Vazio");
-    Toastify({
-      text: "Por favor, preencha o formulário antes de enviar.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
+function isTokenExpired(token) {
+  try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expTime = payload.exp * 1000; 
+      return Date.now() > expTime; 
+  } catch (error) {
+      return true; 
   }
+};
 
-    await fetch('/api/typeprod/submit', {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    }).then((response) => {
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelector('.cadTp').addEventListener('click', async (event) => {
+      event.preventDefault(); 
 
-      if (response.ok) {
-        console.log("deu certo");
+      const token = localStorage.getItem('token'); 
 
+      if (!token || isTokenExpired(token)) {
         Toastify({
-          text: "Cadastrado com Sucesso",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "green",
+            text: "Sessão expirada. Faça login novamente.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
         }).showToast();
     
-        document.querySelector(".formRegisterTipoProdu").reset();
+        localStorage.removeItem("token"); 
+        setTimeout(() => {
+            window.location.href = "/index.html"; 
+        }, 2000); 
         return;
-        
-      } else {
-        console.log("deu erro viu");
+    }
+      if (!$('.formRegisterTipoProdu').valid()) {
+        return;
+    }
 
-        Toastify({
-          text: "Erro no cadastro",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
+      // Captura os valores do formulário
+      const formData = {
+          tpCode: document.querySelector('#tpCode').value,         // Código
+          tpDesc: document.querySelector('#tpDesc').value,         // Descrição
+          tpCat: document.querySelector('#tpCat').value,           // Categoria
+          tpSubCat: document.querySelector('#tpSubCat').value,     // Subcategoria
+          tpObs: document.querySelector('#tpObs').value,           // Observação
+          tpCtct: document.querySelector('#tpCtct').value          // Centro de Custo
+      };
+
+      try {
+          const response = await fetch('http://localhost:3000/api/typeprod/submit', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify(formData)
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+              Toastify({
+                  text: "Tipo de produto cadastrado com sucesso!",
+                  duration: 3000,
+                  close: true,
+                  gravity: "top",
+                  position: "center",
+                  backgroundColor: "green",
+              }).showToast();
+
+              // Limpar o formulário após o sucesso
+              document.querySelector('.formRegisterTipoProdu').reset();
+          } else {
+              alert(`Erro: ${result.message}`);
+          }
+      } catch (error) {
+          console.error('Erro ao enviar formulário:', error);
+          alert('Erro ao enviar os dados.');
       }
-    }).catch((error)=>{
-      console.error("deu erro no envio", error);
-    });
+  });
+  validationFormTipoProd()
 });
 
 //listagem do tipo do produto

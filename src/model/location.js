@@ -11,7 +11,6 @@ const dataLocation = client
   
       const clienteQuery = `SELECT cliecode FROM cadclie WHERE clienome = $1 AND cliecpf = $2`;
 
-     
   
       if (!cllonmlo || !cllodtdv || !cllodtlo || !cllopgmt || !clloidcl || !clloclno ||  !cllocpf) {
         console.error("Erro: Algum valor está indefinido!", { cllonmlo, cllodtdv, cllodtlo, cllopgmt, clloidcl,  cllocpf });

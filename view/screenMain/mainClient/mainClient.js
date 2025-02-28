@@ -23,6 +23,9 @@ btnRegisterClient.addEventListener("click", () => {
 
   const containerAppDriver = document.querySelector('.containerAppDriver')
     containerAppDriver.style.display = 'none'
+
+     const containerAppAutomo = document.querySelector('.containerAppAutomo')
+       containerAppAutomo.style.display = 'none'
     
   const containerAppTypeProd = document.querySelector('.containerAppTipoProd')
   containerAppTypeProd.style.display = 'none'
@@ -100,82 +103,102 @@ buttonToBack.addEventListener("click", () => {
   containerAppClient.style.display = "none";
 });
 
-
-// $('#formRegisterClient').on('submit' , function(event){
-//    event.preventDefault()
-
-//    var valorSemMascara = $('#cpf').cleanVal(); 
-
-//   console.log(" cpf sem mascara" , valorSemMascara)
-// })
-
-//fetch register
-const formRegisterClient = document.querySelector("#formRegisterClient");
-formRegisterClient.addEventListener("submit", async (event) => {
-  event.preventDefault();
- 
-  var valorSemMascara = $('#cpf').cleanVal(); 
-
-  console.log(" cpf sem mascara" , valorSemMascara)
-
-  const formData = new FormData(event.target);
-  const data = Object.fromEntries(formData.entries());
-
-  if (
-    Object.keys(data).length === 0 ||
-    Object.values(data).some((val) => val === "")
-  ) {
-    console.log("Formulario Vazio");
-    Toastify({
-      text: "Por favor, preencha o formulário antes de enviar.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
-  }
-      
+function isTokenExpired(token) {
   try {
-     const response = await fetch("/api/client/submit", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(data),
-    });
-      if (response.ok) {
-
-        console.log("Cadastro concluido co sucesso");
-
-        Toastify({
-          text: "Cadastrado com Sucesso",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "green",
-        }).showToast();
-
-        formRegisterClient.reset();
-
-      } else {
-
-        console.log("deu erro viu");
-
-        Toastify({
-          text: "Erro no cadastro",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-      }
-    
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expTime = payload.exp * 1000; 
+      return Date.now() > expTime; 
   } catch (error) {
-    console.error("deu erro no envio", error);
+      return true; 
   }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelector('.btnRegisterClient').addEventListener('click', async (event) => {
+
+      event.preventDefault();
+      const token = localStorage.getItem('token'); 
+       
+      if (!token || isTokenExpired(token)) {
+        Toastify({
+            text: "Sessão expirada. Faça login novamente.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+        }).showToast();
+    
+        localStorage.removeItem("token"); 
+        setTimeout(() => {
+            window.location.href = "/index.html"; 
+        }, 2000); 
+        return;
+    }
+      
+      if (!$('#formRegisterClient').valid()) {
+        return;
+    }
+
+      // Captura os valores do formulário
+      const formData = {
+          clieCode: document.querySelector('#clieCode').value,            // Codigo
+          clieName: document.querySelector('#clieName').value,            // Nome
+          cpf: document.querySelector('#cpf').value,                      // CPF
+          dtCad: document.querySelector('#dtCad').value,                  // Data de Cadastro
+          dtNasc: document.querySelector('#dtNasc').value,                // Data de Nascimento
+          clieCelu: document.querySelector('#clieCelu').value,            // Celular
+          clieCity: document.querySelector('#clieCity').value,            // Cidade
+          clieEstd: document.querySelector('#clieEstd').value,            // Estado
+          clieRua: document.querySelector('#clieRua').value,              // Rua
+          clieCep: document.querySelector('#clieCep').value,              // Cep
+          clieMail: document.querySelector('#clieMail').value             // E-mail
+      };
+        
+      try {
+          const response = await fetch('http://localhost:3000/api/client/submit', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify(formData)
+          });
+
+          const result = await response.json();
+          
+          if (response.ok) {
+              Toastify({
+                  text: "Cliente cadastrado com Sucesso",
+                  duration: 3000,
+                  close: true,
+                  gravity: "top",
+                  position: "center",
+                  backgroundColor: "green",
+              }).showToast();
+
+              // Limpar o formulário após o sucesso
+              document.querySelector('#formRegisterClient').reset();
+          } else {
+            Toastify({
+              text: "Erro ao cadastrar Cliente",
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "green",
+          }).showToast();
+          
+          }
+      } catch (error) {
+          console.error('Erro ao enviar formulário:', error);
+          alert('Erro ao enviar os dados para o server.');
+      }
+  });
+
+  validationFormClient();
 });
+
 
 //fetch listClient
 
@@ -382,7 +405,6 @@ editButtonClient.addEventListener("click", () => {
 
   try {
     const clientSelecionado = JSON.parse(clientData);
-    console.log("Editar cliente:", clientSelecionado);
 
     const formatDate = (isoDate) => {
       if (!isoDate) return "";
@@ -412,7 +434,15 @@ editButtonClient.addEventListener("click", () => {
     campos.forEach(({ id, valor }) => {
       const elemento = document.getElementById(id);
       if (elemento) {
-        elemento.value = valor !== null && valor !== undefined ? valor : "";; // Preencher com valor ou vazio
+        
+        if (elemento.type === "date" && valor) {
+          // Formata a data para YYYY-MM-DD, caso seja necessário
+          const dataFormatada = new Date(valor).toISOString().split('T')[0];
+          elemento.value = dataFormatada;
+        } else {
+          elemento.value = valor || ""; 
+        }
+      
       } else {
         console.warn(`Elemento com ID '${id}' não encontrado.`);
       }

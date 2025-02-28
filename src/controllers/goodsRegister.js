@@ -5,7 +5,7 @@ import {goodsRegister} from "../model/dataGoods.js";
 
   async registerBens(req, res) {
     try {
-      const {data}  = req.body;
+      const data  = req.body;
 
       const newUser = await goodsRegister.registerOfBens(data);
       res.status(201).json({ success: true, user: newUser });

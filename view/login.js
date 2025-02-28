@@ -1,4 +1,5 @@
 
+
 //iconPassword
 function showPassword() {
   const inputPassword = document.querySelector("#pin");
@@ -27,51 +28,52 @@ document.querySelector("#formLogin").addEventListener("submit", async (event) =>
         headers: {"Content-Type":"application/json"},
         body: JSON.stringify({username , password})
        })
-       .then((responseData)=>{
-
-        if(responseData.ok) {
-          // console.log(response);
-            //  alert('Usuario acessou')
-            Toastify({
-              text: "Login com sucesso",
-              duration: 2000,
-              destination: "https://github.com/apvarun/toastify-js",
-              newWindow: true,
-              close: true,
-              gravity: "top", 
-              position: "center", 
-              stopOnFocus: true, 
-              style: {
-                background: "green",
-              },
-              onClick: function(){} // Callback after click
-            }).showToast();
-
-            setTimeout(() => {
-              window.location.href = 'screenMain/main.html';
-            }, 2000);
-
-            
-        } else {
+       .then((responseData)=> responseData.json())
+       .then((response)=>{
+        if(response.token) {
+          localStorage.setItem('token' ,  response.token )
           Toastify({
-            text: "Usuario invalido",
+            text: "Login com sucesso",
             duration: 3000,
             destination: "https://github.com/apvarun/toastify-js",
             newWindow: true,
             close: true,
-            gravity: "top",
+            gravity: "top", 
             position: "center", 
             stopOnFocus: true, 
             style: {
-              background: "red",
+              background: "green",
             },
             onClick: function(){} // Callback after click
           }).showToast();
 
-          console.log("deu errado");
-        }
+          setTimeout(() => {
+            window.location.href = 'screenMain/main.html';
+          }, 2000);
+
+          
+      } else {
+        Toastify({
+          text: "Usuario invalido",
+          duration: 3000,
+          destination: "https://github.com/apvarun/toastify-js",
+          newWindow: true,
+          close: true,
+          gravity: "top",
+          position: "center", 
+          stopOnFocus: true, 
+          style: {
+            background: "red",
+          },
+          onClick: function(){} // Callback after click
+        }).showToast();
+
+        console.log("deu errado");
+      }
        })
+        
+  })
       
       
    
-});
+
