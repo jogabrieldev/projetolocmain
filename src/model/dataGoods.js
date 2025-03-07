@@ -1,40 +1,38 @@
 // const db = require("../database/dataBaseSgt");
-import {client} from "../database/userDataBase.js";
-const dbGoods = client
+import { client } from "../database/userDataBase.js";
+const dbGoods = client;
 
+export const goodsRegister = {
+  registerOfBens: async (data) => {
+    const {
+      code,
+      name,
+      cofa,
+      model,
+      serial,
+      placa,
+      bensAnmo,
+      dtCompra,
+      valorCp,
+      ntFiscal,
+      cofo,
+      kmAtual,
+      dtKm,
+      status,
+      dtStatus,
+      hrStatus,
+      chassi,
+      cor,
+      nuMO,
+      rena,
+      bensCtep,
+      bensAtiv,
+      alug,
+      valorAlug,
+      fabri,
+    } = data;
 
- export const goodsRegister  =  {
-   
-    registerOfBens: async (data) => {
-        const {
-          code,
-          name,
-          cofa,
-          model,
-          serial,
-          placa,
-          bensAnmo,
-          dtCompra,
-          valor,
-          ntFiscal,
-          cofo,
-          kmAtual,
-          dtKm,
-          status,
-          dtStatus,
-          hrStatus,
-          chassi,
-          cor,
-          nuMO,
-          rena,
-          bensCtep,
-          bensAtiv,
-          alug,
-          valorAlug,
-          fabri,
-        } = data;
-    
-        const insert = `
+    const insert = `
         INSERT INTO cadbens(
            benscode , bensnome, benscofa, bensmode, bensnuse, bensplac, bensanmo, bensdtcp, bensvacp, 
           bensnunf, benscofo, benskmat, bensdtkm, bensstat, bensdtus, benshrus, bensnuch, 
@@ -42,63 +40,70 @@ const dbGoods = client
         ) VALUES (
           $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25
         ) RETURNING *`;
-    
-        const values = [
-          code,
-          name,
-          cofa,
-          model,
-          serial,
-          placa,
-          bensAnmo,
-          dtCompra,
-          valor,
-          ntFiscal,
-          cofo,
-          kmAtual,
-          dtKm,
-          status,
-          dtStatus,
-          hrStatus,
-          chassi,
-          cor,
-          nuMO,
-          rena,
-          bensCtep,
-          bensAtiv,
-          alug,
-          valorAlug,
-          fabri,
-        ];
 
-        await dbGoods.query("BEGIN")
-    
-        const result = await dbGoods.query(insert, values);
+    const values = [
+      code,
+      name,
+      cofa,
+      model,
+      serial,
+      placa,
+      bensAnmo,
+      dtCompra,
+      valorCp,
+      ntFiscal,
+      cofo,
+      kmAtual,
+      dtKm,
+      status,
+      dtStatus,
+      hrStatus,
+      chassi,
+      cor,
+      nuMO,
+      rena,
+      bensCtep,
+      bensAtiv,
+      alug,
+      valorAlug,
+      fabri,
+    ];
 
-        await dbGoods.query("COMMIT")
-        return result.rows[0];
-      },
-    
-      listingBens: async () => {
-        try {
-          const query = "SELECT * FROM cadbens";
-          const result = await dbGoods.query(query);
-    
-          return result.rows;
-        } catch (error) {
-          console.error("Erro ao listar bens:", error.message);
-        }
-      },
-    
-      deleteBens: async (id) => {
-        const delet = "DELETE FROM cadbens WHERE benscode = $1 RETURNING *";
-        const result = await dbGoods.query(delet, [id]);
-    
-        return result.rows[0];
-      },
-    
-      updateBens: async (id, updateBem) => {
-        const query = `
+    await dbGoods.query("BEGIN");
+
+    const result = await dbGoods.query(insert, values);
+
+    await dbGoods.query("COMMIT");
+    return result.rows[0];
+  },
+
+  listingBens: async () => {
+    try {
+      const query = "SELECT * FROM cadbens";
+      const result = await dbGoods.query(query);
+
+      return result.rows;
+    } catch (error) {
+      console.error("Erro ao listar bens:", error.message);
+    }
+  },
+
+  deleteBens: async (id) => {
+    const checkQuery = "SELECT * FROM locafim WHERE lofiidbe = $1";
+    const checkResult = await dbGoods.query(checkQuery, [id]);
+
+    if (checkResult.rowCount > 0) {
+      // Se encontrar registros, lança um erro ou retorna uma mensagem específica
+      throw new Error("O bem está em locação e não pode ser excluído.");
+    }
+    const delet = "DELETE FROM cadbens WHERE benscode = $1 RETURNING *";
+    const result = await dbGoods.query(delet, [id]);
+
+    return result.rows[0];
+  },
+
+  updateBens: async (id, updateBem) => {
+    const query = `
             UPDATE cadbens
             SET 
                  bensnome = $1, benscofa = $2, bensmode = $3, bensnuse = $4, bensplac = $5, bensanmo = $6, bensdtcp = $7, bensvacp = $8, 
@@ -107,55 +112,71 @@ const dbGoods = client
             WHERE benscode = $25
             RETURNING *;
         `;
-        const values = [
-          updateBem.bensnome || null,
-          updateBem.benscofa || null,
-          updateBem.bensmode || null,
-          updateBem.bensnuse || null,
-          updateBem.bensplac || null,
-          updateBem.bensanmo || null,
-          updateBem.bensdtcp || null,
-          updateBem.bensvacp || null,
-          updateBem.bensnunf || null,
-          updateBem.benscofo || null,
-          updateBem.benskmat || null,
-          updateBem.bensdtkm || null,
-          updateBem.bensstat || null,
-          updateBem.bensdtus || null,
-          updateBem.benshrus || null,
-          updateBem.bensnuch || null,
-          updateBem.benscore || null,
-          updateBem.bensnumo || null,
-          updateBem.bensrena || null,
-          updateBem.bensctep || null,
-          updateBem.bensativ || null,
-          updateBem.bensalug || null,
-          updateBem.bensvaal || null,
-          updateBem.bensfabr || null,
-          id,
-        ];
-        const result = await dbGoods.query(query, values);
-    
-        return result.rows[0];
-      },
+    const values = [
+      updateBem.bensnome || null,
+      updateBem.benscofa || null,
+      updateBem.bensmode || null,
+      updateBem.bensnuse || null,
+      updateBem.bensplac || null,
+      updateBem.bensanmo || null,
+      updateBem.bensdtcp || null,
+      updateBem.bensvacp || null,
+      updateBem.bensnunf || null,
+      updateBem.benscofo || null,
+      updateBem.benskmat || null,
+      updateBem.bensdtkm || null,
+      updateBem.bensstat || null,
+      updateBem.bensdtus || null,
+      updateBem.benshrus || null,
+      updateBem.bensnuch || null,
+      updateBem.benscore || null,
+      updateBem.bensnumo || null,
+      updateBem.bensrena || null,
+      updateBem.bensctep || null,
+      updateBem.bensativ || null,
+      updateBem.bensalug || null,
+      updateBem.bensvaal || null,
+      updateBem.bensfabr || null,
+      id,
+    ];
+    const result = await dbGoods.query(query, values);
 
-      buscarIdFamiliaBens: async()=>{
-         
-        try {
-          const result = await dbGoods.query('SELECT fabecode , fabedesc FROM cadfabe')
-          return result.rows
-        } catch (error) {
-           console.log('error no model family bens' , error)
-        }
-      },
+    return result.rows[0];
+  },
 
-      buscarIdForn: async()=>{
-         
-        try {
-          const result = await dbGoods.query('SELECT forncode, fornnome FROM cadforn')
-          return result.rows
-        } catch (error) {
-           console.log('error no model fornecedor' , error)
-        }
-      }
- };
+  buscarIdFamiliaBens: async () => {
+    try {
+      const result = await dbGoods.query(
+        "SELECT fabecode , fabedesc FROM cadfabe"
+      );
+      return result.rows;
+    } catch (error) {
+      console.log("error no model family bens", error);
+    }
+  },
+
+  buscarIdForn: async () => {
+    try {
+      const result = await dbGoods.query(
+        "SELECT forncode, fornnome FROM cadforn"
+      );
+      return result.rows;
+    } catch (error) {
+      console.log("error no model fornecedor", error);
+    }
+  },
+
+  updateStatus: async (bemId, bensstat) => {
+    const query = `
+            UPDATE cadbens
+            SET bensstat = $1
+            WHERE benscode = $2
+            RETURNING *;
+        `;
+
+    const values = [bensstat, bemId];
+    const result = await dbGoods.query(query, values);
+
+    return result.rows[0];
+  },
+};

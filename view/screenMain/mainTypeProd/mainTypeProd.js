@@ -357,7 +357,7 @@ btnEditTp.addEventListener('click' , ()=>{
 
   try {
     const typeProdutoSelecionado = JSON.parse(typeProdutoData);
-    // console.log("Editar item:", produtoSelecionado);
+    console.log("Editar item:", typeProdutoSelecionado);
 
     // Campos e IDs correspondentes
     const campos = [

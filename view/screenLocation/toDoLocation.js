@@ -1,10 +1,3 @@
-// document.querySelector(".btnCadBens").style.display = "none";
-// document.querySelector(".btnCadClie").style.display = "none";
-// document.querySelector(".btnCadForn").style.display = "none";
-// document.querySelector(".btnCadProd").style.display = "none";
-// document.querySelector(".btnCadFabri").style.display = "none";
-// document.querySelector(".btnCadTypeProd").style.display = "none";
-// document.querySelector(".btnCadMotorista").style.display = "none";
 
 
 const btnAtivRegister = document.querySelector(".btnAtivRegister");
@@ -170,9 +163,7 @@ function verificarPreenchimentoCliente() {
     return input && input.value.trim() !== "";
   });
 
-  if (todosPreenchidos) {
-    gerarNumeroLocacao();
-  }
+  
 }
 
 const searchClient = document.querySelector("#search");
@@ -244,7 +235,7 @@ searchClient.addEventListener("click", async (event) => {
         backgroundColor: "orange",
       }).showToast();
     } else if (clienteEncontrado.length === 1) {
-      // Preencher os campos com os dados do único cliente encontrado
+     
       const primeiroCliente = clienteEncontrado[0];
       document.getElementById("nameClient").value =
         primeiroCliente.clienome || "";
@@ -292,7 +283,6 @@ searchClient.addEventListener("click", async (event) => {
   }
 });
 
-// familia de bens locados
 async function carregarFamilias() {
   try {
     const response = await fetch("/api/codefamilybens");
@@ -359,15 +349,6 @@ async function handleSubmit() {
     const dataInicio = document.getElementById(`dataInicio${i}`)?.value || "";
     const dataFim = document.getElementById(`dataFim${i}`)?.value || "";
 
-    console.log(`Dados do grupo ${i}:`, {
-      codeBen,
-      observacao,
-      dataInicio,
-      dataFim,
-      quantidade,
-      produto,
-    });
-
     if (
       codeBen &&
       dataFim &&
@@ -400,8 +381,9 @@ async function handleSubmit() {
     }).showToast();
     return;
   }
-
-  console.log("Array de bens final:", bens);
+  if(bens.length >= 1){
+    gerarNumeroLocacao();
+  }
 
   try {
     const numericLocation = document.querySelector("#numeroLocation").value;
@@ -435,7 +417,7 @@ async function handleSubmit() {
       pagament,
       bens,
     };
-
+      
     const response = await fetch("/api/datalocation", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -570,7 +552,6 @@ async function gerarContrato() {
     <p><strong>CPF do Cliente:</strong> ${cpfCliente}</p>
     <p><strong>Data da Locação:</strong> ${dataLocacao}</p>
     <p><strong>Data de Devolução:</strong> ${dataDevolucao}</p>
-    <p><strong>Numero da Locação:</strong> ${numericLocation}</p>
     <p><strong>Forma de Pagamento:</strong> ${pagamento}</p>
     <hr>
     <p><strong>Itens Locados:</strong></p>
@@ -668,121 +649,4 @@ formRegisterClientLoc.addEventListener("submit", async (event) => {
  
 
 
-// Editar locação
 
-const buttonEditLocation = document.querySelector(".buttonEditLocation");
-
-buttonEditLocation.addEventListener("click", async () => {
-  // Obter o checkbox selecionado
-  const selectedCheckbox = document.querySelector(
-    'input[name="selecionarLocacao"]:checked'
-  );
-
-  if (!selectedCheckbox) {
-    Toastify({
-      text: "Selecione uma Locação para editar",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
-  }
-
-  // ID da locação selecionada
-  const locationId = selectedCheckbox.value;
-
-  const formatDate = (isoDate) => {
-    if (!isoDate) return "";
-    const dateObj = new Date(isoDate);
-    return `${dateObj.getFullYear()}/${String(
-      dateObj.getMonth() + 1
-    ).padStart(2, "0")}/${String(dateObj.getDate()).padStart(2, "0")}`;
-  };
-
-  // Buscar os dados da API
-  try {
-    const response = await fetch("/api/location");
-    const result = await response.json();
-
-    const clientLoc = await result.clientes
-    const goodsLoc = await result.bens
-    
-    console.log('cliente' , clientLoc)
-    console.log('bens' , goodsLoc)
-
-    // Procurar a locação correspondente ao ID
-    const consolidatedLocations = clientLoc.map((cliente) => {
-      const bensCliente = goodsLoc.filter(
-        (ben) => ben.beloidcl === cliente.clloid
-      );
-
-      return {
-         ...cliente,           // Inclui os dados do cliente
-        ... bensCliente,    // Adiciona os bens associados ao cliente
-      };
-    });
-
-    // Procurar a locação correspondente ao ID
-    const locationToEdit = consolidatedLocations.find(
-      (loc) => loc.cllonmlo === locationId
-    );
-
-    console.log('locação final' , locationToEdit)
-
-    if (locationToEdit) {
-      // Mostrar a área de edição
-      const contentMain = document.querySelector(".contentEditlocation");
-      contentMain.style.display = "flex";
-
-      // Esconder o botão inicial
-      const btnInitPageMainLoc = document.querySelector(".btnInitPageMainLoc");
-      btnInitPageMainLoc.style.display = "none";
-
-      // Preencher os campos com os dados obtidos
-      document.querySelector("#numeroLocationEdit").value = locationToEdit.cllonmlo || "";
-      document.querySelector("#dataLocEdit").value = locationToEdit.cllodtlo
-        
-      document.querySelector("#DataDevoEdit").value = locationToEdit.cllodtdv
-        
-      document.querySelector("#pagamentEdit").value = locationToEdit.cllopgmt || "";
-
-      // Preencher os campos adicionais da família de bens
-      document.querySelector("#family1").value = locationToEdit.bencodb || "";
-      document.querySelector("#produto1").value = locationToEdit.beloben || "";
-      document.querySelector("#dataInicio1").value = formatDate((locationToEdit.belodtin))
-        
-      document.querySelector("#dataFim1").value = formatDate((locationToEdit.belodtfi))
-     
-
-      Toastify({
-        text: "Locação carregada para edição!",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "green",
-      }).showToast();
-    } else {
-      Toastify({
-        text: "Erro ao carregar a locação. Tente novamente.",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-    }
-  } catch (error) {
-    console.error("Erro ao buscar os dados da API:", error);
-    Toastify({
-      text: "Erro ao buscar os dados. Verifique a conexão.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-  }
-});

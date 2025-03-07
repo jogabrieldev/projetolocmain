@@ -1,6 +1,10 @@
 import {dbClient } from '../config/dbConfigClient.js'
 import pgk from 'pg'
 const {Pool} = pgk
+// import dotenv from 'dotenv';
+// dotenv.config();
+
+
 
 const client = new Pool(dbClient )
 client.connect().then((res)=>{

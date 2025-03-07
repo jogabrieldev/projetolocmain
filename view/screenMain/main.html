@@ -24,6 +24,8 @@
          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
          <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script> 
          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
    
     <title>Screen main</title>
 </head>
@@ -52,6 +54,8 @@
                 <br>
                 <li><button class="btnLogistic" onclick=" locationPendente()">Logistica</button></li>
                 <br>
+                <li><button class="delivery">Entrega</button></li>
+                <br>
                 <li><button class="btnCadBens" style="display: none;" >Bens</button></li>
                 <br>
                 <li><button class="btnCadClie" style="display: none;" >Clientes</button></li>
@@ -71,9 +75,6 @@
                 
             </ul>
 
-            
-      
-          
             <span class="material-symbols-outlined">
                 exit_to_app
             </span>
@@ -175,13 +176,13 @@
                            <label for="statusEdit">Status</label>
                         <select name="statusEdit" id="statusEdit">
                             <option value="">Selecione...</option>
-                           <option value="Disponivel">DP</option>
-                           <option value="Em locação">EL</option>
-                           <option value="Saida do cliente">SC</option>
-                           <option value="Saida do aterro">SA</option>
-                           <option value="Saida do aterro para o cliente">AC</option>
-                           <option value="Transito para o cliente">TC</option>
-                           <option value="Cliente para o aterro">CA</option>
+                           <option value="Disponivel">Disponivel</option>
+                           <option value="Em locação">Em Locação</option>
+                           <option value="Saida do cliente">Saida do Cliente</option>
+                           <option value="Saida do aterro">Saida do Aterro</option>
+                           <option value="Saida do aterro para o cliente">Saida do aterro para o cliente</option>
+                           <option value="Transito para o cliente">Transito para o cliente</option>
+                           <option value="Cliente para o aterro">cliente para o aterro</option>
                         </select>
                    </div>
 
@@ -333,15 +334,15 @@
                                
                          <div class="inputGroup">
                                 <label for="status">Status</label>
-                             <select name="status" id="status">
+                                <select name="status" id="status">
                                 <option value="">Selecione...</option>
-                                <option value="Disponivel">DP</option>
-                                <option value="Em locação">EL</option>
-                                <option value="Saida do cliente">SC</option>
-                                <option value="Saida do aterro">SA</option>
-                                <option value="Saida do aterro para o cliente">AC</option>
-                                <option value="Transito para o cliente">TC</option>
-                                <option value="Cliente para o aterro">CA</option>
+                                <option value="Disponivel">Disponivel</option>
+                                <option value="Em locação">Em Locação </option>
+                                <option value="Saida do cliente">Saida do cliente</option>
+                                <option value="Saida do aterro">Saida do aterro</option>
+                                <option value="Saida do aterro para o cliente">Saida do aterro para o cliente</option>
+                                <option value="Transito para o cliente">Transito para o cliente</option>
+                                <option value="Cliente para o aterro">Cliente para o aterro</option>
                              </select>
                         </div>
 
@@ -366,7 +367,7 @@
                         </div>
 
                         <div class="inputGroup">
-                            <label for="nuMO">nuMO </label>
+                            <label for="nuMO">Numero</label>
                             <input type="number" name="nuMO" id="nuMO" placeholder="bensNumo" maxlength="15">
                         </div>
 
@@ -887,12 +888,12 @@
                     </div>
     
                     <div class="inputGroup">
-                        <label for="prodPeli">prodPeli</label>
+                        <label for="prodPeli">Preço Liquido</label>
                         <input type="text" name="prodPeli" id="editProdPeli" placeholder="" maxlength="6">
                     </div>
     
                     <div class="inputGroup">
-                        <label for="forCelu">prodPebr</label>
+                        <label for="forCelu">Preço Bruto</label>
                         <input type="text" name="prodPebr" id="editProdPebr" placeholder="" maxlength="10">
                     </div>
     
@@ -1877,6 +1878,9 @@
         
       <label for="numberLocation">Numero da locação</label>
       <input type="number" name="numberLocation" id="numberLocation">
+       
+      <label for="status">Status</label>
+      <input type="text" name="status" id="status">
 
       <label for="nameClient"> Nome do Cliente</label>
       <input type="text" name="nameClient" id="nameClientSearch">
@@ -1903,7 +1907,7 @@
           </div>
 
           <div class="need">
-             <!-- <p>Necessidade x disponibilidade</p> -->
+             <h4>Necessidade vs Disponibilidade</h4>
           </div>
     </div>
 
@@ -1912,11 +1916,12 @@
 
          </div>
 
-         <!-- <div class="availabilityCheck">
 
-         </div> -->
     </div>
+</section>
 
+<section class="modal" style="display: none;">
+   <!-- informações para lincar o bem na locação -->
 </section>
 
          
@@ -1937,7 +1942,6 @@
     <script src="../screenLocation/toDoLocation.js"></script>
     <script src="../screenLocation/locationFinish.js"></script>
     <script src="../screenLogistics/mainLogistics.js"></script>
-
 
 
 </body>

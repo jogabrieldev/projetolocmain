@@ -35,6 +35,8 @@ async function frontLocation() {
     const clientes = data.clientes || [];
     const bens = data.bens || [];
 
+    console.log('meus bens loca' , bens )
+
     if (clientes.length === 0 || bens.length === 0) {
       document.querySelector(
         ".tableLocation"
@@ -67,6 +69,7 @@ async function frontLocation() {
             codigoBem: bem.bencodb,
             produto: bem.beloben,
             quantidade: bem.beloqntd,
+            status: bem.belostat,
             observacao: bem.beloobsv || "Sem observação",
             dataInicio: formatDate(bem.belodtin),
             dataFim: formatDate(bem.belodtfi),
@@ -130,9 +133,10 @@ function renderTable(data) {
                         .map(
                           (locacao) => `
                             <tr>
-                                <td><input type="checkbox" name="selecionarLocacao" value="${locacao.numeroLocacao}"></td>
+                                <td><input type="checkbox" name="selecionarLocacao" class="locacao-checkbox" 
+                                         data-locacao="${locacao.numeroLocacao}"></td>
                                 <td>${locacao.numeroLocacao}</td>
-                                <td>Pendente</td>
+                                <td>${locacao.status}</td>
                                 <td>${locacao.nomeCliente}</td>
                                 <td>${locacao.cpfCliente}</td>
                                 <td>${locacao.dataLocacao}</td>
@@ -154,6 +158,18 @@ function renderTable(data) {
         </table>
     `;
   console.log('MEUS DADOS ' ,  data)
+
+  document.querySelectorAll(".locacao-checkbox").forEach((checkbox) => {
+    checkbox.addEventListener("change", (event) => {
+      const locacaoID = event.target.dataset.locacao;
+      const isChecked = event.target.checked;
+
+      document.querySelectorAll(`.locacao-checkbox[data-locacao="${locacaoID}"]`).forEach((cb) => {
+        cb.checked = isChecked;
+      });
+    });
+  });
+
   // Adiciona o evento de busca ao botão "Buscar Locação"
   document.querySelector(".searchloc").addEventListener("click", () => {
     document.querySelector(".searchLocation").style.display = "flex";
@@ -163,11 +179,12 @@ function renderTable(data) {
 
 function filterTable() {
   const numberLocation = document.getElementById("numberLocation").value.trim();
+  const statusLocation  = document.getElementById("status").value.trim()
   const nameClient = document.getElementById("nameClientSearch").value.trim();
   const dateLocation = document  .getElementById("dateLocation")  .value.trim() .split("-")
  .join("/");
 
-  const filledInputs = [numberLocation, nameClient, dateLocation].filter((input) => input !== "" ).length;
+  const filledInputs = [numberLocation,statusLocation, nameClient, dateLocation].filter((input) => input !== "" ).length;
 
   if (filledInputs > 1) {
     Toastify({
@@ -193,9 +210,10 @@ function filterTable() {
   }
   const filteredData = locacoes.filter((loc) => {
     const matchNumero = numberLocation ? loc.numeroLocacao.includes(numberLocation): true;
+    const mathStatus = statusLocation?loc.status.toLowerCase().includes(statusLocation.toLowerCase()) : true;
     const matchNome = nameClient ? loc.nomeCliente.toLowerCase().includes(nameClient.toLowerCase()) : true;
     const matchData = dateLocation ? loc.dataLocacao === dateLocation : true;
-    return matchNumero && matchNome && matchData;
+    return matchNumero && mathStatus&& matchNome && matchData;
   });
 
   if (filteredData.length === 0) {
@@ -230,6 +248,7 @@ function filterTable() {
   document.querySelector(".searchLocation").style.display = "none"; 
 };
 
+
 const btnDeleteLocation = document.querySelector('.buttonDeleteLocation')
  btnDeleteLocation.addEventListener('click' , async ()=>{
          
@@ -248,7 +267,8 @@ const btnDeleteLocation = document.querySelector('.buttonDeleteLocation')
         return;
       }
     
-      const locacaoId = selectedCheckbox.value;
+      const locacaoId = selectedCheckbox.getAttribute("data-locacao");
+      console.log('id d MINHA LOCAÇÃO:' , locacaoId)
     
       const confirmacao = confirm(
         `Tem certeza de que deseja excluir a locação com código ${locacaoId}?`
@@ -304,4 +324,118 @@ async function deletelocation(id , rowProd) {
         }).showToast();
       }
 }
+// Editar locação
 
+const buttonEditLocation = document.querySelector(".buttonEditLocation");
+
+buttonEditLocation.addEventListener("click", async () => {
+  // Obter o checkbox selecionado
+  const selectedCheckbox = document.querySelector(
+    'input[name="selecionarLocacao"]:checked'
+  );
+
+  if (!selectedCheckbox) {
+    Toastify({
+      text: "Selecione uma Locação para editar",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+    return;
+  }
+
+  // ID da locação selecionada
+  const locationId = selectedCheckbox.value;
+
+  const formatDate = (isoDate) => {
+    if (!isoDate) return "";
+    const dateObj = new Date(isoDate);
+    return `${dateObj.getFullYear()}/${String(
+      dateObj.getMonth() + 1
+    ).padStart(2, "0")}/${String(dateObj.getDate()).padStart(2, "0")}`;
+  };
+
+  // Buscar os dados da API
+  try {
+    const response = await fetch("/api/location");
+    const result = await response.json();
+
+    const clientLoc = await result.clientes
+    const goodsLoc = await result.bens
+    
+    // Procurar a locação correspondente ao ID
+    const consolidatedLocations = clientLoc.map((cliente) => {
+      const bensCliente = goodsLoc.filter(
+        (ben) => ben.beloidcl === cliente.clloid
+      );
+
+      return {
+         ...cliente,           // Inclui os dados do cliente
+        ... bensCliente,    // Adiciona os bens associados ao cliente
+      };
+    });
+
+    // Procurar a locação correspondente ao ID
+    const locationToEdit = consolidatedLocations.find(
+      (loc) => loc.cllonmlo === locationId
+    );
+
+    console.log('locação final' , locationToEdit)
+
+    if (locationToEdit) {
+      // Mostrar a área de edição
+      const contentMain = document.querySelector(".contentEditlocation");
+      contentMain.style.display = "flex";
+
+      // Esconder o botão inicial
+      const btnInitPageMainLoc = document.querySelector(".btnInitPageMainLoc");
+      btnInitPageMainLoc.style.display = "none";
+
+      // Preencher os campos com os dados obtidos
+      document.querySelector("#numeroLocationEdit").value = locationToEdit.cllonmlo || "";
+      document.querySelector("#dataLocEdit").value = locationToEdit.cllodtlo
+        
+      document.querySelector("#DataDevoEdit").value = locationToEdit.cllodtdv
+        
+      document.querySelector("#pagamentEdit").value = locationToEdit.cllopgmt || "";
+
+      // Preencher os campos adicionais da família de bens
+      document.querySelector("#family1").value = locationToEdit.bencodb || "";
+      document.querySelector("#produto1").value = locationToEdit.beloben || "";
+      document.querySelector("#dataInicio1").value = formatDate((locationToEdit.belodtin))
+        
+      document.querySelector("#dataFim1").value = formatDate((locationToEdit.belodtfi))
+     
+
+      Toastify({
+        text: "Locação carregada para edição!",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "green",
+      }).showToast();
+    } else {
+      Toastify({
+        text: "Erro ao carregar a locação. Tente novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+    }
+  } catch (error) {
+    console.error("Erro ao buscar os dados da API:", error);
+    Toastify({
+      text: "Erro ao buscar os dados. Verifique a conexão.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+  }
+});

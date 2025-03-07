@@ -171,6 +171,14 @@ document.addEventListener('DOMContentLoaded', () => {
           fabri: document.querySelector('#fabri').value              // Fabricante
       };
 
+      // Remove campos vazios antes de enviar
+Object.keys(formData).forEach(key => {
+  if (formData[key] === "") {
+      delete formData[key];
+  }
+});
+
+
       try {
           const response = await fetch('http://localhost:3000/api/bens/submit', {
               method: 'POST',
@@ -238,8 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         data.forEach(item => {
-
-          console.log("Adicionando opção:", item[fieldName]); 
+ 
           // Debug
             if (!item.hasOwnProperty(fieldName)) {
                 console.warn(`Campo '${fieldName}' não encontrado em`, item);
@@ -359,7 +366,6 @@ async function fetchBens() {
           return `${year}/${month}/${day}`;
         };
 
-     
         linha.insertCell().textContent = bem.benscode;
         linha.insertCell().textContent = bem.bensnome;
         linha.insertCell().textContent = bem.benscofa;
@@ -373,7 +379,9 @@ async function fetchBens() {
         linha.insertCell().textContent = bem.benscofo;
         linha.insertCell().textContent = bem.benskmat;
         linha.insertCell().textContent = formatDate(bem.bensdtkm);
-        linha.insertCell().textContent = bem.bensstat;
+        const statusCell = linha.insertCell();
+        statusCell.textContent = bem.bensstat;
+        statusCell.classList.add("status-bem");
         linha.insertCell().textContent = formatDate(bem.bensdtus);
         linha.insertCell().textContent = bem.benshrus;
         linha.insertCell().textContent = bem.bensnuch;
@@ -471,12 +479,12 @@ async function deleteBem(id, bemItem , token) {
       console.log("erro para excluir");
 
       Toastify({
-        text: "Erro na exclusão do Bem",
+        text:  data.error || "Erro na exclusão do Bem",
         duration: 2000,
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red)",
+        backgroundColor: "red",
       }).showToast();
     }
   } catch (error) {
@@ -486,6 +494,7 @@ async function deleteBem(id, bemItem , token) {
 }
 
 // Evento para o botão Editar
+
 const editButton = document.querySelector(".buttonEdit");
 editButton.addEventListener("click", (event) => {
   
@@ -518,77 +527,56 @@ editButton.addEventListener("click", (event) => {
     const bemSelecionado = JSON.parse(bemData);
     console.log("Editar item:", bemSelecionado);
 
-    // Campos e IDs correspondentes
     const campos = [
-      { id: "code", valor: bemSelecionado.benscode },
-      { id: "name", valor: bemSelecionado.bensnome },
+      { id: "codeEdit", valor: bemSelecionado.benscode },
+      { id: "nameEdit", valor: bemSelecionado.bensnome },
       { id: "cofaEdit", valor: bemSelecionado.benscofa },
-      { id: "model", valor: bemSelecionado.bensmode },
-      { id: "serial", valor: bemSelecionado.bensnuse },
-      { id: "placa", valor: bemSelecionado.bensplac },
-      { id: "bensAnmo", valor: bemSelecionado.bensanmo },
-      { id: "dtCompra", valor: bemSelecionado.bensdtcp },
-      { id: "valorCp", valor: bemSelecionado.bensvacp },
-      { id: "ntFiscal", valor: bemSelecionado.bensnunf },
+      { id: "modelEdit", valor: bemSelecionado.bensmode },
+      { id: "serialEdit", valor: bemSelecionado.bensnuse },
+      { id: "placaEdit", valor: bemSelecionado.bensplac },
+      { id: "bensAnmoEdit", valor: bemSelecionado.bensanmo },
+      { id: "dtCompraEdit", valor: bemSelecionado.bensdtcp },
+      { id: "valorCpEdit", valor: bemSelecionado.bensvacp },
+      { id: "ntFiscalEdit", valor: bemSelecionado.bensnunf },
       { id: "cofoEdit", valor: bemSelecionado.benscofo },
-      { id: "kmAtual", valor: bemSelecionado.benskmat },
-      { id: "dtKm", valor: bemSelecionado.bensdtkm },
-      { id: "status", valor: bemSelecionado.bensstat },
-      { id: "dtStatus", valor: bemSelecionado.bensdtus },
-      { id: "hrStatus", valor: bemSelecionado.benshrus },
-      { id: "chassi", valor: bemSelecionado.bensnuch },
-      { id: "cor", valor: bemSelecionado.benscore },
-      { id: "nuMO", valor: bemSelecionado.bensnumo },
-      { id: "rena", valor: bemSelecionado.bensrena },
-      { id: "bensCtep", valor: bemSelecionado.bensctep },
-      { id: "bensAtiv", valor: bemSelecionado.bensativ },
-      { id: "alug", valor: bemSelecionado.bensalug },
-      { id: "valorAlug", valor: bemSelecionado.bensvaal },
-      { id: "fabri", valor: bemSelecionado.bensfabr },
+      { id: "kmAtualEdit", valor: bemSelecionado.benskmat },
+      { id: "dtKmEdit", valor: bemSelecionado.bensdtkm },
+      { id: "statusEdit", valor: bemSelecionado.bensstat },
+      { id: "dtStatusEdit", valor: bemSelecionado.bensdtus },
+      { id: "hrStatusEdit", valor: bemSelecionado.benshrus },
+      { id: "chassiEdit", valor: bemSelecionado.bensnuch },
+      { id: "corEdit", valor: bemSelecionado.benscore },
+      { id: "nuMOEdit", valor: bemSelecionado.bensnumo },
+      { id: "renaEdit", valor: bemSelecionado.bensrena },
+      { id: "bensCtepEdit", valor: bemSelecionado.bensctep },
+      { id: "bensAtivEdit", valor: bemSelecionado.bensativ },
+      { id: "alugEdit", valor: bemSelecionado.bensalug },
+      { id: "valorAlugEdit", valor: bemSelecionado.bensvaal },
+      { id: "fabriEdit", valor: bemSelecionado.bensfabr },
     ];
 
-    // Atualizar valores no formulário
     campos.forEach(({ id, valor }) => {
       const elemento = document.getElementById(id);
       if (elemento) {
-
         if (elemento.type === "date" && valor) {
-          // Formata a data para YYYY-MM-DD, caso seja necessário
           const dataFormatada = new Date(valor).toISOString().split('T')[0];
           elemento.value = dataFormatada;
         } else {
           elemento.value = valor || ""; 
         }
-  
       } else {
         console.warn(`Elemento com ID '${id}' não encontrado.`);
       }
     });
 
-    // Mostrar o formulário de edição e ocultar a lista
-    const editForm = document.querySelector(".editForm");
-    const listingBens = document.querySelector(".listingBens");
-    const btnMainPage = document.querySelector('.btnPageListGoods')
-
-    if (editForm) {
-      editForm.style.display = "flex";
-    } else {
-      console.error("O formulário de edição não foi encontrado.");
-    }
-
-    if (listingBens) {
-      listingBens.style.display = "none";
-    } else {
-      console.error("A lista de bens não foi encontrada.");
-    }
-
-    if(btnMainPage){
-      btnMainPage.style.display = 'none'
-    }
+    document.querySelector(".editForm").style.display = "flex";
+    document.querySelector(".listingBens").style.display = "none";
+    document.querySelector(".btnPageListGoods").style.display = "none";
   } catch (error) {
     console.error("Erro ao fazer parse de data-bem:", error);
   }
 });
+
 
 // Função para editar e atualizar os dados
 async function editAndUpdateOfBens() {
@@ -625,31 +613,31 @@ async function editAndUpdateOfBens() {
     }
 
     const updateBem = {
-      benscode: document.getElementById("code").value,
-      bensnome: document.getElementById("name").value,
+      benscode: document.getElementById("codeEdit").value,
+      bensnome: document.getElementById("nameEdit").value,
       benscofa: document.getElementById("cofaEdit").value,
-      bensmode: document.getElementById("model").value,
-      bensnuse: document.getElementById("serial").value,
-      bensplac: document.getElementById("placa").value,
-      bensanmo: document.getElementById("bensAnmo").value,
-      bensdtcp: document.getElementById("dtCompra").value || null,
-      bensvacp: document.getElementById("valorCp").value,
-      bensnunf: document.getElementById("ntFiscal").value,
+      bensmode: document.getElementById("modelEdit").value,
+      bensnuse: document.getElementById("serialEdit").value,
+      bensplac: document.getElementById("placaEdit").value,
+      bensanmo: document.getElementById("bensAnmoEdit").value,
+      bensdtcp: document.getElementById("dtCompraEdit").value || null,
+      bensvacp: document.getElementById("valorCpEdit").value,
+      bensnunf: document.getElementById("ntFiscalEdit").value,
       benscofo: document.getElementById("cofoEdit").value,
-      benskmat: document.getElementById("kmAtual").value,
-      bensdtkm: document.getElementById("dtKm").value || null,
-      bensstat: document.getElementById("status").value,
-      bensdtus: document.getElementById("dtStatus").value || null,
-      benshrus: document.getElementById("hrStatus").value,
-      bensnuch: document.getElementById("chassi").value,
-      benscore: document.getElementById("cor").value,
-      bensnumo: document.getElementById("nuMO").value,
-      bensrena: document.getElementById("rena").value,
-      bensctep: document.getElementById("bensCtep").value,
-      bensativ: document.getElementById("bensAtiv").value,
-      bensalug: document.getElementById("alug").value,
-      bensvaal: document.getElementById("valorAlug").value,
-      bensfabr: document.getElementById("fabri").value,
+      benskmat: document.getElementById("kmAtualEdit").value,
+      bensdtkm: document.getElementById("dtKmEdit").value || null,
+      bensstat: document.getElementById("statusEdit").value,
+      bensdtus: document.getElementById("dtStatusEdit").value || null,
+      benshrus: document.getElementById("hrStatusEdit").value,
+      bensnuch: document.getElementById("chassiEdit").value,
+      benscore: document.getElementById("corEdit").value,
+      bensnumo: document.getElementById("nuMOEdit").value,
+      bensrena: document.getElementById("renaEdit").value,
+      bensctep: document.getElementById("bensCtepEdit").value,
+      bensativ: document.getElementById("bensAtivEdit").value,
+      bensalug: document.getElementById("alugEdit").value,
+      bensvaal: document.getElementById("valorAlugEdit").value,
+      bensfabr: document.getElementById("fabriEdit").value,
     };
 
     try {
@@ -658,6 +646,7 @@ async function editAndUpdateOfBens() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updateBem),
       });
+      console.log('uptade date' , updateBem)
 
       console.log("resposta:", response);
 
@@ -672,8 +661,6 @@ async function editAndUpdateOfBens() {
           position: "center",
           backgroundColor: "green",
         }).showToast();
-
-          // document.querySelector(".editForm").style.display = "none";
     
           formEditBens.reset();
 

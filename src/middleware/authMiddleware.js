@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
-console.log("Minha chave", SECRET_KEY)
 
  const authenticateToken = (req, res, next) => {
 
@@ -21,8 +20,7 @@ console.log("Minha chave", SECRET_KEY)
         req.user = decoded;
         next();
       })
-        
-      
+         
   } catch (error) {
      console.error('Erro na aplicação: ' ,  error)
      res.status(500).json({

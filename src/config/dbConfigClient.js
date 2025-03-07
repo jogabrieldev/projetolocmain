@@ -1,7 +1,10 @@
+ import dotenv from "dotenv";
+ dotenv.config()
+
 export const dbClient ={
-    host:"127.0.0.1",
-    user:"postgres",
-    password:"101010",
-    database:"server03",
-    port: 5432
+host: process.env.DB_CLIENT_HOST,
+user: process.env.DB_CLIENT_USER,
+password: process.env.DB_CLIENT_PASSWORD,
+database: process.env.DB_CLIENT_NAME,
+port: process.env.DB_CLIENT_PORT
 };

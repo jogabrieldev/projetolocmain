@@ -13,6 +13,13 @@ import {movementOfTypeProd} from "../controllers/typeProdRegister.js";
 import {movementOfDriver} from '../controllers/driverRegister.js';
 import { movementAuto } from '../controllers/automovelController.js';
 import {location} from '../controllers/locationController.js';
+import logistics from '../controllers/logistcsController.js'
+
+
+
+route.post('/logistics' , (req , res)=>{
+  logistics.postData(req , res)
+})
 
 
 // Olhar pois e uma classe
@@ -47,6 +54,10 @@ route.delete('/api/delete/:id', async (req,res)=>{
 route.put('/api/update/:id' , async (req , res)=>{
   movementGoods.updateGoods(req , res)
  
+})
+
+route.put("/api/updatestatus/:bemId" , async(req, res)=>{
+  movementGoods.update(req ,res)
 })
 
 //client
@@ -196,6 +207,10 @@ route.get('/api/codefamilybens',(req , res)=>{
 
  route.delete('/api/deletelocation/:id' , (req , res)=>{
   location.DeleteLocationFinish(req , res)
+ })
+
+ route.put('/api/updatestatuslocation/:bemId' , (req , res)=>{
+    location.updateStatus(req ,res)
  })
 
  export {route}

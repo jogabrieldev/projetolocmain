@@ -7,6 +7,8 @@ import {goodsRegister} from "../model/dataGoods.js";
     try {
       const data  = req.body;
 
+      console.log('Dados controller:' , data)
+
       const newUser = await goodsRegister.registerOfBens(data);
       res.status(201).json({ success: true, user: newUser });
     } catch (error) {
@@ -103,6 +105,29 @@ import {goodsRegister} from "../model/dataGoods.js";
       return res.status(500).json({ message: "erro no servidor" });
     }
   },
+
+  async update(req, res) {
+    try {
+        const { bemId } = req.params; // Pega o ID da URL
+        const { bensstat } = req.body; // Pega o novo status
+
+        if (!bemId || !bensstat) {
+            return res.status(400).json({ message: "Dados inválidos" });
+        }
+
+        const result = await goodsRegister.updateStatus(bemId, bensstat);
+
+        if (!result) {
+          return res.status(404).json({ message: "Bem não encontrado" });
+      }
+        
+        res.status(200).json({ message: "Status atualizado com sucesso!", data: result });
+    } catch (error) {
+        console.error("Erro ao atualizar status:", error);
+        res.status(500).json({ message: "Erro no servidor" });
+    }
+}
+
 };
 
 

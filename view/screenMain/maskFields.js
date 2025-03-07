@@ -52,9 +52,9 @@ $(document).ready(function () {
 
 $(document).ready(function () {
 
-    $("#valorCp").mask('R$ 000.000.000,00',{ reverse: true,  } )
+    $("#valorCpEdit").mask('R$ 000.000.000,00',{ reverse: true,  } )
    
-    $("#valorAlug").mask('R$ 000.000.000,00',{ reverse: true,  } );
+    $("#valorAlugEdit").mask('R$ 000.000.000,00',{ reverse: true,  } );
 
     $("#valorCpMain").mask('R$ 000.000.000,00',{ reverse: true,  } )
    

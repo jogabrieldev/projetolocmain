@@ -55,4 +55,24 @@ Meu html esta destribuido por seções onde tenho algumas sesões com display no
 
 * meu processo de locação esta envolvendo 2 tabelas , uma para registrar o cliente que locou e outra para registrar o bem locado. Assim que a locação e finalizada e gerado um numero de locação e com esse numero temos acesso ao locação. Temos acesso ao bem que foi locado/ produto, temos acesso a quantidade, a descrição desse bem, e o cliente que solicitou e os dados desse cliente.
 
+## backend 
 
+*  meu back-end e composto por arquivo (CONTROLLER, MODEL, ROUTES ,  MIDDLEWARE , DATABASE , E O CONFIG ENVOLVE AS VARIAVEIS DE AMBIENTE.)
+(MODEL)
+* no meu model estou estruturando minhas "QUERY" para o banco de dados configurado 
+
+* no model cada arquivo contem os dados para uma tabela especifica no banco , nos arquivos (location.js , logisticsModel.js) temos relacionamentos para ser feito aquele determinado processo, e também temos tabelas para os 2 processos para armazenar.
+
+* No arquivo auth do meu model: eu estou validando se os dados fornecidos no parametro da função são iguais a determinada coluna da tabela , para ai sim poder fazer a validação esses dados estão sendo preenchido pelo o front por 2 inputs na hora do login estou usando o BCRYPT para compara a senha criptografada do banco com a senha fornecida no input , ou seja  tenho esas camda de segurança pois todas minhas senhas no banco vão estar criptografadas.
+
+* o arquivo (Index.js) do meu model faz o link para uma outra pagina que e onde rola todo meu processo temos um controller e uma rota também para esse processo.
+
+* nos outros arquivos eles fazem basicamente um (CRUD) nas suas respectivas tabelas , alguns faço consulta para buscar um dado ou outro  dependendo doque minha aplicação vai precisar , e se não estiver um endpoint que execute aqule processo.
+
+(MIDDLEWARE)
+
+* estou pegando o tokem fornecido e validando ele para que ele possa acessar determinada rota , ou seja estou  passando uma camada de segurança para que se o o tokem não for fornecido não poderar acessar 
+
+(CONTROLLER)
+
+* meus controllers são a ponte para ser emitido meu endPoint no routes

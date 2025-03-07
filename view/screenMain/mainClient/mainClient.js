@@ -205,8 +205,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let clientesData = {};
 async function fetchListClientes() {
+
+  const token = localStorage.getItem('token'); 
+       
+      if (!token || isTokenExpired(token)) {
+        Toastify({
+            text: "Sessão expirada. Faça login novamente.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+        }).showToast();
+    
+        localStorage.removeItem("token"); 
+        setTimeout(() => {
+            window.location.href = "/index.html"; 
+        }, 2000); 
+        return;
+    }
   try {
-    const response = await fetch("/api/listclient");
+    const response = await fetch("/api/listclient" ,{
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    }
+    });
     const clientes = await response.json();
 
     // console.log(clientes)
@@ -332,13 +356,35 @@ buttonDeleteClient.addEventListener("click", async () => {
 });
 
 async function deleteClient(id, clientRow) {
+  const token = localStorage.getItem('token'); 
+       
+      if (!token || isTokenExpired(token)) {
+        Toastify({
+            text: "Sessão expirada. Faça login novamente.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+        }).showToast();
+    
+        localStorage.removeItem("token"); 
+        setTimeout(() => {
+            window.location.href = "/index.html"; 
+        }, 2000); 
+        return;
+    }
+
   try {
     const response = await fetch(`/api/deleteclient/${id}`, {
       method: "DELETE",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    }
     });
-    const data = await response.json();
-    console.log("Resposta do servidor:", data);
 
+    const data = await response.json();
     if (response.ok) {
       Toastify({
         text: "O Cliente foi excluído com sucesso!",
@@ -457,13 +503,29 @@ editButtonClient.addEventListener("click", () => {
 
 // // Função para enviar os dados atualizados
 async function editAndUpdateOfClient() {
+ 
   const formEditClient = document.querySelector("#formEditRegisterClient");
 
   formEditClient.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData.entries());
+    const token = localStorage.getItem('token'); 
+    if (!token || isTokenExpired(token)) {
+      Toastify({
+          text: "Sessão expirada. Faça login novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+      }).showToast();
+  
+      localStorage.removeItem("token"); 
+      setTimeout(() => {
+          window.location.href = "/index.html"; 
+      }, 2000); 
+      return;
+  }
 
     const selectedCheckbox = document.querySelector(
       'input[name="selectCliente"]:checked'
@@ -503,10 +565,14 @@ async function editAndUpdateOfClient() {
       cliemail: document.getElementById("editClieMail").value,
     };
 
+    
     try {
       const response = await fetch(`/api/updateclient/${clientIdParsed}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+      },
         body: JSON.stringify(updateClient),
       });
 
