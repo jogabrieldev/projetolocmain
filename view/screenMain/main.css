@@ -3,7 +3,7 @@ body{
     margin: 0px;
     font-size: 15px;
     font-family: Arial, Helvetica, sans-serif;
-    background-color:  darkgray;
+    background-color:   lightslategray;
 }
 input{
     height: 23px;
@@ -11,13 +11,14 @@ input{
 
 /* Cabeçalho */
 .containerHeader{
-    height: 115px;
+    height: 117px;
     background-color: cornflowerblue;
     display: flex;
     justify-content: space-between;
     position: sticky;
     top: 0;
     right: 0;
+    border-radius: 10px;
 }
 
 .material-symbols-outlined {
@@ -54,29 +55,45 @@ input{
  padding: 20px;
  height: 40px;
  margin-top: 1%;
+ border: solid , 2px , white;
 }
-/* Container bens*/
+#ContainerMainApp{
+    display: flex;
+    flex-direction:column;
+    gap: 2px;
+    height: 100%;
+}
 
 .workButton{
     display: flex;
     background-color: darkgray;
     width: 20%;
-    height: 100%;
+    height: 85%;
+    margin-top: 0.5%;
     justify-content: flex-end;
     border-radius: 10px;
-    border: none;
+    border: solid , 2px , white;
     position: fixed;
+    margin-left: 0.1%;
+    padding: 5px;
+    box-shadow:8px 8px 8px rgba(0, 0, 0, 0.929) ;
 }
      
 ul{
+    height: 100%;
     width: 100%;
-    background-color: darkgray;
     list-style-type: none;
-    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
+    
 }
+button{
+    border-radius: 10px;
+}
+button:hover {
+    background-color: #b1c4b2;
+  }
 /* Botoes do menu principais */
 .btnCadBens{ 
-    margin-top: 13%;
+    margin-top: 11%;
     width: 90%;
     height: 35px;
     border: none;
@@ -191,7 +208,6 @@ ul{
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
     transform: translateY(6px);
 }
-/* Pagina relacionada aos bens */
 
 
 .error-text{
@@ -207,7 +223,8 @@ ul{
 table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed; /* Fixará as larguras das células */
+    table-layout: fixed;  /* Fixará as larguras das células */
+    border: 2px solid white
   }
   
   th, td {
@@ -253,7 +270,6 @@ table {
 }
 
 
-/* botoes que estao na tela de registro */
 .btnOutNext{
     display: flex;
     width:50%;

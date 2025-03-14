@@ -24,7 +24,7 @@ function validationFormGoods() {
         required: true,
         date: true
       },
-      valor: {
+      valorCpMain: {
         required: true
       },
       ntFiscal: {
@@ -34,42 +34,65 @@ function validationFormGoods() {
       cofo: {
         required: true,
       },
-     
+      status:{
+        required:true
+      },
+      dtStatus:{
+        required:true
+      },
+      hrStatus:{
+         required:true
+      },
+      bensAtiv:{
+         required:true
+      }
     },
     messages: {
       code: {
-        required: "Obrigatorio",
+        required: "OBRIGATORIO",
         minlength: "O código deve ter no mínimo 3 caracteres."
       },
       name: {
-        required: "Obrigatorio",
+        required: "OBRIGATORIO",
         minlength: "O nome deve ter no mínimo 4 caracteres."
       },
       cofa: {
-        required: "Obrigatorio"
+        required: "OBRIGATORIO"
       },
       model: {
-        required: "Obrigatorio"
+        required: "OBRIGATORIO"
       },
       serial: {
-        required: "Obrigatorio",
+        required: "OBRIGATORIO",
         minlength: "O número de série deve ter no mínimo 5 caracteres."
       },
       dtCompra: {
-        required: "Obrigatorio",
+        required: "OBRIGATORIO",
         date: "Insira uma data no formato correto."
       },
-      valor: {
-        required: "Obrigatorio"
+      valorCpMain: {
+        required: "OBRIGATORIO"
       },
       ntFiscal: {
-        required: "Obrigatorio",
+        required: "OBRIGATORIO",
         minlength: "O número da nota fiscal deve ter no mínimo 5 caracteres."
       },
       cofo: {
-        required: "Obrigatorio",
+        required: "OBRIGATORIO",
         minlength: "O código do fornecedor deve ter no mínimo 4 caracteres."
       },
+      status:{
+        required:"OBRIGATORIO"
+      },
+      dtStatus:{
+        required:"OBRIGATORIO"
+      },
+      hrStatus:{
+         required:"OBRIGATORIO"
+      },
+      bensAtiv:{
+         required:"OBRIGATORIO"
+      }
       
     },
     errorPlacement: function (error, element) {
@@ -585,6 +608,9 @@ function  validationFormMoto(){
         },
         motoCity:{
            required: true
+        },
+        motoStat:{
+           required:true
         }
 
 
@@ -626,7 +652,10 @@ function  validationFormMoto(){
             },
             motoCity:{
                required: "Obrigatorio"
-            }
+            },
+            motoStat:{
+              required: "Obrigatorio"
+           }
           
           },
 
@@ -650,60 +679,110 @@ $(function () {
 });
 
 
-// Tipo de produto
-// function  validationFormTipoProd(){
-//   $('.formRegisterTipoProd').validate({
-//       rules: {
+// veiculos
+function  validationFormTipoProd(){
+  $('.foorm').validate({
+      rules: {
           
-//         tpCode:{
-//           required: true 
-//         },
-//         tpDesc:{
-//           required: true
-//         },
-//         tpObs:{
-//            required: true
+        codeAuto:{
+          required: true 
+        },
+        placAuto:{
+          required: true
+        },
+        chassAuto:{
+           required: true,
+           maxlength: 17
           
-//         },
-//         tpCtct:{
-//           required: true
-//         },
-//     },
-//           messages: {
-//             tpCode:{
-//               required:'Obrigatorio '
-//             },
-//             tpDesc:{
-//               required: 'Obrigatori'
-//             },
-//             tpObs:{
-//                required: 'Obrigatorio',
+        },
+         renaAuto:{
+          required: true,
+          maxlength: 11
+        },
+        macaAuto:{
+          required: true
+        },
+        modeAuto:{
+          required: true
+        },
+        corAuto:{
+          required: true
+        },
+        tpCombusAuto:{
+          required: true
+        },
+        kmAtAuto:{
+          required: true,
+          number:true
+        },
+        statAuto:{
+          required: true
+        },
+        dtCadAuto:{
+           required:true,
+           date: true
+        }
+    },
+          messages: {
+            codeAuto:{
+              required: "OBRIGATORIO"
+            },
+            placAuto:{
+              required: "OBRIGATORIO"
+            },
+            chassAuto:{
+               required: "OBRIGATORIO",
+               maxlength: "maximo 17 caracteres "
               
-//             },
-//             tpCtct:{
-//               required: "Obrigatorio"
-//             },
-          
-//           },
+            },
+             renaAuto:{
+              required: "OBRIGATORIO",
+              maxlength: "maximo 11 caracteres"
+            },
+            macaAuto:{
+              required: "OBRIGATORIO"
+            },
+            modeAuto:{
+              required: "OBRIGATORIO"
+            },
+            corAuto:{
+              required: "OBRIGATORIO"
+            },
+            tpCombusAuto:{
+              required: "OBRIGATORIO"
+            },
+            kmAtAuto:{
+              required: "OBRIGATORIO",
+              number:"Somente valor numerico"
+            },
+            statAuto:{
+              required: "OBRIGATORIO"
+            },
+            dtCadAuto:{
+               required:"OBRIGATORIO",
+               date: "Insira uma data valida"
+            }
+          },
 
-//           errorPlacement: function (error, element) {
-//               error.addClass('error-text');
-//               error.insertAfter(element);
-//             },
-//             highlight: function (element) {
-//               $(element).addClass('error-field');
-//             },
-//             unhighlight: function (element) {
-//               $(element).removeClass('error-field');
-//             },
-//             submitHandler: function (form) {
-//               form.submit();
-//             }
-//   })
-// }
-// $(function () {
-//   validationFormTipoProd();
-// });
+          errorPlacement: function (error, element) {
+              error.addClass('error-text');
+              error.insertAfter(element);
+            },
+            highlight: function (element) {
+              $(element).addClass('error-field');
+            },
+            unhighlight: function (element) {
+              $(element).removeClass('error-field');
+            },
+            submitHandler: function (form) {
+              form.submit();
+            }
+  })
+}
+$(function () {
+  validationFormTipoProd();
+});
+
 
 
 

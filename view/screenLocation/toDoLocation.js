@@ -1,13 +1,11 @@
-
-
 const btnAtivRegister = document.querySelector(".btnAtivRegister");
 btnAtivRegister.addEventListener("click", () => {
   const informative = document.querySelector(".information");
   informative.style.display = "block";
   informative.textContent = "SEÇÃO CADASTROS";
-  
+
   document.querySelector(".btnCadBens").style.display = "flex";
-  document.querySelector(".btnCadAutomo").style.display = "flex"
+  document.querySelector(".btnCadAutomo").style.display = "flex";
   document.querySelector(".btnCadClie").style.display = "flex";
   document.querySelector(".btnCadForn").style.display = "flex";
   document.querySelector(".btnCadProd").style.display = "flex";
@@ -16,9 +14,9 @@ btnAtivRegister.addEventListener("click", () => {
   document.querySelector(".btnCadMotorista").style.display = "flex";
 
   //none
-  document.querySelector('.btnLogistic').style.display = 'none'
+  document.querySelector(".delivery").style.display = "none";
+  document.querySelector(".btnLogistic").style.display = "none";
   document.querySelector(".btnRegisterLocation").style.display = "none";
-  document.querySelector(".containerAppLocation").style.display = "none";
 });
 
 const btnLocation = document.querySelector(".btnRegisterLocation");
@@ -30,11 +28,11 @@ btnLocation.addEventListener("click", () => {
   const containerAppLocation = document.querySelector(".containerAppLocation");
   containerAppLocation.style.display = "flex";
 
-  const btnInitPageMainLoc = document.querySelector(".btnInitPageMainLoc");
-  btnInitPageMainLoc.style.display = "flex";
-
   const containerLogistica = document.querySelector(".containerLogistica");
   containerLogistica.style.display = "none";
+
+  const deliveryFinish = document.querySelector(".deliveryFinish");
+  deliveryFinish.style.display = "none";
 });
 
 const registerLocation = document.querySelector(".registerLocation");
@@ -115,7 +113,6 @@ buttonOutPageLocation.addEventListener("click", () => {
   containerMainBtnPage.style.display = "flex";
 });
 
-// data e hora em tempo REAL
 function atualizarDataHora() {
   const agora = new Date();
 
@@ -133,20 +130,17 @@ function atualizarDataHora() {
 setInterval(atualizarDataHora, 1000);
 
 function gerarNumeroLocacao() {
-  let numerosGerados = JSON.parse(localStorage.getItem("numerosLocacao")) || []; // Busca os números já gerados
-  let novoNumero;
+  let numerosGerados = JSON.parse(localStorage.getItem("numerosLocacao")) || []; 
 
   do {
-    novoNumero = Math.floor(Math.random() * 1000000); // Gera um número aleatório de 0 a 999999
-  } while (numerosGerados.includes(novoNumero)); // Verifica se já foi gerado antes
+    novoNumero = Math.floor(Math.random() * 1000000); 
+  } while (numerosGerados.includes(novoNumero)); 
 
-  numerosGerados.push(novoNumero); // Adiciona o novo número na lista
-  localStorage.setItem("numerosLocacao", JSON.stringify(numerosGerados)); // Salva no localStorage
-
-  document.getElementById("numeroLocation").value = novoNumero; // Atualiza o campo input
+  numerosGerados.push(novoNumero); 
+  localStorage.setItem("numerosLocacao", JSON.stringify(numerosGerados)); 
+  document.getElementById("numeroLocation").value = novoNumero; 
 }
 
-// Função para verificar se os inputs do cliente foram preenchidos
 function verificarPreenchimentoCliente() {
   const inputsCliente = [
     "nameClient",
@@ -162,8 +156,6 @@ function verificarPreenchimentoCliente() {
     const input = document.getElementById(id);
     return input && input.value.trim() !== "";
   });
-
-  
 }
 
 const searchClient = document.querySelector("#search");
@@ -171,8 +163,33 @@ searchClient.addEventListener("click", async (event) => {
   event.preventDefault();
   const inputSearchClient = document.querySelector("#client").value.trim();
 
+  const token = localStorage.getItem("token"); // Pega o token armazenado no login
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+      text: "Sessão expirada. Faça login novamente.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      window.location.href = "/index.html";
+    }, 2000);
+    return;
+  }
+
   try {
-    const response = await fetch("/api/listclient");
+    const response = await fetch("/api/listclient", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`,
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`Erro na API: ${response.status}`);
@@ -182,33 +199,51 @@ searchClient.addEventListener("click", async (event) => {
 
     console.log("Clientes da API", clientes);
 
-    const clienteEncontrado = clientes.filter(
-      (cliente) =>
-        cliente.clienome.toLowerCase().includes(inputSearchClient.toLowerCase()) ||
-      cliente.cliecpf === inputSearchClient
-    );
+    // Função para normalizar textos (remover acentos e converter para minúsculas)
+    const normalizeText = (text) => {
+      return text
+        ? text
+            .normalize("NFD") // Decompor acentos
+            .replace(/[\u0300-\u036f]/g, "") // Remover acentos
+            .toLowerCase()
+        : "";
+    };
+
+    // Função para remover caracteres não numéricos do CPF
+    const normalizeCPF = (cpf) => cpf.replace(/\D/g, "");
+
+    // Normaliza entrada do usuário
+    const inputNormalized = normalizeText(inputSearchClient);
+    const inputCpfNormalized = normalizeCPF(inputSearchClient);
+
+    // Filtrando clientes
+    const clienteEncontrado = clientes.filter((cliente) => {
+      const nomeNormalizado = normalizeText(cliente.clienome);
+      const cpfNormalizado = normalizeCPF(cliente.cliecpf);
+
+      return nomeNormalizado.includes(inputNormalized) || cpfNormalizado === inputCpfNormalized;
+    });
 
     const resultDiv = document.querySelector(".searchClient");
+    resultDiv.innerHTML = ""; // Limpa os resultados anteriores
 
     if (clienteEncontrado.length > 1) {
-      resultDiv.innerHTML = "";
-
       clienteEncontrado.forEach((cliente) => {
         const clienteDiv = document.createElement("div");
         clienteDiv.classList.add("cliente-info");
-        clienteDiv.style.border = "2px solid  #000000";
+        clienteDiv.style.border = "2px solid #000000";
         clienteDiv.style.margin = "10px";
         clienteDiv.style.padding = "10px";
         clienteDiv.style.borderRadius = "5px";
         clienteDiv.style.backgroundColor = "#f9f9f9";
 
         clienteDiv.innerHTML = `
-          <p><strong>Nome:</strong> ${cliente.clienome}</p>
-          <p><strong>CPF:</strong> ${cliente.cliecpf}</p>
-          <p><strong>Rua:</strong> ${cliente.clierua}</p>
-          <p><strong>Cidade:</strong> ${cliente.cliecity}</p>
-          <p><strong>CEP:</strong> ${cliente.cliecep}</p>
-          <p><strong>Email:</strong> ${cliente.cliemail}</p>
+          <p><strong>Nome:</strong> ${cliente.clienome || "N/A"}</p>
+          <p><strong>CPF:</strong> ${cliente.cliecpf || "N/A"}</p>
+          <p><strong>Rua:</strong> ${cliente.clierua || "N/A"}</p>
+          <p><strong>Cidade:</strong> ${cliente.cliecity || "N/A"}</p>
+          <p><strong>CEP:</strong> ${cliente.cliecep || "N/A"}</p>
+          <p><strong>Email:</strong> ${cliente.cliemail || "N/A"}</p>
         `;
 
         resultDiv.appendChild(clienteDiv);
@@ -223,7 +258,6 @@ searchClient.addEventListener("click", async (event) => {
       });
 
       resultDiv.appendChild(buttonVoltar);
-
       resultDiv.style.display = "flex";
 
       Toastify({
@@ -235,20 +269,13 @@ searchClient.addEventListener("click", async (event) => {
         backgroundColor: "orange",
       }).showToast();
     } else if (clienteEncontrado.length === 1) {
-     
       const primeiroCliente = clienteEncontrado[0];
-      document.getElementById("nameClient").value =
-        primeiroCliente.clienome || "";
-      document.getElementById("cpfClient").value =
-        primeiroCliente.cliecpf || "";
-      document.getElementById("ruaClient").value =
-        primeiroCliente.clierua || "";
-      document.getElementById("cityClient").value =
-        primeiroCliente.cliecity || "";
-      document.getElementById("cepClient").value =
-        primeiroCliente.cliecep || "";
-      document.getElementById("mailClient").value =
-        primeiroCliente.cliemail || "";
+      document.getElementById("nameClient").value = primeiroCliente.clienome || "";
+      document.getElementById("cpfClient").value = primeiroCliente.cliecpf || "";
+      document.getElementById("ruaClient").value = primeiroCliente.clierua || "";
+      document.getElementById("cityClient").value = primeiroCliente.cliecity || "";
+      document.getElementById("cepClient").value = primeiroCliente.cliecep || "";
+      document.getElementById("mailClient").value = primeiroCliente.cliemail || "";
 
       verificarPreenchimentoCliente();
 
@@ -283,9 +310,35 @@ searchClient.addEventListener("click", async (event) => {
   }
 });
 
+
 async function carregarFamilias() {
+  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token"); 
+    setTimeout(() => {
+        window.location.href = "/index.html"; 
+    }, 2000); 
+    return;
+}
+
   try {
-    const response = await fetch("/api/codefamilybens");
+    const response = await fetch("/api/codefamilybens" , {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    }
+    });
     if (!response.ok) {
       throw new Error("Erro ao buscar famílias de bens");
     }
@@ -328,10 +381,24 @@ function preencherProduto(index, familias) {
   );
 
   if (familiaSelecionada) {
-    inputProduto.value = familiaSelecionada.fabedesc || "Sem nome definido"; 
+    inputProduto.value = familiaSelecionada.fabedesc || "Sem nome definido";
   } else {
     inputProduto.value = "";
   }
+}
+
+function clearFields() {
+  document.querySelector("#numeroLocation").value = "";
+  document.querySelector("#client").value = "";
+  document.querySelector("#nameClient").value = "";
+  document.querySelector("#cpfClient").value = "";
+  document.getElementById("dataLoc").value = "";
+  document.getElementById("DataDevo").value = "";
+  document.getElementById("pagament").value = "";
+  document.getElementById("ruaClient").value = "";
+  document.getElementById("cityClient").value = "";
+  document.getElementById("cepClient").value = "";
+  document.getElementById("mailClient").value = "";
 }
 
 document.addEventListener("DOMContentLoaded", carregarFamilias);
@@ -364,7 +431,7 @@ async function handleSubmit() {
         dataFim,
         quantidade,
         produto,
-        status: "Pendente"
+        status: "Pendente",
       });
     }
   }
@@ -381,7 +448,7 @@ async function handleSubmit() {
     }).showToast();
     return;
   }
-  if(bens.length >= 1){
+  if (bens.length >= 1) {
     gerarNumeroLocacao();
   }
 
@@ -395,8 +462,7 @@ async function handleSubmit() {
     const dataDevo = document.getElementById("DataDevo")?.value || null;
     const pagament = document.getElementById("pagament")?.value || null;
 
-    if(!dataDevo  || !pagament ){
-        
+    if (!dataDevo || !pagament) {
       Toastify({
         text: "Insira a data de devolução e a Forma de pagamento",
         duration: 3000,
@@ -416,11 +482,33 @@ async function handleSubmit() {
       dataDevo,
       pagament,
       bens,
-    };
-      
+    }; 
+
+    const token = localStorage.getItem('token'); // Pega o token armazenado no login
+
+    if (!token || isTokenExpired(token)) {
+      Toastify({
+          text: "Sessão expirada. Faça login novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+      }).showToast();
+  
+      localStorage.removeItem("token"); 
+      setTimeout(() => {
+          window.location.href = "/index.html"; 
+      }, 2000); 
+      return;
+  }
+
     const response = await fetch("/api/datalocation", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    },
       body: JSON.stringify(payload),
     });
 
@@ -435,7 +523,10 @@ async function handleSubmit() {
       }).showToast();
 
       gerarContrato();
-      
+
+      setTimeout(() => {
+        clearFields();
+      }, 500);
     } else {
       Toastify({
         text: "Erro na locaçao!",
@@ -460,8 +551,33 @@ async function handleSubmit() {
 }
 
 async function buscarNomeCliente(cpf) {
+
+  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token"); 
+    setTimeout(() => {
+        window.location.href = "/index.html"; 
+    }, 2000); 
+    return;
+}
   try {
-    const response = await fetch(`/api/client?cpf=${cpf}`);
+    const response = await fetch(`/api/client?cpf=${cpf}` , {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    },
+    });
     if (response.ok) {
       const data = await response.json();
       return data.nome || "Nome não encontrado";
@@ -474,19 +590,10 @@ async function buscarNomeCliente(cpf) {
     return "Erro ao buscar cliente";
   }
 }
- 
+
 // CONTRATO COM OS DADOS A LOCAÇÃO
 async function gerarContrato() {
-
-  const formatDate = (isoDate) => {
-    if (!isoDate) return "";
-    const dateObj = new Date(isoDate);
-    const year = dateObj.getFullYear();
-    const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-    const day = String(dateObj.getDate()).padStart(2, "0");
-    return `${year}/${month}/${day}`;
-  };
-
+ 
   const cpfCliente =
     document.getElementById("cpfClient")?.value || "Não informado";
 
@@ -609,11 +716,31 @@ formRegisterClientLoc.addEventListener("submit", async (event) => {
     }).showToast();
     return;
   }
+  const token = localStorage.getItem('token'); // Pega o token armazenado no login
 
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token"); 
+    setTimeout(() => {
+        window.location.href = "/index.html"; 
+    }, 2000); 
+    return;
+}
   try {
     await fetch("/api/client/submit", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    },
       body: JSON.stringify(data),
     }).then((response) => {
       if (response.ok) {
@@ -646,7 +773,3 @@ formRegisterClientLoc.addEventListener("submit", async (event) => {
     console.error("deu erro no envio", error);
   }
 });
- 
-
-
-

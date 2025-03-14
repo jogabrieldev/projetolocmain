@@ -24,8 +24,8 @@ btnCadFabri.addEventListener("click", () => {
   const containerAppDriver = document.querySelector(".containerAppDriver");
   containerAppDriver.style.display = "none";
 
-   const containerAppAutomo = document.querySelector('.containerAppAutomo')
-       containerAppAutomo.style.display = 'none'
+  const containerAppAutomo = document.querySelector(".containerAppAutomo");
+  containerAppAutomo.style.display = "none";
 
   const containerAppTypeProd = document.querySelector(".containerAppTipoProd");
   containerAppTypeProd.style.display = "none";
@@ -68,14 +68,13 @@ btnOutOfRegister.addEventListener("click", (event) => {
   containerFormFabriRegister.style.display = "none";
 });
 
-const btnExitFamilygoods = document.querySelector('.buttonExitFabri')
-btnExitFamilygoods.addEventListener('click', (event)=>{
-   event.preventDefault()
+const btnExitFamilygoods = document.querySelector(".buttonExitFabri");
+btnExitFamilygoods.addEventListener("click", (event) => {
+  event.preventDefault();
 
-   const containerAppFabri = document.querySelector(".containerAppFabri");
-    containerAppFabri.style.display = "none";
-    
-})
+  const containerAppFabri = document.querySelector(".containerAppFabri");
+  containerAppFabri.style.display = "none";
+});
 
 const btnOutInitFabriEdit = document.querySelector(".btnOutInitFabriEdit");
 btnOutInitFabriEdit.addEventListener("click", (event) => {
@@ -93,92 +92,124 @@ btnOutInitFabriEdit.addEventListener("click", (event) => {
 
 function isTokenExpired(token) {
   try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const expTime = payload.exp * 1000; 
-      return Date.now() > expTime; 
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    const expTime = payload.exp * 1000;
+    return Date.now() > expTime;
   } catch (error) {
-      return true; 
+    return true;
   }
-};
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelector('.cadFabri').addEventListener('click', async (event) => {
-      event.preventDefault(); 
+document.addEventListener("DOMContentLoaded", () => {
+  document
+    .querySelector(".cadFabri")
+    .addEventListener("click", async (event) => {
+      event.preventDefault();
 
-      const token = localStorage.getItem('token'); 
+      const token = localStorage.getItem("token");
 
       if (!token || isTokenExpired(token)) {
         Toastify({
-            text: "Sessão expirada. Faça login novamente.",
+          text: "Sessão expirada. Faça login novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+
+        localStorage.removeItem("token");
+        setTimeout(() => {
+          window.location.href = "/index.html";
+        }, 2000);
+        return;
+      }
+
+      if (!$(".formRegisterFabricante").valid()) {
+        return;
+      }
+
+      // Captura os valores do formulário
+      const formData = {
+        fabeCode: document.querySelector("#fabeCode").value, // Código
+        fabeDesc: document.querySelector("#fabeDesc").value, // Descrição
+        fabeCate: document.querySelector("#fabeCate").value, // Categoria
+        fabeSuca: document.querySelector("#fabeSuca").value, // Subcategoria
+        fabeObs: document.querySelector("#fabeObs").value, // Observação
+        fabeCtct: document.querySelector("#fabeCtct").value, // Centro de Custo
+      };
+
+      try {
+        const response = await fetch("http://localhost:3000/api/fabri/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          Toastify({
+            text: "Familia do bem cadastrado com sucesso!",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "green",
+          }).showToast();
+
+          // Limpar o formulário após o sucesso
+          document.querySelector(".formRegisterFabricante").reset();
+        } else {
+          Toastify({
+            text: "Erro ao cadastrar familia de bens",
             duration: 3000,
             close: true,
             gravity: "top",
             position: "center",
             backgroundColor: "red",
-        }).showToast();
-    
-        localStorage.removeItem("token"); 
-        setTimeout(() => {
-            window.location.href = "/index.html"; 
-        }, 2000); 
-        return;
-    }
-
-      if (!$('.formRegisterFabricante').valid()) {
-        return;
-    }
-
-      // Captura os valores do formulário
-      const formData = {
-          fabeCode: document.querySelector('#fabeCode').value,         // Código
-          fabeDesc: document.querySelector('#fabeDesc').value,         // Descrição
-          fabeCate: document.querySelector('#fabeCate').value,         // Categoria
-          fabeSuca: document.querySelector('#fabeSuca').value,         // Subcategoria
-          fabeObs: document.querySelector('#fabeObs').value,           // Observação
-          fabeCtct: document.querySelector('#fabeCtct').value          // Centro de Custo
-      };
-
-      try {
-          const response = await fetch('http://localhost:3000/api/fabri/submit', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${token}`
-              },
-              body: JSON.stringify(formData)
-          });
-
-          const result = await response.json();
-
-          if (response.ok) {
-              Toastify({
-                  text: "Familia do bem cadastrado com sucesso!",
-                  duration: 3000,
-                  close: true,
-                  gravity: "top",
-                  position: "center",
-                  backgroundColor: "green",
-              }).showToast();
-
-              // Limpar o formulário após o sucesso
-              document.querySelector('.formRegisterFabricante').reset();
-          } else {
-              alert(`Erro: ${result.message}`);
-          }
+          }).showToast();
+        }
       } catch (error) {
-          console.error('Erro ao enviar formulário:', error);
-          alert('Erro ao enviar os dados.');
+        console.error("Erro ao enviar formulário:", error);
+        alert("Erro ao enviar os dados.", error);
       }
-  });
-  validationFormFabric()
+    });
+  validationFormFabric();
 });
-
 
 // listagem de fabricante
 
 async function fetchListFabricante() {
+
+  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token"); 
+    setTimeout(() => {
+        window.location.href = "/index.html"; 
+    }, 2000); 
+    return;
+}
   try {
-    const response = await fetch("/api/listfabri");
+    const response = await fetch("/api/listfabri" , {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    },
+    });
     const fabricante = await response.json();
 
     const fabricanteListDiv = document.querySelector(".listingFabri");
@@ -258,7 +289,7 @@ btnDeleteFabri.addEventListener("click", async () => {
   );
   if (!selectedCheckbox) {
     Toastify({
-      text: "Selecione um fabricante para excluir",
+      text: "Selecione uma familia de bem para excluir",
       duration: 2000,
       close: true,
       gravity: "top",
@@ -271,7 +302,7 @@ btnDeleteFabri.addEventListener("click", async () => {
   const fabricanteSelecionado = JSON.parse(selectedCheckbox.dataset.fabricante);
   const fabricanteId = fabricanteSelecionado.fabecode;
 
-  console.log("ID Family", fabricanteId)
+  console.log("ID Family", fabricanteId);
 
   const confirmacao = confirm(
     `Tem certeza de que deseja excluir o Fabricante com código ${fabricanteId}?`
@@ -284,16 +315,37 @@ btnDeleteFabri.addEventListener("click", async () => {
 });
 
 async function deleteFabri(id, fabeRow) {
+  const token = localStorage.getItem("token"); // Pega o token armazenado no login
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+      text: "Sessão expirada. Faça login novamente.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      window.location.href = "/index.html";
+    }, 2000);
+    return;
+  }
   try {
     const response = await fetch(`/api/deletefabri/${id}`, {
       method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`,
+      },
     });
     const data = await response.json();
     console.log("Resposta do servidor:", data);
-
     if (response.ok) {
       Toastify({
-        text: "O Fabricante foi excluído com sucesso!",
+        text: "O Familia de bens excluída com sucesso!",
         duration: 2000,
         close: true,
         gravity: "top",
@@ -303,20 +355,31 @@ async function deleteFabri(id, fabeRow) {
 
       fabeRow.remove();
     } else {
-      console.log("Erro para excluir:", data);
-      Toastify({
-        text: "Erro na exclusão do fabricante",
-        duration: 2000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
+      if (response.status === 400) {
+        Toastify({
+          text: data.message, // Mensagem retornada do backend
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "orange",
+        }).showToast();
+      } else {
+        console.log("Erro para excluir:", data);
+        Toastify({
+          text: "Erro na exclusão da familia de bem",
+          duration: 2000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+      }
     }
   } catch (error) {
     console.error("Erro ao excluir fabricante:", error);
     Toastify({
-      text: "Erro ao excluir fabricante. Tente novamente.",
+      text: "Erro ao excluir familia de bem. Tente novamente.",
       duration: 2000,
       close: true,
       gravity: "top",
@@ -335,7 +398,7 @@ btnFormEditFabri.addEventListener("click", () => {
 
   if (!selectedCheckbox) {
     Toastify({
-      text: "Selecione um Fabricante para editar",
+      text: "Selecione uma familia de bem para editar",
       duration: 2000,
       close: true,
       gravity: "top",
@@ -444,10 +507,32 @@ async function editAndUpdateOfFabric() {
       fabectct: document.getElementById("editFabeCtct").value,
     };
 
+    const token = localStorage.getItem("token"); // Pega o token armazenado no login
+
+    if (!token || isTokenExpired(token)) {
+      Toastify({
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+
+      localStorage.removeItem("token");
+      setTimeout(() => {
+        window.location.href = "/index.html";
+      }, 2000);
+      return;
+    }
+
     try {
       const response = await fetch(`/api/updatefabe/${fabeIdParsed}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+         'Authorization': `Bearer ${token}`,
+        },
         body: JSON.stringify(updateFabric),
       });
 
@@ -457,7 +542,7 @@ async function editAndUpdateOfFabric() {
         console.log("Atualização bem-sucedida");
 
         Toastify({
-          text: `Bem '${fabeIdParsed}' Atualizado com sucesso!!`,
+          text: `Familia'${fabeIdParsed}' Atualizada com sucesso!!`,
           duration: 3000,
           close: true,
           gravity: "top",
@@ -465,14 +550,9 @@ async function editAndUpdateOfFabric() {
           backgroundColor: "green",
         }).showToast();
 
-        setTimeout(() => {
-          window.location.reload();
-          document.querySelector(".editFabri").style.display = "none";
-        }, 3000);
-
         formEditFabri.reset();
       } else {
-        console.error("Erro ao atualizar produto:", await response.text());
+        console.error("Erro ao atualizar familia:", await response.text());
       }
     } catch (error) {
       console.error("Erro na requisição:", error);

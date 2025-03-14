@@ -1,11 +1,10 @@
-import {crudRegisterForn} from "../model/dataForn.js";
-const fornRegister = crudRegisterForn
+import { crudRegisterForn } from "../model/dataForn.js";
+const fornRegister = crudRegisterForn;
 
- export const movementForne = {
+export const movementForne = {
   async registerForn(req, res) {
     try {
       const dataForn = req.body;
-      console.log(dataForn);
 
       if (!dataForn) {
         return res
@@ -35,18 +34,43 @@ const fornRegister = crudRegisterForn
     }
   },
 
+  async codeForn(req, res) {
+    try {
+      const dataforn = await fornRegister.buscarIdForn();
+      if (dataforn) {
+        res.status(200).json(dataforn);
+        return dataforn;
+      } else {
+        return req.status(400).json({ error: "Nenhum dado encontrado" });
+      }
+    } catch (error) {
+      console.error("Erro ao buscar fornecedor", error);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+  },
+
   async deleteOfForm(req, res) {
     try {
       const { id } = req.params;
+
+      const temDependencia = await fornRegister.verificarDependenciaForne(id);
+
+      if (temDependencia) {
+        return res.status(400).json({
+          message:
+            "Não e possivel excluir. Temos bens vinculados a esse fornecedor",
+        });
+      }
       const deleteComponent = await fornRegister.deleteForn(id);
 
-      if (!deleteComponent) {
-        return res.status(404).json({ message: "Componente Não encontrado" });
+      if (deleteComponent) {
+        return res.status(200).json({
+          message: "componente Apagado com sucesso",
+          component: deleteComponent,
+        });
+      } else {
+        res.status(500).json({ message: "Erro no servidor" });
       }
-      return res.status(200).json({
-        message: "componente Apagado com sucesso",
-        component: deleteComponent,
-      });
     } catch (error) {
       console.error("erro ao apagar componente:", error);
       return res.status(500).json({ message: "erro no servidor" });
@@ -76,4 +100,3 @@ const fornRegister = crudRegisterForn
     }
   },
 };
-

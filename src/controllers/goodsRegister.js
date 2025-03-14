@@ -1,14 +1,12 @@
+import { goodsRegister } from "../model/dataGoods.js";
 
-import {goodsRegister} from "../model/dataGoods.js";
-
- export const movementGoods = {
-
+export const movementGoods = {
   async registerBens(req, res) {
     try {
-      const data  = req.body;
-
-      console.log('Dados controller:' , data)
-
+      const data = req.body;
+      if (!data) {
+        res.status(400).json({ messagem: "Nenhum dado enviado" });
+      }
       const newUser = await goodsRegister.registerOfBens(data);
       res.status(201).json({ success: true, user: newUser });
     } catch (error) {
@@ -16,43 +14,20 @@ import {goodsRegister} from "../model/dataGoods.js";
     }
   },
 
-  async codeForn(req ,res){
-
+  async codeFamilyBens(req, res) {
     try {
-      const dataforn = await  goodsRegister.buscarIdForn()
-       if(dataforn){
-      res.status(200).json(dataforn)
-       return dataforn
-    }else{
-      return req.status(400).json({error: "Nenhum dado encontrado"})
-    }
-      
+      const dataFamilybens = await goodsRegister.buscarIdFamiliaBens();
+
+      if (dataFamilybens) {
+        res.status(200).json(dataFamilybens);
+        return dataFamilybens;
+      } else {
+        return req.status(400).json({ error: "Nenhum dado encontrado" });
+      }
     } catch (error) {
-       console.error('Erro ao buscar fornecedor', error)
-       return res.status(500).json({ error: "Erro interno do servidor" });
+      console.error("Erro ao buscar família de bens:", error);
+      return res.status(500).json({ error: "Erro interno do servidor" });
     }
-    
-    
-  },
-
-  async codeFamilyBens(req ,res){
-
-    try {
-      const dataFamilybens = await goodsRegister.buscarIdFamiliaBens()
-
-      if(dataFamilybens){
-      res.status(200).json(dataFamilybens)
-      return dataFamilybens
-
-    }else{
-      return req.status(400).json({error: "Nenhum dado encontrado"})
-    }
-      
-    } catch (error) {
-       console.error("Erro ao buscar família de bens:", error);
-       return res.status(500).json({ error: "Erro interno do servidor" });
-    }
-    
   },
 
   async listBens(req, res) {
@@ -89,8 +64,16 @@ import {goodsRegister} from "../model/dataGoods.js";
   },
 
   async deletarGoods(req, res) {
+    const { id } = req.params;
     try {
-      const { id } = req.params;
+      const verificar = await goodsRegister.verificarDependenciaBens(id);
+
+      if (verificar) {
+        return res.status(400).json({
+          message: "Não e possivel excluir. o bem esta em locação ",
+        });
+      }
+
       const deleteComponent = await goodsRegister.deleteBens(id);
 
       if (!deleteComponent) {
@@ -108,26 +91,25 @@ import {goodsRegister} from "../model/dataGoods.js";
 
   async update(req, res) {
     try {
-        const { bemId } = req.params; // Pega o ID da URL
-        const { bensstat } = req.body; // Pega o novo status
+      const { bemId } = req.params; // Pega o ID da URL
+      const { bensstat } = req.body; // Pega o novo status
 
-        if (!bemId || !bensstat) {
-            return res.status(400).json({ message: "Dados inválidos" });
-        }
-
-        const result = await goodsRegister.updateStatus(bemId, bensstat);
-
-        if (!result) {
-          return res.status(404).json({ message: "Bem não encontrado" });
+      if (!bemId || !bensstat) {
+        return res.status(400).json({ message: "Dados inválidos" });
       }
-        
-        res.status(200).json({ message: "Status atualizado com sucesso!", data: result });
+
+      const result = await goodsRegister.updateStatus(bemId, bensstat);
+
+      if (!result) {
+        return res.status(404).json({ message: "Bem não encontrado" });
+      }
+
+      res
+        .status(200)
+        .json({ message: "Status atualizado com sucesso!", data: result });
     } catch (error) {
-        console.error("Erro ao atualizar status:", error);
-        res.status(500).json({ message: "Erro no servidor" });
+      console.error("Erro ao atualizar status:", error);
+      res.status(500).json({ message: "Erro no servidor" });
     }
-}
-
+  },
 };
-
-

@@ -1,12 +1,10 @@
-import  {crudRegisterFamilyGoods} from "../model/dataFamilyGoods.js";
-const fabriRegister = crudRegisterFamilyGoods
+import { crudRegisterFamilyGoods } from "../model/dataFamilyGoods.js";
+const fabriRegister = crudRegisterFamilyGoods;
 
- export const movementOfFamilyGoods= {
+export const movementOfFamilyGoods = {
   async registerOfFabri(req, res) {
     try {
       const dataFabri = req.body;
-
-     
 
       if (!dataFabri) {
         return res
@@ -21,7 +19,6 @@ const fabriRegister = crudRegisterFamilyGoods
       res.status(500).json({ success: false, message: error.message });
     }
   },
-
 
   async listingOfFabri(req, res) {
     try {
@@ -38,17 +35,25 @@ const fabriRegister = crudRegisterFamilyGoods
   },
 
   async deleteOfFabri(req, res) {
+    const { id } = req.params;
     try {
-      const { id } = req.params;
+      const temDependencia =
+        await fabriRegister.verificarDependenciaDaFamiliaBens(id);
+
+      if (temDependencia) {
+        return res.status(400).json({
+          message:
+            "Não e possivel excluir. Temos bens vinculados a essa Familia de bem",
+        });
+      }
       const deleteComponent = await fabriRegister.deleteFabri(id);
 
-      if (!deleteComponent) {
-        return res.status(404).json({ message: "Componente Não encontrado" });
+      if (deleteComponent) {
+        return res.status(200).json({
+          message: "componente Apagado com sucesso",
+          component: deleteComponent,
+        });
       }
-      return res.status(200).json({
-        message: "componente Apagado com sucesso",
-        component: deleteComponent,
-      });
     } catch (error) {
       console.error("erro ao apagar componente:", error);
       return res.status(500).json({ message: "erro no servidor" });
@@ -79,4 +84,3 @@ const fabriRegister = crudRegisterFamilyGoods
     }
   },
 };
-

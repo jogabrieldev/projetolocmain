@@ -11,8 +11,6 @@ export const location = {
       bens,
     } = req.body;
 
-    console.log("Corpo da requisição recebido:", req.body);
-
     try {
       if (!bens || bens.length === 0) {
         return res.status(400).json({ error: "Nenhum dado de bens enviado." });
@@ -130,11 +128,10 @@ export const location = {
     if (!bemId || !belostat) {
       return res
         .status(400)
-        .json({ error: "Bem ID e novo status são obrigatórios." });
+        .json({ error: " ID bem e novo status são obrigatórios." });
     }
 
     try {
-      
       const bemAtualizado = await LocacaoModel.updateBemStatus(bemId, belostat);
       if (!bemAtualizado) {
         return res.status(404).json({ error: "Bem não encontrado." });

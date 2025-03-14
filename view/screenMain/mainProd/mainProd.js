@@ -186,8 +186,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 async function loadSelectOptions(url, selectId, fieldName) {
+     
+  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token"); 
+    setTimeout(() => {
+        window.location.href = "/index.html"; 
+    }, 2000); 
+    return;
+}
   try {
-      const response = await fetch(url);
+      const response = await fetch(url , {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+      },
+      });
       const result = await response.json();
       
       console.log(`Dados recebidos de ${url}:`, result);
@@ -224,15 +248,38 @@ async function loadSelectOptions(url, selectId, fieldName) {
 }
 
 document.querySelector('.registerProd').addEventListener('click' ,()=>{
-  loadSelectOptions("/api/codefamilyben", "prodCofa", 'fabecode');
   loadSelectOptions("/api/codetipoprod", "prodTipo", 'tiprcode');
 })
 
 
 // listagem de produtos
 async function fetchListProdutos() {
+
+  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token"); 
+    setTimeout(() => {
+        window.location.href = "/index.html"; 
+    }, 2000); 
+    return;
+}
     try {
-      const response = await fetch("/api/listProd");
+      const response = await fetch("/api/listProd" , {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+      },
+      });
       const produtos = await response.json();
   
       const produtosListDiv = document.querySelector(".listingProd");
@@ -346,14 +393,36 @@ async function fetchListProdutos() {
 })
 
 async function deleteProd(id , rowProd) {
+
+  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token"); 
+    setTimeout(() => {
+        window.location.href = "/index.html"; 
+    }, 2000); 
+    return;
+}
     
     try {
         const response = await fetch(`/api/deleteprod/${id}`, {
           method: "DELETE",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
         });
         const data = await response.json();
-        console.log("Resposta do servidor:", data);
-    
+        
         if (response.ok) {
           Toastify({
             text: "O produto foi excluido com sucesso",
@@ -522,12 +591,34 @@ async function editAndUpdateOfProduct() {
       prodpeli: document.getElementById("editProdPeli").value, 
       prodpebr: document.getElementById("editProdPebr").value,
       prodativ: document.getElementById("editProdAtiv").value,
-    };
+    }; 
+
+    const token = localStorage.getItem('token'); // Pega o token armazenado no login
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token"); 
+    setTimeout(() => {
+        window.location.href = "/index.html"; 
+    }, 2000); 
+    return;
+}
 
     try {
       const response = await fetch(`/api/updateprod/${prodIdParsed}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+      },
         body: JSON.stringify(updateProduct),
       });
 

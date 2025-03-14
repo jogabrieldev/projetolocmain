@@ -1,77 +1,78 @@
 // const dataBaseM = require('../database/dataBaseSgt')
-import {client} from '../database/userDataBase.js';
-const userDbProd = client
+import { client } from "../database/userDataBase.js";
+const userDbProd = client;
 
-
- export const crudRegisterProd = {
-    
-    registerOfProd: async (data)=>{
-          const {
-            prodCode,
-            prodDesc,
-            prodTipo,
-            prodUni,
-            prodData,
-            prodValor,
-            prodPeli,
-            prodPebr,
-            prodAtiv
-          } = data
-
-         const insert = `INSERT INTO cadprod(prodcode, proddesc, prodtipo, produnid, proddtuc, prodvluc, prodpeli, prodpebr, prodativ ) VALUES( $1 , $2 , $3 , $4 , $5 ,$6 , $7 , $8 , $9 ) RETURNING *`;
-          
-         const values = [
-            prodCode,
-            prodDesc,
-            prodTipo,
-            prodUni,
-            prodData,
-            prodValor,
-            prodPeli,
-            prodPebr,
-            prodAtiv
-         ]
-         const result = await userDbProd.query(insert, values);
-
-         return result.rows[0];
-  },
-
-    listingOfProd: async(data)=>{
-       try {
-         const query = 'SELECT * FROM cadprod';
-
-         const result = await userDbProd.query(query)
-         return result.rows;
-
-        } catch (error) {
-        console.error('Erro em listar produto:' , error.message)
-      }
-  },
-
-  deleteOfProd: async(id)=>{
-
+export const crudRegisterProd = {
+  registerOfProd: async (data) => {
     try {
-            
-        const delet = "DELETE FROM cadprod WHERE prodcode = $1 RETURNING *";
-        const result = await userDbProd.query(delet, [id])
+      const {
+        prodCode,
+        prodDesc,
+        prodTipo,
+        prodUni,
+        prodData,
+        prodValor,
+        prodPeli,
+        prodPebr,
+        prodAtiv,
+      } = data;
 
-        return result.rows[0]
+      const insert = `INSERT INTO cadprod(prodcode, proddesc, prodtipo, produnid, proddtuc, prodvluc, prodpeli, prodpebr, prodativ ) VALUES( $1 , $2 , $3 , $4 , $5 ,$6 , $7 , $8 , $9 ) RETURNING *`;
 
-      } catch (error) {
-        console.error('Erro no model:', error.message)
-      }
-       
-    },
+      const values = [
+        prodCode,
+        prodDesc,
+        prodTipo,
+        prodUni,
+        prodData,
+        prodValor,
+        prodPeli,
+        prodPebr,
+        prodAtiv,
+      ];
+      const result = await userDbProd.query(insert, values);
 
-    updateOfProd: async (id, updateProd) => {
+      return result.rows[0];
+    } catch (error) {
+      console.error("erro para registrar tipo");
+      throw error;
+    }
+  },
+
+  listingOfProd: async (data) => {
+    try {
+      const query = "SELECT * FROM cadprod";
+
+      const result = await userDbProd.query(query);
+      return result.rows;
+    } catch (error) {
+      console.error("Erro em listar produto:", error.message);
+      throw error;
+    }
+  },
+
+  deleteOfProd: async (id) => {
+    try {
+      const delet = "DELETE FROM cadprod WHERE prodcode = $1 RETURNING *";
+      const result = await userDbProd.query(delet, [id]);
+
+      return result.rows[0];
+    } catch (error) {
+      console.error("Erro no model:", error.message);
+      throw error;
+    }
+  },
+
+  updateOfProd: async (id, updateProd) => {
+    try {
       const query = `
-          UPDATE cadprod
-          SET 
-               proddesc = $1, prodtipo = $2, produnid = $3, proddtuc = $4, prodvluc = $5, prodpeli = $6, prodpebr = $7, 
-               prodativ = $8
-               WHERE prodcode = $9
-              RETURNING *;
-              `;
+        UPDATE cadprod
+        SET 
+             proddesc = $1, prodtipo = $2, produnid = $3, proddtuc = $4, prodvluc = $5, prodpeli = $6, prodpebr = $7, 
+             prodativ = $8
+             WHERE prodcode = $9
+            RETURNING *;
+            `;
       const values = [
         updateProd.proddesc || null,
         updateProd.prodtipo || null,
@@ -81,25 +82,24 @@ const userDbProd = client
         updateProd.prodpeli || null,
         updateProd.prodpebr || null,
         updateProd.prodativ || null,
-        id
+        id,
       ];
       const result = await userDbProd.query(query, values);
-   
-  
+
       return result.rows[0];
-    },
-
-
-   buscartipoProd: async ()=>{
-
-    try {
-      const result = await userDbProd.query('SELECT tiprcode FROM cadtipr')
-      return result.rows
     } catch (error) {
-       console.error('Erro no model tipo prod')
+      console.error("erro na atualização", error);
+      throw error;
     }
-   }
+  },
+
+  buscartipoProd: async () => {
+    try {
+      const result = await userDbProd.query("SELECT tiprcode FROM cadtipr");
+      return result.rows;
+    } catch (error) {
+      console.error("Erro no model tipo prod");
+      throw error;
+    }
+  },
 };
-   
-
-

@@ -1,14 +1,10 @@
-import {crudRegisterProd} from "../model/dataProd.js";
-const prodRegister = crudRegisterProd
+import { crudRegisterProd } from "../model/dataProd.js";
+const prodRegister = crudRegisterProd;
 
-
- export const movementOfProd = {
-
+export const movementOfProd = {
   async registerProd(req, res) {
     try {
       const dataProd = req.body;
-
-      console.log('dados do corpo:' ,req.body)
 
       if (!dataProd) {
         return res
@@ -24,22 +20,20 @@ const prodRegister = crudRegisterProd
     }
   },
 
-  async codeTipoProd(req , res){
-     try {
-           const dataTyperod = await prodRegister.buscartipoProd()
-     
-           if(dataTyperod){
-           res.status(200).json(dataTyperod)
-           return dataTyperod
-     
-         }else{
-           return req.status(400).json({error: "Nenhum dado encontrado"})
-         }
-           
-         } catch (error) {
-            console.error("Erro ao buscar tipo do produto:", error);
-            return res.status(500).json({ error: "Erro interno do servidor" });
-         }
+  async codeTipoProd(req, res) {
+    try {
+      const dataTyperod = await prodRegister.buscartipoProd();
+
+      if (dataTyperod) {
+        res.status(200).json(dataTyperod);
+        return dataTyperod;
+      } else {
+        return req.status(400).json({ error: "Nenhum dado encontrado" });
+      }
+    } catch (error) {
+      console.error("Erro ao buscar tipo do produto:", error);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
   },
 
   async listofProd(req, res) {
@@ -96,4 +90,3 @@ const prodRegister = crudRegisterProd
     }
   },
 };
-

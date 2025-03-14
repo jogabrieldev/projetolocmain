@@ -385,6 +385,7 @@ async function deleteClient(id, clientRow) {
     });
 
     const data = await response.json();
+
     if (response.ok) {
       Toastify({
         text: "O Cliente foi excluído com sucesso!",
@@ -396,7 +397,19 @@ async function deleteClient(id, clientRow) {
       }).showToast();
 
       clientRow.remove();
-    } else {
+    } else { 
+      
+      if (response.status === 400) {
+        Toastify({
+          text: data.message, // Mensagem retornada do backend
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "orange",
+        }).showToast();
+      }
+    else{ 
       console.log("Erro para excluir:", data);
       Toastify({
         text: "Erro na exclusão do Cliente",
@@ -406,7 +419,10 @@ async function deleteClient(id, clientRow) {
         position: "center",
         backgroundColor: "red",
       }).showToast();
+
     }
+  }
+     
   } catch (error) {
     console.error("Erro ao excluir cliente:", error);
     Toastify({

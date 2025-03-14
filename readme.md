@@ -63,7 +63,7 @@ Meu html esta destribuido por seções onde tenho algumas sesões com display no
 
 * no model cada arquivo contem os dados para uma tabela especifica no banco , nos arquivos (location.js , logisticsModel.js) temos relacionamentos para ser feito aquele determinado processo, e também temos tabelas para os 2 processos para armazenar.
 
-* No arquivo auth do meu model: eu estou validando se os dados fornecidos no parametro da função são iguais a determinada coluna da tabela , para ai sim poder fazer a validação esses dados estão sendo preenchido pelo o front por 2 inputs na hora do login estou usando o BCRYPT para compara a senha criptografada do banco com a senha fornecida no input , ou seja  tenho esas camda de segurança pois todas minhas senhas no banco vão estar criptografadas.
+* No arquivo auth do meu model: eu estou validando se os dados fornecidos no parametro da função são iguais a determinada coluna da tabela , para ai sim poder fazer a validação esses dados estão sendo preenchido pelo o front por 2 inputs na hora do login estou usando o BCRYPT para compara a senha criptografada do banco, com a senha fornecida no input  ou seja  tenho essas camada de segurança pois todas minhas senhas no banco vão estar criptografadas.
 
 * o arquivo (Index.js) do meu model faz o link para uma outra pagina que e onde rola todo meu processo temos um controller e uma rota também para esse processo.
 
@@ -71,8 +71,18 @@ Meu html esta destribuido por seções onde tenho algumas sesões com display no
 
 (MIDDLEWARE)
 
-* estou pegando o tokem fornecido e validando ele para que ele possa acessar determinada rota , ou seja estou  passando uma camada de segurança para que se o o tokem não for fornecido não poderar acessar 
+* estou pegando o tokem fornecido e validando ele para que ele possa acessar determinada rota , ou seja estou  passando uma camada de segurança para que se o o tokem não for fornecido não poderar acessar a rota
 
 (CONTROLLER)
 
 * meus controllers são a ponte para ser emitido meu endPoint no routes
+
+* neles também estou retornando a resposta para o cliente e pegando as requisições
+
+* no controller o nome dos arquivos também diz muito sobre em que precesso ele esta envolvido e quais rotas ele esta controlando.
+
+(ROUTES)
+
+* Todos meus endPoints estão nessa pasta router , e meus arquivos da views estão interagindo com esses endPoints de acordo com a necessidade
+
+* tenho as difinições la no arquivo route.js onde eu descrevo para que esta servindo aqueles determinados endPoints 

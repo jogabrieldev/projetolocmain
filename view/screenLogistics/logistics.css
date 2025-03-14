@@ -21,75 +21,108 @@
   box-shadow: 4px 5px 8px rgba(0, 0, 0, 0.929);
   width: 76%;
   height: 550px;
-  margin-left: 20%;
+  margin-left: 22%;
   margin-top: 1.2%;
   flex-direction: column;
   justify-content: space-between;
+  border: solid , 2px , white;
+  padding: 7px;
+  border-radius: 10px;
+}
+p{
+  font-size: 17px;
 }
 .logisticsMainTop{
     display: flex;
     gap: 0.5%;
     flex-direction: row;
     justify-content: space-between;
+    height: 70px;
 }
 .orders{
   display: flex;
   background-color:  darkgray;
   width:60%;
-  height: 250px;
+  height: 270px;
   overflow: auto;
   border: 2px solid white;
 }
-
+.orders #tableWithAllLocation{
+  height:50px;
+  border-collapse: collapse;
+}
+.orders #tableWithAllLocation th,
+.orders #tableWithAllLocation td{
+  padding: 10px;
+  text-align: left;
+}
 
 .need{
   display: flex;
   background-color:  darkgray;
   width:50%;
   height: 200px;
-  align-items: center;
-  justify-content: center;
   border: 2px solid white;
 }
-#tableGoodsVsRequestPending{
-  width: 100%;
-}
-#tableGoodsVsRequestPending th{
-  width: 100%;
-}
-#tableGoodsVsRequestPending td{
-  width: 100%;
+.need #tableGoodsVsRequestPending {
+  height:50px;
+  border-collapse: collapse;
 }
 
+.need #tableGoodsVsRequestPending th,
+.need #tableGoodsVsRequestPending td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+  width: 50%;
+}
+
+.need #tableGoodsVsRequestPending thead {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 10;
+}
 
 .logisticsMainBottom{
   display: flex;
+  gap: 0.5%;
   flex-direction: row;
   justify-content: space-between;
 }
 
 .validadeFamily{
   overflow: auto;
-  width:70%;
-  height: 220px;
+  width:65%;
+  height: 270px;
+  border: 2px solid white;
+}
+.linkDrive{
+  overflow: auto;
+  width: 50%;
+  height: 270px;
   border: 2px solid white;
 }
 
-thead{
-  width:10%;
+.linkDriver.listDriver{
+   height: 50px;
 }
+
 /* modal para vincular o bem a locação */
 .modal{
   background-color: darkgray;
   box-shadow: 4px 5px 8px rgba(0, 0, 0, 0.929);
   width: 76%;
   height: 550px;
-  margin-left: 20%;
+  margin-left: 22%;
   margin-top: 1.2%;
   flex-direction: column;
   justify-content: space-between;
+  border: 2px solid white;
+  padding: 7px;
+  border-radius: 10px;
 }
-.modal-content{
+#bensDisponiveis{
   overflow: auto;
 }
 .OutScreenLinkGoods{

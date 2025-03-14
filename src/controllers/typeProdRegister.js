@@ -1,26 +1,23 @@
-import  {crudRegisterTypeProd} from "../model/dataTypeProd.js";
-const typeProdRegister = crudRegisterTypeProd
+import { crudRegisterTypeProd } from "../model/dataTypeProd.js";
+const typeProdRegister = crudRegisterTypeProd;
 
- export const movementOfTypeProd = {
-
+export const movementOfTypeProd = {
   async registerTyperProd(req, res) {
     try {
-      try {
-        const dataTypeProd = req.body;
+      const dataTypeProd = req.body;
 
-        if (!dataTypeProd) {
-          return res
-            .status(400)
-            .json({ message: "campos obrigatorios não preenchidos" });
-        }
-
-        const newTypeProd = await typeProdRegister.registerTypeProd(dataTypeProd);
-        res.status(201).json({ success: true, user: newTypeProd });
-      } catch (error) {
-        console.log("erro no controller");
-        res.status(500).json({ success: false, message: error.message });
+      if (!dataTypeProd) {
+        return res
+          .status(400)
+          .json({ message: "campos obrigatorios não preenchidos" });
       }
-    } catch (error) {}
+
+      const newTypeProd = await typeProdRegister.registerTypeProd(dataTypeProd);
+      res.status(201).json({ success: true, user: newTypeProd });
+    } catch (error) {
+      console.log("erro no controller");
+      res.status(500).json({ success: false, message: error.message });
+    }
   },
 
   async listingOfTypeProd(req, res) {
@@ -38,8 +35,19 @@ const typeProdRegister = crudRegisterTypeProd
   },
 
   async deleteOfTypeProd(req, res) {
+    const { id } = req.params;
     try {
-      const { id } = req.params;
+      const verificar = await typeProdRegister.verificarDependeciaDetipoProd(
+        id
+      );
+
+      if (verificar) {
+        return res.status(400).json({
+          message:
+            "Não e possivel excluir. Temos produtos vinculado a esse tipo",
+        });
+      }
+
       const deleteComponent = await typeProdRegister.deleteTypeProd(id);
 
       if (!deleteComponent) {

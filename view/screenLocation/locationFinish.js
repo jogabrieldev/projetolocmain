@@ -1,10 +1,5 @@
 // locação finalizada
 
-// const buttonAtivRegister = document.querySelector(".btnAtivRegister");
-// buttonAtivRegister.addEventListener("click", () => {
-//   const containerSearch = document.querySelector(".containerSearch");
-//   containerSearch.style.display = "none";
-// });
 
 const btnOutPageLocation = document.querySelector(".buttonExitLocation");
 btnOutPageLocation.addEventListener("click", () => {
@@ -22,12 +17,37 @@ outPageSearchLocation.addEventListener("click", () => {
 });
 
 
-let locacoes = []; // Variável global para armazenar os dados das locações
+let locacoes = []; 
 
 async function frontLocation() {
+  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token"); 
+    setTimeout(() => {
+        window.location.href = "/index.html"; 
+    }, 2000); 
+    return;
+}
+
+
   try {
-    // Chamar a API para buscar os dados de locações
-    const response = await fetch("/api/location");
+    const response = await fetch("/api/location" , {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    },
+    });
     if (!response.ok) throw new Error("Erro ao buscar locações.");
 
     // Obter os dados
@@ -35,7 +55,6 @@ async function frontLocation() {
     const clientes = data.clientes || [];
     const bens = data.bens || [];
 
-    console.log('meus bens loca' , bens )
 
     if (clientes.length === 0 || bens.length === 0) {
       document.querySelector(
@@ -157,7 +176,6 @@ function renderTable(data) {
             </tbody>
         </table>
     `;
-  console.log('MEUS DADOS ' ,  data)
 
   document.querySelectorAll(".locacao-checkbox").forEach((checkbox) => {
     checkbox.addEventListener("change", (event) => {
@@ -184,7 +202,7 @@ function filterTable() {
   const dateLocation = document  .getElementById("dateLocation")  .value.trim() .split("-")
  .join("/");
 
-  const filledInputs = [numberLocation,statusLocation, nameClient, dateLocation].filter((input) => input !== "" ).length;
+ const filledInputs = [numberLocation, statusLocation, nameClient, dateLocation].filter((input) => input.length > 0).length;
 
   if (filledInputs > 1) {
     Toastify({
@@ -248,7 +266,6 @@ function filterTable() {
   document.querySelector(".searchLocation").style.display = "none"; 
 };
 
-
 const btnDeleteLocation = document.querySelector('.buttonDeleteLocation')
  btnDeleteLocation.addEventListener('click' , async ()=>{
          
@@ -268,7 +285,6 @@ const btnDeleteLocation = document.querySelector('.buttonDeleteLocation')
       }
     
       const locacaoId = selectedCheckbox.getAttribute("data-locacao");
-      console.log('id d MINHA LOCAÇÃO:' , locacaoId)
     
       const confirmacao = confirm(
         `Tem certeza de que deseja excluir a locação com código ${locacaoId}?`
@@ -282,13 +298,36 @@ const btnDeleteLocation = document.querySelector('.buttonDeleteLocation')
 })
 
 async function deletelocation(id , rowProd) {
-    
+       
+  const token = localStorage.getItem('token'); 
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token"); 
+    setTimeout(() => {
+        window.location.href = "/index.html"; 
+    }, 2000); 
+    return;
+}
     try {
         const response = await fetch(`/api/deletelocation/${id}`, {
           method: "DELETE",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+
         });
         const data = await response.json();
-        console.log("Resposta do servidor:", data);
+        console.log('dados', data)
     
         if (response.ok) {
           Toastify({
@@ -357,9 +396,32 @@ buttonEditLocation.addEventListener("click", async () => {
     ).padStart(2, "0")}/${String(dateObj.getDate()).padStart(2, "0")}`;
   };
 
-  // Buscar os dados da API
+  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token"); 
+    setTimeout(() => {
+        window.location.href = "/index.html"; 
+    }, 2000); 
+    return;
+}
   try {
-    const response = await fetch("/api/location");
+    const response = await fetch("/api/location" , {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    },
+    });
     const result = await response.json();
 
     const clientLoc = await result.clientes

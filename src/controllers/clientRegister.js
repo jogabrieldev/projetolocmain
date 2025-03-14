@@ -35,17 +35,27 @@ import  {clientRegister} from "../model/dataClient.js";
   },
 
   async deleteOfClient(req, res) {
+
+    const { id } = req.params;
     try {
-      const { id } = req.params;
+      const temDependencia = await clientRegister.verificarDependenciaCliente(id)
+       
+        if(temDependencia){
+           return res.status(400).json({
+             message: "Não e possivel excluir. O cliente tem locação"
+           })
+        }
       const deleteComponent = await clientRegister.deleteClient(id);
 
-      if (!deleteComponent) {
-        return res.status(404).json({ message: "Componente Não encontrado" });
+      if(deleteComponent){
+        return res.status(200).json({
+          message: "Client Apagado com sucesso",
+          component: deleteComponent,
+        });
+      }else{
+        return res.status(500).json({message: "Cliente não encontrado"})
       }
-      return res.status(200).json({
-        message: "Client Apagado com sucesso",
-        component: deleteComponent,
-      });
+     
     } catch (error) {
       console.error("erro ao apagar componente:", error);
       return res.status(500).json({ message: "erro no servidor" });

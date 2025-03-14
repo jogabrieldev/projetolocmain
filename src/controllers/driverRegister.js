@@ -1,8 +1,7 @@
-import  {crudRegisterDriver} from "../model/dataDriver.js";
-const driverRegister = crudRegisterDriver
+import { crudRegisterDriver } from "../model/dataDriver.js";
+const driverRegister = crudRegisterDriver;
 
-
- export const movementOfDriver = {
+export const movementOfDriver = {
   async registerOfDriver(req, res) {
     try {
       const dataDriver = req.body;
@@ -36,8 +35,15 @@ const driverRegister = crudRegisterDriver
   },
 
   async deleteOfDriver(req, res) {
+    const { id } = req.params;
     try {
-      const { id } = req.params;
+      const verificar = await driverRegister.verificarDepedenciaDeMotorista(id);
+      if (verificar) {
+        return res.status(400).json({
+          message:
+            "Não e possivel excluir. Motorista tem veiculo vinculado a ele",
+        });
+      }
       const deleteMotorista = await driverRegister.deleteDriver(id);
 
       if (!deleteMotorista) {
@@ -74,5 +80,27 @@ const driverRegister = crudRegisterDriver
       res.status(500).json({ message: "Erro ao atualizar o Motorista", error });
     }
   },
-};
 
+  async updateStatusDriver(req, res) {
+    try {
+      const { motoId } = req.params;
+      const { motostat } = req.body;
+
+      if (!motoId || !motostat) {
+        return res.status(400).json({ message: "Dados inválidos" });
+      }
+
+      const result = await driverRegister.updateStatusMoto(motoId, motostat);
+      if (!result) {
+        return res.status(404).json({ message: "Motorista não encontrado" });
+      }
+
+      res
+        .status(200)
+        .json({ message: "Status atualizado com sucesso!", data: result });
+    } catch (error) {
+      console.error("Erro ao atualizar status:", error);
+      res.status(500).json({ message: "Erro no servidor" });
+    }
+  },
+};

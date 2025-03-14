@@ -79,11 +79,41 @@ btnOutCadAutoEdit.addEventListener('click', (event)=>{
     const listingAutomo = document.querySelector('.listingAutomo')
      listingAutomo.style.display = 'flex'
 })
-
+ const buttonExitAuto = document.querySelector('.buttonExitAuto')
+  buttonExitAuto.addEventListener('click' , ()=>{
+      
+     const containerAppAutomo = document.querySelector('.containerAppAutomo')
+       containerAppAutomo.style.display = 'none'
+  })
 //listar motorista
 const loadDrivers = async () => {
+
+  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token"); 
+    setTimeout(() => {
+        window.location.href = "/index.html"; 
+    }, 2000); 
+    return;
+}
     try {
-      const response = await fetch('/api/listingdriver');
+      const response = await fetch('/api/listingdriver' , {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+      },
+      });
       const drivers = await response.json();
 
       const select = document.getElementById('motoAuto');
@@ -141,6 +171,10 @@ document.addEventListener('DOMContentLoaded', () => {
           }, 2000); 
           return;
       }
+
+      if (!$('.foorm').valid()) {
+        return;
+    }
         // Captura os valores do formulário
         const formData = {
             caaucode: document.querySelector('#codeAuto').value,
@@ -153,8 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
             caautico: document.querySelector('#tpCombusAuto').value,
             caaukmat: document.querySelector('#kmAtAuto').value,
             caaumoto: document.querySelector('#motoAuto').value,
-            cadstat: document.querySelector('#statAuto').value,
-            caddtcad: document.querySelector('#dtCadAuto').value
+            caaustat: document.querySelector('#statAuto').value,
+            caaudtca: document.querySelector('#dtCadAuto').value
         };
 
         try {
@@ -171,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (response.ok) {
                 Toastify({
-                    text: "Cadastrado com Sucesso",
+                    text: "Veiculo cadastrado com Sucesso",
                     duration: 3000,
                     close: true,
                     gravity: "top",
@@ -195,11 +229,37 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Erro ao enviar os dados para server.');
         }
     });
+    validationFormTipoProd()
 });
 
 async function listarVeiculos() {
+
+  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token"); 
+    setTimeout(() => {
+        window.location.href = "/index.html"; 
+    }, 2000); 
+    return;
+}
   try {
-      const response = await fetch('/api/listauto');
+      const response = await fetch('/api/listauto' ,{
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+      },
+      });
       const veiculos = await response.json();
 
       const veiculosListDiv = document.querySelector(".listingAutomo");
@@ -267,7 +327,7 @@ async function listarVeiculos() {
               linha.insertCell().textContent = veiculo.caautico;
               linha.insertCell().textContent = veiculo.caaukmat;
               linha.insertCell().textContent = veiculo.caaumoto;
-              linha.insertCell().textContent = veiculo.cadstat;
+              linha.insertCell().textContent = veiculo.caaustat;
 
               const formatDate = (isoDate) => {
                   if (!isoDate) return "";
@@ -278,7 +338,7 @@ async function listarVeiculos() {
                   return `${year}/${month}/${day}`;
               };
 
-              linha.insertCell().textContent = formatDate(veiculo.caddtcad);
+              linha.insertCell().textContent = formatDate(veiculo.caaudtca);
           });
 
           // Adiciona a tabela à div
@@ -327,9 +387,31 @@ buttonDeleteAuto.addEventListener("click", async () => {
 });
 
 async function deleteAuto(id, autoRow) {
+  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token"); 
+    setTimeout(() => {
+        window.location.href = "/index.html"; 
+    }, 2000); 
+    return;
+}
     try {
         const response = await fetch(`/api/cadauto/${id}`, {
             method: "DELETE",
+            headers:{
+               "Content-Type": "application/json" ,
+              "Authorization": `Bearer ${localStorage.getItem(token)}`
+            }
         });
         const data = await response.json();
         console.log("Resposta do servidor:", data);
@@ -422,8 +504,8 @@ editButtonAuto.addEventListener("click", () => {
       { id: "tpCombusAutoEdit", valor: autoSelecionado.caautico },
       { id: "kmAtAutoEdit", valor: autoSelecionado.caaukmat },
       { id: "motoAutoEdit", valor: autoSelecionado.caaumoto },
-      { id: "statAutoEdit", valor: autoSelecionado.cadstat },
-      { id: "dtCadAutoEdit", valor: formatDate(autoSelecionado.caddtcad) },
+      { id: "statAutoEdit", valor: autoSelecionado.caaustat },
+      { id: "dtCadAutoEdit", valor: formatDate(autoSelecionado.caaudtca) },
     ];
 
     campos.forEach(({ id, valor }) => {
@@ -485,14 +567,33 @@ async function editAndUpdateOfAuto() {
       caautico: document.getElementById("tpCombusAutoEdit").value,
       caaukmat: document.getElementById("kmAtAutoEdit").value,
       caaumoto: document.getElementById("motoAutoEdit").value,
-      cadstat: document.getElementById("statAutoEdit").value,
-      caddtcad: document.getElementById("dtCadAutoEdit").value || null,
+      caaustat: document.getElementById("statAutoEdit").value,
+      caaudtca: document.getElementById("dtCadAutoEdit").value || null,
     };
+    const token = localStorage.getItem('token'); // Pega o token armazenado no login
 
+    if (!token || isTokenExpired(token)) {
+      Toastify({
+          text: "Sessão expirada. Faça login novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+      }).showToast();
+  
+      localStorage.removeItem("token"); 
+      setTimeout(() => {
+          window.location.href = "/index.html"; 
+      }, 2000); 
+      return;
+  }
     try {
       const response = await fetch(`/api/cadauto/${autoSelecionado.caaucode}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" ,
+          "Authorization": `Bearer ${localStorage.getItem(token)}`
+         },
         body: JSON.stringify(updateAuto),
       });
 
