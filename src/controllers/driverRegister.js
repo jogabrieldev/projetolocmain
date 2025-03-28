@@ -12,7 +12,13 @@ export const movementOfDriver = {
           .json({ message: "campos obrigatorios não preenchidos" });
       }
 
-      const newDriver = driverRegister.registerDriver(dataDriver);
+      const newDriver = await driverRegister.registerDriver(dataDriver);
+      const listDriver = await driverRegister.listingDriver()
+
+      const io = req.app.get("socketio");
+      if (io) {
+        io.emit("updateRunTimeDriver", listDriver);
+      }
       res.status(201).json({ success: true, user: newDriver });
     } catch (error) {
       console.log("erro no controller");
@@ -44,6 +50,13 @@ export const movementOfDriver = {
             "Não e possivel excluir. Motorista tem veiculo vinculado a ele",
         });
       }
+      const verificarEntregas = await driverRegister.verificarEntregaComMotorista(id)
+      if(verificarEntregas){
+        return res.status(400).json({
+          message:
+            "Não é possível excluir. O motorista tem entregas pendentes ou está em entrega.",
+        });
+      }
       const deleteMotorista = await driverRegister.deleteDriver(id);
 
       if (!deleteMotorista) {
@@ -68,9 +81,20 @@ export const movementOfDriver = {
         updateData[key] = null;
       }
     });
-
+    //updateRunTimeTableDrive
     try {
+      const io = req.app.get("socketio");
       const updateMoto = await driverRegister.updateDriver(motoId, updateData);
+
+      if(!updateMoto){
+        return res.status(404).json({ message: "Tipo de produto não encontrado para atualização." });
+      }
+
+      if (io) {
+        io.emit("updateRunTimeTableDrive",updateMoto); 
+      } else {
+        console.warn("Socket.IO não está configurado.");
+      }
       res.json({
         message: "Motorista atualizado com sucesso",
         Motorista: updateMoto,
@@ -86,6 +110,7 @@ export const movementOfDriver = {
       const { motoId } = req.params;
       const { motostat } = req.body;
 
+     
       if (!motoId || !motostat) {
         return res.status(400).json({ message: "Dados inválidos" });
       }

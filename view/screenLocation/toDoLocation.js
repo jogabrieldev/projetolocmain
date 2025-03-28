@@ -126,21 +126,27 @@ function atualizarDataHora() {
 
   document.getElementById("dataLoc").value = dataHoraFormatada;
 }
-
 setInterval(atualizarDataHora, 1000);
 
-function gerarNumeroLocacao() {
-  let numerosGerados = JSON.parse(localStorage.getItem("numerosLocacao")) || []; 
+async function obterNumeroLocacao() {
+  try {
+    const response = await fetch("/api/generateNumber", {
+      method: "GET",
+    });
 
-  do {
-    novoNumero = Math.floor(Math.random() * 1000000); 
-  } while (numerosGerados.includes(novoNumero)); 
+    if (!response.ok) {
+      throw new Error("Erro ao obter número de locação do servidor.");
+    }
 
-  numerosGerados.push(novoNumero); 
-  localStorage.setItem("numerosLocacao", JSON.stringify(numerosGerados)); 
-  document.getElementById("numeroLocation").value = novoNumero; 
-}
+    const data = await response.json();
+    return data.numericLocation;  // Retorna o número gerado pelo backend
+  } catch (error) {
+    console.error("Erro ao gerar número de locação:", error);
+    throw error;
+  }
+};
 
+// VERIFICA SE OS CAMPOS DOS CLIENTES ESTA OK
 function verificarPreenchimentoCliente() {
   const inputsCliente = [
     "nameClient",
@@ -156,14 +162,64 @@ function verificarPreenchimentoCliente() {
     const input = document.getElementById(id);
     return input && input.value.trim() !== "";
   });
-}
+};
 
+//ATUALIZAÇÃO DA TABELA DE LOCAÇAO EM RUNTIME
+const socketUpdateContainerLocation = io()
+document.addEventListener('DOMContentLoaded' , ()=>{
+   
+  socketUpdateContainerLocation.on("updateRunTimeRegisterLocation", (listLocation) => {
+    const listaLocacoes = listLocation.map((locacao) => {
+      if (locacao.bens.length > 0) {
+        return locacao.bens.map((bem) => ({
+          idClient: locacao.clloid,
+          numeroLocacao: locacao.cllonmlo || "Não definido",
+          nomeCliente: locacao.clloclno || "Não definido",
+          cpfCliente: locacao.cllocpf || "Não definido",
+          dataLocacao: formatDate(locacao.cllodtlo),
+          dataDevolucao: formatDate(locacao.cllodtdv),
+          formaPagamento: locacao.cllopgmt || "Não definido",
+          codigoBem: bem.bencodb || "-",
+          produto: bem.beloben || "Nenhum bem associado",
+          quantidade: bem.beloqntd || "-",
+          status: bem.belostat || "Não definido",
+          observacao: bem.beloobsv || "Sem observação",
+          dataInicio: formatDate(bem.belodtin),
+          dataFim: formatDate(bem.belodtfi),
+        }));
+      } else {
+        return [
+          {
+            idClient: locacao.clloid,
+            numeroLocacao: locacao.cllonmlo || "Não definido",
+            nomeCliente: locacao.clloclno || "Não definido",
+            cpfCliente: locacao.cllocpf || "Não definido",
+            dataLocacao: formatDate(locacao.cllodtlo),
+            dataDevolucao: formatDate(locacao.cllodtdv),
+            formaPagamento: locacao.cllopgmt || "Não definido",
+            codigoBem: "-",
+            produto: "Nenhum bem associado",
+            quantidade: "-",
+            status: "-",
+            observacao: "Nenhuma observação",
+            dataInicio: "-",
+            dataFim: "-",
+          },
+        ];
+      }
+    }).flat(); 
+
+    renderTable(listaLocacoes); 
+  });
+})
+
+// BUSCAR CLIENTE E VERIFICAR SE ELE JA TEM CADASTRO.
 const searchClient = document.querySelector("#search");
 searchClient.addEventListener("click", async (event) => {
   event.preventDefault();
   const inputSearchClient = document.querySelector("#client").value.trim();
 
-  const token = localStorage.getItem("token"); // Pega o token armazenado no login
+  const token = localStorage.getItem("token"); 
 
   if (!token || isTokenExpired(token)) {
     Toastify({
@@ -197,14 +253,12 @@ searchClient.addEventListener("click", async (event) => {
 
     const clientes = await response.json();
 
-    console.log("Clientes da API", clientes);
-
     // Função para normalizar textos (remover acentos e converter para minúsculas)
     const normalizeText = (text) => {
       return text
         ? text
-            .normalize("NFD") // Decompor acentos
-            .replace(/[\u0300-\u036f]/g, "") // Remover acentos
+            .normalize("NFD") 
+            .replace(/[\u0300-\u036f]/g, "") 
             .toLowerCase()
         : "";
     };
@@ -310,9 +364,9 @@ searchClient.addEventListener("click", async (event) => {
   }
 });
 
-
+// CARREGAR CODIGO DA FAMILIA
 async function carregarFamilias() {
-  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+  const token = localStorage.getItem('token'); 
 
   if (!token || isTokenExpired(token)) {
     Toastify({
@@ -369,13 +423,13 @@ async function carregarFamilias() {
     }).showToast();
   }
 }
-
+//PREECHER  DISCRIÇÃO DO PRODUTO QUE FOI LOCADO
 function preencherProduto(index, familias) {
   const select = document.getElementById(`family${index}`);
   const inputProduto = document.getElementById(`produto${index}`);
   const codigoSelecionado = select.value;
 
-  // Encontra a família correspondente ao código selecionado
+ 
   const familiaSelecionada = familias.find(
     (familia) => familia.fabecode === codigoSelecionado
   );
@@ -403,6 +457,7 @@ function clearFields() {
 
 document.addEventListener("DOMContentLoaded", carregarFamilias);
 
+// ENVIO DA LOCAÇÃO FINALIZADA
 async function handleSubmit() {
   const totalGrups = 4;
   const bens = [];
@@ -448,12 +503,10 @@ async function handleSubmit() {
     }).showToast();
     return;
   }
-  if (bens.length >= 1) {
-    gerarNumeroLocacao();
-  }
 
   try {
-    const numericLocation = document.querySelector("#numeroLocation").value;
+    const numericLocation = await obterNumeroLocacao();
+    document.querySelector("#numeroLocation").value = numericLocation;
     const nameClient = document.querySelector("#nameClient").value;
     const cpfClient = document.querySelector("#cpfClient").value;
 
@@ -484,7 +537,7 @@ async function handleSubmit() {
       bens,
     }; 
 
-    const token = localStorage.getItem('token'); // Pega o token armazenado no login
+    const token = localStorage.getItem('token'); 
 
     if (!token || isTokenExpired(token)) {
       Toastify({
@@ -550,9 +603,9 @@ async function handleSubmit() {
   }
 }
 
+// BUSCAR CLIENTE
 async function buscarNomeCliente(cpf) {
-
-  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+  const token = localStorage.getItem('token'); 
 
   if (!token || isTokenExpired(token)) {
     Toastify({
@@ -705,7 +758,7 @@ formRegisterClientLoc.addEventListener("submit", async (event) => {
     Object.keys(data).length === 0 ||
     Object.values(data).some((val) => val === "")
   ) {
-    console.log("Formulario Vazio");
+
     Toastify({
       text: "Por favor, preencha o formulário antes de enviar.",
       duration: 3000,
@@ -716,7 +769,7 @@ formRegisterClientLoc.addEventListener("submit", async (event) => {
     }).showToast();
     return;
   }
-  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+  const token = localStorage.getItem('token');
 
   if (!token || isTokenExpired(token)) {
     Toastify({

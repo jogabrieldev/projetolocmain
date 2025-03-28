@@ -12,7 +12,13 @@ export const movementOfFamilyGoods = {
           .json({ message: "campos obrigatorios não preenchidos" });
       }
 
-      const newFabri = fabriRegister.registerOfFabri(dataFabri);
+      const newFabri = await fabriRegister.registerOfFabri(dataFabri);
+      const listFamilyBens = await fabriRegister.listingFabri();
+
+      const io = req.app.get("socketio");
+      if (io) {
+        io.emit("updateRunTimeFamilyBens", listFamilyBens);
+      }
       res.status(201).json({ success: true, user: newFabri });
     } catch (error) {
       console.log("erro no controller");
@@ -71,7 +77,19 @@ export const movementOfFamilyGoods = {
     });
 
     try {
+      const io = req.app.get("socketio");
       const updateProd = await fabriRegister.updateFabri(fabeId, updateData);
+       
+      if(!updateProd){
+        return res.status(404).json({ message: "familia de bem não encontrado para atualização." });
+      }
+      
+      if (io) {
+        io.emit("updateRunTimeTableFamilyGoods", updateProd); 
+      } else {
+        console.warn("Socket.IO não está configurado.");
+      }
+
       res.json({
         message: "produto atualizado com sucesso",
         fabricante: updateProd,

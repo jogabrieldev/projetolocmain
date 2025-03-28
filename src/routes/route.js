@@ -17,9 +17,6 @@ import logistics from '../controllers/logistcsController.js'
 import { controllerDelivery } from "../controllers/deliveryController.js";
 
 
-
-
-
 // Olhar pois e uma classe
 route.get("/", () => {
   control.submitStart();
@@ -52,9 +49,10 @@ route.put("/api/updatestatus/:bemId" , authenticateToken, async(req, res)=>{
 })
 
 //client
-route.post('/api/client/submit', authenticateToken, (req , res)=>{
-  movementClient.registerClient(req , res)
-})
+
+route.post('/api/client/submit', authenticateToken, (req, res) => {
+  movementClient.registerClient(req, res);  
+});
 
 route.get('/api/listclient', authenticateToken, (req , res)=>{
   movementClient.listingOfClient(req, res)
@@ -93,6 +91,7 @@ route.put('/api/updateforn/:id' , authenticateToken, (req , res)=>{
 // produto
 
 route.post('/api/prod/submit' ,  authenticateToken,  (req , res)=>{
+ 
   movementOfProd.registerProd(req ,res)
 })
 
@@ -192,13 +191,21 @@ route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
 
  //locação 
 
+ route.get('/api/generateNumber' , (req , res)=>{
+   location.gerarNumeroLocacao(req , res)
+ })
+
  route.post('/api/datalocation' , authenticateToken, (req , res)=>{
   location.dataLocacao(req , res)
  })
 
- route.get('/api/location' , authenticateToken, (req , res)=>{
-   location.buscarLocationFinish(req ,res)
+ route.get('/api/locationFinish' , authenticateToken, (req , res)=>{
+  location.buscarLocationFinish(req ,res)
  })
+ 
+ route.get('/api/location/:locacaoId', authenticateToken, (req, res) => {
+  location.buscarLocacaoPorId(req, res);
+});
 
 route.get('/api/codefamilybens', authenticateToken,(req , res)=>{
    location.listarFamilias(req,res)
@@ -215,6 +222,9 @@ route.get('/api/codefamilybens', authenticateToken,(req , res)=>{
  route.put('/api/updatestatuslocation/:bemId' , authenticateToken, (req , res)=>{
     location.updateStatus(req ,res)
  })
+ route.put("/api/location/:id", authenticateToken, (req ,res)=>{
+  location.updateLocationAndBens(req ,res)
+ });
     
  // DELIVERY LOCATION 
 

@@ -100,10 +100,21 @@ function isTokenExpired(token) {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  document
-    .querySelector(".cadFabri")
-    .addEventListener("click", async (event) => {
+const socketUpdateFamilyBens = io()
+document.addEventListener("DOMContentLoaded", async () => {
+   
+   await fetchListFabricante();
+   socketUpdateFamilyBens.on("updateRunTimeFamilyBens", (familyGoods) => {
+    insertFamilyGoodsTableRunTime(familyGoods);
+  });
+
+  socketUpdateFamilyBens.on("updateRunTimeTableFamilyGoods", (updatedFamimyGoods) => {
+   updateFamilyGoodsInTableRunTime(updatedFamimyGoods);
+  });
+
+
+    document.querySelector(".cadFabri").addEventListener("click", async (event) => {
+
       event.preventDefault();
 
       const token = localStorage.getItem("token");
@@ -181,8 +192,63 @@ document.addEventListener("DOMContentLoaded", () => {
   validationFormFabric();
 });
 
-// listagem de fabricante
+function insertFamilyGoodsTableRunTime(familyGoods) {
+  const fabricanteListDiv = document.querySelector(".listingFabri");
+  fabricanteListDiv.innerHTML = "";
 
+  if (familyGoods.length > 0) {
+    const tabela = document.createElement("table");
+    tabela.style.width = "100%";
+    tabela.setAttribute("border", "1");
+
+    // Cabeçalho
+    const cabecalho = tabela.createTHead();
+    const linhaCabecalho = cabecalho.insertRow();
+    const colunas = [
+      "Selecionar",
+      "Código",
+      "Descrição",
+      "Categoria",
+      "Subcategoria",
+      "Observação",
+      "Centro de Custo"
+    ];
+
+    colunas.forEach((coluna) => {
+      const th = document.createElement("th");
+      th.textContent = coluna;
+      linhaCabecalho.appendChild(th);
+    });
+
+    // Corpo da tabela
+    const corpo = tabela.createTBody();
+    familyGoods.forEach((familyGoods) => {
+      const linha = corpo.insertRow();
+      linha.setAttribute("data-fabecode", familyGoods.fabecode);
+
+      const checkboxCell = linha.insertCell();
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.name = "selectfamilyGoods";
+      checkbox.value = familyGoods.fabecode;
+      checkbox.dataset.familyGoods = JSON.stringify(familyGoods);
+      checkboxCell.appendChild(checkbox);
+
+      linha.insertCell().textContent = familyGoods.fabecode;
+      linha.insertCell().textContent = familyGoods.fabedesc;
+      linha.insertCell().textContent = familyGoods.fabecate;
+      linha.insertCell().textContent = familyGoods.fabesuca;
+      linha.insertCell().textContent = familyGoods.fabeobs;
+      linha.insertCell().textContent = familyGoods.fabectct;
+    });
+
+    fabricanteListDiv.appendChild(tabela);
+  } else {
+    fabricanteListDiv.innerHTML = "<p>Nenhum fabricante cadastrado.</p>";
+  }
+}
+
+// listagem de fabricante
 async function fetchListFabricante() {
 
   const token = localStorage.getItem('token'); // Pega o token armazenado no login
@@ -210,12 +276,12 @@ async function fetchListFabricante() {
         'Authorization': `Bearer ${token}`
     },
     });
-    const fabricante = await response.json();
+    const familyGoods = await response.json();
 
-    const fabricanteListDiv = document.querySelector(".listingFabri");
-    fabricanteListDiv.innerHTML = "";
+    const familyGoodsListDiv = document.querySelector(".listingFabri");
+    familyGoodsListDiv.innerHTML = "";
 
-    if (fabricante.length > 0) {
+    if (familyGoods.length > 0) {
       const tabela = document.createElement("table");
       tabela.style.width = "100%";
       tabela.setAttribute("border", "1");
@@ -239,37 +305,37 @@ async function fetchListFabricante() {
       });
 
       const corpo = tabela.createTBody();
-      fabricante.forEach((fabricante) => {
+      familyGoods.forEach((familyGoods) => {
         const linha = corpo.insertRow();
 
-        linha.setAttribute("data-fabecode", fabricante.fabecode);
+        linha.setAttribute("data-fabecode", familyGoods.fabecode);
 
         const checkboxCell = linha.insertCell();
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.name = "selectFabricante";
-        checkbox.value = fabricante.fabecode;
+        checkbox.name = "selectfamilyGoods";
+        checkbox.value = familyGoods.fabecode;
 
-        const fabricanteData = JSON.stringify(fabricante);
+        const fabricanteData = JSON.stringify(familyGoods);
         if (fabricanteData) {
-          checkbox.dataset.fabricante = fabricanteData;
+          checkbox.dataset.familyGoods = fabricanteData;
         } else {
-          console.warn(`Fornecedor inválido encontrado:`, fabricante);
+          console.warn(`Fornecedor inválido encontrado:`, familyGoods);
         }
 
         checkboxCell.appendChild(checkbox);
 
-        linha.insertCell().textContent = fabricante.fabecode;
-        linha.insertCell().textContent = fabricante.fabedesc;
-        linha.insertCell().textContent = fabricante.fabecate;
-        linha.insertCell().textContent = fabricante.fabesuca;
-        linha.insertCell().textContent = fabricante.fabeobs;
-        linha.insertCell().textContent = fabricante.fabectct;
+        linha.insertCell().textContent = familyGoods.fabecode;
+        linha.insertCell().textContent = familyGoods.fabedesc;
+        linha.insertCell().textContent = familyGoods.fabecate;
+        linha.insertCell().textContent = familyGoods.fabesuca;
+        linha.insertCell().textContent = familyGoods.fabeobs;
+        linha.insertCell().textContent = familyGoods.fabectct;
       });
 
-      fabricanteListDiv.appendChild(tabela);
+      familyGoodsListDiv.appendChild(tabela);
     } else {
-      fabricanteListDiv.innerHTML = "<p>Nenhum fornecedor cadastrado.</p>";
+      familyGoodsListDiv.innerHTML = "<p>Nenhum fornecedor cadastrado.</p>";
     }
   } catch (error) {
     console.error("Erro ao carregar fornecedores:", error);
@@ -278,14 +344,11 @@ async function fetchListFabricante() {
   }
 }
 
-fetchListFabricante();
-
 //deletar fabricante
-
 const btnDeleteFabri = document.querySelector(".buttonDeleteFabri");
 btnDeleteFabri.addEventListener("click", async () => {
   const selectedCheckbox = document.querySelector(
-    'input[name="selectFabricante"]:checked'
+    'input[name="selectfamilyGoods"]:checked'
   );
   if (!selectedCheckbox) {
     Toastify({
@@ -299,7 +362,7 @@ btnDeleteFabri.addEventListener("click", async () => {
     return;
   }
 
-  const fabricanteSelecionado = JSON.parse(selectedCheckbox.dataset.fabricante);
+  const fabricanteSelecionado = JSON.parse(selectedCheckbox.dataset.familyGoods);
   const fabricanteId = fabricanteSelecionado.fabecode;
 
   console.log("ID Family", fabricanteId);
@@ -315,7 +378,7 @@ btnDeleteFabri.addEventListener("click", async () => {
 });
 
 async function deleteFabri(id, fabeRow) {
-  const token = localStorage.getItem("token"); // Pega o token armazenado no login
+  const token = localStorage.getItem("token");
 
   if (!token || isTokenExpired(token)) {
     Toastify({
@@ -393,7 +456,7 @@ async function deleteFabri(id, fabeRow) {
 const btnFormEditFabri = document.querySelector(".buttonEditFabri");
 btnFormEditFabri.addEventListener("click", () => {
   const selectedCheckbox = document.querySelector(
-    'input[name="selectFabricante"]:checked'
+    'input[name="selectfamilyGoods"]:checked'
   );
 
   if (!selectedCheckbox) {
@@ -408,7 +471,7 @@ btnFormEditFabri.addEventListener("click", () => {
     return;
   }
 
-  const fabricanteData = selectedCheckbox.dataset.fabricante;
+  const fabricanteData = selectedCheckbox.dataset.familyGoods;
   if (!fabricanteData) {
     console.error("O atributo data-fabecode está vazio ou indefinido.");
     return;
@@ -416,7 +479,6 @@ btnFormEditFabri.addEventListener("click", () => {
 
   try {
     const fabricanteSelecionado = JSON.parse(fabricanteData);
-    // console.log("Editar item:", fabricanteSelecionado);
 
     // Campos e IDs correspondentes
     const campos = [
@@ -464,7 +526,7 @@ btnFormEditFabri.addEventListener("click", () => {
   }
 });
 
-// função
+// função DE EDIÇÃO
 async function editAndUpdateOfFabric() {
   const formEditFabri = document.querySelector(".formEditFabri");
 
@@ -475,7 +537,7 @@ async function editAndUpdateOfFabric() {
     const data = Object.fromEntries(formData.entries());
 
     const selectedCheckbox = document.querySelector(
-      'input[name="selectFabricante"]:checked'
+      'input[name="selectfamilyGoods"]:checked'
     );
 
     if (!selectedCheckbox) {
@@ -483,7 +545,7 @@ async function editAndUpdateOfFabric() {
       return;
     }
 
-    const fabricanteId = selectedCheckbox.dataset.fabricante;
+    const fabricanteId = selectedCheckbox.dataset.familyGoods;
 
     if (!fabricanteId) {
       console.error("O atributo data-bem está vazio ou inválido.");
@@ -507,7 +569,7 @@ async function editAndUpdateOfFabric() {
       fabectct: document.getElementById("editFabeCtct").value,
     };
 
-    const token = localStorage.getItem("token"); // Pega o token armazenado no login
+    const token = localStorage.getItem("token"); 
 
     if (!token || isTokenExpired(token)) {
       Toastify({
@@ -558,5 +620,22 @@ async function editAndUpdateOfFabric() {
       console.error("Erro na requisição:", error);
     }
   });
-}
+};
 editAndUpdateOfFabric();
+
+// ATUALIZÇÃO EM RUNTIME
+function updateFamilyGoodsInTableRunTime(updatedFamimyGoods) {
+  const row = document.querySelector(
+    `[data-fabecode="${updatedFamimyGoods.fabecode}"]`
+  );
+
+  if (row) {
+    // Atualiza as células da linha com as novas informações do fabricante
+    row.cells[2].textContent = updatedFamimyGoods.fabedesc || "-"; // Descrição
+    row.cells[3].textContent = updatedFamimyGoods.fabecate || "-"; // Categoria
+    row.cells[4].textContent = updatedFamimyGoods.fabesuca || "-"; // Subcategoria
+    row.cells[5].textContent = updatedFamimyGoods.fabeobs || "-"; // Observação
+    row.cells[6].textContent = updatedFamimyGoods.fabectct || "-"; // Centro de Custo
+  }
+};
+

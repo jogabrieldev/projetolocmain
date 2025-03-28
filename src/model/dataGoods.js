@@ -190,7 +190,7 @@ export const goodsRegister = {
 
       return result.rows[0];
     } catch (error) {
-      console.error("erro ");
+      console.error("erro a atualizar status do bem ");
       throw error;
     }
   },

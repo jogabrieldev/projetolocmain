@@ -12,7 +12,13 @@ export const movementForne = {
           .json({ message: "campos obrigatorios não preenchidos" });
       }
 
-      const newForn = fornRegister.registerOfForn(dataForn);
+      const newForn = await fornRegister.registerOfForn(dataForn);
+      const forne = await fornRegister.listingForn();
+
+      const io = req.app.get("socketio");
+      if (io) {
+        io.emit("updateRunTimeForne", forne);
+      }
       res.status(201).json({ success: true, user: newForn });
     } catch (error) {
       console.log("erro no controller");
@@ -88,8 +94,15 @@ export const movementForne = {
     });
 
     try {
+      const io = req.app.get("socketio");
       const fornUpdate = await fornRegister.updateForn(fornId, updateForn);
 
+      
+      if (io) {
+        io.emit("updateFornTable", fornUpdate);
+      }else{
+        console.warn("Socket.IO não está configurado.");
+      }
       res.json({
         message: "Bem atualizado com sucesso",
         Fornecedor: fornUpdate,

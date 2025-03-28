@@ -97,7 +97,18 @@ function isTokenExpired(token) {
   }
 }
 
+const socketUpdateTypeProd  = io()
 document.addEventListener("DOMContentLoaded", () => {
+    
+  socketUpdateTypeProd.on("updateRunTimeTypeProduto", (tipoProduto) => {
+    insertTypeProductTableRunTime(tipoProduto)
+  });
+
+  socketUpdateTypeProd.on("updateRunTimeTableTypeProduto", (updatedTypeProduct) => {
+    updateTypeProductInTableRunTime(updatedTypeProduct)
+  });
+
+
   document.querySelector(".cadTp").addEventListener("click", async (event) => {
     event.preventDefault();
 
@@ -131,7 +142,9 @@ document.addEventListener("DOMContentLoaded", () => {
       tpSubCat: document.querySelector("#tpSubCat").value, // Subcategoria
       tpObs: document.querySelector("#tpObs").value, // Observação
       tpCtct: document.querySelector("#tpCtct").value, // Centro de Custo
-    };
+    }; 
+
+    
 
     try {
       const response = await fetch(
@@ -140,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify(formData),
         }
@@ -178,100 +191,165 @@ document.addEventListener("DOMContentLoaded", () => {
   validationFormTipoProd();
 });
 
+// ATUALIZAR A TABELA EM RUNTIME NA INSERÇÃO
+function insertTypeProductTableRunTime(tipoProduto) {
+  const tableWrapper = document.querySelector(".tableWrapper");
+  tableWrapper.innerHTML = ""; 
+
+  if (tipoProduto.length > 0) {
+    const tabela = document.createElement("table");
+    tabela.style.width = "100%";
+    tabela.setAttribute("border", "1");
+
+    // Cabeçalho da tabela
+    const cabecalho = tabela.createTHead();
+    const linhaCabecalho = cabecalho.insertRow();
+    const colunas = [
+      "Selecionar",
+      "Código",
+      "Descrição",
+      "Categoria",
+      "Subcategoria",
+      "Observação",
+      "Centro de Custo",
+    ];
+
+    colunas.forEach((coluna) => {
+      const th = document.createElement("th");
+      th.textContent = coluna;
+      linhaCabecalho.appendChild(th);
+    });
+
+    // Corpo da tabela
+    const corpo = tabela.createTBody();
+    tipoProduto.forEach((typeProd) => {
+      const linha = corpo.insertRow();
+      linha.setAttribute("data-typecode", typeProd.tiprcode);
+
+      const checkboxCell = linha.insertCell();
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.name = "selectTypeProd";
+      checkbox.value = typeProd.tiprcode;
+
+      const typeProdData = JSON.stringify(typeProd);
+      if (typeProdData) {
+        checkbox.dataset.typeProd = typeProdData;
+      } else {
+        console.warn(`Produto inválido encontrado:`, typeProd);
+      }
+
+      checkboxCell.appendChild(checkbox);
+
+      linha.insertCell().textContent = typeProd.tiprcode;
+      linha.insertCell().textContent = typeProd.tiprdesc;
+      linha.insertCell().textContent = typeProd.tiprcate;
+      linha.insertCell().textContent = typeProd.tiprsuca;
+      linha.insertCell().textContent = typeProd.tiprobs;
+      linha.insertCell().textContent = typeProd.tiprctct;
+    });
+
+    tableWrapper.appendChild(tabela);
+  } else {
+    tableWrapper.innerHTML = "<p>Nenhum tipo de produto cadastrado.</p>";
+  }
+};
+
 //listagem do tipo do produto
 async function fetchListTypeProduct() {
-  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+  const token = localStorage.getItem('token');
 
   if (!token || isTokenExpired(token)) {
-    Toastify({
-        text: "Sessão expirada. Faça login novamente.",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-    }).showToast();
+      Toastify({
+          text: "Sessão expirada. Faça login novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+      }).showToast();
 
-    localStorage.removeItem("token"); 
-    setTimeout(() => {
-        window.location.href = "/index.html"; 
-    }, 2000); 
-    return;
-}
-       
+      localStorage.removeItem("token"); 
+      setTimeout(() => {
+          window.location.href = "/index.html"; 
+      }, 2000); 
+      return;
+  }
+
   try {
-    const response = await fetch("/api/listingTypeProd" , {
-      method: "GET",
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    },
-    });
-    const tipoProduto = await response.json();
-
-    const typeProdListDiv = document.querySelector(".listingTipoProd");
-    typeProdListDiv.innerHTML = "";
-
-    if (tipoProduto.length > 0) {
-      const tabela = document.createElement("table");
-      tabela.style.width = "100%";
-      tabela.setAttribute("border", "1");
-
-      const cabecalho = tabela.createTHead();
-      const linhaCabecalho = cabecalho.insertRow();
-      const colunas = [
-        "Selecionar",
-        "Código",
-        "Discrição",
-        "Categoria",
-        "Subcategoria",
-        "observação",
-        "Centro de custo",
-      ];
-
-      colunas.forEach((coluna) => {
-        const th = document.createElement("th");
-        th.textContent = coluna;
-        linhaCabecalho.appendChild(th);
+      const response = await fetch("/api/listingTypeProd", {
+          method: "GET",
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+          },
       });
 
-      const corpo = tabela.createTBody();
-      tipoProduto.forEach((typeProd) => {
-        const linha = corpo.insertRow();
+      const tipoProduto = await response.json();
 
-        linha.setAttribute("data-typecode", typeProd.tiprcode);
+      const tableWrapper = document.querySelector('.tableWrapper');
+      tableWrapper.innerHTML = ""; // Limpa antes de adicionar a tabela
 
-        const checkboxCell = linha.insertCell();
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.name = "selecttypeprod";
-        checkbox.value = typeProd.tiprcode;
+      if (tipoProduto.length > 0) {
+          const tabela = document.createElement("table");
+          tabela.style.width = "100%"; // Define largura fixa
 
-        const typeProdData = JSON.stringify(typeProd);
-        if (typeProdData) {
-          checkbox.dataset.typeProd = typeProdData;
-        } else {
-          console.warn(`Fornecedor inválido encontrado:`, typeProd);
-        }
+          tabela.setAttribute("border", "1");
 
-        checkboxCell.appendChild(checkbox);
+          const cabecalho = tabela.createTHead();
+          const linhaCabecalho = cabecalho.insertRow();
+          const colunas = [
+              "Selecionar",
+              "Código",
+              "Descrição",
+              "Categoria",
+              "Subcategoria",
+              "Observação",
+              "Centro de custo",
+          ];
 
-        linha.insertCell().textContent = typeProd.tiprcode;
-        linha.insertCell().textContent = typeProd.tiprdesc;
-        linha.insertCell().textContent = typeProd.tiprcate;
-        linha.insertCell().textContent = typeProd.tiprsuca;
-        linha.insertCell().textContent = typeProd.tiprobs;
-        linha.insertCell().textContent = typeProd.tiprctct;
-      });
+          colunas.forEach((coluna) => {
+              const th = document.createElement("th");
+              th.textContent = coluna;
+              linhaCabecalho.appendChild(th);
+          });
 
-      typeProdListDiv.appendChild(tabela);
-    } else {
-      typeProdListDiv.innerHTML = "<p>Nenhum tipo de produto cadastrado.</p>";
-    }
+          const corpo = tabela.createTBody();
+          tipoProduto.forEach((typeProd) => {
+              const linha = corpo.insertRow();
+              linha.setAttribute("data-typecode", typeProd.tiprcode);
+
+              const checkboxCell = linha.insertCell();
+              const checkbox = document.createElement("input");
+              checkbox.type = "checkbox";
+              checkbox.name = "selectTypeProd";
+              checkbox.value = typeProd.tiprcode;
+
+              const typeProdData = JSON.stringify(typeProd);
+              if (typeProdData) {
+                  checkbox.dataset.typeProd = typeProdData;
+              } else {
+                  console.warn(`Fornecedor inválido encontrado:`, typeProd);
+              }
+
+              checkboxCell.appendChild(checkbox);
+
+              linha.insertCell().textContent = typeProd.tiprcode;
+              linha.insertCell().textContent = typeProd.tiprdesc;
+              linha.insertCell().textContent = typeProd.tiprcate;
+              linha.insertCell().textContent = typeProd.tiprsuca;
+              linha.insertCell().textContent = typeProd.tiprobs;
+              linha.insertCell().textContent = typeProd.tiprctct;
+          });
+
+          tableWrapper.appendChild(tabela);
+      } else {
+          tableWrapper.innerHTML = "<p>Nenhum tipo de produto cadastrado.</p>";
+      }
   } catch (error) {
-    console.error("Erro ao carregar fornecedores:", error);
-    document.querySelector(".listingTipoProd").innerHTML =
-      "<p>Erro ao carregar tipo de produto.</p>";
+      console.error("Erro ao carregar fornecedores:", error);
+      document.querySelector(".listingTipoProd").innerHTML =
+          "<p>Erro ao carregar tipo de produto.</p>";
   }
 }
 fetchListTypeProduct();
@@ -280,7 +358,7 @@ fetchListTypeProduct();
 const btnDeleteTypeProd = document.querySelector(".buttonDeleteTipoProd");
 btnDeleteTypeProd.addEventListener("click", async () => {
   const selectedCheckbox = document.querySelector(
-    'input[name="selecttypeprod"]:checked'
+    'input[name="selectTypeProd"]:checked'
   );
   if (!selectedCheckbox) {
     Toastify({
@@ -308,7 +386,7 @@ btnDeleteTypeProd.addEventListener("click", async () => {
 });
 
 async function deleteTypeProd(id, rowProd) {
-  const token = localStorage.getItem("token"); // Pega o token armazenado no login
+  const token = localStorage.getItem("token"); 
 
   if (!token || isTokenExpired(token)) {
     Toastify({
@@ -336,7 +414,6 @@ async function deleteTypeProd(id, rowProd) {
       },
     });
     const data = await response.json();
-    console.log("Resposta do servidor:", data);
 
     if (response.ok) {
       Toastify({
@@ -385,11 +462,10 @@ async function deleteTypeProd(id, rowProd) {
 }
 
 //botão editar
-
 const btnEditTp = document.querySelector(".buttonEditTipoProd");
 btnEditTp.addEventListener("click", () => {
   const selectedCheckbox = document.querySelector(
-    'input[name="selecttypeprod"]:checked'
+    'input[name="selectTypeProd"]:checked'
   );
 
   if (!selectedCheckbox) {
@@ -412,7 +488,6 @@ btnEditTp.addEventListener("click", () => {
 
   try {
     const typeProdutoSelecionado = JSON.parse(typeProdutoData);
-    console.log("Editar item:", typeProdutoSelecionado);
 
     // Campos e IDs correspondentes
     const campos = [
@@ -424,8 +499,6 @@ btnEditTp.addEventListener("click", () => {
       { id: "editTpCtct", valor: typeProdutoSelecionado.tiprctct },
     ];
 
-    //  console.log(campos)
-
     // Atualizar valores no formulário
     campos.forEach(({ id, valor }) => {
       const elemento = document.getElementById(id);
@@ -436,7 +509,6 @@ btnEditTp.addEventListener("click", () => {
       }
     });
 
-    // Mostrar o formulário de edição e ocultar a lista
     const spaceEditTypeprod = document.querySelector(".containerRegisterEdit");
     const btnMainPageProd = document.querySelector(".btnMainPageTipoProd");
     const listingTypeProd = document.querySelector(".listingTipoProd");
@@ -462,7 +534,6 @@ btnEditTp.addEventListener("click", () => {
 });
 
 //atualização
-
 async function editAndUpdateOfTypeProduct() {
   const formEditProd = document.querySelector(".formEditTp");
 
@@ -473,7 +544,7 @@ async function editAndUpdateOfTypeProduct() {
     const data = Object.fromEntries(formData.entries());
 
     const selectedCheckbox = document.querySelector(
-      'input[name="selecttypeprod"]:checked'
+      'input[name="selectTypeProd"]:checked'
     );
 
     if (!selectedCheckbox) {
@@ -527,7 +598,7 @@ async function editAndUpdateOfTypeProduct() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(updateTypeProduct),
       });
@@ -554,5 +625,21 @@ async function editAndUpdateOfTypeProduct() {
       console.error("Erro na requisição:", error);
     }
   });
-}
+};
 editAndUpdateOfTypeProduct();
+
+// atualização em runtime NA EDIÇÃO
+function updateTypeProductInTableRunTime(updatedTypeProduct) {
+  const row = document.querySelector(
+    `[data-typecode="${updatedTypeProduct.tiprcode}"]`
+  );
+
+  if (row) {
+    // Atualiza as células da linha com as novas informações do tipo de produto
+    row.cells[2].textContent = updatedTypeProduct.tiprdesc || "-"; // Descrição
+    row.cells[3].textContent = updatedTypeProduct.tiprcate || "-"; // Categoria
+    row.cells[4].textContent = updatedTypeProduct.tiprsuca || "-"; // Subcategoria
+    row.cells[5].textContent = updatedTypeProduct.tiprobs || "-"; // Observação
+    row.cells[6].textContent = updatedTypeProduct.tiprctct || "-"; // Centro de Custo
+  }
+};

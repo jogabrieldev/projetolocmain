@@ -1,47 +1,45 @@
 //butoes relacionados aos bens
 const buttonStartCadBens = document.querySelector(".btnCadBens");
 buttonStartCadBens.addEventListener("click", () => {
-
   const containerAppBens = document.querySelector(".containerAppBens");
-    containerAppBens.style.display = "flex";
+  containerAppBens.style.display = "flex";
 
-  const showContentBens = document.querySelector('.showContentBens')
-   showContentBens.style.display = 'none'
+  const showContentBens = document.querySelector(".showContentBens");
+  showContentBens.style.display = "none";
 
   const btnMainPage = document.querySelector(".btnPageListGoods");
-    btnMainPage.style.display = "flex";
+  btnMainPage.style.display = "flex";
 
   const listBens = document.querySelector(".listingBens");
-   listBens.style.display = "flex";
+  listBens.style.display = "flex";
 
-  const containerAppProd = document.querySelector('.containerAppProd')
-   containerAppProd.style.display = 'none'
+  const containerAppProd = document.querySelector(".containerAppProd");
+  containerAppProd.style.display = "none";
 
-  const containerAppFabri = document.querySelector('.containerAppFabri')
-   containerAppFabri.style.display = 'none'
+  const containerAppFabri = document.querySelector(".containerAppFabri");
+  containerAppFabri.style.display = "none";
 
-  const containerAppTypeProd = document.querySelector('.containerAppTipoProd')
-  containerAppTypeProd.style.display = 'none'
+  const containerAppTypeProd = document.querySelector(".containerAppTipoProd");
+  containerAppTypeProd.style.display = "none";
 
-   const containerAppDriver = document.querySelector('.containerAppDriver')
-    containerAppDriver.style.display = 'none'
-    
-     const containerAppAutomo = document.querySelector('.containerAppAutomo')
-       containerAppAutomo.style.display = 'none'
-       
-    const containerAppClient = document.querySelector(".containerAppClient");
-    containerAppClient.style.display = "none";
+  const containerAppDriver = document.querySelector(".containerAppDriver");
+  containerAppDriver.style.display = "none";
 
-    const containerAppForn = document.querySelector(".containerAppForn")
-       containerAppForn.style.display = 'none'
+  const containerAppAutomo = document.querySelector(".containerAppAutomo");
+  containerAppAutomo.style.display = "none";
 
-    const containerFormEdit = document.querySelector('.editForm')
-    containerFormEdit.style.display = 'none'
+  const containerAppClient = document.querySelector(".containerAppClient");
+  containerAppClient.style.display = "none";
 
-    const informative = document.querySelector('.information')
-    informative.style.display = 'block'
-    informative.textContent = 'SEÇÃO BENS'
+  const containerAppForn = document.querySelector(".containerAppForn");
+  containerAppForn.style.display = "none";
 
+  const containerFormEdit = document.querySelector(".editForm");
+  containerFormEdit.style.display = "none";
+
+  const informative = document.querySelector(".information");
+  informative.style.display = "block";
+  informative.textContent = "SEÇÃO BENS";
 });
 
 const buttonOutStart = document.querySelector(".material-symbols-outlined");
@@ -74,257 +72,351 @@ btnOutPageEdit.addEventListener("click", (e) => {
   e.preventDefault();
 
   const pageEditForm = document.querySelector(".editForm");
-  const listingBens = document.querySelector(".listingBens");
-  const btnPageListGoods = document.querySelector('.btnPageListGoods')
-  
-   listingBens.style.display = 'flex'
-   btnPageListGoods.style.display = 'flex'
-
-
   pageEditForm.style.display = "none";
+
+  const listingBens = document.querySelector(".listingBens");
+  listingBens.style.display = "flex";
+
+  const btnPageListGoods = document.querySelector(".btnPageListGoods");
+  btnPageListGoods.style.display = "flex";
 
   return;
 });
-
 
 const buttonOutGoods = document.querySelector(".btnOut");
 buttonOutGoods.addEventListener("click", (event) => {
   event.preventDefault();
   const ContentBens = document.querySelector(".showContentBens");
   const listingBens = document.querySelector(".listingBens");
-  const btnPageListGoods = document.querySelector('.btnPageListGoods')
+  const btnPageListGoods = document.querySelector(".btnPageListGoods");
 
   ContentBens.style.display = "none";
-  listingBens.style.display = 'flex'
-  btnPageListGoods.style.display ='flex'
+  listingBens.style.display = "flex";
+  btnPageListGoods.style.display = "flex";
 
   return;
 });
 
-const buttonSubmitRegisterGoods = document.querySelector('.btnNext')
-buttonSubmitRegisterGoods.addEventListener("submit" , (event)=>{
-  event.preventDefault()
-})
+const buttonSubmitRegisterGoods = document.querySelector(".btnNext");
+buttonSubmitRegisterGoods.addEventListener("submit", (event) => {
+  event.preventDefault();
+});
 
 function isTokenExpired(token) {
   try {
-      const payload = JSON.parse(atob(token.split('.')[1])); 
-      const expTime = payload.exp * 1000; 
-      return Date.now() > expTime; 
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    const expTime = payload.exp * 1000;
+    return Date.now() > expTime;
   } catch (error) {
-      return true; 
+    return true;
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelector('.btnNext').addEventListener('click', async (event) => {
-      event.preventDefault(); // Evita que o formulário recarregue a página
+const formatDate = (isoDate) => {
+  if (!isoDate) return "";
+  const dateObj = new Date(isoDate);
+  const year = dateObj.getFullYear();
+  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const day = String(dateObj.getDate()).padStart(2, "0");
+  return `${year}/${month}/${day}`;
+};
 
-      const token = localStorage.getItem('token'); // Pega o token armazenado no login
+const socketUpdateBens = io();
+document.addEventListener("DOMContentLoaded", async () => {
+  await fetchBens();
+
+  await loadSelectOptions("/api/codefamilyben", "cofa", "fabecode", "fabedesc");
+  await loadSelectOptions("/api/codeforn", "cofo", "forncode", "fornnome");
+
+  socketUpdateBens.on("updateRunTimeGoods", (bens) => {
+    insertBensInTableRunTime(bens);
+  });
+
+  socketUpdateBens.on("updateGoodsTable", (updatedBem) => {
+    updateBemInTableRunTime(updatedBem);
+  });
+
+  document.querySelector(".btnNext").addEventListener("click", async (event) => {
+      event.preventDefault(); 
+
+      const token = localStorage.getItem("token"); 
 
       if (!token || isTokenExpired(token)) {
         Toastify({
-            text: "Sessão expirada. Faça login novamente.",
+          text: "Sessão expirada. Faça login novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+
+        localStorage.removeItem("token"); 
+        setTimeout(() => {
+          window.location.href = "/index.html"; 
+        }, 2000); 
+        return;
+      }
+
+      if (!$("#formRegisterBens").valid()) {
+        return;
+      }
+      // Captura os valores do formulário
+      const formData = {
+        code: document.querySelector("#code").value.trim(),
+        name: document.querySelector("#name").value.trim(),
+        cofa: document.querySelector("#cofa").value.trim(),
+        model: document.querySelector("#model").value.trim(),
+        serial: document.querySelector("#serial").value.trim(),
+        placa: document.querySelector("#placa").value.trim(),
+        bensAnmo: document.querySelector("#bensAnmo").value.trim(),
+        dtCompra: document.querySelector("#dtCompra").value.trim(),
+        valorCp: document.querySelector("#valorCpMain").value.trim(),
+        ntFiscal: document.querySelector("#ntFiscal").value.trim(),
+        cofo: document.querySelector("#cofo").value.trim(),
+        kmAtual: document.querySelector("#kmAtual").value.trim(),
+        dtKm: document.querySelector("#dtKm").value.trim(),
+        status: document.querySelector("#status").value.trim(),
+        dtStatus: document.querySelector("#dtStatus").value.trim(),
+        hrStatus: document.querySelector("#hrStatus").value.trim(),
+        chassi: document.querySelector("#chassi").value.trim(),
+        cor: document.querySelector("#cor").value.trim(),
+        nuMO: document.querySelector("#nuMO").value.trim(),
+        rena: document.querySelector("#rena").value.trim(),
+        bensCtep: document.querySelector("#bensCtep").value.trim(),
+        bensAtiv: document.querySelector("#bensAtiv").value.trim(),
+        alug: document.querySelector("#alug").value.trim(),
+        valorAlug: document.querySelector("#valorAlugMain").value.trim(),
+        fabri: document.querySelector("#fabri").value.trim(), // Fabricante
+      };
+       
+      const cleanedData = Object.fromEntries(
+        Object.entries(formData).filter(([_, value]) => value !== "")
+      );
+
+      try {
+        const response = await fetch("http://localhost:3000/api/bens/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(cleanedData),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          Toastify({
+            text: "Bem cadastrado com sucesso!",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "green",
+          }).showToast();
+
+          // Limpar o formulário após o sucesso
+          document.querySelector("#formRegisterBens").reset();
+        } else {
+          Toastify({
+            text: `Erro ao cadastrar o bem`,
             duration: 3000,
             close: true,
             gravity: "top",
             position: "center",
             backgroundColor: "red",
-        }).showToast();
-    
-        localStorage.removeItem("token"); // Remove o token expirado
-        setTimeout(() => {
-            window.location.href = "/index.html"; // Redireciona para a página de login
-        }, 2000); // Espera 2 segundos para exibir a notificação antes do redirecionamento
-        return;
-    }
-
-      if (!$('#formRegisterBens').valid()) {
-        return;
-    }
-      // Captura os valores do formulário
-      const formData = {
-        code: document.querySelector('#code').value.trim(),
-        name: document.querySelector('#name').value.trim(),
-        cofa: document.querySelector('#cofa').value.trim(),
-        model: document.querySelector('#model').value.trim(),
-        serial: document.querySelector('#serial').value.trim(),
-        placa: document.querySelector('#placa').value.trim(),
-        bensAnmo: document.querySelector('#bensAnmo').value.trim(),
-        dtCompra: document.querySelector('#dtCompra').value.trim(),
-        valorCp: document.querySelector('#valorCpMain').value.trim(),
-        ntFiscal: document.querySelector('#ntFiscal').value.trim(),
-        cofo: document.querySelector('#cofo').value.trim(),
-        kmAtual: document.querySelector('#kmAtual').value.trim(),
-        dtKm: document.querySelector('#dtKm').value.trim(),
-        status: document.querySelector('#status').value.trim(),
-        dtStatus: document.querySelector('#dtStatus').value.trim(),
-        hrStatus: document.querySelector('#hrStatus').value.trim(),
-        chassi: document.querySelector('#chassi').value.trim(),
-        cor: document.querySelector('#cor').value.trim(),
-        nuMO: document.querySelector('#nuMO').value.trim(),
-        rena: document.querySelector('#rena').value.trim(),
-        bensCtep: document.querySelector('#bensCtep').value.trim(),
-        bensAtiv: document.querySelector('#bensAtiv').value.trim(),
-        alug: document.querySelector('#alug').value.trim(),
-        valorAlug: document.querySelector('#valorAlugMain').value.trim(),
-        fabri: document.querySelector('#fabri').value.trim()   // Fabricante
-      };
-
-const cleanedData = Object.fromEntries(
-  Object.entries(formData).filter(([_, value]) => value !== "")
-);
-
-
-      try {
-          const response = await fetch('http://localhost:3000/api/bens/submit', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${token}`
-              },
-              body: JSON.stringify(cleanedData )
-          });
-
-          const result = await response.json();
-
-
-          if (response.ok) {
-              Toastify({
-                  text: "Bem cadastrado com sucesso!",
-                  duration: 3000,
-                  close: true,
-                  gravity: "top",
-                  position: "center",
-                  backgroundColor: "green",
-              }).showToast();
-
-              // Limpar o formulário após o sucesso
-              document.querySelector('#formRegisterBens').reset();
-          } else {
-
-            Toastify({
-              text: `Erro ao cadastrar o bem`,
-              duration: 3000,
-              close: true,
-              gravity: "top",
-              position: "center",
-              backgroundColor: "red",
           }).showToast();
-             
-          }
+        }
       } catch (error) {
-          console.error('Erro ao enviar formulário:', error);
-          alert('Erro ao enviar os dados.');
+        console.error("Erro ao enviar formulário:", error);
+        alert("Erro ao enviar os dados.");
       }
-  });
-  validationFormGoods()
+    });
+  validationFormGoods();
 });
 
+// ATUALIZAR TABELA NA INSERÇÃO EM RUNTIME
+function insertBensInTableRunTime(bens) {
+  const bensListDiv = document.querySelector(".listingBens");
+  bensListDiv.innerHTML = "";
+  if (bens.length > 0) {
+    const tabela = document.createElement("table");
+    tabela.style.width = "100%";
+    tabela.setAttribute("border", "1");
 
-  async function loadSelectOptions(url, selectId, fieldName , name) {
+    const cabecalho = tabela.createTHead();
+    const linhaCabecalho = cabecalho.insertRow();
+    const colunas = [
+      "Selecionar",
+      "Código",
+      "Nome",
+      "Familia do Bem",
+      "Status",
+      "Número de Série",
+      "Placa",
+      "Ano do Modelo",
+      "Data da Compra",
+      "Valor de Compra",
+      "Nota Fiscal",
+      "Código Fornecedor",
+      "Km Atual",
+      "Data do Km",
+      "Modelo",
+      "Data do Status",
+      "Hora Status",
+      "Chassi",
+      "Cor",
+      "Número",
+      "Renavam",
+      "Ctep",
+      "Ativo",
+      "Alugado",
+      "Valor Alugado",
+      "Fabricante",
+    ];
 
-    const token = localStorage.getItem('token'); // Pega o token armazenado no login
+    colunas.forEach((coluna) => {
+      const th = document.createElement("th");
+      th.textContent = coluna;
+      linhaCabecalho.appendChild(th);
+    });
+
+    const corpo = tabela.createTBody();
+    bens.forEach((bem) => {
+      const linha = corpo.insertRow();
+      linha.setAttribute("data-benscode", bem.benscode);
+
+      const checkboxCell = linha.insertCell();
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.name = "selectBem";
+      checkbox.value = bem.benscode;
+      checkbox.dataset.bem = JSON.stringify(bem);
+      checkboxCell.appendChild(checkbox);
+
+      linha.insertCell().textContent = bem.benscode;
+      linha.insertCell().textContent = bem.bensnome;
+      linha.insertCell().textContent = bem.benscofa;
+      linha.insertCell().textContent = bem.bensstat;
+      linha.insertCell().textContent = bem.bensnuse;
+      linha.insertCell().textContent = bem.bensplac;
+      linha.insertCell().textContent = formatDate(bem.bensanmo);
+      linha.insertCell().textContent = formatDate(bem.bensdtcp);
+      linha.insertCell().textContent = bem.bensvacp;
+      linha.insertCell().textContent = bem.bensnunf;
+      linha.insertCell().textContent = bem.benscofo;
+      linha.insertCell().textContent = bem.benskmat;
+      linha.insertCell().textContent = formatDate(bem.bensdtkm);
+      linha.insertCell().textContent = bem.bensmode;
+      linha.insertCell().textContent = formatDate(bem.bensdtus);
+      linha.insertCell().textContent = bem.benshrus;
+      linha.insertCell().textContent = bem.bensnuch;
+      linha.insertCell().textContent = bem.benscore;
+      linha.insertCell().textContent = bem.bensnumo;
+      linha.insertCell().textContent = bem.bensrena;
+      linha.insertCell().textContent = bem.bensctep;
+      linha.insertCell().textContent = bem.bensativ;
+      linha.insertCell().textContent = bem.bensalug;
+      linha.insertCell().textContent = bem.bensvaal;
+      linha.insertCell().textContent = bem.bensfabr;
+    });
+
+    bensListDiv.appendChild(tabela);
+  }
+}
+
+// CARREGAR OPÇOES DO SELECT
+async function loadSelectOptions(url, selectId, fieldName, name) {
+  const token = localStorage.getItem("token"); 
 
   if (!token || isTokenExpired(token)) {
     Toastify({
-        text: "Sessão expirada. Faça login novamente.",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
+      text: "Sessão expirada. Faça login novamente.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
     }).showToast();
 
-    localStorage.removeItem("token"); 
+    localStorage.removeItem("token");
     setTimeout(() => {
-        window.location.href = "/index.html"; 
-    }, 2000); 
+      window.location.href = "/index.html";
+    }, 2000);
     return;
-}
-    try {
-        const response = await fetch(url ,  {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        });
-        const result = await response.json();
-        
-        // Caso os dados venham aninhados dentro de "data"
-        const data = Array.isArray(result) ? result : result.data;
+  }
+  try {
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const result = await response.json();
 
-        if (!Array.isArray(data)) {
-            throw new Error(`Formato de dados inesperado de ${url}: ` + JSON.stringify(result));
-        }
+    const data = Array.isArray(result) ? result : result.data;
 
-        const select = document.getElementById(selectId);
-        if (!select) {
-            throw new Error(`Elemento select com ID '${selectId}' não encontrado.`);
-        }
-
-        data.forEach(item => {
- 
-         
-            if (!item.hasOwnProperty(fieldName)) {
-                console.warn(`Campo '${fieldName}' não encontrado em`, item);
-                return;
-            }
-
-            if (!item.hasOwnProperty(name)) {
-              console.warn(`Campo '${name}' não encontrado em`, item);
-              return;
-          }
-
-            const option = document.createElement("option");
-            option.value = item[fieldName];
-            option.textContent = item[name];
-            select.appendChild(option);
-        });
- 
-    } catch (error) {
-        console.error(`Erro ao carregar os dados para ${selectId}:`, error);
+    if (!Array.isArray(data)) {
+      throw new Error(
+        `Formato de dados inesperado de ${url}: ` + JSON.stringify(result)
+      );
     }
-};
 
-// Chamar a função corretamente ao carregar a página
-document.querySelector('.registerGoods').addEventListener('click' , ()=>{
-  loadSelectOptions("/api/codefamilyben", "cofa", 'fabecode'  ,"fabedesc");
-  loadSelectOptions("/api/codeforn", "cofo", 'forncode' , "fornnome");
-});
+    const select = document.getElementById(selectId);
+    if (!select) {
+      throw new Error(`Elemento select com ID '${selectId}' não encontrado.`);
+    }
 
+    data.forEach((item) => {
+      if (!item.hasOwnProperty(fieldName)) {
+        console.warn(`Campo '${fieldName}' não encontrado em`, item);
+        return;
+      }
 
+      if (!item.hasOwnProperty(name)) {
+        console.warn(`Campo '${name}' não encontrado em`, item);
+        return;
+      }
+
+      const option = document.createElement("option");
+      option.value = item[fieldName];
+      option.textContent = item[name];
+      select.appendChild(option);
+    });
+  } catch (error) {
+    console.error(`Erro ao carregar os dados para ${selectId}:`, error);
+  }
+}
 
 // fazendo listagens
-
 let bensData = {};
 
 async function fetchBens() {
+  const token = localStorage.getItem("token");
 
-  const token = localStorage.getItem('token'); 
-       
-      if (!token || isTokenExpired(token)) {
-        Toastify({
-            text: "Sessão expirada. Faça login novamente.",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "red",
-        }).showToast();
-    
-        localStorage.removeItem("token"); 
-        setTimeout(() => {
-            window.location.href = "/index.html"; 
-        }, 2000); 
-        return;
-    }
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+      text: "Sessão expirada. Faça login novamente.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      window.location.href = "/index.html";
+    }, 2000);
+    return;
+  }
   try {
-    const response = await fetch("/api/listbens" , {
-      headers:{ 
+    const response = await fetch("/api/listbens", {
+      headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
     const bens = await response.json();
 
@@ -388,8 +480,7 @@ async function fetchBens() {
         checkbox.name = "selectBem";
         checkbox.value = bem.benscode;
 
-        // Aqui, serializa `bem` como JSON e valida antes de atribuir
-        const bemData = JSON.stringify(bem , bem.bensstat);
+        const bemData = JSON.stringify(bem, bem.bensstat);
         if (bemData) {
           checkbox.dataset.bem = bemData;
         } else {
@@ -397,16 +488,6 @@ async function fetchBens() {
         }
 
         checkboxCell.appendChild(checkbox);
-
-        // formatação de data
-        const formatDate = (isoDate) => {
-          if (!isoDate) return "";
-          const dateObj = new Date(isoDate);
-          const year = dateObj.getFullYear();
-          const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-          const day = String(dateObj.getDate()).padStart(2, "0");
-          return `${year}/${month}/${day}`;
-        };
 
         linha.insertCell().textContent = bem.benscode;
         linha.insertCell().textContent = bem.bensnome;
@@ -448,8 +529,6 @@ async function fetchBens() {
   }
 }
 
-fetchBens();
-
 // Evento para o botão Excluir
 const deleteButton = document.querySelector(".buttonDelete");
 deleteButton.addEventListener("click", async () => {
@@ -468,9 +547,9 @@ deleteButton.addEventListener("click", async () => {
     }).showToast();
     return;
   }
-  
+
   const bemSelecionado = JSON.parse(selectedCheckbox.dataset.bem);
-   const bemId = bemSelecionado.benscode;
+  const bemId = bemSelecionado.benscode;
 
   const confirmacao = confirm(
     `Tem certeza de que deseja excluir o bem com código ${bemId}?`
@@ -479,37 +558,36 @@ deleteButton.addEventListener("click", async () => {
     return;
   }
 
-  await deleteBem(bemId, selectedCheckbox.closest("tr") );
+  await deleteBem(bemId, selectedCheckbox.closest("tr"));
 });
 
 //deleteBens
-async function deleteBem(id, bemItem ) {
+async function deleteBem(id, bemItem) {
+  const token = localStorage.getItem("token");
 
-  const token = localStorage.getItem('token'); 
-       
-      if (!token || isTokenExpired(token)) {
-        Toastify({
-            text: "Sessão expirada. Faça login novamente.",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "red",
-        }).showToast();
-    
-        localStorage.removeItem("token"); 
-        setTimeout(() => {
-            window.location.href = "/index.html"; 
-        }, 2000); 
-        return;
-    }
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+      text: "Sessão expirada. Faça login novamente.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      window.location.href = "/index.html";
+    }, 2000);
+    return;
+  }
   try {
     const response = await fetch(`/api/delete/${id}`, {
       method: "DELETE",
-      headers:{ 
+      headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
     const data = await response.json();
 
@@ -524,8 +602,7 @@ async function deleteBem(id, bemItem ) {
       }).showToast();
 
       bemItem.remove();
-    } else { 
-      
+    } else {
       if (response.status === 400) {
         Toastify({
           text: data.message, // Mensagem retornada do backend
@@ -535,20 +612,18 @@ async function deleteBem(id, bemItem ) {
           position: "center",
           backgroundColor: "orange",
         }).showToast();
+      } else {
+        console.log("Erro para excluir:", data);
+        Toastify({
+          text: "Erro na exclusão do Bem ",
+          duration: 2000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
       }
-    else{ 
-      console.log("Erro para excluir:", data);
-      Toastify({
-        text: "Erro na exclusão do Bem ",
-        duration: 2000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-
     }
-  }
   } catch (error) {
     console.error("erro ao excluir bem:", error);
     alert("erro ao excluir o bem");
@@ -556,13 +631,12 @@ async function deleteBem(id, bemItem ) {
 }
 
 // Evento para o botão Editar
-
 const editButton = document.querySelector(".buttonEdit");
 editButton.addEventListener("click", (event) => {
-  
-  loadSelectOptions("/api/codefamilyben", "cofaEdit", 'fabecode');
-  loadSelectOptions("/api/codeforn", "cofoEdit", 'forncode');
-  
+
+  loadSelectOptions("/api/codefamilyben", "cofaEdit", "fabecode");
+  loadSelectOptions("/api/codeforn", "cofoEdit", "forncode");
+
   const selectedCheckbox = document.querySelector(
     'input[name="selectBem"]:checked'
   );
@@ -603,7 +677,7 @@ editButton.addEventListener("click", (event) => {
       { id: "cofoEdit", valor: bemSelecionado.benscofo },
       { id: "kmAtualEdit", valor: bemSelecionado.benskmat },
       { id: "dtKmEdit", valor: bemSelecionado.bensdtkm },
-      { id: "statusEdit", valor: bemSelecionado.bensstat},
+      { id: "statusEdit", valor: bemSelecionado.bensstat },
       { id: "dtStatusEdit", valor: bemSelecionado.bensdtus },
       { id: "hrStatusEdit", valor: bemSelecionado.benshrus },
       { id: "chassiEdit", valor: bemSelecionado.bensnuch },
@@ -621,10 +695,10 @@ editButton.addEventListener("click", (event) => {
       const elemento = document.getElementById(id);
       if (elemento) {
         if (elemento.type === "date" && valor) {
-          const dataFormatada = new Date(valor).toISOString().split('T')[0];
+          const dataFormatada = new Date(valor).toISOString().split("T")[0];
           elemento.value = dataFormatada;
         } else {
-          elemento.value = valor || ""; 
+          elemento.value = valor || "";
         }
       } else {
         console.warn(`Elemento com ID '${id}' não encontrado.`);
@@ -639,8 +713,7 @@ editButton.addEventListener("click", (event) => {
   }
 });
 
-
-// Função para editar e atualizar os dados
+//Função para editar e atualizar os dados
 async function editAndUpdateOfBens() {
   const formEditBens = document.querySelector("#formEditBens");
 
@@ -702,34 +775,33 @@ async function editAndUpdateOfBens() {
       bensfabr: document.getElementById("fabriEdit").value,
     };
 
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem("token");
     if (!token || isTokenExpired(token)) {
       Toastify({
-          text: "Sessão expirada. Faça login novamente.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
       }).showToast();
-  
-      localStorage.removeItem("token"); 
+
+      localStorage.removeItem("token");
       setTimeout(() => {
-          window.location.href = "/index.html"; 
-      }, 2000); 
+        window.location.href = "/index.html";
+      }, 2000);
       return;
-  }
+    }
 
     try {
       const response = await fetch(`/api/update/${bemIdParsed}`, {
         method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-      },
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(updateBem),
       });
-      
 
       if (response.ok) {
         console.log("Atualização bem-sucedida");
@@ -742,9 +814,8 @@ async function editAndUpdateOfBens() {
           position: "center",
           backgroundColor: "green",
         }).showToast();
-    
-          formEditBens.reset();
 
+        formEditBens.reset();
       } else {
         console.error("Erro ao atualizar bem:", await response.text());
       }
@@ -754,3 +825,39 @@ async function editAndUpdateOfBens() {
   });
 }
 editAndUpdateOfBens();
+
+// ATUALIZAR A TABELA EM RUNTIME NA EDIÇÃO
+function updateBemInTableRunTime(updatedBem) {
+  const row = document.querySelector(
+    `[data-benscode="${updatedBem.benscode}"]`
+  );
+
+  if (row) {
+   
+    row.cells[1].textContent = updatedBem.benscode || "-"; // Código
+    row.cells[2].textContent = updatedBem.bensnome || "-"; // Nome
+    row.cells[3].textContent = updatedBem.benscofa || "-"; // Família do Bem
+    row.cells[4].textContent = updatedBem.bensstat || "-"; // Status
+    row.cells[5].textContent = updatedBem.bensnuse || "-"; // Número de Série
+    row.cells[6].textContent = updatedBem.bensplac || "-"; // Placa
+    row.cells[7].textContent = formatDate(updatedBem.bensanmo) || "-"; // Ano do Modelo
+    row.cells[8].textContent = formatDate(updatedBem.bensdtcp) || "-"; // Data da Compra
+    row.cells[9].textContent = updatedBem.bensvacp || "-"; // Valor de Compra
+    row.cells[10].textContent = updatedBem.bensnunf || "-"; // Nota Fiscal
+    row.cells[11].textContent = updatedBem.benscofo || "-"; // Código Fornecedor
+    row.cells[12].textContent = updatedBem.benskmat || "-"; // Km Atual
+    row.cells[13].textContent = formatDate(updatedBem.bensdtkm) || "-"; // Data do Km
+    row.cells[14].textContent = updatedBem.bensmode || "-"; // Modelo
+    row.cells[15].textContent = formatDate(updatedBem.bensdtus) || "-"; // Data do Status
+    row.cells[16].textContent = updatedBem.benshrus || "-"; // Hora Status
+    row.cells[17].textContent = updatedBem.bensnuch || "-"; // Chassi
+    row.cells[18].textContent = updatedBem.benscore || "-"; // Cor
+    row.cells[19].textContent = updatedBem.bensnumo || "-"; // Número
+    row.cells[20].textContent = updatedBem.bensrena || "-"; // Renavam
+    row.cells[21].textContent = updatedBem.bensctep || "-"; // Ctep
+    row.cells[22].textContent = updatedBem.bensativ || "-"; // Ativo
+    row.cells[23].textContent = updatedBem.bensalug || "-"; // Alugado
+    row.cells[24].textContent = updatedBem.bensvaal || "-"; // Valor Alugado
+    row.cells[25].textContent = updatedBem.bensfabr || "-"; // Fabricante
+  }
+};

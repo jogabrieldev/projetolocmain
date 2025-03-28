@@ -13,6 +13,12 @@ export const movementAuto = {
       }
 
       const newAuto = await autoRegister.registerAuto(dataAuto);
+
+      const io = req.app.get("socketio");
+            if (io) {
+              const automovel = await autoRegister.listAutos(); // Pega todos os clientes após o cadastro
+              io.emit("updateRunTimeAutomovel", automovel); // Emite a lista completa de clientes
+            }
       res.status(201).json({ success: true, auto: newAuto });
     } catch (error) {
       console.log("Erro no controller");
@@ -63,7 +69,19 @@ export const movementAuto = {
     });
 
     try {
+       
+      const io = req.app.get("socketio");
       const updatedAuto = await autoRegister.updateAuto(autoId, updateAuto);
+
+      if(!updateAuto){
+        return res.status(404).json({ message: "cliente não encontrado para atualização." });
+      }
+       
+      if (io) {
+        io.emit("updateTableAutomovel", updateAuto);
+      } else {
+        console.warn("Socket.IO não está configurado.");
+      }
       res.json({
         message: "Registro atualizado com sucesso",
         auto: updatedAuto,

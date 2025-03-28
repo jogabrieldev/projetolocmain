@@ -1,34 +1,44 @@
 import { goodsRegister } from "../model/dataGoods.js";
 
 export const movementGoods = {
-  async registerBens(req, res) {
+  async  registerBens(req, res) {
     try {
       const data = req.body;
       if (!data) {
-        res.status(400).json({ messagem: "Nenhum dado enviado" });
+        return res.status(400).json({ message: "Nenhum dado enviado" }); // Corrigido: adicionando return
       }
+  
       const newUser = await goodsRegister.registerOfBens(data);
-      res.status(201).json({ success: true, user: newUser });
+      const bens = await goodsRegister.listingBens(); // Obtém a lista atualizada
+  
+      const io = req.app.get("socketio");
+      if (io) {
+        io.emit("updateRunTimeGoods", bens); 
+      }
+  
+      return res.status(201).json({ success: true, user: newUser }); // Mantém a resposta independente do io existir
+  
     } catch (error) {
-      res.status(500).json({ success: false, message: error.message });
+      return res.status(500).json({ success: false, message: error.message }); // Corrigido: adicionando return
     }
   },
+  
 
   async codeFamilyBens(req, res) {
     try {
       const dataFamilybens = await goodsRegister.buscarIdFamiliaBens();
-
-      if (dataFamilybens) {
-        res.status(200).json(dataFamilybens);
-        return dataFamilybens;
-      } else {
-        return req.status(400).json({ error: "Nenhum dado encontrado" });
+  
+      if (!dataFamilybens || dataFamilybens.length === 0) {
+        return res.status(400).json({ error: "Nenhum dado encontrado" });
       }
+  
+      return res.status(200).json(dataFamilybens);
     } catch (error) {
       console.error("Erro ao buscar família de bens:", error);
       return res.status(500).json({ error: "Erro interno do servidor" });
     }
   },
+  
 
   async listBens(req, res) {
     try {
@@ -55,8 +65,21 @@ export const movementGoods = {
     });
 
     try {
-      const updatedBem = await goodsRegister.updateBens(bemId, updatedData);
-      res.json({ message: "Bem atualizado com sucesso", bem: updatedBem });
+     
+      const bemUpdate = await goodsRegister.updateBens(bemId , updatedData)
+      if (!bemUpdate) {
+        return res.status(404).json({ message: "Bem não encontrado para atualização." });
+    }
+     
+       const io = req.app.get("socketio");
+      if (io) {
+        io.emit("updateGoodsTable", bemUpdate); 
+      } else {
+        console.warn("Socket.IO não está configurado.");
+      }
+
+        return res.json({ message: "Bem atualizado com sucesso!", bem: bemUpdate });
+     
     } catch (error) {
       console.error("Erro ao atualizar o bem:", error);
       res.status(500).json({ message: "Erro ao atualizar o bem", error });

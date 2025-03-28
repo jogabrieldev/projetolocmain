@@ -178,7 +178,7 @@
                         <select name="statusEdit" id="statusEdit">
                             <option value="">Selecione...</option>
                            <option value="Disponivel">Disponivel</option>
-                           <option value="Em locação">Em Locação</option>
+                           <option value="Em locação">Locado</option>
                            <option value="Saida do cliente">Saida do Cliente</option>
                            <option value="Saida do aterro">Saida do Aterro</option>
                            <option value="Saida do aterro para o cliente">Saida do aterro para o cliente</option>
@@ -338,7 +338,7 @@
                                 <select name="status" id="status">
                                 <option value="">Selecione...</option>
                                 <option value="Disponivel">Disponivel</option>
-                                <option value="Em locação">Em Locação </option>
+                                <option value="Em locação">Locado</option>
                                 <option value="Saida do cliente">Saida do cliente</option>
                                 <option value="Saida do aterro">Saida do aterro</option>
                                 <option value="Saida do aterro para o cliente">Saida do aterro para o cliente</option>
@@ -368,8 +368,8 @@
                         </div>
 
                         <div class="inputGroup">
-                            <label for="nuMO"></label>
-                            <input type="number" name="nuMO" id="nuMO" placeholder="bensNumo" maxlength="15">
+                            <label for="nuMO">Numero</label>
+                            <input type="number" name="nuMO" id="nuMO" placeholder="Numero" maxlength="15">
                         </div>
 
                         <div class="inputGroup">
@@ -501,7 +501,7 @@
                 </form>  
              </div>
              
-        <div class="containerOfForm">
+        <div class="containerOfForm" style="display: none;">
               <form id="formRegisterClient">
                   <div class="formGroup">
 
@@ -850,7 +850,6 @@
             </div>
         </form>
     </div>
-     <!-- edição de dados -->
         <div class="formEditProd" style="display: none;">
             <form class="editProd" >
 
@@ -1023,9 +1022,12 @@
 <!-- Tipo do produto -->
 
  <section class="containerAppTipoProd">
-
+   
+   
     <div class="listingTipoProd">
-          <!-- Informações do tipo de produto -->
+        <div class="tableWrapper"> 
+            <!-- A tabela será inserida aqui via JavaScript -->
+        </div>
     </div>
 
     <div class="btnMainPageTipoProd">
@@ -1195,7 +1197,7 @@
 
                         <div class="inputGroup">
                             <label for="motoCep">Cep</label>
-                            <input type="text" name="motoCep" id="motoCep" placeholder="Celular" maxlength="9">
+                            <input type="text" name="motoCep" id="motoCep" placeholder="CEP" maxlength="9">
                         </div>
 
                         <div class="inputGroup">
@@ -1235,7 +1237,6 @@
                      </div>
                 </form>
              </div>
-
 
              <div class="containerFormEditDriver" style="display: none;">
                  
@@ -1341,6 +1342,8 @@
 
      </section>
 
+
+    <!-- Cadastro de automovel -->
   <section class="containerAppAutomo">
       
     <div class="listingAutomo">
@@ -1364,17 +1367,17 @@
 
                 <div class="inputGroup">
                   <label for="placAuto">Placa</label>
-                  <input type="text" name="placAuto" id="placAuto" placeholder="Placa" maxlength="8">
+                  <input type="text" name="placAuto" id="placAuto" placeholder="Placa" maxlength="10">
                 </div>
 
                <div class="inputGroup">
                   <label for="chassAuto">Chassi</label>
-                  <input type="number" name="chassAuto" id="chassAuto" placeholder="Chassi" maxlength="20">
+                  <input type="text" name="chassAuto" id="chassAuto" placeholder="Chassi" maxlength="20">
               </div>
 
               <div class="inputGroup">
                  <label for="renaAuto">Renavam</label>
-                 <input type="number" name="renaAuto" id="renaAuto" placeholder="Renavam" maxlength="20">
+                 <input type="text" name="renaAuto" id="renaAuto" placeholder="Renavam" maxlength="20">
               </div>
 
              <div class="inputGroup">
@@ -1424,13 +1427,13 @@
             </div>
 
              <div class="btnOutNext">
-                <button class="cadAutomo">Salvar</button>
+                <button class="cadAutomo">Cadastrar</button>
                 <button class="btnOutCadAuto">Voltar</button>
              </div>
          </div>
      </form>
  </div>
- <!-- Edição de veiculos -->
+
    <div class="editFormAuto" style="display: none;">
     <form class="foormEditVeicu" >
         <div class="formGroup">
@@ -1442,17 +1445,17 @@
 
             <div class="inputGroup">
               <label for="placAutoEdit">Placa</label>
-              <input type="text" name="placAutoEdit" id="placAutoEdit" placeholder="Placa" maxlength="8">
+              <input type="text" name="placAutoEdit" id="placAutoEdit" placeholder="Placa" maxlength="10">
             </div>
 
            <div class="inputGroup">
               <label for="chassAutoEdit">Chassi</label>
-              <input type="number" name="chassAutoEdit" id="chassAutoEdit" placeholder="Chassi" maxlength="20">
+              <input type="text" name="chassAutoEdit" id="chassAutoEdit" placeholder="Chassi" maxlength="20">
           </div>
 
           <div class="inputGroup">
              <label for="renaAutoEdit">Renavam</label>
-             <input type="number" name="renaAutoEdit" id="renaAutoEdit" placeholder="Renavam" maxlength="20">
+             <input type="text" name="renaAutoEdit" id="renaAutoEdit" placeholder="Renavam" maxlength="20">
           </div>
 
          <div class="inputGroup">
@@ -1472,7 +1475,7 @@
 
         <div class="inputGroup">
             <label for="tpCombusAutoEdit">Tipo de Combustivel</label>
-            <input type="text" name="tpCombusAutoEdit" id="tpCombusAutoEdit"  placeholder="Tipo de Combustivel" maxlength="12">
+            <input type="text" name="tpCombusAutoEdit" id="tpCombusAutoEdit"  placeholder="Tipo de Combustivel" maxlength="20">
         </div>
 
         <div class="inputGroup">
@@ -1508,11 +1511,10 @@
      </div>
   </form>
 </div>
- 
-     
 
 </section> 
 
+  <!-- sesão de locação  -->
 <section class="containerAppLocation">
 
     <div class="tableLocation">
@@ -1534,8 +1536,7 @@
         <!-- Informações caso tenha mais e um cliente -->
          
     </div>
-   
-        <!-- <h3>Informações do Cliente</h3> -->
+
       <div id="formClient">
         <div class="formGroup">
           
@@ -1601,8 +1602,6 @@
         <input type="text" id="mailClient" placeholder="E-mail do cliente" readonly required>
     </div>
     
-    <!--  Familia de Bens -->
-   
     <div class="familyBens">
 
            <div class="tableGrid">
@@ -1674,18 +1673,7 @@
       <div id="formClient">
         <div class="formGroup">
           
-          <div class="inputGroupSearchClient ">
-              <label for="clientEdit"> <b>Pesquise o Cliente</b></label>
-             <div class="inputWrapper">
-                  <input type="text" name="client" id="clientEdit" placeholder="CPF ou Nome" required>
-                   <span class="material-symbols-outlined" id="search">
-                   search
-                  </span>
-                  <button type="button" class="locCadClient">Cadastrar Cliente</button>
-                  
-              </div>
-          </div>
-
+    
            <div class="Numeric">
             <label for="numeroLocationEdit"> <b>Locação</b></label>
               <input type="number" name="numeroLocation" id="numeroLocationEdit" placeholder="Locação" readonly>
@@ -1697,8 +1685,8 @@
            </div>
 
            <div class="inputGroupDataEvolu">
-              <label for="DataDevo"> <b>Data de devolução</b></label>
-              <input type="date" name="dataDevo" id="DataDevoEdit" required>
+              <label for="DataDevoEdit"> <b>Data de devolução</b></label>
+              <input type="date" name="DataDevoEdit" id="DataDevoEdit" required>
            </div>
 
           <div class="inputGroupPagament">
@@ -1717,22 +1705,22 @@
  </div>
 
     <div class="infoClient">
-        <label for="nameClient"> <b>Nome do Cliente</b></label>
+        <label for="nameClientEdit"> <b>Nome do Cliente</b></label>
         <input type="text" id="nameClientEdit" placeholder="Nome do cliente" readonly required>
     
-        <label for="cpfClient"> <b>CPF do Cliente</b></label>
+        <label for="ruaClientEdit"> <b>CPF do Cliente</b></label>
         <input type="number" id="cpfClientEdit" placeholder="CPF do cliente" readonly required>
     
         <label for="ruaClient"> <b>Rua do Cliente</b></label>
         <input type="text" id="ruaClientEdit" placeholder="Rua do cliente" readonly required> 
     
-        <label for="cityClient"> <b>Cidade do Cliente</b></label>
+        <label for="cityClientEdit"> <b>Cidade do Cliente</b></label>
         <input type="text" id="cityClientEdit" placeholder="Cidade do cliente" readonly required>
     
-        <label for="cepClient"> <b>CEP do Cliente</b></label>
+        <label for="cepClientEdit"> <b>CEP do Cliente</b></label>
         <input type="text" id="cepClientEdit" placeholder="CEP do cliente" readonly required>
     
-        <label for="mailClient"> <b>E-mail do Cliente</b></label>
+        <label for="mailClientEdit"> <b>E-mail do Cliente</b></label>
         <input type="text" id="mailClientEdit" placeholder="E-mail do cliente" readonly required>
     </div>
     
@@ -1742,59 +1730,59 @@
 
            <div class="tableGrid">
       
-        <label for="codeBen1">Família de bens</label>
-        <label for="prod1">Nome da familia </label>
-        <label for="quantidade1">Quantidade</label>
-        <label for="descricao1">Observação</label>
-        <label for="dataInicio1">Data Início</label>
-        <label for="dataFim1">Data Fim</label>
+        <label for="codeBen1Edit">Família de bens</label>
+        <label for="prod1Edit">Nome da familia </label>
+        <label for="quantidade1Edit">Quantidade</label>
+        <label for="descricao1Edit">Observação</label>
+        <label for="dataInicio1Edit">Data Início</label>
+        <label for="dataFim1Edit">Data Fim</label>
       
-              <select  id="family1">
+              <select  id="family1Edit">
                 <option value="">Selecione...</option>
             <!-- informações  -->
              </select>
-              <input type="text"  id="produto1" placeholder="Produto" readonly >
-             <input type="number"  id="quantidade1" placeholder="quantidade" required>
-             <input type="text" id="observacao1" placeholder="Ex.: TV, Computadores" >
-             <input type="date" id="dataInicio1" required>
-             <input type="date" id="dataFim1" required>
+              <input type="text"  id="produto1Edit" placeholder="Produto" readonly >
+             <input type="number"  id="quantidade1Edit" placeholder="quantidade" required>
+             <input type="text" id="observacao1Edit" placeholder="Ex.: TV, Computadores" >
+             <input type="date" id="dataInicio1Edit" required>
+             <input type="date" id="dataFim1Edit" required>
 
 
-        <select  id="family2">
+        <select  id="family2Edit">
             <option value="">Selecione...</option>
             <!-- informações  -->
         </select>
-        <input type="text"  id="produto2" placeholder="produto" readonly>
-        <input type="number" id="quantidade2" placeholder="Ex.: 10" required>
-        <input type="text"  id="observacao2" placeholder="Ex.: Eletrônicos">
-        <input type="date" id="dataInicio2" required>
-        <input type="date" id="dataFim2" required>
+        <input type="text"  id="produto2Edit" placeholder="produto" readonly>
+        <input type="number" id="quantidade2Edit" placeholder="Ex.: 10" required>
+        <input type="text"  id="observacao2Edit" placeholder="Ex.: Eletrônicos">
+        <input type="date" id="dataInicio2Edit" required>
+        <input type="date" id="dataFim2Edit" required>
 
 
-        <select id="family3">
+        <select id="family3Edit">
             <!-- informações  -->
              <option value="">Selecione...</option>
         </select>
-        <input type="text"  id="produto3" placeholder="Produto" readonly>
-        <input type="number"  id="quantidade3" placeholder="Ex.: 10" required >
-        <input type="text"  id="observacao3" placeholder="Ex.: TV, Computadores">
-        <input type="date" id="dataInicio3" required>
-        <input type="date" id="dataFim3" required>
+        <input type="text"  id="produto3Edit" placeholder="Produto" readonly>
+        <input type="number"  id="quantidade3Edit" placeholder="Ex.: 10" required >
+        <input type="text"  id="observacao3Edit" placeholder="Ex.: TV, Computadores">
+        <input type="date" id="dataInicio3Edit" required>
+        <input type="date" id="dataFim3Edit" required>
 
-        <select id="family4">
+        <select id="family4Edit">
             <!-- informações  -->
              <option value="">Selecione...</option>
         </select>
-        <input type="text"  id="produto4" placeholder="Produto" readonly>
-        <input type="number"  id="quantidade4" placeholder="Ex.: 10" required >
-        <input type="text"  id="observacao4" placeholder="Ex.: TV, Computadores">
-        <input type="date" id="dataInicio4" required>
-        <input type="date" id="dataFim4" required>
+        <input type="text"  id="produto4Edit" placeholder="Produto" readonly>
+        <input type="number"  id="quantidade4Edit" placeholder="Ex.: 10" required >
+        <input type="text"  id="observacao4Edit" placeholder="Ex.: TV, Computadores">
+        <input type="date" id="dataInicio4Edit" required>
+        <input type="date" id="dataFim4Edit" required>
   
    </div>
  
           <div class="formGroupBtn">
-            <button  class="finish">Finalizar</button>
+            <button  class="finish">Atualizar</button>
             <button class="outLocation">Voltar</button>
           </div> 
        
@@ -1811,7 +1799,7 @@
             <div class="formGroup">
 
                 <div class="inputGroup">
-                    <label for="cliCode">Codigo</label>
+                    <label for="clieCode">Codigo</label>
                     <input type="text" name="clieCode" id="clieCode" placeholder="Codigo" maxlength="15">
                 </div>
 
@@ -1856,7 +1844,7 @@
                 </div>
 
                 <div class="inputGroup">
-                    <label for="clieCep ">Cep</label>
+                    <label for="clieCep">Cep</label>
                     <input type="text" name="clieCep" id="clieCep" placeholder="CEP" maxlength="10">
                 </div>
 
@@ -1878,7 +1866,7 @@
          </div>
 </section>
 
-<!-- Buscar locação -->
+<!-- sesão Buscar locação -->
 
     <div class="searchLocation" style="display: none;">
 
@@ -1887,8 +1875,8 @@
       <label for="numberLocation">Numero da locação</label>
       <input type="number" name="numberLocation" id="numberLocation">
        
-      <label for="status">Status</label>
-      <input type="text" name="status" id="status">
+      <label for="statusLocation">Status</label>
+      <input type="text" name="statusLocation" id="statusLocation">
 
       <label for="nameClient"> Nome do Cliente</label>
       <input type="text" name="nameClient" id="nameClientSearch">
@@ -1935,10 +1923,32 @@
    <!-- informações para lincar o bem na locação -->
 </section>
 
-<!--  Entrega -->
+<!--  Entrega da locação -->
 
 <section class="deliveryFinish" style="display: none;">
 
+    <div class="containerTableDelivery">
+       <h2>Lista de Locações</h2>
+       <table id="tableDelivery" style="display: flex;">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>ID do bem</th>
+                <th>Nome Cliente</th>
+                <th>Numero locação</th>
+                <th>Data e Hora</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <button class="btnOutPageListLocationForDelivery">Voltar</button>
+</div>     
+         <div class="containerDelivery">
+              
+
+         </div>
 </section>
          
   
@@ -1947,8 +1957,9 @@
      <script type = "module" src="maskFields.js"></script>
     <script  src="validation.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="./mainGoods/mainGoods.js"></script>
-    <script src="./mainClient/mainClient.js"></script>
+    <script type = "module" src="./mainClient/mainClient.js"></script>
     <script src="./mainForn/mainForn.js"></script>
     <script src="./mainProd/mainProd.js"></script>
     <script src="./mainFabe/mainFabri.js"></script>
@@ -1959,7 +1970,7 @@
     <script src="../screenLocation/locationFinish.js"></script>
     <script src="../screenLogistics/mainLogistics.js"></script>
     <script src="../screenDelivery/mainDelivery.js"></script>
-
+    
 
 </body>
 

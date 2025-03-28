@@ -43,6 +43,7 @@ input{
 #photo{
     width: 100px;
     border-radius: 100%;
+    border: 1px solid white;
 }
 .information{
   font-size: 19px;
@@ -224,7 +225,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;  /* Fixará as larguras das células */
-    border: 2px solid white
+    border: 2px solid white;
   }
   
   th, td {

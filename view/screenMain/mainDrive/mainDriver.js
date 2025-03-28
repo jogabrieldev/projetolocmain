@@ -100,12 +100,26 @@ function isTokenExpired(token) {
       return true; 
   }
 };
+ 
+const sokectUpdateDriver = io()
+document.addEventListener('DOMContentLoaded', async () => {
+   
+  await fetchListMotorista();
+  
+  sokectUpdateDriver.on("updateRunTimeDriver", (motorista) => {
+    insertDriverTableRunTime(motorista);
+    loadingDriver()
+  });
 
-document.addEventListener('DOMContentLoaded', () => {
+  sokectUpdateDriver.on("updateRunTimeTableDrive", (updatedDriver) => {
+    updateDriverInTableRunTime(updatedDriver)
+    loadingDriver()
+  });
+
   document.querySelector('.cadDriver').addEventListener('click', async (event) => {
-      event.preventDefault(); // Evita recarregar a página
+      event.preventDefault(); 
 
-      const token = localStorage.getItem('token'); // Recupera o token armazenado
+      const token = localStorage.getItem('token'); 
 
       if (!token || isTokenExpired(token)) {
         Toastify({
@@ -128,7 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-      // Captura os valores do formulário
       const formData = {
           motoCode: document.querySelector('#motoCode').value,     // Código
           motoNome: document.querySelector('#motoNome').value,     // Nome
@@ -183,12 +196,90 @@ document.addEventListener('DOMContentLoaded', () => {
   validationFormMoto()
 });
 
+// ATUALIZAR EM RUNTIME QUANDO INSERIR
+function insertDriverTableRunTime(motorista) {
+  const motoristaListDiv = document.querySelector(".listingDriver");
+  motoristaListDiv.innerHTML = ""; 
+
+  if (motorista.length > 0) {
+    const tabela = document.createElement("table");
+    tabela.style.width = "100%";
+    tabela.setAttribute("border", "1");
+
+    // Cabeçalho da tabela
+    const cabecalho = tabela.createTHead();
+    const linhaCabecalho = cabecalho.insertRow();
+    const colunas = [
+      "Selecionar",
+      "Código",
+      "Status",
+      "Nome",
+      "Data de Nascimento",
+      "CPF",
+      "Data de Emissão",
+      "Categoria da CNH",
+      "Data de Vencimento",
+      "Restrições",
+      "Órgão Emissor",
+      "Celular",
+      "CEP",
+      "Rua",
+      "Cidade",
+      "Estado",
+      "E-mail",
+    ];
+
+    colunas.forEach((coluna) => {
+      const th = document.createElement("th");
+      th.textContent = coluna;
+      linhaCabecalho.appendChild(th);
+    });
+
+    const corpo = tabela.createTBody();
+    motorista.forEach((driver) => {
+      const linha = corpo.insertRow();
+      linha.setAttribute("data-motocode", driver.motocode);
+
+      const checkboxCell = linha.insertCell();
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.name = "selectDriver";
+      checkbox.value = driver.motocode;
+      checkbox.dataset.motorista = JSON.stringify(driver);
+      checkboxCell.appendChild(checkbox);
+
+      linha.insertCell().textContent = driver.motocode;
+      
+      const statusCell = linha.insertCell();
+      statusCell.textContent = driver.motostat || "-";
+      statusCell.classList.add("status-moto");
+
+      linha.insertCell().textContent = driver.motoname || "-";
+      linha.insertCell().textContent = formatDate(driver.motodtnc);
+      linha.insertCell().textContent = driver.motocpf || "-";
+      linha.insertCell().textContent = formatDate(driver.motodtch);
+      linha.insertCell().textContent = driver.motoctch || "-";
+      linha.insertCell().textContent = formatDate(driver.motodtvc);
+      linha.insertCell().textContent = driver.motorest || "-";
+      linha.insertCell().textContent = driver.motoorem || "-";
+      linha.insertCell().textContent = driver.motocelu || "-";
+      linha.insertCell().textContent = driver.motocep || "-";
+      linha.insertCell().textContent = driver.motorua || "-";
+      linha.insertCell().textContent = driver.motocity || "-";
+      linha.insertCell().textContent = driver.motoestd || "-";
+      linha.insertCell().textContent = driver.motomail || "-";
+    });
+
+    motoristaListDiv.appendChild(tabela);
+  } else {
+    motoristaListDiv.innerHTML = "<p>Nenhum motorista cadastrado.</p>";
+  }
+};
 
 //listagem de motorista
-
 async function fetchListMotorista() {
 
-  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+  const token = localStorage.getItem('token'); 
 
   if (!token || isTokenExpired(token)) {
     Toastify({
@@ -275,15 +366,7 @@ async function fetchListMotorista() {
 
         checkboxCell.appendChild(checkbox);
 
-        const formatDate = (isoDate) => {
-          if (!isoDate) return "";
-          const dateObj = new Date(isoDate);
-          const year = dateObj.getFullYear();
-          const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-          const day = String(dateObj.getDate()).padStart(2, "0");
-          return `${year}/${month}/${day}`;
-        };
-
+    
         linha.insertCell().textContent = motorista.motocode;
         const statusCell = linha.insertCell();
         statusCell.textContent = motorista.motostat;
@@ -315,10 +398,8 @@ async function fetchListMotorista() {
       "<p>Erro ao carregar fornecedores.</p>";
   }
 }
-fetchListMotorista();
 
 //delete motorista
-
 const btnDeleteDriver = document.querySelector(".buttonDeleteDriver");
 btnDeleteDriver.addEventListener("click", async () => {
   const selectedCheckbox = document.querySelector(
@@ -350,85 +431,78 @@ btnDeleteDriver.addEventListener("click", async () => {
 });
 
 async function deleteDriver(id, driverRow) {
-
-  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+  const token = localStorage.getItem('token'); 
 
   if (!token || isTokenExpired(token)) {
-    Toastify({
-        text: "Sessão expirada. Faça login novamente.",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-    }).showToast();
-
-    localStorage.removeItem("token"); 
-    setTimeout(() => {
-        window.location.href = "/index.html"; 
-    }, 2000); 
-    return;
-}
-  try {
-    const response = await fetch(`/api/deletedriver/${id}`, {
-      method: "DELETE",
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    },
-    });
-    const data = await response.json();
-    console.log("Resposta do servidor:", data);
-
-    if (response.ok) {
       Toastify({
-        text: "O Cliente foi excluído com sucesso!",
-        duration: 2000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "green",
-      }).showToast();
-
-      driverRow.remove();
-    } else { 
-      
-      if (response.status === 400) {
-        Toastify({
-          text: data.message, // Mensagem retornada do backend
+          text: "Sessão expirada. Faça login novamente.",
           duration: 3000,
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "orange",
-        }).showToast();
-      }
-    else{ 
-      console.log("Erro para excluir:", data);
-      Toastify({
-        text: "Erro na exclusão do Cliente",
-        duration: 2000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
+          backgroundColor: "red",
       }).showToast();
 
-    }
+      localStorage.removeItem("token"); 
+      setTimeout(() => {
+          window.location.href = "/index.html"; 
+      }, 2000);
+      return;
   }
-  } catch (error) {
-    console.error("Erro ao excluir Motorista:", error);
-    Toastify({
-      text: "Erro ao excluir Motorista. Tente novamente.",
-      duration: 2000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-  }
-}
 
+  try {
+      const response = await fetch(`/api/deletedriver/${id}`, {
+          method: "DELETE",
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+          },
+      });
+
+      const data = await response.json();
+      console.log("Resposta do servidor:", data);
+
+      if (response.ok) {
+          Toastify({
+              text: "Motorista deletado com sucesso!",
+              duration: 2000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "green",
+          }).showToast();
+
+          driverRow.remove();
+      } else {
+          // Caso o status seja 400, 404 ou outro erro do servidor
+          let errorMessage = "Erro ao excluir o motorista.";
+          
+          if (response.status === 400 || response.status === 404) {
+              errorMessage = data.message;
+          }
+
+          Toastify({
+              text: errorMessage,
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "orange",
+          }).showToast();
+      }
+
+  } catch (error) {
+      console.error("Erro ao excluir motorista:", error);
+      Toastify({
+          text: "Erro ao excluir motorista. Tente novamente.",
+          duration: 2000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+      }).showToast();
+  }
+};
 // botão de editar
 const btnFormEditDrive = document.querySelector(".buttonEditDriver");
 btnFormEditDrive.addEventListener("click", () => {
@@ -456,10 +530,7 @@ btnFormEditDrive.addEventListener("click", () => {
 
   try {
     const motoristaSelecionado = JSON.parse(motoristaData);
-    // console.log("Editar item:", fabricanteSelecionado);
        
-    console.log('Motorista:' ,motoristaSelecionado)
-    // Campos e IDs correspondentes
     const campos = [
       { id: "editMotoCode", valor: motoristaSelecionado.motocode },
       { id: "editMotoNome", valor: motoristaSelecionado.motoname },
@@ -478,8 +549,6 @@ btnFormEditDrive.addEventListener("click", () => {
       { id: "editMotoMail", valor: motoristaSelecionado.motomail },
       {id:"editMotoStat" , valor: motoristaSelecionado.motostat}
     ];
-
-    console.log(campos);
 
     // Atualizar valores no formulário
     campos.forEach(({ id, valor }) => {
@@ -577,7 +646,7 @@ async function editAndUpdateOfDriver() {
       motostat: document.getElementById("editMotoStat").value
     };
        
-    const token = localStorage.getItem('token'); // Pega o token armazenado no login
+    const token = localStorage.getItem('token'); 
 
     if (!token || isTokenExpired(token)) {
       Toastify({
@@ -606,10 +675,7 @@ async function editAndUpdateOfDriver() {
         body: JSON.stringify(updateDriver),
       });
 
-      console.log("resposta:", response);
-
       if (response.ok) {
-        console.log("Atualização bem-sucedida");
 
         Toastify({
           text: `Motorista '${motoIdParsed}' Atualizado com sucesso!!`,
@@ -631,3 +697,27 @@ async function editAndUpdateOfDriver() {
   });
 }
 editAndUpdateOfDriver();
+
+// ATUALIZAÇÃO EM RUNTIME
+function updateDriverInTableRunTime(updatedDriver) {
+  const row = document.querySelector(`[data-motocode="${updatedDriver.motocode}"]`);
+
+  if (row) {
+
+    row.cells[2].textContent = updatedDriver.motostat || "-"; // Status
+    row.cells[3].textContent = updatedDriver.motoname || "-"; // Nome
+    row.cells[4].textContent = formatDate(updatedDriver.motodtnc); // Data de Nascimento
+    row.cells[5].textContent = updatedDriver.motocpf || "-"; // CPF
+    row.cells[6].textContent = formatDate(updatedDriver.motodtch); // Data de Emissão
+    row.cells[7].textContent = updatedDriver.motoctch || "-"; // Categoria da CNH
+    row.cells[8].textContent = formatDate(updatedDriver.motodtvc); // Data de Vencimento
+    row.cells[9].textContent = updatedDriver.motorest || "-"; // Restrições
+    row.cells[10].textContent = updatedDriver.motoorem || "-"; // Órgão Emissor
+    row.cells[11].textContent = updatedDriver.motocelu || "-"; // Celular
+    row.cells[12].textContent = updatedDriver.motocep || "-"; // CEP
+    row.cells[13].textContent = updatedDriver.motorua || "-"; // Rua
+    row.cells[14].textContent = updatedDriver.motocity || "-"; // Cidade
+    row.cells[15].textContent = updatedDriver.motoestd || "-"; // Estado
+    row.cells[16].textContent = updatedDriver.motomail || "-"; // E-mail
+  }
+};

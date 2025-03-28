@@ -1,239 +1,318 @@
 // botoes relacionado aos clientes
-
 const btnRegisterClient = document.querySelector(".btnCadClie");
 btnRegisterClient.addEventListener("click", () => {
 
   const containerAppClient = document.querySelector(".containerAppClient");
-    containerAppClient.style.display = "flex";
+  containerAppClient.style.display = "flex";
 
   const listingClient = document.querySelector(".listClient");
-     listingClient.style.display = "flex";
+  listingClient.style.display = "flex";
 
   const btnMainPage = document.querySelector(".buttonsMainPage");
-   btnMainPage.style.display = "flex";
+  btnMainPage.style.display = "flex";
 
-  const containerAppForn = document.querySelector(".containerAppForn")
-    containerAppForn.style.display = 'none'
+  const containerAppForn = document.querySelector(".containerAppForn");
+  containerAppForn.style.display = "none";
 
-  const containerAppProd = document.querySelector('.containerAppProd')
-  containerAppProd.style.display = 'none';
+  const containerAppProd = document.querySelector(".containerAppProd");
+  containerAppProd.style.display = "none";
 
-  const containerAppFabri = document.querySelector('.containerAppFabri')
-    containerAppFabri.style.display = 'none'
+  const containerAppFabri = document.querySelector(".containerAppFabri");
+  containerAppFabri.style.display = "none";
 
-  const containerAppDriver = document.querySelector('.containerAppDriver')
-    containerAppDriver.style.display = 'none'
+  const containerAppDriver = document.querySelector(".containerAppDriver");
+  containerAppDriver.style.display = "none";
 
-     const containerAppAutomo = document.querySelector('.containerAppAutomo')
-       containerAppAutomo.style.display = 'none'
-    
-  const containerAppTypeProd = document.querySelector('.containerAppTipoProd')
-  containerAppTypeProd.style.display = 'none'
+  const containerAppAutomo = document.querySelector(".containerAppAutomo");
+  containerAppAutomo.style.display = "none";
+
+  const containerAppTypeProd = document.querySelector(".containerAppTipoProd");
+  containerAppTypeProd.style.display = "none";
 
   const containerAppBens = document.querySelector(".containerAppBens");
-   containerAppBens.style.display = "none";
+  containerAppBens.style.display = "none";
 
-  const containerFormEdit = document.querySelector('.formEditClient')
-    containerFormEdit.style.display = 'none'
+  const containerFormEdit = document.querySelector(".formEditClient");
+  containerFormEdit.style.display = "none";
 
-  formRegisterClient.style.display = "none";
-
-  const informative = document.querySelector('.information')
-   informative.style.display = 'block'
-    informative.textContent = 'SEÇÃO CLIENTE'
-    
+  const informative = document.querySelector(".information");
+  informative.style.display = "block";
+  informative.textContent = "SEÇÃO CLIENTE";
 });
 
 const buttonRegisterClient = document.querySelector(".registerClient");
 buttonRegisterClient.addEventListener("click", () => {
-  
-  const formRegisterClient = document.querySelector("#formRegisterClient");
-  const listingClient = document.querySelector(".listClient");
-  const btnMainPage = document.querySelector(".buttonsMainPage");
-
+  const formRegisterClient = document.querySelector(".containerOfForm");
   formRegisterClient.style.display = "flex";
-  btnMainPage.style.display = "none";
-  listingClient.style.display = "none";
-});
 
+  const listingClient = document.querySelector(".listClient");
+  listingClient.style.display = "none";
+
+  const btnMainPage = document.querySelector(".buttonsMainPage");
+  btnMainPage.style.display = "none";
+});
 
 const buttonOutPageClient = document.querySelector(".btnOutInit");
 buttonOutPageClient.addEventListener("click", (event) => {
- event.preventDefault()
+  event.preventDefault();
 
   const listingClient = document.querySelector(".listClient");
-    listingClient.style.display = 'flex'
+  listingClient.style.display = "flex";
 
   const btnMainPage = document.querySelector(".buttonsMainPage");
-     btnMainPage.style.display  ='flex'
+  btnMainPage.style.display = "flex";
 
-  const containeFormClient = document.querySelector('#formRegisterClient')
-  containeFormClient.style.display = 'none'
-
-  
+  const containeFormClient = document.querySelector(".containerOfForm");
+  containeFormClient.style.display = "none";
 });
 
 const buttonOutPageEdit = document.querySelector(".outPageEditClient");
 buttonOutPageEdit.addEventListener("click", (event) => {
   event.preventDefault();
-   
+
   const listingClient = document.querySelector(".listClient");
-      listingClient.style.display = 'flex'
+  listingClient.style.display = "flex";
 
   const btnMainPage = document.querySelector(".buttonsMainPage");
-     btnMainPage.style.display  ='flex'
+  btnMainPage.style.display = "flex";
 
-  const containerEditClient = document.querySelector('.formEditClient')
-  containerEditClient.style.display = 'none'
-
+  const containerEditClient = document.querySelector(".formEditClient");
+  containerEditClient.style.display = "none";
   return;
 });
 
 const buttonEditClient = document.querySelector(".buttonEditClient");
 buttonEditClient.addEventListener("click", () => {
   const btnMainPage = document.querySelector(".buttonsMainPage");
-
   btnMainPage.style.display = "none";
 });
 
 const buttonToBack = document.querySelector(".buttonExitClient");
 buttonToBack.addEventListener("click", () => {
   const containerAppClient = document.querySelector(".containerAppClient");
-
   containerAppClient.style.display = "none";
 });
 
+// validação jwt
 function isTokenExpired(token) {
   try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const expTime = payload.exp * 1000; 
-      return Date.now() > expTime; 
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    const expTime = payload.exp * 1000;
+    return Date.now() > expTime;
   } catch (error) {
-      return true; 
+    return true;
   }
+}
+
+const formatDate = (isoDate) => {
+  if (!isoDate) return "";
+  const dateObj = new Date(isoDate);
+  const year = dateObj.getFullYear();
+  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const day = String(dateObj.getDate()).padStart(2, "0");
+  return `${year}/${month}/${day}`;
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelector('.btnRegisterClient').addEventListener('click', async (event) => {
+const socketUpdateClient = io();
+document.addEventListener("DOMContentLoaded", async () => {
+   
+  await fetchListClientes();
 
+  socketUpdateClient.on("updateClients", (updatedClient) => {
+    updateClientInTableRunTime(updatedClient);
+  });
+
+  socketUpdateClient.on("clienteAtualizado", (clientes) => {
+    insertClientTableRunTime(clientes); 
+  });
+
+  document.querySelector(".btnRegisterClient").addEventListener("click", async (event) => {
       event.preventDefault();
-      const token = localStorage.getItem('token'); 
-       
+      const token = localStorage.getItem("token");
+
       if (!token || isTokenExpired(token)) {
         Toastify({
-            text: "Sessão expirada. Faça login novamente.",
+          text: "Sessão expirada. Faça login novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+
+        localStorage.removeItem("token");
+        setTimeout(() => {
+          window.location.href = "/index.html";
+        }, 2000);
+        return;
+      }
+
+      if (!$("#formRegisterClient").valid()) {
+        return;
+      }
+
+      // Captura os valores do formulário
+      const formData = {
+        clieCode: document.querySelector("#clieCode").value, // Codigo
+        clieName: document.querySelector("#clieName").value, // Nome
+        cpf: document.querySelector("#cpf").value, // CPF
+        dtCad: document.querySelector("#dtCad").value, // Data de Cadastro
+        dtNasc: document.querySelector("#dtNasc").value, // Data de Nascimento
+        clieCelu: document.querySelector("#clieCelu").value, // Celular
+        clieCity: document.querySelector("#clieCity").value, // Cidade
+        clieEstd: document.querySelector("#clieEstd").value, // Estado
+        clieRua: document.querySelector("#clieRua").value, // Rua
+        clieCep: document.querySelector("#clieCep").value, // Cep
+        clieMail: document.querySelector("#clieMail").value, // E-mail
+      };
+
+      try {
+        const response = await fetch("/api/client/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          Toastify({
+            text: "Cliente cadastrado com Sucesso",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "green",
+          }).showToast();
+
+       
+          document.querySelector("#formRegisterClient").reset();
+        } else {
+          Toastify({
+            text: "Erro ao cadastrar Cliente",
             duration: 3000,
             close: true,
             gravity: "top",
             position: "center",
             backgroundColor: "red",
-        }).showToast();
-    
-        localStorage.removeItem("token"); 
-        setTimeout(() => {
-            window.location.href = "/index.html"; 
-        }, 2000); 
-        return;
-    }
-      
-      if (!$('#formRegisterClient').valid()) {
-        return;
-    }
-
-      // Captura os valores do formulário
-      const formData = {
-          clieCode: document.querySelector('#clieCode').value,            // Codigo
-          clieName: document.querySelector('#clieName').value,            // Nome
-          cpf: document.querySelector('#cpf').value,                      // CPF
-          dtCad: document.querySelector('#dtCad').value,                  // Data de Cadastro
-          dtNasc: document.querySelector('#dtNasc').value,                // Data de Nascimento
-          clieCelu: document.querySelector('#clieCelu').value,            // Celular
-          clieCity: document.querySelector('#clieCity').value,            // Cidade
-          clieEstd: document.querySelector('#clieEstd').value,            // Estado
-          clieRua: document.querySelector('#clieRua').value,              // Rua
-          clieCep: document.querySelector('#clieCep').value,              // Cep
-          clieMail: document.querySelector('#clieMail').value             // E-mail
-      };
-        
-      try {
-          const response = await fetch('http://localhost:3000/api/client/submit', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${token}`
-              },
-              body: JSON.stringify(formData)
-          });
-
-          const result = await response.json();
-          
-          if (response.ok) {
-              Toastify({
-                  text: "Cliente cadastrado com Sucesso",
-                  duration: 3000,
-                  close: true,
-                  gravity: "top",
-                  position: "center",
-                  backgroundColor: "green",
-              }).showToast();
-
-              // Limpar o formulário após o sucesso
-              document.querySelector('#formRegisterClient').reset();
-          } else {
-            Toastify({
-              text: "Erro ao cadastrar Cliente",
-              duration: 3000,
-              close: true,
-              gravity: "top",
-              position: "center",
-              backgroundColor: "green",
           }).showToast();
-          
-          }
+        }
       } catch (error) {
-          console.error('Erro ao enviar formulário:', error);
-          alert('Erro ao enviar os dados para o server.');
+        console.error("Erro ao enviar formulário:", error);
+        alert("Erro ao enviar os dados para o server.");
       }
-  });
+    });
 
   validationFormClient();
 });
 
+//ATUALIZAR EM TEMPO REAL NA INSERÇÃO
+function insertClientTableRunTime(clientes) {
+  const clientesListDiv = document.querySelector(".listClient");
+  clientesListDiv.innerHTML = "";
 
-//fetch listClient
+  if (clientes.length > 0) {
+    const tabela = document.createElement("table");
+    tabela.style.width = "100%";
+    tabela.setAttribute("border", "1");
 
+    // Cabeçalho
+    const cabecalho = tabela.createTHead();
+    const linhaCabecalho = cabecalho.insertRow();
+    const colunas = [
+      "Selecionar",
+      "Código",
+      "Nome",
+      "CPF",
+      "Data de Cadastro",
+      "Data de Nascimento",
+      "Celular",
+      "Cidade",
+      "Estado",
+      "Rua",
+      "CEP",
+      "E-mail",
+    ];
 
+    colunas.forEach((coluna) => {
+      const th = document.createElement("th");
+      th.textContent = coluna;
+      linhaCabecalho.appendChild(th);
+    });
+
+    // Corpo da tabela
+    const corpo = tabela.createTBody();
+    clientes.forEach((cliente) => {
+      const linha = corpo.insertRow();
+      linha.setAttribute("data-cliecode", cliente.cliecode);
+
+      const checkboxCell = linha.insertCell();
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.name = "selectCliente";
+      checkbox.value = cliente.cliecode;
+
+      const clienteData = JSON.stringify(cliente);
+      if (clienteData) {
+        checkbox.setAttribute("data-cliente", clienteData);
+      } else {
+        console.warn(`Cliente inválido encontrado:`, cliente);
+      }
+
+      checkboxCell.appendChild(checkbox);
+
+      linha.insertCell().textContent = cliente.cliecode;
+      linha.insertCell().textContent = cliente.clienome;
+      linha.insertCell().textContent = cliente.cliecpf;
+      linha.insertCell().textContent = formatDate(cliente.cliedtcd);
+      linha.insertCell().textContent = formatDate(cliente.cliedtnc);
+      linha.insertCell().textContent = cliente.cliecelu;
+      linha.insertCell().textContent = cliente.cliecity;
+      linha.insertCell().textContent = cliente.clieestd;
+      linha.insertCell().textContent = cliente.clierua;
+      linha.insertCell().textContent = cliente.cliecep;
+      linha.insertCell().textContent = cliente.cliemail;
+    });
+
+    // Adiciona a tabela à div
+    clientesListDiv.appendChild(tabela);
+  } else {
+    clientesListDiv.innerHTML = "<p>Nenhum cliente cadastrado.</p>";
+  }
+}
+
+// LISTAGEM DE CLIENTES
 let clientesData = {};
 async function fetchListClientes() {
+  const token = localStorage.getItem("token");
 
-  const token = localStorage.getItem('token'); 
-       
-      if (!token || isTokenExpired(token)) {
-        Toastify({
-            text: "Sessão expirada. Faça login novamente.",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "red",
-        }).showToast();
-    
-        localStorage.removeItem("token"); 
-        setTimeout(() => {
-            window.location.href = "/index.html"; 
-        }, 2000); 
-        return;
-    }
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+      text: "Sessão expirada. Faça login novamente.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      window.location.href = "/index.html";
+    }, 2000);
+    return;
+  }
   try {
-    const response = await fetch("/api/listclient" ,{
+    const response = await fetch("/api/listclient", {
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    }
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
     const clientes = await response.json();
-
-    // console.log(clientes)
 
     const clientesListDiv = document.querySelector(".listClient");
     clientesListDiv.innerHTML = "";
@@ -282,7 +361,7 @@ async function fetchListClientes() {
 
         const clienteData = JSON.stringify(cliente);
         if (clienteData) {
-          checkbox.dataset.cliente = clienteData;
+          checkbox.setAttribute("data-cliente", clienteData);
         } else {
           console.warn(`Cliente inválido encontrado:`, cliente);
         }
@@ -292,16 +371,6 @@ async function fetchListClientes() {
         linha.insertCell().textContent = cliente.cliecode;
         linha.insertCell().textContent = cliente.clienome;
         linha.insertCell().textContent = cliente.cliecpf;
-
-        const formatDate = (isoDate) => {
-          if (!isoDate) return "";
-          const dateObj = new Date(isoDate);
-          const year = dateObj.getFullYear();
-          const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-          const day = String(dateObj.getDate()).padStart(2, "0");
-          return `${year}/${month}/${day}`;
-        };
-
         linha.insertCell().textContent = formatDate(cliente.cliedtcd);
         linha.insertCell().textContent = formatDate(cliente.cliedtnc);
         linha.insertCell().textContent = cliente.cliecelu;
@@ -312,7 +381,6 @@ async function fetchListClientes() {
         linha.insertCell().textContent = cliente.cliemail;
       });
 
-      // Adiciona a tabela à div
       clientesListDiv.appendChild(tabela);
     } else {
       clientesListDiv.innerHTML = "<p>Nenhum cliente cadastrado.</p>";
@@ -323,8 +391,8 @@ async function fetchListClientes() {
       "<p>Erro ao carregar clientes.</p>";
   }
 }
-fetchListClientes();
 
+//deletar cliente
 const buttonDeleteClient = document.querySelector(".buttonDeleteClient");
 buttonDeleteClient.addEventListener("click", async () => {
   const selectedCheckbox = document.querySelector(
@@ -356,32 +424,32 @@ buttonDeleteClient.addEventListener("click", async () => {
 });
 
 async function deleteClient(id, clientRow) {
-  const token = localStorage.getItem('token'); 
-       
-      if (!token || isTokenExpired(token)) {
-        Toastify({
-            text: "Sessão expirada. Faça login novamente.",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "red",
-        }).showToast();
-    
-        localStorage.removeItem("token"); 
-        setTimeout(() => {
-            window.location.href = "/index.html"; 
-        }, 2000); 
-        return;
-    }
+  const token = localStorage.getItem("token");
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+      text: "Sessão expirada. Faça login novamente.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      window.location.href = "/index.html";
+    }, 2000);
+    return;
+  }
 
   try {
     const response = await fetch(`/api/deleteclient/${id}`, {
       method: "DELETE",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    }
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     const data = await response.json();
@@ -397,8 +465,7 @@ async function deleteClient(id, clientRow) {
       }).showToast();
 
       clientRow.remove();
-    } else { 
-      
+    } else {
       if (response.status === 400) {
         Toastify({
           text: data.message, // Mensagem retornada do backend
@@ -408,21 +475,18 @@ async function deleteClient(id, clientRow) {
           position: "center",
           backgroundColor: "orange",
         }).showToast();
+      } else {
+        console.log("Erro para excluir:", data);
+        Toastify({
+          text: "Erro na exclusão do Cliente",
+          duration: 2000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
       }
-    else{ 
-      console.log("Erro para excluir:", data);
-      Toastify({
-        text: "Erro na exclusão do Cliente",
-        duration: 2000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-
     }
-  }
-     
   } catch (error) {
     console.error("Erro ao excluir cliente:", error);
     Toastify({
@@ -438,12 +502,11 @@ async function deleteClient(id, clientRow) {
 
 // Botão para iniciar a edição
 const editButtonClient = document.querySelector(".buttonEditClient");
-
 editButtonClient.addEventListener("click", () => {
   const selectedCheckbox = document.querySelector(
     'input[name="selectCliente"]:checked'
   );
-
+ 
   if (!selectedCheckbox) {
     Toastify({
       text: "Selecione um Cliente para editar",
@@ -458,7 +521,7 @@ editButtonClient.addEventListener("click", () => {
     return;
   }
 
-  const clientData = selectedCheckbox.dataset.cliente;
+  const clientData = selectedCheckbox.getAttribute("data-cliente");
 
   if (!clientData) {
     console.error("O atributo data-client está vazio ou indefinido.");
@@ -467,17 +530,6 @@ editButtonClient.addEventListener("click", () => {
 
   try {
     const clientSelecionado = JSON.parse(clientData);
-
-    const formatDate = (isoDate) => {
-      if (!isoDate) return "";
-      const dateObj = new Date(isoDate);
-      const year = dateObj.getFullYear();
-      const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-      const day = String(dateObj.getDate()).padStart(2, "0");
-      return `${year}/${month}/${day}`;
-    };
-
-    // Campos e IDs correspondentes
     const campos = [
       { id: "editClieCode", valor: clientSelecionado.cliecode },
       { id: "editClieName", valor: clientSelecionado.clienome },
@@ -496,15 +548,13 @@ editButtonClient.addEventListener("click", () => {
     campos.forEach(({ id, valor }) => {
       const elemento = document.getElementById(id);
       if (elemento) {
-        
         if (elemento.type === "date" && valor) {
           // Formata a data para YYYY-MM-DD, caso seja necessário
-          const dataFormatada = new Date(valor).toISOString().split('T')[0];
+          const dataFormatada = new Date(valor).toISOString().split("T")[0];
           elemento.value = dataFormatada;
         } else {
-          elemento.value = valor || ""; 
+          elemento.value = valor || "";
         }
-      
       } else {
         console.warn(`Elemento com ID '${id}' não encontrado.`);
       }
@@ -517,31 +567,30 @@ editButtonClient.addEventListener("click", () => {
   }
 });
 
-// // Função para enviar os dados atualizados
+// Função para enviar os dados atualizados
 async function editAndUpdateOfClient() {
- 
   const formEditClient = document.querySelector("#formEditRegisterClient");
 
   formEditClient.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem("token");
     if (!token || isTokenExpired(token)) {
       Toastify({
-          text: "Sessão expirada. Faça login novamente.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
       }).showToast();
-  
-      localStorage.removeItem("token"); 
+
+      localStorage.removeItem("token");
       setTimeout(() => {
-          window.location.href = "/index.html"; 
-      }, 2000); 
+        window.location.href = "/index.html";
+      }, 2000);
       return;
-  }
+    }
 
     const selectedCheckbox = document.querySelector(
       'input[name="selectCliente"]:checked'
@@ -571,7 +620,7 @@ async function editAndUpdateOfClient() {
       cliecode: document.getElementById("editClieCode").value,
       clienome: document.getElementById("editClieName").value,
       cliecpf: document.getElementById("editCliecpf").value,
-      cliedtcd: document.getElementById ("editClieDtCad").value || null,
+      cliedtcd: document.getElementById("editClieDtCad").value || null,
       cliedtnc: document.getElementById("editClieDtNasc").value || null,
       cliecelu: document.getElementById("editClieCelu").value,
       cliecity: document.getElementById("editClieCity").value,
@@ -581,14 +630,13 @@ async function editAndUpdateOfClient() {
       cliemail: document.getElementById("editClieMail").value,
     };
 
-    
     try {
       const response = await fetch(`/api/updateclient/${clientIdParsed}`, {
         method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-      },
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(updateClient),
       });
 
@@ -603,8 +651,7 @@ async function editAndUpdateOfClient() {
           backgroundColor: "green",
         }).showToast();
 
-        formEditClient.reset()
-
+        formEditClient.reset();
       } else {
         console.error("Erro ao atualizar cliente:", await response.text());
         Toastify({
@@ -622,3 +669,24 @@ async function editAndUpdateOfClient() {
   });
 }
 editAndUpdateOfClient();
+
+// atualizar a celula da tabela runtime
+function updateClientInTableRunTime(updatedClient) {
+  const row = document.querySelector(
+    `[data-cliecode="${updatedClient.cliecode}"]`
+  );
+
+  if (row) {
+    
+    row.cells[2].textContent = updatedClient.clienome || "-"; // Nome
+    row.cells[3].textContent = updatedClient.cliecpf || "-"; // CPF
+    row.cells[4].textContent = formatDate(updatedClient.cliedtcd) || "-"; // Data de Cadastro
+    row.cells[5].textContent = formatDate(updatedClient.cliedtnc) || "-"; // Data de Nascimento
+    row.cells[6].textContent = updatedClient.cliecelu || "-"; // Celular
+    row.cells[7].textContent = updatedClient.cliecity || "-"; // Cidade
+    row.cells[8].textContent = updatedClient.clieestd || "-"; // Estado
+    row.cells[9].textContent = updatedClient.clierua || "-"; // Rua
+    row.cells[10].textContent = updatedClient.cliecep || "-"; // CEP
+    row.cells[11].textContent = updatedClient.cliemail || "-"; // E-mail
+  }
+}

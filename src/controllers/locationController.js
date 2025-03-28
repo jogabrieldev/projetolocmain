@@ -1,15 +1,23 @@
 import { LocacaoModel } from "../model/location.js";
 
 export const location = {
+
+  async gerarNumeroLocacao(req, res) {
+    try {
+      const numero = await LocacaoModel.gerarNumeroLocacao(); // Gera o número único
+
+      if(!numero){
+         return res.status(404).json({message: "Numero de locação não foi gerado"})
+      }
+      return res.status(200).json({ numericLocation: numero });
+    } catch (error) {
+      console.error("Erro ao gerar número de locação:", error);
+      return res.status(500).json({ error: "Erro ao gerar número de locação." });
+    }
+  },
+
   async dataLocacao(req, res) {
-    const {
-      userClientValidade,
-      numericLocation,
-      dataLoc,
-      dataDevo,
-      pagament,
-      bens,
-    } = req.body;
+    const { userClientValidade, numericLocation, dataLoc, dataDevo, pagament, bens } = req.body;
 
     try {
       if (!bens || bens.length === 0) {
@@ -21,15 +29,14 @@ export const location = {
       }
 
       const cpfClient = userClientValidade[1];
-
       const cliente = await LocacaoModel.buscarClientePorCPF(cpfClient);
-      console.log("Esse e o cliente: ", cliente);
 
       if (!cliente) {
         return res.status(404).json({ error: "Cliente não encontrado." });
       }
 
-      const locationClient = await LocacaoModel.clientLoc({
+
+      const locationClient = await LocacaoModel.criarLocacao({
         cllonmlo: numericLocation,
         clloidcl: cliente.cliecode,
         cllodtdv: dataDevo,
@@ -41,13 +48,19 @@ export const location = {
 
       await LocacaoModel.inserirBens(bens, locationClient);
 
+      const listAllLocation = await LocacaoModel.buscarTodasLocacoes();
+
+      const io = req.app.get("socketio");
+      if (io) {
+        io.emit("updateRunTimeRegisterLocation", listAllLocation);
+      }
+
       return res.status(201).json({ message: "Locação criada com sucesso." });
     } catch (error) {
       console.error("Erro ao criar locação:", error);
       return res.status(500).json({ error: "Erro interno do servidor." });
     }
   },
-
   async getClientByCPF(req, res) {
     try {
       const { cpf } = req.query;
@@ -92,20 +105,50 @@ export const location = {
 
   async buscarLocationFinish(req, res) {
     try {
-      const [clientes, bens] = await Promise.all([
-        LocacaoModel.buscarLocationClient(),
-        LocacaoModel.buscarLocationGoods(),
-      ]);
+      const locacaoFinish = await LocacaoModel.buscarTodasLocacoes();
 
-      res.status(200).json({ clientes, bens });
+      if (!locacaoFinish || locacaoFinish.length === 0) {
+        return res.status(404).json({ message: 'Nenhuma locação encontrada' });
+      }
+  
+      return res.status(200).json({ locacoes: locacaoFinish }); 
     } catch (error) {
       res.status(500).json({ error: "Erro ao buscar os dados" });
     }
   },
+  
+  async buscarLocacaoPorId(req, res) {
+    try {
+        const { id } = req.params; // Pega o ID da URL
+
+        if (!id) {
+            return res.status(400).json({ error: "ID da locação não foi informado." });
+        }
+
+        const locacao = await LocacaoModel.buscarLocationPorId(id); // Chama o model específico
+
+        if (!locacao) {
+            return res.status(404).json({ error: "Locação não encontrada." });
+        }
+
+         return res.status(200).json(locacao);
+    } catch (error) {
+        console.error("Erro ao buscar locação por ID:", error);
+        res.status(500).json({ error: "Erro ao buscar a locação" });
+    }
+},
 
   async DeleteLocationFinish(req, res) {
+
+    const { id } = req.params;
     try {
-      const { id } = req.params;
+       const verificar = await LocacaoModel.verificarDependenciaLocacao(id);
+      
+            if (verificar) {
+              return res.status(400).json({
+                message: "Não e possivel excluir. a locação esta vinculada a um bem ",
+              });
+            }
       const deleteSuccess = await LocacaoModel.deleteLocation(id);
 
       if (!deleteSuccess) {
@@ -143,6 +186,27 @@ export const location = {
       });
     } catch (error) {
       res.status(500).json({ error: "Erro ao atualizar o status do bem." });
+    }
+  },
+
+  async updateLocationAndBens(req, res) {
+    try {
+      const { id } = req.params; // ID da locação vindo da URL
+      const { locacao, bens } = req.body; // Recebendo os dados da locação e bens
+
+      if (!id || !locacao || !Array.isArray(bens)) {
+        return res.status(400).json({ error: "Dados inválidos para atualização." });
+      }
+
+      const resultado = await LocacaoModel.updateLocationAndBens(id, locacao, bens);
+
+      res.status(200).json({
+        message: "Locação e bens atualizados com sucesso!",
+        data: resultado,
+      });
+    } catch (error) {
+      console.error("Erro ao atualizar locação e bens:", error);
+      res.status(500).json({ error: "Erro interno ao atualizar locação e bens." });
     }
   },
 };

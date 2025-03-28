@@ -1,5 +1,7 @@
+
 const btnAtivLogistics = document.querySelector(".btnLogistic");
 btnAtivLogistics.addEventListener("click", () => {
+
   const informative = document.querySelector(".information");
   informative.style.display = "block";
   informative.textContent = "SEÇÃO LOGISTICA";
@@ -12,178 +14,170 @@ btnAtivLogistics.addEventListener("click", () => {
       
 });
 
+
 //  my table location 
 async function locationPendente() {
-
-  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+  const token = localStorage.getItem('token'); 
 
   if (!token || isTokenExpired(token)) {
-    Toastify({
-        text: "Sessão expirada. Faça login novamente.",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-    }).showToast();
+      Toastify({
+          text: "Sessão expirada. Faça login novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+      }).showToast();
 
-    localStorage.removeItem("token"); 
-    setTimeout(() => {
-        window.location.href = "/index.html"; 
-    }, 2000); 
-    return;
-}
-  try {
-    const response = await fetch("/api/location" , {
-      method: "GET",
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    },
-    });
-    if (!response.ok) throw new Error("Erro ao buscar locações.");
-
-    // Obter os dados
-    const data = await response.json();
-    const clientes = data.clientes || [];
-    const bens = data.bens || [];
-
-    if (clientes.length === 0 || bens.length === 0) {
-      document.querySelector(
-        ".orders"
-      ).innerHTML = `<p style="text-align:center;">Nenhuma locação encontrada.</p>`;
+      localStorage.removeItem("token");
+      setTimeout(() => {
+          window.location.href = "/index.html";
+      }, 2000);
       return;
-    }
+  }
 
-    const formatDate = (isoDate) => {
-      if (!isoDate) return "";
-      const dateObj = new Date(isoDate);
-      return `${dateObj.getFullYear()}/${String(
-        dateObj.getMonth() + 1
-      ).padStart(2, "0")}/${String(dateObj.getDate()).padStart(2, "0")}`;
-    };
+  try {
+      const response = await fetch("/api/locationFinish", {
+          method: "GET",
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+          },
+      });
+      if (!response.ok) throw new Error("Erro ao buscar locações.");
 
-    // Criar array unindo clientes e bens
-    locacoes = []; // Limpa o array global antes de popular
-    clientes.forEach((cliente) => {
-      const bensCliente = bens.filter((bem) => bem.beloidcl == cliente.clloid);
-      if (bensCliente.length > 0) {
-        bensCliente.forEach((bem) => {
-          locacoes.push({
-            idClient: cliente.clloid,
-            numeroLocacao: cliente.cllonmlo,
-            nomeCliente: cliente.clloclno,
-            cpfCliente: cliente.cllocpf,
-            dataLocacao: formatDate(cliente.cllodtlo),
-            dataDevolucao: formatDate(cliente.cllodtdv),
-            codigoBem: bem.bencodb,
-            produto: bem.beloben,
-            quantidade: bem.beloqntd,
-            status: bem.belostat,
+      const data = await response.json();
+      const locacao = data.locacoes || []
+
+      const tableDiv = document.querySelector(".orders");
+      tableDiv.innerHTML = ""; 
+
+      if (locacao.length === 0) {
+        document.querySelector(
+          ".orders"
+        ).innerHTML = `<p style="text-align:center;">Nenhuma locação encontrada.</p>`;
+        return;
+      }
+  
+      const listaLocacoes = locacao.flatMap((locacao) => {
+        if (locacao.bens.length > 0) {
+          return locacao.bens.map((bem) => ({
+            idClient: locacao.clloid,
+            numeroLocacao: locacao.cllonmlo || "Não definido",
+            nomeCliente: locacao.clloclno || "Não definido",
+            cpfCliente: locacao.cllocpf || "Não definido",
+            dataLocacao: formatDate(locacao.cllodtlo),
+            dataDevolucao: formatDate(locacao.cllodtdv),
+            formaPagamento: locacao.cllopgmt || "Não definido",
+            codigoBem: bem.bencodb || "-",
+            produto: bem.beloben || "Nenhum bem associado",
+            quantidade: bem.beloqntd || "-",
+            status: bem.belostat || "Não definido",
             observacao: bem.beloobsv || "Sem observação",
             dataInicio: formatDate(bem.belodtin),
             dataFim: formatDate(bem.belodtfi),
+          }));
+        } else {
+          return [
+            {
+              idClient: locacao.clloid,
+              numeroLocacao: locacao.cllonmlo || "Não definido",
+              nomeCliente: locacao.clloclno || "Não definido",
+              cpfCliente: locacao.cllocpf || "Não definido",
+              dataLocacao: formatDate(locacao.cllodtlo),
+              dataDevolucao: formatDate(locacao.cllodtdv),
+              formaPagamento: locacao.cllopgmt || "Não definido",
+              codigoBem: "-",
+              produto: "Nenhum bem associado",
+              quantidade: "-",
+              status: "-",
+              observacao: "Nenhuma observação",
+              dataInicio: "-",
+              dataFim: "-",
+            },
+          ];
+        }
+      })
+     
+      const filterStatusPendente = listaLocacoes.filter(locacao => locacao.status === "Pendente");
+
+      if (filterStatusPendente.length > 0) {
+          // Criar tabela
+          const table = document.createElement("table");
+          table.id = "tableWithAllLocation";
+
+          const thead = document.createElement("thead");
+          const headerRow = document.createElement("tr");
+          const headers = ["Selecionar", "Número de Locação", "Status", "Nome do Cliente", "Data da Locação", "Data de Devolução", "Familia do bem", "Descrição", "Quantidade"];
+
+          headers.forEach(text => {
+              const th = document.createElement("th");
+              th.textContent = text;
+              headerRow.appendChild(th);
           });
-        });
+          thead.appendChild(headerRow);
+          table.appendChild(thead);
+
+          // Criar corpo da tabela
+          const tbody = document.createElement("tbody");
+
+          filterStatusPendente.forEach(locacao => {
+              const row = document.createElement("tr");
+
+              // Criar checkbox
+              const tdCheckbox = document.createElement("td");
+              const checkbox = document.createElement("input");
+              checkbox.type = "checkbox";
+              checkbox.classList.add("select-location");
+              checkbox.value = locacao.numeroLocacao;
+              checkbox.dataset.quantidade = locacao.quantidade;
+              checkbox.dataset.familia = locacao.codigoBem;
+              checkbox.dataset.cliente = locacao.nomeCliente;
+              tdCheckbox.appendChild(checkbox);
+              row.appendChild(tdCheckbox);
+
+              // Criar células com os dados
+              const values = [locacao.numeroLocacao, locacao.status, locacao.nomeCliente, locacao.dataLocacao, locacao.dataDevolucao, locacao.codigoBem, locacao.produto, locacao.quantidade];
+              values.forEach(text => {
+                  const td = document.createElement("td");
+                  td.textContent = text;
+                  row.appendChild(td);
+              });
+
+              tbody.appendChild(row);
+          });
+
+          table.appendChild(tbody);
+          tableDiv.appendChild(table);
+
+          // Adicionar evento aos checkboxes
+          document.querySelectorAll(".select-location").forEach(checkbox => {
+              checkbox.addEventListener("change", (event) => {
+                  const quantidadeLocacao = parseInt(event.target.dataset.quantidade);
+                  const isChecked = event.target.checked;
+                  const familiaBem = event.target.dataset.familia;
+                  const cliente = event.target.dataset.cliente;
+
+                  needVsAvaible(cliente, quantidadeLocacao, familiaBem, isChecked);
+                  loadingDriver()
+              });
+          });
+
       } else {
-        locacoes.push({
-          numeroLocacao: "Não foi gerado",
-          nomeCliente: "Não foi definido",
-          cpfCliente: "Não foi definido",
-          dataLocacao: "Não foi definida",
-          dataDevolucao: "A data não foi definida",
-          formaPagamento: "Não foi definido",
-          codigoBem: "-",
-          produto: "Nenhum bem associado",
-          quantidade: "-",
-          observacao: "Nenhuma observação",
-        });
+          const msg = document.createElement("p");
+          msg.style.textAlign = "center";
+          msg.textContent = "Nenhuma locação pendente encontrada.";
+          tableDiv.appendChild(msg);
       }
-    });
-
-    const filterStatus = locacoes.filter(
-      (locacao) => locacao.status === "Em locação"
-    );
-    const filterStatusPendente = locacoes.filter(
-      (locacao) => locacao.status === "Pendente"
-    );
-
-    const tableDiv = document.querySelector(".orders");
-
-    // Se houver locações "Em Locação", limpa a tabela e não renderiza nada
-    if (filterStatus.length > 0 && filterStatusPendente.length === 0) {
-      tableDiv.innerHTML = " ";
-    }
-    // Se houver locações "Pendente", renderiza a tabela apenas com elas
-    else if (filterStatusPendente.length > 0) {
-      tableDiv.innerHTML = `
-           <table id="tableWithAllLocation">
-                <thead>
-                    <tr>
-                        <th>Selecionar</th>
-                        <th>Número de Locação</th>
-                        <th>Status</th>
-                        <th>Nome do Cliente</th>
-                        <th>Data da Locação</th>
-                        <th>Data de Devolução</th>
-                        <th>Familia do bem</th>
-                        <th>Descrição</th>
-                        <th>Quantidade</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${filterStatusPendente
-                      .map(
-                        (locacao) => `
-                                <tr>
-                                    <td><input type="checkbox" name="selecionarLocacao" class="select-location" 
-                                        value="${locacao.numeroLocacao}" data-quantidade="${locacao.quantidade}" 
-                                        data-familia="${locacao.codigoBem}" data-cliente="${locacao.nomeCliente}" ></td>
-                                    <td>${locacao.numeroLocacao}</td>
-                                    <td>${locacao.status}</td>
-                                    <td>${locacao.nomeCliente}</td>
-                                    <td>${locacao.dataLocacao}</td>
-                                    <td>${locacao.dataDevolucao}</td>
-                                    <td>${locacao.codigoBem}</td>
-                                    <td>${locacao.produto}</td>
-                                    <td>${locacao.quantidade}</td>
-                                </tr>
-                            `
-                      )
-                      .join("")}
-                </tbody>
-            </table>
-        `;
-    } else {
-      tableDiv.innerHTML = `<p style="text-align:center;">Nenhuma locação pendente encontrada.</p>`;
-    }
-
-    document.querySelectorAll(".select-location").forEach((checkbox) => {
-      checkbox.addEventListener("change", (event) => {
-        const quantidadeLocacao = parseInt(event.target.dataset.quantidade);
-        const isChecked = event.target.checked;
-        const familiaBem = event.target.dataset.familia;
-        const cliente = event.target.dataset.cliente;
-
-        console.log("familia do bem:", familiaBem);
-
-        needVsAvaible(cliente, quantidadeLocacao, familiaBem, isChecked);
-      });
-    });
   } catch (error) {
-    console.error("Erro para gerar tabela locação!!", error);
+      console.error("Erro para gerar tabela locação!!", error);
   }
-}
+};
 
 // Necessidade vs Disponibilidade
-async function needVsAvaible(
-  cliente,
-  quantidadeLocacao,
-  familiaBem,
-  isChecked
-) {
+async function needVsAvaible(cliente, quantidadeLocacao, familiaBem, isChecked) {
     
-  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+  const token = localStorage.getItem('token'); 
 
   if (!token || isTokenExpired(token)) {
     Toastify({
@@ -201,7 +195,6 @@ async function needVsAvaible(
     }, 2000); 
     return;
 }
-
 
   try {
     const bensResponse = await fetch("/api/listbens" , {
@@ -223,7 +216,7 @@ async function needVsAvaible(
     const statusText =
       quantidadeDisponivel >= quantidadeLocacao ? "Suficiente" : "Insuficiente";
       
-   // preciso tratar essa parte para dar uma solunção para o usuario
+   // preciso tratar essa parte para dar uma solução para o usuario  quando tiver "Insufisiente"!!!
       if(statusText === "Insuficiente" && isChecked){
         const containerNeed = document.querySelector('.need')
         containerNeed
@@ -236,8 +229,6 @@ async function needVsAvaible(
           backgroundColor: "orange",
         }).showToast();
         return; 
-
-      
 
       }
 
@@ -271,7 +262,7 @@ async function needVsAvaible(
               </tbody>
           </table>
       `;
-      loadingDriver();
+      
       const btnModal = document.querySelector(".openModal");
       if (btnModal) {
         btnModal.addEventListener("click", (event) => {
@@ -279,7 +270,6 @@ async function needVsAvaible(
           const quantidadeLocacao = event.target.dataset.quantidade;
           const cliente = event.target.dataset.cliente;
 
-          console.log("Cliente locação", cliente);
           abrirModal(cliente, familiaBem, quantidadeLocacao);
         });
       }
@@ -297,7 +287,7 @@ async function needVsAvaible(
 // pagina que vincula o bem
 async function abrirModal(cliente, familiaBem, quantidadeLocacao) {
      
-  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+  const token = localStorage.getItem('token');
 
   if (!token || isTokenExpired(token)) {
     Toastify({
@@ -377,7 +367,7 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao) {
 
 if (motoristasSelecionados.length === 0) {
   Toastify({
-    text: "Selecione pelo menos 1 motorista",
+    text: "Selecione 1 motorista para a entrega",
     duration: 3000,
     close: true,
     gravity: "top",
@@ -387,7 +377,6 @@ if (motoristasSelecionados.length === 0) {
   return;
 }
 
-// ✅ Só agora exibe a modal
 modalDiv.style.display = "block";
 
     if ((modalDiv.style.display = "block")) {
@@ -396,7 +385,6 @@ modalDiv.style.display = "block";
       
     let quantidadeVinculada = 0
     const botoesVincular = document.querySelectorAll(".vincular-bem");
-    const contadorVinculada = document.getElementById("contadorVinculados")  
 
     botoesVincular.forEach((botao) => {
       botao.addEventListener("click", async function () {
@@ -454,10 +442,30 @@ async function vincularBem(bemId, familiaBem, motoId) {
     return;
 }
   try {
-    const locacaoSelecionada = document.querySelector(
-      ".select-location:checked"
-    );
+    const resunt = await fetch('/api/locationFinish', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    if (!resunt.ok) {
+      throw new Error("Erro ao obter dados da locação");
+    }
+ 
+    const locacao = await resunt.json()
+   
+    const locations = await locacao.locacoes || [];
+    
+    
+    if (!Array.isArray(locations) || locations.length === 0) {
+      throw new Error("Não foi possível localizar dados de locação.");
+    }
 
+   
+    const locacaoSelecionada = document.querySelector(".select-location:checked");
+    
     if (!locacaoSelecionada) {
       Toastify({
         text: `Nenhuma locação selecionada`,
@@ -469,8 +477,28 @@ async function vincularBem(bemId, familiaBem, motoId) {
       }).showToast();
       return;
     }
-
-    // Obtém os dados do cliente a partir da linha da tabela
+    
+    // Obtendo o número da locação selecionada
+    const numeroLocacaoSelecionado = locacaoSelecionada.value;
+    
+    // Filtrando a locação correspondente
+    const locacaoEncontrada =  locations.find(loc => loc.cllonmlo === numeroLocacaoSelecionado);
+    
+    if (!locacaoEncontrada) {
+      Toastify({
+        text: `Locação não encontrada na base de dados.`,
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+      return;
+    }
+    
+  
+    const meioPagamento = locacaoEncontrada.cllopgmt;
+    
     const tr = locacaoSelecionada.closest("tr");
 
     const locationId = tr.querySelector("td:nth-child(2)").textContent.trim();
@@ -534,11 +562,16 @@ async function vincularBem(bemId, familiaBem, motoId) {
         familiaBem,
         idClient,
         locationId,
-        driver: motoId
+        driver: motoId,
+        pagament: meioPagamento
       }),
     });
 
     if (!response.ok) throw new Error("Erro ao vincular bem.");
+
+    if(response.ok){
+      renderTableDelivery()
+    }
 
     const statusUpdateResponse = await fetch(`/api/updatestatus/${bemId}`, {
       method: "PUT",
@@ -546,7 +579,7 @@ async function vincularBem(bemId, familiaBem, motoId) {
         "Content-Type": "application/json",
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ bensstat: "Em Locação" }),
+      body: JSON.stringify({ bensstat: "Locado" }),
     });
 
     const statusUpdateResponseLocation = await fetch(
@@ -581,7 +614,7 @@ async function vincularBem(bemId, familiaBem, motoId) {
 
     const bemRow = document.querySelector(`[data-benscode="${bemId}"]`);
     if (bemRow) {
-      bemRow.querySelector(".status-bem").textContent = "Em Locação";
+      bemRow.querySelector(".status-bem").textContent = "Locado";
     }
 
     const motoRow = document.querySelector(`[data-motocode="${motoId}"]`);
@@ -595,7 +628,6 @@ async function vincularBem(bemId, familiaBem, motoId) {
       }
     });
     
-
     Toastify({
       text: "Bem vinculado com sucesso!",
       duration: 4000,
@@ -619,12 +651,29 @@ async function vincularBem(bemId, familiaBem, motoId) {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  validateFamilyBensPending();
+document.addEventListener("DOMContentLoaded", async () => {
+  await validateFamilyBensPending();
+
+  const socketUpdateLogistcs = io(); 
+
+  socketUpdateLogistcs.on("updateGoodsTable", (updatedGood) => {
+      validateFamilyBensPending(); 
+  });
+
+  socketUpdateLogistcs.on("updateRunTimeGoods", (updatedGood) => {
+      validateFamilyBensPending();
+  });
+
+  socketUpdateLogistcs.on("updateRunTimeFamilyBens", (updatedFamily) => {
+      validateFamilyBensPending(); 
+  });
+
 });
+
+// COMPARAÇÃO ENTRE DISPONIVEL E PENDENCIA
 async function validateFamilyBensPending() {
 
-  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+  const token = localStorage.getItem('token'); 
 
   if (!token || isTokenExpired(token)) {
     Toastify({
@@ -661,7 +710,7 @@ async function validateFamilyBensPending() {
     });
     const familyBens = await listFamilyBens.json();
 
-    const locationResponse = await fetch("/api/location" , {
+    const locationResponse = await fetch("/api/locationFinish" , {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -669,7 +718,7 @@ async function validateFamilyBensPending() {
     },
     });
     const locations = await locationResponse.json();
-    const bensLoc = locations.bens;
+    const bensLoc = locations.locacoes?.flatMap(loc => loc.bens) || [];
 
     const resultadosPorFamilia = familyBens.reduce((acc, familia) => {
       const codigoFamilia = familia.fabecode;
@@ -805,7 +854,7 @@ async function loadingDriver() {
       checkbox.name = "selectDriver";
       checkbox.value = motorista.motocode;
 
-      checkbox.classList.add("checkbox-motorista"); // Adiciona classe para seleção posterior
+      checkbox.classList.add("checkbox-motorista");
 
       checkboxCell.appendChild(checkbox);
 
@@ -818,15 +867,6 @@ async function loadingDriver() {
       }
 
       checkboxCell.appendChild(checkbox);
-
-      const formatDate = (isoDate) => {
-        if (!isoDate) return "";
-        const dateObj = new Date(isoDate);
-        const year = dateObj.getFullYear();
-        const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-        const day = String(dateObj.getDate()).padStart(2, "0");
-        return `${year}/${month}/${day}`;
-      };
 
       linha.insertCell().textContent = motorista.motoname;
       linha.insertCell().textContent = motorista.motostat;
@@ -843,4 +883,4 @@ async function loadingDriver() {
     const divContainerDriver = document.querySelector(".linkDrive");
     divContainerDriver.innerHTML = "Nenhum motorista disponivel";
   }
-}
+};

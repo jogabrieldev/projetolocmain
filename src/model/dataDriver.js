@@ -77,6 +77,18 @@ export const crudRegisterDriver = {
     }
   },
 
+  verificarEntregaComMotorista:async (id)=>{
+    try {
+      const checkQuery = "SELECT COUNT(*) FROM locafim WHERE lofiidmt = $1";
+      const checkResult = await userDbDriver.query(checkQuery, [id]);
+
+      return parseInt(checkResult.rows[0].count) > 0;
+    } catch (error) {
+      console.error("Erro ao verificar dependências do Motorista com entrega:", error);
+      throw error;
+    }
+  },
+
   deleteDriver: async (id) => {
     try {
       const delet = "DELETE FROM cadmoto WHERE motocode = $1 RETURNING *";

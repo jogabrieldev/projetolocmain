@@ -107,13 +107,26 @@ function isTokenExpired(token) {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  document
-    .querySelector(".btnRegisterforn")
-    .addEventListener("click", async (event) => {
-      event.preventDefault(); // Evita que o formulário recarregue a página
 
-      const token = localStorage.getItem("token"); // Pega o token armazenado no login
+const socketUpdateForn = io();
+document.addEventListener("DOMContentLoaded", async () => {
+
+  await fetchListFornecedores() 
+    
+  socketUpdateForn.on("updateRunTimeForne", (fornecedor) => {
+    insertFornecedoresInTableRunTime(fornecedor);
+     
+  });
+  socketUpdateForn.on("updateFornTable", (updateFornecedor) => {
+    updateFornecedorInTableRunTime(updateFornecedor) 
+     
+  });
+   
+  
+    document .querySelector(".btnRegisterforn").addEventListener("click", async (event) => {
+      event.preventDefault(); 
+
+      const token = localStorage.getItem("token"); 
 
       if (!token || isTokenExpired(token)) {
         Toastify({
@@ -198,11 +211,70 @@ document.addEventListener("DOMContentLoaded", () => {
   validationFormForne();
 });
 
-// lista de fornecedor
 
+// ATUALIZA A TABELA E RUNTIME QUANDO INSERIR
+function insertFornecedoresInTableRunTime(fornecedores) {
+  const fornecedoresListDiv = document.querySelector(".listingForn");
+  fornecedoresListDiv.innerHTML = "";
+
+  if (fornecedores.length > 0) {
+    const tabela = document.createElement("table");
+    tabela.style.width = "100%";
+    tabela.setAttribute("border", "1");
+
+    const cabecalho = tabela.createTHead();
+    const linhaCabecalho = cabecalho.insertRow();
+    const colunas = [
+      "Selecionar", "Código", "Nome", "Nome Fantasia", "CNPJ", "CEP", "Rua",
+      "Cidade", "Estado", "Celular", "E-mail", "Banco", "Agência", "Conta",
+      "Pix", "Data do cadastro", "Descrição"
+    ];
+
+    colunas.forEach((coluna) => {
+      const th = document.createElement("th");
+      th.textContent = coluna;
+      linhaCabecalho.appendChild(th);
+    });
+
+    const corpo = tabela.createTBody();
+    fornecedores.forEach((fornecedor) => {
+      const linha = corpo.insertRow();
+      linha.setAttribute("data-forncode", fornecedor.forncode);
+
+      const checkboxCell = linha.insertCell();
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.name = "selectFornecedor";
+      checkbox.value = fornecedor.forncode;
+      checkbox.dataset.fornecedor = JSON.stringify(fornecedor);
+      checkboxCell.appendChild(checkbox);
+
+      linha.insertCell().textContent = fornecedor.forncode;
+      linha.insertCell().textContent = fornecedor.fornnome;
+      linha.insertCell().textContent = fornecedor.fornnoft;
+      linha.insertCell().textContent = fornecedor.forncnpj;
+      linha.insertCell().textContent = fornecedor.forncep;
+      linha.insertCell().textContent = fornecedor.fornrua;
+      linha.insertCell().textContent = fornecedor.forncity;
+      linha.insertCell().textContent = fornecedor.fornestd;
+      linha.insertCell().textContent = fornecedor.forncelu;
+      linha.insertCell().textContent = fornecedor.fornmail;
+      linha.insertCell().textContent = fornecedor.fornbanc;
+      linha.insertCell().textContent = fornecedor.fornagen;
+      linha.insertCell().textContent = fornecedor.forncont;
+      linha.insertCell().textContent = fornecedor.fornpix;
+      linha.insertCell().textContent = formatDate(fornecedor.forndtcd);
+      linha.insertCell().textContent = fornecedor.fornptsv;
+    });
+
+    fornecedoresListDiv.appendChild(tabela);
+  }
+}
+
+// lista de fornecedor
 async function fetchListFornecedores() {
 
-  const token = localStorage.getItem('token'); // Pega o token armazenado no login
+  const token = localStorage.getItem('token'); 
 
   if (!token || isTokenExpired(token)) {
     Toastify({
@@ -281,15 +353,6 @@ async function fetchListFornecedores() {
         checkbox.dataset.fornecedor = JSON.stringify(fornecedor);
         checkboxCell.appendChild(checkbox);
 
-        const formatDate = (isoDate) => {
-          if (!isoDate) return "";
-          const dateObj = new Date(isoDate);
-          const year = dateObj.getFullYear();
-          const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-          const day = String(dateObj.getDate()).padStart(2, "0");
-          return `${year}/${month}/${day}`;
-        };
-
         linha.insertCell().textContent = fornecedor.forncode;
         linha.insertCell().textContent = fornecedor.fornnome;
         linha.insertCell().textContent = fornecedor.fornnoft;
@@ -318,8 +381,6 @@ async function fetchListFornecedores() {
       "<p>Erro ao carregar fornecedores.</p>";
   }
 }
-
-fetchListFornecedores();
 
 // deletar fornecedor
 const btnDeleteForn = document.querySelector(".buttonDeleteForn");
@@ -353,7 +414,7 @@ btnDeleteForn.addEventListener("click", async () => {
 });
 
 async function deleteForne(id, fornRow) {
-  const token = localStorage.getItem("token"); // Pega o token armazenado no login
+  const token = localStorage.getItem("token"); 
 
   if (!token || isTokenExpired(token)) {
     Toastify({
@@ -380,8 +441,7 @@ async function deleteForne(id, fornRow) {
       },
     });
     const data = await response.json();
-    console.log("Resposta do servidor:", data);
-
+  
     if (response.ok) {
       Toastify({
         text: "O Fornecedor foi excluído com sucesso!",
@@ -426,8 +486,7 @@ async function deleteForne(id, fornRow) {
   }
 }
 
-// // atualização
-
+// atualização
 const editButtonForn = document.querySelector(".buttonEditForn");
 
 editButtonForn.addEventListener("click", (e) => {
@@ -502,8 +561,7 @@ editButtonForn.addEventListener("click", (e) => {
   }
 });
 
-// função fetch
-
+// função ENVIA O DADO ATUALIZADO
 async function editAndUpdateOfForn() {
   const formEditForn = document.querySelector(".formEditForn");
 
@@ -611,3 +669,32 @@ async function editAndUpdateOfForn() {
   });
 }
 editAndUpdateOfForn();
+
+// ATUALIZAR EM RUNTIME A EDIÇÃO
+function updateFornecedorInTableRunTime(updatedFornecedor) {
+  
+  const row = document.querySelector(
+    `[data-forncode="${updatedFornecedor.forncode}"]`
+  );
+
+  if (row) {
+    // Atualiza as células da linha com as novas informações do fornecedor
+    row.cells[1].textContent = updatedFornecedor.forncode || "-"; // Código
+    row.cells[2].textContent = updatedFornecedor.fornnome || "-"; // Nome
+    row.cells[3].textContent = updatedFornecedor.fornnoft || "-"; // Nome Fantasia
+    row.cells[4].textContent = updatedFornecedor.forncnpj || "-"; // CNPJ
+    row.cells[5].textContent = updatedFornecedor.forncep || "-"; // CEP
+    row.cells[6].textContent = updatedFornecedor.fornrua || "-"; // Rua
+    row.cells[7].textContent = updatedFornecedor.forncity || "-"; // Cidade
+    row.cells[8].textContent = updatedFornecedor.fornestd || "-"; // Estado
+    row.cells[9].textContent = updatedFornecedor.forncelu || "-"; // Celular
+    row.cells[10].textContent = updatedFornecedor.fornmail || "-"; // E-mail
+    row.cells[11].textContent = updatedFornecedor.fornbanc || "-"; // Banco
+    row.cells[12].textContent = updatedFornecedor.fornagen || "-"; // Agência
+    row.cells[13].textContent = updatedFornecedor.forncont || "-"; // Conta
+    row.cells[14].textContent = updatedFornecedor.fornpix || "-"; // Pix
+    row.cells[15].textContent = formatDate(updatedFornecedor.forndtcd) || "-"; // Data do cadastro
+    row.cells[16].textContent = updatedFornecedor.fornptsv || "-"; // Descrição
+  }
+}
+

@@ -19,8 +19,8 @@ function showPassword() {
 document.querySelector("#formLogin").addEventListener("submit", async (event) => {
  
   event.preventDefault()
-  const username = document.querySelector("#user").value;
-  const password = document.querySelector("#pin").value;
+  const username = document.querySelector("#user").value.trim();
+  const password = document.querySelector("#pin").value.trim();
 
   
        await fetch('/autenticar' , {

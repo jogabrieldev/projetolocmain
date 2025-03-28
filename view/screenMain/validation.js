@@ -139,6 +139,9 @@ function validationFormClient(){
                 required: true,
                 date: true
             },
+            clieCelu:{
+              required:true
+            },
            clieCity:{
             required: true,
             minlength:4
@@ -162,44 +165,46 @@ function validationFormClient(){
       },
             messages: {
                 clieCode: {
-                  required: "Por favor, insira o código.",
+                  required: "OBRIGATORIO",
                   minlength: "O código deve ter no mínimo 3 caracteres."
                 },
                 clieName: {
-                  required: "Por favor, insira um nome.",
+                  required: "OBRIGATORIO",
                   minlength: "O nome deve ter no mínimo 4 caracteres."
                 },
                 cpf: {
-                    required: "Por favor, insira um CPF valido",
+                    required: "OBRIGATORIO",
                   minlength: "Insira a quantidade correta de numeros"
                 },
                 dtCad:{
-                    required: 'Insira uma data',
+                    required: 'OBRIGATORIO',
                     date: 'Insira uma data valida'
                 },
                 dtNasc:{
-                    required: 'insira uma data',
+                    required: 'OBRIGATORIO',
                     date: 'insira uma data valida'
                 },
-                
+                clieCelu:{
+                   required: "OBRIGATORIO"
+                },
                 clieCity:{
-                  required: "Obrigatorio",
+                  required: "OBRIGATORIO",
                   minlength: 'Caracteres minimos são 4'
                  },
                  clieEstd:{
-                  required:'Obrigatorio',
+                  required:'OBRIGATORIO',
                   minlength: 'Caracteres minimos são 4'
                 },
                 clieRua:{
-                  required: 'Obrigatorio',
+                  required: 'OBRIGATORIO',
                   minlength: 'Caracteres minimos são 5 Se preciso inclua QD E LT'
                  },
                  clieCep:{
-                  required: "Obrigatorio",
+                  required: "OBRIGATORIO",
                   minlength: 'Caracteres minimos são 4'
                  },
                  clieMail:{
-                  required: "Obrigatorio"
+                  required: "OBRIGATORIO"
                  }
 
             },
@@ -254,6 +259,9 @@ $(function () {
           fornEstd:{
             required: true
           },
+          fornCelu:{
+            required: true
+          },
           fornMail:{
             required: true,
           },
@@ -279,53 +287,56 @@ $(function () {
       },
             messages: {
               fornCode:{
-                required: 'obrigatorio',
+                required: 'OBRIGATORIO',
                 minlength: 'minimo 4 caracteres'
               },
               fornName:{
-                 required:'Obrigatorio'
+                 required:'OBRIGATORIO'
               },
               nomeFan:{
                 minlength:'minimo 5 caracteres'
              },
              fornCnpj:{
-               required:'Obrigatorio',
+               required:'OBRIGATORIO',
                number: 'Somente valor numerico',
                minlength: 'minimo 14 caracteres'
              },
              fornCep:{
-                required:'Obrigatorio',
+                required:'OBRIGATORIO',
                 number: 'Somente valores numericos'
              },
              fornRua:{
-              required:"Obrigatorio"
+              required:"OBRIGATORIO"
            },
 
            fornCity:{
-            required: "obrigatorio"
+            required: "OBRIGATORIO"
           },
           fornEstd:{
-            required: "Obrigatorio"
+            required: "OBRIGATORIO"
+          },
+          fornCelu:{
+            required: 'OBRIGATORIO'
           },
           fornMail:{
-            required: 'Obrigatorio'
+            required: 'OBRIGATORIO'
           },
           fornBank:{
-            required: " Obrigatorio"
+            required: " OBRIGATORIO"
           },
           fornAge:{
-            required: "Obrigatorio",
+            required: "OBRIGATORIO",
             maxlength: 'Maximo 4 caracteres'
          },
          fornCont:{
-           required: "obrigatorio",
+           required: "OBRIGATORIO",
            maxlength: 'Maximo 8 caracteres'
          },
          fornPix:{
-            required: 'Obrigatorio'
+            required: 'OBRIGATORIO'
          },
          fornDtcd:{
-          required: 'Obrigatorio',
+          required: 'OBRIGATORIO',
           date: 'Insira uma data valida'
         }
            
@@ -390,32 +401,32 @@ $(function () {
             messages: {
 
               prodCode:{
-                required: 'obrigatorio',
+                required: 'OBRIGATORIO',
               },
               prodDesc:{
-                 required:'Obrigatorio'
+                 required:'OBRIGATORIO'
               },
               prodTipo:{
-                required:"Obrigatorio",
+                required:"OBRIGATORIO",
               },
               prodUni:{
-                required: "Obrigatorio",
+                required: "OBRIGATORIO",
                 number: "Insira o valor numerico"
               },
               prodValor:{
-               required: "Obrigatorio"
+               required: "OBRIGATORIO"
              },
              prodPeli:{
-              required: "Obrigatorio"
+              required: "OBRIGATORIO"
             },
             prodPebr:{
-              required: "Obrigatorio"
+              required: "OBRIGATORIO"
             },
             prodAtiv:{
-              required: "Obrigatorio"
+              required: "OBRIGATORIO"
             },
              prodData:{
-              required: "Obrigatorio",
+              required: "OBRIGATORIO",
               date: 'Insira uma data valida'
              }
 
@@ -467,19 +478,19 @@ function validationFormFabric(){
           messages: {
 
             fabeCode:{
-              required: 'obrigatorio',
+              required: 'OBRIGATORIO',
             },
             fabeDesc:{
-               required:'Obrigatorio'
+               required:'OBRIGATORIO'
             },
             fabeCate:{
-             required: "Obrigatorio"
+             required: "OBRIGATORIO"
            },
            fabeCtct:{
-            required: "Obrigatorio"
+            required: "OBRIGATORIO"
            },
            fabeSuca:{
-            required: "Obrigatorio"
+            required: "OBRIGATORIO"
            }
           
           },
@@ -530,19 +541,19 @@ function validationFormTipoProd(){
           messages: {
 
             tpCode:{
-              required: "Obrigatorio" ,
+              required: "OBRIGATORIO" ,
             },
             tpDesc:{
-              required: "Obrigatorio"
+              required: "OBRIGATORIO"
             },
             tpCat:{
-               required: "Obrigatorio"
+               required: "OBRIGATORIO"
             },
             tpSubCat:{
-              required: "Obrigatorio"
+              required: "OBRIGATORIO"
             },
             tpCtct:{
-              required: "Obrigatorio"
+              required: "OBRIGATORIO"
             }
           
           },
@@ -618,43 +629,43 @@ function  validationFormMoto(){
           messages: {
 
             motoCode:{
-              required: "Obrigatorio" ,
+              required: "OBRIGATORIO" ,
             },
             motoNome:{
-              required: "Obrigatorio"
+              required: "OBRIGATORIO"
             },
             motoDtnc:{
-               required: 'Obrigatorio',
+               required: 'OBRIGATORIO',
                date: 'Insira uma data valida'
             },
             motoCpf:{
-              required: "Obrigatorio"
+              required: "OBRIGATORIO"
             },
             motoDtch:{
-              required: "Obrigatorio",
+              required: "OBRIGATORIO",
               date: 'Insira uma data valida'
             },
             motoDtvc:{
-              required: 'Obrigatorio',
+              required: 'OBRIGATORIO',
               date: "Insira uma data valida"
             },
             motoctch:{
-              required: "Obrigatorio"
+              required: "OBRIGATORIO"
             },
             motoOrem:{
-              required: "Obrigatorio"
+              required: "OBRIGATORIO"
             },
             motoCep:{
-               required: "Obrigatorio"
+               required: "OBRIGATORIO"
             },
             motoRua:{
-               required: "Obrigatorio"
+               required: "OBRIGATORIO"
             },
             motoCity:{
-               required: "Obrigatorio"
+               required: "OBRIGATORIO"
             },
             motoStat:{
-              required: "Obrigatorio"
+              required: "OBRIGATORIO"
            }
           
           },
@@ -680,7 +691,7 @@ $(function () {
 
 
 // veiculos
-function  validationFormTipoProd(){
+function  validationFormAutomovel(){
   $('.foorm').validate({
       rules: {
           
@@ -714,6 +725,9 @@ function  validationFormTipoProd(){
         kmAtAuto:{
           required: true,
           number:true
+        },
+        motoAuto:{
+          required: true
         },
         statAuto:{
           required: true
@@ -755,6 +769,9 @@ function  validationFormTipoProd(){
               required: "OBRIGATORIO",
               number:"Somente valor numerico"
             },
+            motoAuto:{
+              required: "OBRIGATORIO"
+            },
             statAuto:{
               required: "OBRIGATORIO"
             },
@@ -780,7 +797,7 @@ function  validationFormTipoProd(){
   })
 }
 $(function () {
-  validationFormTipoProd();
+  validationFormAutomovel();
 });
 
 

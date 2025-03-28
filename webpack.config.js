@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default  {
-  entry: path.resolve (__dirname ,"./src/view/screenMain"), // Arquivo principal do frontend
+  entry: path.resolve (__dirname ,"view" , "login.js"), // Arquivo principal do frontend
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
@@ -35,7 +35,7 @@ export default  {
     }), // Limpa a pasta dist antes de cada build
 
     new HtmlWebpackPlugin({
-      template: "./src/view/index.html", // HTML base do frontend
+      template: "./view/index.html", // HTML base do frontend
       filename: "index.html",
     }),
 
@@ -46,9 +46,9 @@ export default  {
     port: 9000, // Porta do servidor Webpack DevServer
   },
 
-  resolve:{
-    alias:{
-      Inputmask: path.resolve(__dirname , "node_modules/inputmask/dist/inputmask.min.js")
-    }
-  }
+  // resolve:{
+  //   alias:{
+  //     Inputmask: path.resolve(__dirname , "node_modules/inputmask/dist/inputmask.min.js")
+  //   }
+  // }
 };

@@ -17,45 +17,59 @@ i{
 }
 .left{
     width: 80%;
-    height: 115%;
+    height: 100%;
     margin: 0;
 }
 .container{
     background-color: rgb(21, 21, 21);
-    max-width: 110%;
+    max-width: 100%;
     display: flex;
     justify-content: space-between;
-    height: 640px;
+    height: 100%;
 }
 
 .right{
     background-color: rgb(131, 152, 136);
-    width: 90%;
-    text-align: center;
-    height: 115%;
+    width:89%;
     margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .information{
-    margin-top: 37%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+   
+}
+
+.information h3{
+    font-size: 30px;
 }
 #user{
-    width: 219px;
-    height: 27px;
+    width: 75%;
+    height: 25px;
     border-radius: 10px;
     border: none;
-    padding: 0px 5px 0px 15px;
+    padding: 5px;
 }
 #pin{
-    width: 219px;
-    height: 27px;
+    width: 75%;
+    height: 25px;
     border-radius: 10px;
     border: none;
-    padding: 0px 5px 0px 15px;
+    padding: 5px;
 }
 .submit{
-    width: 131px;
-    height: 29px;
+    width: 30%;
+    height: 32px;
     border-radius: 10px;
     border: none;
     cursor: pointer;
+    transition: border 0.3s ease; 
 }   
+.submit:focus {
+    border: 2px solid black;
+}
+

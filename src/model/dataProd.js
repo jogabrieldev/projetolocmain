@@ -31,7 +31,7 @@ export const crudRegisterProd = {
         prodAtiv,
       ];
       const result = await userDbProd.query(insert, values);
-
+  
       return result.rows[0];
     } catch (error) {
       console.error("erro para registrar tipo");
@@ -46,7 +46,7 @@ export const crudRegisterProd = {
       const result = await userDbProd.query(query);
       return result.rows;
     } catch (error) {
-      console.error("Erro em listar produto:", error.message);
+      console.error("Erro em listar tipo produto:", error.message);
       throw error;
     }
   },

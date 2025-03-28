@@ -7,6 +7,7 @@
     margin-top: 1.2%;
     flex-direction: column;
     justify-content: space-between;
+    padding: 7px;
     border: solid , 2px , white;
     border-radius: 10px;
 }
@@ -23,4 +24,40 @@
 .delivery:active{
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
     transform: translateY(6px);
+}
+
+.containerTableDelivery{
+    overflow: auto;
+}
+.btnOutPageListLocationForDelivery{
+    cursor: pointer;
+    width: 120px;
+    background-color: lightslategray;
+    border: none;
+    height: 27px;
+    margin-left: 3%;
+    margin-top: 1.5%;
+}
+
+.containerDelivery{
+    height: 470px;
+    padding: 7px;
+}
+
+.btnOutDelivery{
+    cursor: pointer;
+    width: 120px;
+    background-color: lightslategray;
+    border: none;
+    height: 27px;
+    margin-left: 3%;
+}
+
+.btnImprimirDelivery{
+    cursor: pointer;
+    width: 120px;
+    background-color: lightslategray;
+    border: none;
+    height: 27px;
+    margin-left: 3%;
 }

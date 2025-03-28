@@ -61,7 +61,6 @@ export const crudRegisterFamilyGoods = {
   },
   deleteFabri: async (id) => {
     try {
-      // Excluir o cliente da tabela "cadclie"
       const deleteCadclie =
         "DELETE FROM cadfabe WHERE fabecode = $1 RETURNING *";
       const result = await dbFamilyGoods.query(deleteCadclie, [id]);

@@ -13,6 +13,12 @@ export const movementOfProd = {
       }
 
       const newProd = await prodRegister.registerOfProd(dataProd);
+      const listProduto = await prodRegister.listingOfProd();
+      
+      const io = req.app.get("socketio");
+      if (io) {
+        io.emit("updateRunTimeProduto", listProduto);
+      }
       res.status(201).json({ success: true, user: newProd });
     } catch (error) {
       console.log("erro no controller");
@@ -62,6 +68,7 @@ export const movementOfProd = {
         message: "componente Apagado com sucesso",
         component: deleteComponent,
       });
+      
     } catch (error) {
       console.error("erro ao apagar componente:", error);
       return res.status(500).json({ message: "erro no servidor" });
@@ -79,11 +86,23 @@ export const movementOfProd = {
     });
 
     try {
+      const io = req.app.get("socketio");
       const updateProd = await prodRegister.updateOfProd(prodId, updateData);
+      if(!updateProd){
+        return res.status(404).json({ message: "produto não encontrado para atualização." });
+      }
+
+      if (io) {
+        io.emit("updateRunTimeTableProduto", updateProd); 
+      } else {
+        console.warn("Socket.IO não está configurado.");
+      }
       res.json({
         message: "produto atualizado com sucesso",
         produto: updateProd,
       });
+
+
     } catch (error) {
       console.error("Erro ao atualizar o bem:", error);
       res.status(500).json({ message: "Erro ao atualizar o produto", error });

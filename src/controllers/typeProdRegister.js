@@ -13,6 +13,12 @@ export const movementOfTypeProd = {
       }
 
       const newTypeProd = await typeProdRegister.registerTypeProd(dataTypeProd);
+      const listTypeProd = await typeProdRegister.listTypeProd();
+
+      const io = req.app.get("socketio");
+      if (io) {
+        io.emit("updateRunTimeTypeProduto", listTypeProd );
+      }
       res.status(201).json({ success: true, user: newTypeProd });
     } catch (error) {
       console.log("erro no controller");
@@ -74,10 +80,18 @@ export const movementOfTypeProd = {
     });
 
     try {
-      const updateTypeProd = await typeProdRegister.updateTypeProd(
-        prodId,
-        updateData
-      );
+      const io = req.app.get("socketio");
+      const updateTypeProd = await typeProdRegister.updateTypeProd(prodId, updateData);
+
+      if(!updateTypeProd){
+        return res.status(404).json({ message: "Tipo de produto não encontrado para atualização." });
+      }
+        
+      if (io) {
+        io.emit("updateRunTimeTableTypeProduto", updateTypeProd); 
+      } else {
+        console.warn("Socket.IO não está configurado.");
+      }
       res.json({
         message: "tipo do produto atualizado com sucesso",
         produto: updateTypeProd,

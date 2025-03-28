@@ -78,11 +78,6 @@ $(document).ready(function () {
   
   });
 
-//   $(document).ready(function () {
-  
-//     $("#client").mask("000.000.000-00")
-      
-// });
 
 
 
