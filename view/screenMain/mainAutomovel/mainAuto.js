@@ -218,9 +218,19 @@ document.addEventListener("DOMContentLoaded", async () => {
             backgroundColor: "green",
           }).showToast();
           document.querySelector(".foorm").reset();
-        } else {
+
+        }else if(response.status === 409) {
           Toastify({
-            text: `Erro para cadastrar Automovel: ${result.message}`,
+            text: result.message || "Codigo ja cadastrado" , 
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "orange",
+          }).showToast();
+        }else{   
+          Toastify({
+            text: "Erro para cadastrar veiculo",
             duration: 3000,
             close: true,
             gravity: "top",
@@ -228,6 +238,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             backgroundColor: "red",
           }).showToast();
         }
+
       } catch (error) {
         console.error("Erro ao enviar formulário:", error);
         alert("Erro ao enviar os dados para server.");
@@ -334,6 +345,8 @@ async function listarVeiculos() {
     });
     const veiculos = await response.json();
 
+    console.log('Meus Veiculos:' ,  veiculos)
+
     const veiculosListDiv = document.querySelector(".listingAutomo");
     veiculosListDiv.innerHTML = "";
 
@@ -356,7 +369,7 @@ async function listarVeiculos() {
         "Cor",
         "Tipo",
         "Km Atual",
-        "Motor",
+        "Motorista",
         "Status",
         "Data de Cadastro",
       ];

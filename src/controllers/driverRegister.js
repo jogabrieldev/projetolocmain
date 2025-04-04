@@ -21,7 +21,11 @@ export const movementOfDriver = {
       }
       res.status(201).json({ success: true, user: newDriver });
     } catch (error) {
-      console.log("erro no controller");
+      console.error("erro no controller");
+
+      if (error.message.includes("Código do motorista ja cadastrado. Tente outro.")) {
+        return res.status(409).json({ success: false, message: error.message });
+      }
       res.status(500).json({ success: false, message: error.message });
     }
   },

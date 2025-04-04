@@ -38,6 +38,8 @@
   margin-right: 2.5%;
   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
   transition: box-shadow 0.2s, transform 0.4s;
+  text-align: center;
+  align-items: center;
 }
 .btnRegisterLocation:active{
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
@@ -134,7 +136,7 @@
   margin-top: 1%;
   margin-left: 1.5%;
   padding: 4px;
-  border: 2px solid rgb(100, 137, 189);
+  border: 2px solid white;
   border-radius: 10px;
   background-color: #888282;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

@@ -12,13 +12,14 @@ input{
 /* Cabeçalho */
 .containerHeader{
     height: 117px;
-    background-color: cornflowerblue;
+    background-color: darkgray;
     display: flex;
     justify-content: space-between;
     position: sticky;
     top: 0;
     right: 0;
     border-radius: 10px;
+    border: 2px solid white;
 }
 
 .material-symbols-outlined {
@@ -63,13 +64,14 @@ input{
     flex-direction:column;
     gap: 2px;
     height: 100%;
+    
 }
 
 .workButton{
     display: flex;
     background-color: darkgray;
     width: 20%;
-    height: 85%;
+    height: 80%;
     margin-top: 0.5%;
     justify-content: flex-end;
     border-radius: 10px;
@@ -81,10 +83,8 @@ input{
 }
      
 ul{
-    height: 100%;
     width: 100%;
     list-style-type: none;
-    
 }
 button{
     border-radius: 10px;
@@ -206,6 +206,20 @@ button:hover {
     transition: box-shadow 0.2s, transform 0.4s;
 }
 .btnCadAutomo:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+.outSectionRegister{
+    width: 90%;
+    height: 35px;
+    border: none;
+    background-color: rgb(100, 137, 189);
+    cursor: pointer;
+    margin-right: 2.5%;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, transform 0.4s;
+}
+.outSectionRegister:active{
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
     transform: translateY(6px);
 }

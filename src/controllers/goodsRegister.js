@@ -5,20 +5,24 @@ export const movementGoods = {
     try {
       const data = req.body;
       if (!data) {
-        return res.status(400).json({ message: "Nenhum dado enviado" }); // Corrigido: adicionando return
+        return res.status(400).json({ message: "Nenhum dado enviado" }); 
       }
   
       const newUser = await goodsRegister.registerOfBens(data);
-      const bens = await goodsRegister.listingBens(); // Obtém a lista atualizada
+      const bens = await goodsRegister.listingBens(); 
   
       const io = req.app.get("socketio");
       if (io) {
         io.emit("updateRunTimeGoods", bens); 
       }
   
-      return res.status(201).json({ success: true, user: newUser }); // Mantém a resposta independente do io existir
+      return res.status(201).json({ success: true, user: newUser }); 
   
     } catch (error) {
+
+      if (error.message.includes("Código do Bem ja cadastrado. Tente outro.")) {
+        return res.status(409).json({ success: false, message: error.message });
+      }
       return res.status(500).json({ success: false, message: error.message }); // Corrigido: adicionando return
     }
   },

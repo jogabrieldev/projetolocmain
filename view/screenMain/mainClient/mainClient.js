@@ -180,16 +180,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (response.ok) {
           Toastify({
-            text: "Cliente cadastrado com Sucesso",
+            text: "Cliente cadastrado com sucesso!",
             duration: 3000,
             close: true,
             gravity: "top",
             position: "center",
             backgroundColor: "green",
           }).showToast();
-
-       
+    
           document.querySelector("#formRegisterClient").reset();
+        } else if (response.status === 409) {
+          Toastify({
+            text: result.message,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "orange",
+          }).showToast();
         } else {
           Toastify({
             text: "Erro ao cadastrar Cliente",

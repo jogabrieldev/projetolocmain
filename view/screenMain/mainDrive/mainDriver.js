@@ -185,8 +185,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
               // Limpar o formulário após o sucesso
               document.querySelector('.formRegisterDriver').reset();
-          } else {
-              alert(`Erro: ${result.message}`);
+          } else if(response.status === 409) {
+            Toastify({
+              text: result.message,
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "orange",
+            }).showToast();
+          }else{
+            Toastify({
+              text: "Erro no cadastro do motorista",
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "red",
+            }).showToast();
           }
       } catch (error) {
           console.error('Erro ao enviar formulário:', error);

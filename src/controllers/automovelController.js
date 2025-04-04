@@ -21,7 +21,13 @@ export const movementAuto = {
             }
       res.status(201).json({ success: true, auto: newAuto });
     } catch (error) {
-      console.log("Erro no controller");
+      console.error("Erro no controller");
+
+      if (error.message.includes("Código do veiculo já cadastrado. Tente outro.")) {
+        return res.status(409).json({ success: false, message: error.message });
+      }
+
+
       res.status(500).json({ success: false, message: error.message });
     }
   },

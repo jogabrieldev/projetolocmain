@@ -128,7 +128,7 @@ export const location = {
         const locacao = await LocacaoModel.buscarLocationPorId(id); // Chama o model específico
 
         if (!locacao) {
-            return res.status(404).json({ error: "Locação não encontrada." });
+            return res.status(404).json({ error: "Essa Locação não foi encontrada." });
         }
 
          return res.status(200).json(locacao);

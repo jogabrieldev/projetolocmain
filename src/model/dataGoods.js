@@ -77,6 +77,10 @@ export const goodsRegister = {
       await dbGoods.query("COMMIT");
       return result.rows[0];
     } catch (error) {
+
+      if (error.code === "23505") { 
+        throw new Error("Código do Bem ja cadastrado. Tente outro.");
+      }
       console.error("Erro ao registrar bem:", error);
       throw error;
     }

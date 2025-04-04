@@ -48,6 +48,10 @@ export const crudRegisterDriver = {
       const result = await userDbDriver.query(insert, values);
       return result.rows[0];
     } catch (error) {
+
+      if (error.code === "23505") { 
+        throw new Error("Código do motorista ja cadastrado. Tente outro.");
+      }
       console.error("Erro ao registrar motorista");
       throw error;
     }

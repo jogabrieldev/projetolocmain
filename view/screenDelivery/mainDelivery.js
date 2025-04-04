@@ -271,13 +271,12 @@ let motoris = []
             printDelivery(wrapper);
         })
 
-    
          // Adicionando os elementos ao wrapper e container
          containerBtnpage.appendChild(voltarBtn)
          containerBtnpage.appendChild(imprimir)
          wrapper.appendChild(locacaoDiv);
          wrapper.appendChild(clienteDiv);
-         container.innerHTML = ""; // Limpa o container antes de adicionar novos elementos
+         container.innerHTML = ""; 
          container.appendChild(wrapper);
          container.appendChild(containerBtnpage)
          container.style.display = "block";
@@ -290,40 +289,106 @@ let motoris = []
 
   function printDelivery(element) {
     const printWindow = window.open('', '', 'width=800,height=600');
-    
+  
     printWindow.document.write(`
-        <html>
-        <head>
-            <title>Imprimir Detalhes</title>
-            <style>
-                body { font-family: Arial, sans-serif; padding: 20px; }
-                .print-container { width: 100%; margin: auto; }
-                .print-container table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-                .print-container th, .print-container td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                .print-container th { background-color: #f2f2f2; }
-                h3 { margin-bottom: 10px; }
-                .no-print { display: none; } /* Oculta botões na impressão */
-            </style>
-        </head>
-        <body>
-            <div class="print-container">
-                <h2>Detalhes da Entrega</h2>
-                ${element.outerHTML}
+      <html>
+      <head>
+        <title>Detalhes para entrega</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+          }
+  
+          .print-container {
+            width: 100%;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+          }
+  
+          .logo {
+            max-width: 105px;
+            margin-bottom: 10px;
+          }
+  
+          h2 {
+            margin-bottom: 5px;
+          }
+  
+          h3 {
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+          }
+  
+          .section {
+            text-align: left;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 16px;
+          }
+  
+          .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 20px;
+          }
+  
+          .signature-section {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+          }
+  
+          .signature {
+            width: 40%;
+            border-top: 1px solid black;
+            padding-top: 5px;
+            text-align: center;
+            font-size: 14px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="print-container">
+          <img src="../img/sgttec2.jpg" alt="Logo da Empresa" class="logo">
+          <h2>Detalhes da Entrega</h2>
+          ${formatContentForPrint(element.innerHTML)}
+  
+          <div class="signature-section">
+            <div class="signature">
+              Assinatura do Cliente
             </div>
-            <script>
-                window.onload = function() {
-                    setTimeout(() => {
-                        window.print();
-                        window.onafterprint = function() { window.close(); };
-                    }, 500);
-                };
-            </script>
-        </body>
-        </html>
+            <div class="signature">
+              Assinatura do Motorista
+            </div>
+          </div>
+        </div>
+  
+        <script>
+          window.onload = function() {
+            setTimeout(() => {
+              window.print();
+              window.onafterprint = function() { window.close(); };
+            }, 500);
+          };
+        </script>
+      </body>
+      </html>
     `);
-    
+  
     printWindow.document.close();
-};
+  }
 
-// Carrega os dados ao iniciar a página
 getAllDelivery();
+
+function formatContentForPrint(innerHTML) {
+    return innerHTML
+      .replace(/delivery-section/g, 'section')
+      .replace(/delivery-grid/g, 'grid');
+  }
+  

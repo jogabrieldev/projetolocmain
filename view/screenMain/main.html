@@ -18,10 +18,11 @@
     <link rel="stylesheet" href="../screenLogistics/logistics.css">
     <link rel="stylesheet" href="../screenDelivery/mainDelivery.css">
     
-       <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=exit_to_app,search" />
-        
-      
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
          <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script> 
          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
@@ -51,12 +52,6 @@
             <ul>
                 <li> <button class="btnAtivRegister">Cadastros</button></li>
                 <br>
-                <li> <button class="btnRegisterLocation"onclick="frontLocation()">Locação</button></li>
-                <br>
-                <li><button class="btnLogistic" onclick=" locationPendente()">Logistica</button></li>
-                <br>
-                <li><button class="delivery">Entrega</button></li>
-
                 <li><button class="btnCadBens" style="display: none;" >Bens</button></li>
                 <br>
                 <li><button class="btnCadClie" style="display: none;" >Clientes</button></li>
@@ -72,13 +67,23 @@
                 <li><button class="btnCadMotorista" style="display: none;">Motorista</button></li>
                 <br>
                 <li><button class="btnCadAutomo" style="display: none;">Veiculos</button></li>
-                
+                <br>
+                <li><button class="outSectionRegister" style="display: none;">Voltar</button></li>
+
+                <li> <button class="btnRegisterLocation"onclick="frontLocation()">Locação</button></li>
+                <br>
+                <li><button class="btnLogistic" onclick=" locationPendente()">Logistica</button></li>
+                <br>
+                <li><button class="delivery">Entrega</button></li>
+
+               
+
                 
             </ul>
 
             <span class="material-symbols-outlined">
-                exit_to_app
-            </span>
+                sync
+                </span>
         </div>
 
     <section class="containerAppBens">
@@ -165,7 +170,7 @@
                     <div class="inputGroup">
                         <label for="kmAtualEdit">KM Atual </label>
                         <input type="number" name="kmAtualEdit" id="kmAtualEdit"
-                           placeholder="bensKmat" maxlength="7" >
+                           placeholder="km Atual" maxlength="7" >
                     </div>
                
                     <div class="inputGroup">
@@ -204,7 +209,7 @@
                   
                     <div class="inputGroup">
                        <label for="corEdit">Cor</label>
-                       <input type="text" name="corEdit" id="corEdit" placeholder="bensCore" maxlength="10">
+                       <input type="text" name="corEdit" id="corEdit" placeholder="bensCore" maxlength="15">
                    </div>
 
                    <div class="inputGroup">
@@ -263,7 +268,7 @@
                     <div class="formGroup">               
 
                          <div class="inputGroup">
-                            <label for="name">Codigo</label>
+                            <label for="code">Codigo</label>
                             <input type="text" name="code" id="code" placeholder="Codigo" maxlength="15">
                          </div> 
 
@@ -363,8 +368,8 @@
                          </div>
                        
                          <div class="inputGroup">
-                            <label for="Cor" id="COR">Cor</label>
-                            <input type="text" name="cor" id="cor" placeholder="Cor" maxlength="10">
+                            <label for="cor">Cor</label>
+                            <input type="text" name="cor" id="cor" placeholder="Cor" maxlength="15">
                         </div>
 
                         <div class="inputGroup">
@@ -401,7 +406,7 @@
                         </div>
                     
                          <div class="inputGroup">
-                            <label for="valorAlug">Valor Alugado</label>
+                            <label for="valorAlugMain">Valor Alugado</label>
                             <input type="text" name="valorAlugMain" id="valorAlugMain" placeholder="R$ 0,00" maxlength="13">
                         </div>
                            
@@ -439,58 +444,58 @@
                 <div class="formGroup">
   
                     <div class="inputGroup">
-                        <label for="cliCode">Codigo</label>
-                        <input type="text" name="clieCode" id="editClieCode" placeholder="Codigo" maxlength="15" readonly>
+                        <label for="editClieCode">Codigo</label>
+                        <input type="text" name="editClieCode" id="editClieCode" placeholder="Codigo" maxlength="15" readonly>
                     </div>
   
                     <div class="inputGroup">
-                        <label for="clieNome">Nome</label>
-                        <input type="text" name="clieName" id="editClieName" placeholder="Nome" maxlength="80">
+                        <label for="editClieName">Nome</label>
+                        <input type="text" name="editClieName" id="editClieName" placeholder="Nome" maxlength="80">
                     </div>
   
                     <div class="inputGroup">
-                        <label for="cpf">CPF</label>
-                        <input type="text" name="cpf" id="editCliecpf" placeholder="CPF" maxlength="15">
+                        <label for="editCliecpf">CPF</label>
+                        <input type="text" name="editCliecpf" id="editCliecpf" placeholder="CPF" maxlength="15">
                     </div>
   
                     <div class="inputGroup">
-                        <label for="dtCad">Data do cadastro</label>
-                        <input type="date" name="dtCad" id="editClieDtCad">
+                        <label for="editClieDtCad">Data do cadastro</label>
+                        <input type="date" name="editClieDtCad" id="editClieDtCad">
                     </div>
   
                     <div class="inputGroup">
-                        <label for="dtNasc">Data de Nascimento</label>
-                        <input type="date" name="dtNasc" id="editClieDtNasc">
+                        <label for="editClieDtNasc">Data de Nascimento</label>
+                        <input type="date" name="editClieDtNasc" id="editClieDtNasc">
                     </div>
   
                     <div class="inputGroup">
-                        <label for="clieCelu">Celular</label>
-                        <input type="text" name="clieCelu" id="editClieCelu" placeholder="Celular" maxlength="20">
+                        <label for="editClieCelu">Celular</label>
+                        <input type="text" name="editClieCelu" id="editClieCelu" placeholder="Celular" maxlength="20">
                     </div>
   
                     <div class="inputGroup">
-                        <label for="clieCity">Cidade</label>
-                        <input type="text" name="clieCity" id="editClieCity" placeholder="Cidade" maxlength="25">
+                        <label for="editClieCity">Cidade</label>
+                        <input type="text" name="editClieCity" id="editClieCity" placeholder="Cidade" maxlength="25">
                     </div>
   
                     <div class="inputGroup">
-                        <label for="clieEstd">Estado</label>
-                        <input type="text" name="clieEstd" id="editClieEstd" placeholder="Estado" maxlength="20">
+                        <label for="editClieEstd">Estado</label>
+                        <input type="text" name="editClieEstd" id="editClieEstd" placeholder="Estado" maxlength="20">
                     </div>
   
                     <div class="inputGroup">
-                        <label for="clieRua ">Rua</label>
-                        <input type="text" name="clieRua" id="editClieRua" placeholder="RUA" maxlength="40">
+                        <label for="editClieRua">Rua</label>
+                        <input type="text" name="editClieRua" id="editClieRua" placeholder="RUA QD LT" maxlength="40">
                     </div>
   
                     <div class="inputGroup">
-                        <label for="clieCep ">Cep</label>
-                        <input type="text" name="clieCep" id="editClieCep" placeholder="CEP" maxlength="13">
+                        <label for="editClieCep">Cep</label>
+                        <input type="text" name="editClieCep" id="editClieCep" placeholder="CEP" maxlength="13">
                     </div>
   
                     <div class="inputGroup">
-                        <label for="clieMail ">E-mail</label>
-                        <input type="email" name="clieMail" id="editClieMail" placeholder="E-mail" maxlength="35">
+                        <label for="editClieMail">E-mail</label>
+                        <input type="email" name="editClieMail" id="editClieMail" placeholder="E-mail" maxlength="35">
                     </div>
                       
                      <div class="btnbtn">
@@ -506,7 +511,7 @@
                   <div class="formGroup">
 
                   <div class="inputGroup">
-                      <label for="cliCode">Codigo</label>
+                      <label for="clieCode">Codigo</label>
                       <input type="text" name="clieCode" id="clieCode" placeholder="Codigo" maxlength="15">
                   </div>
 
@@ -620,7 +625,7 @@
                     </div>
   
                     <div class="inputGroup">
-                        <label for="forCity">Cidade</label>
+                        <label for="fornCity">Cidade</label>
                         <input type="text" name="fornCity" id="fornCity" placeholder="Cidade" maxlength="25">
                     </div>
   
@@ -684,68 +689,68 @@
                 <div class="formGroup">
 
                     <div class="inputGroup">
-                        <label for="fornCode">Codigo</label>
-                        <input type="text" name="fornCode" id="editFornCode" placeholder="Codigo" maxlength="15" readonly>
+                        <label for="editFornCode">Codigo</label>
+                        <input type="text" name="editFornCode" id="editFornCode" placeholder="Codigo" maxlength="15" readonly>
                     </div>
   
                     <div class="inputGroup">
-                        <label for="fornName">Nome</label>
-                        <input type="text" name="fornName" id="editFornName" placeholder="Nome" maxlength="80">
+                        <label for="editFornName">Nome</label>
+                        <input type="text" name="editFornName" id="editFornName" placeholder="Nome" maxlength="80">
                     </div>
   
                     <div class="inputGroup">
-                        <label for="nomeFan">Nome fantasia</label>
-                        <input type="text" name="nomeFan" id="editNomeFan" placeholder="Nome Fantasia" maxlength="50">
+                        <label for="editNomeFan">Nome fantasia</label>
+                        <input type="text" name="editNomeFan" id="editNomeFan" placeholder="Nome Fantasia" maxlength="50">
                     </div>
   
                     <div class="inputGroup">
-                        <label for="fornCnpj">CNPJ</label>
-                        <input type="text" name="fornCnpj" id="editFornCnpj" placeholder="CNPJ" maxlength="20">
+                        <label for="editFornCnpj">CNPJ</label>
+                        <input type="text" name="editFornCnpj" id="editFornCnpj" placeholder="CNPJ" maxlength="20">
                     </div>
   
                     <div class="inputGroup">
-                        <label for="fornCep">CEP</label>
-                        <input type="text" name="fornCep" id="editFornCep" placeholder="CEP" maxlength="13">
+                        <label for="editFornCep">CEP</label>
+                        <input type="text" name="editFornCep" id="editFornCep" placeholder="CEP" maxlength="13">
                     </div>
   
                     <div class="inputGroup">
-                        <label for="fornRua">Rua</label>
-                        <input type="text" name="fornRua" id="editFornRua" placeholder="Rua" maxlength="40">
+                        <label for="editFornRua">Rua</label>
+                        <input type="text" name="editFornRua" id="editFornRua" placeholder="Rua" maxlength="40">
                     </div>
   
                     <div class="inputGroup">
-                        <label for="fornCity">Cidade</label>
-                        <input type="text" name="fornCity" id="editFornCity" placeholder="Cidade" maxlength="25">
+                        <label for="editFornCity">Cidade</label>
+                        <input type="text" name="editFornCity" id="editFornCity" placeholder="Cidade" maxlength="25">
                     </div>
   
                     <div class="inputGroup">
-                        <label for="fornEstd">Estado</label>
-                        <input type="text" name="fornEstd" id="editFornEstd" placeholder="Estado" maxlength="20">
+                        <label for="editFornEstd">Estado</label>
+                        <input type="text" name="editFornEstd" id="editFornEstd" placeholder="Estado" maxlength="20">
                     </div>
   
                     <div class="inputGroup">
-                        <label for="fornCelu">Celular</label>
-                        <input type="text" name="fornCelu" id="editFornCelu" placeholder="Celular" maxlength="15">
+                        <label for="editFornCelu">Celular</label>
+                        <input type="text" name="editFornCelu" id="editFornCelu" placeholder="Celular" maxlength="15">
                     </div>
   
                     <div class="inputGroup">
-                        <label for="fornMail ">E-mail</label>
-                        <input type="email" name="fornMail" id="editFornMail" placeholder="E-mail" maxlength="35">
+                        <label for="editFornMail">E-mail</label>
+                        <input type="email" name="editFornMail" id="editFornMail" placeholder="E-mail" maxlength="35">
                     </div>
   
                     <div class="inputGroup">
-                        <label for="fornBank ">Banco</label>
-                        <input type="text" name="fornBank" id="editFornBank" placeholder="Banco" maxlength="20">
+                        <label for="editFornBank">Banco</label>
+                        <input type="text" name="editFornBank" id="editFornBank" placeholder="Banco" maxlength="20">
                     </div>
 
                     <div class="inputGroup">
-                        <label for="fornAge ">Agencia</label>
-                        <input type="number" name="fornAge" id="editFornAge" placeholder="Agencia" maxlength="4">
+                        <label for="editFornAge">Agencia</label>
+                        <input type="number" name="editFornAge" id="editFornAge" placeholder="Agencia" maxlength="4">
                     </div>
 
                     <div class="inputGroup">
-                        <label for="forncont ">Conta</label>
-                        <input type="number" name="fornCont" id="editFornCont" placeholder="Conta" maxlength="8">
+                        <label for="editFornCont">Conta</label>
+                        <input type="number" name="editFornCont" id="editFornCont" placeholder="Conta" maxlength="8">
                     </div>
 
                     <div class="inputGroup">
@@ -830,7 +835,7 @@
                 </div>
 
                 <div class="inputGroup">
-                    <label for="forCelu">Preço Bruto</label>
+                    <label for="prodPebr">Preço Bruto</label>
                     <input type="text" name="prodPebr" id="prodPebr" placeholder="R$" maxlength="10">
                 </div>
 
@@ -856,50 +861,50 @@
                 <div class="formGroup">
 
                     <div class="inputGroup">
-                        <label for="prodCode">Codigo</label>
-                        <input type="text" name="prodCode" id="editProdCode" placeholder="Codigo" maxlength="10" readonly>
+                        <label for="editProdCode">Codigo</label>
+                        <input type="text" name="editProdCode" id="editProdCode" placeholder="Codigo" maxlength="10" readonly>
                     </div>
     
                     <div class="inputGroup">
-                        <label for="prodDesc">Descrição</label>
-                        <input type="text" name="prodDesc" id="editProdDesc" placeholder="Discrição" maxlength="60">
+                        <label for="editProdDesc">Descrição</label>
+                        <input type="text" name="editProdDesc" id="editProdDesc" placeholder="Discrição" maxlength="60">
                     </div>
     
                     <div class="inputGroup">
-                        <label for="prodTipo">Tipo do Produto</label>
+                        <label for="editProdTipo">Tipo do Produto</label>
                          <select name="editProdTipo" id="editProdTipo">
                             <option value="">Selecione...</option>
                          </select>
                     </div>
     
                     <div class="inputGroup">
-                        <label for="prodUni">Unidade</label>
-                        <input type="number" name="prodUni" id="editProdUni" placeholder="Unidade" maxlength="2">
+                        <label for="editProdUni">Unidade</label>
+                        <input type="number" name="editProdUni" id="editProdUni" placeholder="Unidade" maxlength="2">
                     </div>
     
                     <div class="inputGroup">
-                        <label for="prodData">Data da Compra</label>
-                        <input type="date" name="prodData" id="editProdData" >
+                        <label for="editProdData">Data da Compra</label>
+                        <input type="date" name="editProdData" id="editProdData" >
                     </div>
     
                     <div class="inputGroup">
-                        <label for="prodValor">Valor</label>
-                        <input type="text" name="prodValor" id="editProdValor" placeholder="Valor " maxlength="12">
+                        <label for="editProdValor">Valor</label>
+                        <input type="text" name="editProdValor" id="editProdValor" placeholder="Valor " maxlength="12">
                     </div>
     
                     <div class="inputGroup">
-                        <label for="prodPeli">Preço Liquido</label>
-                        <input type="text" name="prodPeli" id="editProdPeli" placeholder="" maxlength="6">
+                        <label for="editProdPeli">Preço Liquido</label>
+                        <input type="text" name="editProdPeli" id="editProdPeli" placeholder="" maxlength="6">
                     </div>
     
                     <div class="inputGroup">
-                        <label for="forCelu">Preço Bruto</label>
-                        <input type="text" name="prodPebr" id="editProdPebr" placeholder="" maxlength="10">
+                        <label for="editProdPebr">Preço Bruto</label>
+                        <input type="text" name="editProdPebr" id="editProdPebr" placeholder="" maxlength="10">
                     </div>
     
                     <div class="inputGroup">
-                        <label for="prodAtiv ">Ativo</label>
-                          <select name="prodAtiv" id="editProdAtiv">
+                        <label for="editProdAtiv">Ativo</label>
+                          <select name="editProdAtiv" id="editProdAtiv">
                             <option value="">Selecione...</option>
                              <option value="S">SIM</option>
                              <option value="N">NAO</option>
@@ -960,7 +965,7 @@
               </div>
 
               <div class="inputGroup">
-                  <label for="prodData">Centro de custo</label>
+                  <label for="fabeCtct">Centro de custo</label>
                   <input type="text" name="fabeCtct" id="fabeCtct"  placeholder="centro de custo" maxlength="40">
               </div>
 
@@ -999,7 +1004,7 @@
                 </div>
   
                 <div class="inputGroup">
-                    <label for="feditFabeObs">Observação</label>
+                    <label for="editFabeObs">Observação</label>
                     <input type="text" name="editFabeObs" id="editFabeObs" placeholder="Observação" maxlength="100">
                 </div>
   
@@ -1087,33 +1092,33 @@
                     <div class="formGroup">
       
                        <div class="inputGroup">
-                          <label for="tpCode">Codigo</label>
-                          <input type="text" name="tpCode" id="editTpCode" placeholder="Codigo" maxlength="5" readonly>
+                          <label for="editTpCode">Codigo</label>
+                          <input type="text" name="editTpCode" id="editTpCode" placeholder="Codigo" maxlength="5" readonly>
                        </div>
       
                        <div class="inputGroup">
-                         <label for="tpDesc">Descrição</label>
-                         <input type="text" name="tpDesc" id="editTpDesc" placeholder="Discrição" maxlength="80">
+                         <label for="editTpDesc">Descrição</label>
+                         <input type="text" name="editTpDesc" id="editTpDesc" placeholder="Discrição" maxlength="80">
                        </div>
       
                       <div class="inputGroup">
-                         <label for="tpCat">Categoria</label>
-                         <input type="text" name="tpCat" id="editTpCat" placeholder="categoria" maxlength="35">
+                         <label for="editTpCat">Categoria</label>
+                         <input type="text" name="editTpCat" id="editTpCat" placeholder="categoria" maxlength="35">
                      </div>
       
                      <div class="inputGroup">
-                        <label for="tpSubCat">Subcategoria</label>
-                        <input type="text" name="tpSubCat" id="editTpSubCat" placeholder="Subcategoria" maxlength="30">
+                        <label for="editTpSubCat">Subcategoria</label>
+                        <input type="text" name="editTpSubCat" id="editTpSubCat" placeholder="Subcategoria" maxlength="30">
                      </div>
       
                     <div class="inputGroup">
-                        <label for="tpObs">Observação</label>
-                        <input type="text" name="tpObs" id="editTpObs" placeholder="Observação" maxlength="100">
+                        <label for="editTpObs">Observação</label>
+                        <input type="text" name="editTpObs" id="editTpObs" placeholder="Observação" maxlength="100">
                     </div>
       
                     <div class="inputGroup">
-                        <label for="tpCtct">Centro de custo</label>
-                        <input type="text" name="tpCtct" id="editTpCtct"  placeholder="centro de custo" maxlength="40">
+                        <label for="editTpCtct">Centro de custo</label>
+                        <input type="text" name="editTpCtct" id="editTpCtct"  placeholder="centro de custo" maxlength="40">
                     </div>
       
                     <div class="btnOutNext">
@@ -1152,7 +1157,7 @@
            
                             <div class="inputGroup">
                               <label for="motoNome">Nome</label>
-                              <input type="text" name="motoNome" id="motoNome" placeholder="Discrição" maxlength="80">
+                              <input type="text" name="motoNome" id="motoNome" placeholder="Nome" maxlength="80">
                             </div>
 
                             <div class="inputGroup">
@@ -1191,7 +1196,7 @@
                         </div>
 
                         <div class="inputGroup">
-                            <label for="motoDtvc">Celular</label>
+                            <label for="motoCelu">Celular</label>
                             <input type="text" name="motoCelu" id="motoCelu" placeholder="Celular" maxlength="40">
                         </div>
 
@@ -1206,7 +1211,7 @@
                         </div>
 
                         <div class="inputGroup">
-                            <label for="motoCep">Cidade</label>
+                            <label for="motoCity">Cidade</label>
                             <input type="text" name="motoCity" id="motoCity" placeholder="cidade" maxlength="25">
                         </div>
 
@@ -1245,32 +1250,32 @@
                     <div class="formGroup">
       
                         <div class="inputGroup">
-                           <label for="motoCode">Codigo</label>
+                           <label for="editMotoCode">Codigo</label>
                            <input type="text" name="editMotoCode" id="editMotoCode" placeholder="Codigo" maxlength="15" readonly>
                         </div>
        
                         <div class="inputGroup">
-                          <label for="motoNome">Nome</label>
+                          <label for="editMotoNome">Nome</label>
                           <input type="text" name="editMotoNome" id="editMotoNome" placeholder="Discrição" maxlength="80">
                         </div>
 
                         <div class="inputGroup">
-                            <label for="motoDtnc">Data de nascimento</label>
-                            <input type="date" name="motoDtnc" id="editMotoDtnc"  >
+                            <label for="editMotoDtnc">Data de nascimento</label>
+                            <input type="date" name="editMotoDtnc" id="editMotoDtnc"  >
                           </div>
        
                        <div class="inputGroup">
-                          <label for="motoCpf">CPF</label>
-                          <input type="text" name="motoCpf" id="editMotoCpf" placeholder="CPF" maxlength="14">
+                          <label for="editMotoCpf">CPF</label>
+                          <input type="text" name="editMotoCpf" id="editMotoCpf" placeholder="CPF" maxlength="14">
                       </div>
        
                       <div class="inputGroup">
-                         <label for="motoDtch">Data de emisão</label>
-                         <input type="date" name="motoDtch" id="editMotoDtch">
+                         <label for="editMotoDtch">Data de emisão</label>
+                         <input type="date" name="editMotoDtch" id="editMotoDtch">
                       </div>
        
                      <div class="inputGroup">
-                         <label for="motoctch">Categoria da CNH</label>
+                         <label for="editMotoCtch">Categoria da CNH</label>
                         <input type="text" name="editMotoCtch" id="editMotoCtch">
                      </div>
        
@@ -1525,7 +1530,7 @@
       
         <button class="registerLocation">incluir</button>
         <button class="buttonDeleteLocation">Excluir</button>
-        <button class="buttonEditLocation">Editar</button>
+        <!-- <button class="buttonEditLocation">Editar</button> -->
         <button class="buttonExitLocation">Voltar</button>
      </div>
 
@@ -1564,7 +1569,7 @@
 
            <div class="inputGroupDataEvolu">
               <label for="DataDevo"> <b>Data de devolução</b></label>
-              <input type="date" name="dataDevo" id="DataDevo" required>
+              <input type="date" name="DataDevo" id="DataDevo" required>
            </div>
 
           <div class="inputGroupPagament">
@@ -1681,7 +1686,7 @@
 
            <div class="inputGroupDataLoc">
              <label for="dataLocEdit"> <b>Data da locação</b></label>
-             <input type="datetime-local" name="dataLoc" id="dataLocEdit" required>
+             <input type="datetime-local" name="dataLocEdit" id="dataLocEdit" required>
            </div>
 
            <div class="inputGroupDataEvolu">
@@ -1804,7 +1809,7 @@
                 </div>
 
                 <div class="inputGroup">
-                    <label for="clieNome">Nome</label>
+                    <label for="clieName">Nome</label>
                     <input type="text" name="clieName" id="clieName" placeholder="Nome" maxlength="80">
                 </div>
 
@@ -1870,7 +1875,7 @@
 
     <div class="searchLocation" style="display: none;">
 
-        <h4>Escolhar um formato de Pesquisa:</h4>
+        <h4>Escolha um formato de Pesquisa:</h4>
         
       <label for="numberLocation">Numero da locação</label>
       <input type="number" name="numberLocation" id="numberLocation">
@@ -1880,11 +1885,7 @@
 
       <label for="nameClient"> Nome do Cliente</label>
       <input type="text" name="nameClient" id="nameClientSearch">
-
-      <label for="">Data da locação</label>
-      <input type="date" name="dateLocation" id="dateLocation">
       <br>
-      
      <div class="btnMainTheSearch">
        <button class="submitSearchLocation" onclick=" filterTable()" >Pesquisar</button>
        <button class="outPageSearchLocation">Voltar</button>
@@ -1898,14 +1899,18 @@
 
       <div class="logisticsMainTop">
           <div class="orders">
-           
             <!-- table de Necessidade -->
           </div>
+          <button class="btn-filter" id="btnFilter" title="Filtrar Locações ">
+            <i class="bi bi-filter"></i>
+          </button>
 
           <div class="need">
              <h3>Necessidade vs Disponibilidade</h3>
           </div>
+         
     </div>
+    
 
     <div class="logisticsMainBottom">
          <div class="validadeFamily">

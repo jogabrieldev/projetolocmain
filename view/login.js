@@ -1,5 +1,4 @@
 
-
 //iconPassword
 function showPassword() {
   const inputPassword = document.querySelector("#pin");
@@ -15,7 +14,6 @@ function showPassword() {
 }
 
 //to-enter-page main /valid login
-
 document.querySelector("#formLogin").addEventListener("submit", async (event) => {
  
   event.preventDefault()
@@ -44,7 +42,7 @@ document.querySelector("#formLogin").addEventListener("submit", async (event) =>
             style: {
               background: "green",
             },
-            onClick: function(){} // Callback after click
+            onClick: function(){} 
           }).showToast();
 
           setTimeout(() => {
@@ -65,10 +63,9 @@ document.querySelector("#formLogin").addEventListener("submit", async (event) =>
           style: {
             background: "red",
           },
-          onClick: function(){} // Callback after click
+          onClick: function(){} 
         }).showToast();
 
-        console.log("deu errado");
       }
        })
         

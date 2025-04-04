@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default  {
-  entry: path.resolve (__dirname ,"view" , "login.js"), // Arquivo principal do frontend
+  entry: path.resolve (__dirname ,"view" , "login.js" ), // Arquivo principal do frontend
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",

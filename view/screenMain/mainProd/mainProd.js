@@ -173,7 +173,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           // Limpar o formulário após o sucesso
           document.querySelector(".formRegisterProduto").reset();
-        } else {
+
+        } else if(response.status === 409) {
+          Toastify({
+            text: result.message,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "orange",
+          }).showToast();
+
+        }else{
           Toastify({
             text: `Erro ao cadastrar produto`,
             duration: 3000,

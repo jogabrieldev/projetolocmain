@@ -15,12 +15,18 @@ export const movementClient = {
 
       const io = req.app.get("socketio");
       if (io) {
-        const clients = await clientRegister.listingClient(); // Pega todos os clientes após o cadastro
-        io.emit("clienteAtualizado", clients); // Emite a lista completa de clientes
+        const clients = await clientRegister.listingClient(); 
+        io.emit("clienteAtualizado", clients); 
       }
       res.status(201).json({ success: true, user: newClient });
     } catch (error) {
-      console.log("erro no controller");
+      
+      console.error("erro no controller");
+
+      if (error.message.includes("Código de cliente já cadastrado")) {
+        return res.status(409).json({ success: false, message: error.message });
+      }
+
       res.status(500).json({ success: false, message: error.message });
     }
   },

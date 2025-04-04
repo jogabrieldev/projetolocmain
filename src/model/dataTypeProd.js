@@ -31,6 +31,10 @@ const userDbTypeProd = client
         return result.rows[0];
       
     } catch (error) {
+
+      if (error.code === "23505") { 
+        throw new Error("Código do tipo de produto ja cadastrado. Tente outro.");
+      }
        console.error('Erro ao registrar tipo de produto')
        throw error;
     } 

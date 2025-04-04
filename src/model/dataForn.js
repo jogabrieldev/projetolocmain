@@ -48,6 +48,10 @@ export const crudRegisterForn = {
       const result = await userDbFo.query(insert, values);
       return result.rows[0];
     } catch (error) {
+
+      if (error.code === "23505") { 
+        throw new Error("Código do Fornecedor ja cadastrado. Tente outro.");
+      }
       console.error("Erro fornecedor", error);
       throw error;
     }

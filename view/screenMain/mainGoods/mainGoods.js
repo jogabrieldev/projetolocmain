@@ -218,7 +218,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           // Limpar o formulário após o sucesso
           document.querySelector("#formRegisterBens").reset();
-        } else {
+          
+        } else if(response.status === 409) {
+          Toastify({
+            text: result.message,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "orange",
+          }).showToast();
+          
+        }else{
           Toastify({
             text: `Erro ao cadastrar o bem`,
             duration: 3000,
@@ -661,7 +672,6 @@ editButton.addEventListener("click", (event) => {
 
   try {
     const bemSelecionado = JSON.parse(bemData);
-    console.log("Editar item:", bemSelecionado);
 
     const campos = [
       { id: "codeEdit", valor: bemSelecionado.benscode },

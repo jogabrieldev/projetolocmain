@@ -22,6 +22,10 @@ export const crudRegisterFamilyGoods = {
       const result = await dbFamilyGoods.query(insert, values);
       return result.rows[0];
     } catch (error) {
+
+      if (error.code === "23505") { 
+        throw new Error("Código da familia de bens ja cadastrado. Tente outro.");
+      }
       console.error("erro ao registrar familia de bem");
       throw error;
     }

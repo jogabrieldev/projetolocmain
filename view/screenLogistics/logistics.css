@@ -133,3 +133,18 @@ p{
   border: none;
   height: 27px;
 }
+.btn-filter {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px; /* tamanho do ícone */
+  color: #333;
+  padding: 3px;
+  transition: color 0.3s, transform 0.2s;
+  vertical-align: middle;
+}
+
+.btn-filter:hover {
+  color: #007bff;
+  transform: scale(1.1);
+}

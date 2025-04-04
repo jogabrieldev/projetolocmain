@@ -192,7 +192,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           // Limpar o formulário após o sucesso
           document.querySelector("#registerForn").reset();
-        } else {
+          
+        } else if(response.status === 409) {
+          Toastify({
+            text: result.message,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "orange",
+          }).showToast();
+        
+        }else{
+            
           Toastify({
             text: `Erro para Cadastrar fornecedor`,
             duration: 3000,
@@ -201,7 +213,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             position: "center",
             backgroundColor: "red",
           }).showToast();
-          alert();
         }
       } catch (error) {
         console.error("Erro ao enviar formulário:", error);

@@ -174,7 +174,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           // Limpar o formulário após o sucesso
           document.querySelector(".formRegisterFabricante").reset();
-        } else {
+        } else if(response.status === 409) {
+
+          Toastify({
+            text: result.message,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "orange",
+          }).showToast();
+
+        }else{
           Toastify({
             text: "Erro ao cadastrar familia de bens",
             duration: 3000,

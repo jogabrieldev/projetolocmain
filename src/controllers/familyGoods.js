@@ -21,7 +21,12 @@ export const movementOfFamilyGoods = {
       }
       res.status(201).json({ success: true, user: newFabri });
     } catch (error) {
-      console.log("erro no controller");
+
+      console.error("erro no controller");
+
+      if (error.message.includes("Código da familia de bens ja cadastrado. Tente outro.")) {
+        return res.status(409).json({ success: false, message: error.message });
+      }
       res.status(500).json({ success: false, message: error.message });
     }
   },

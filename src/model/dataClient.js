@@ -1,4 +1,3 @@
-// const database = require('../database/dataBaseSgt')
 
 import { client } from "../database/userDataBase.js";
 const dataClient = client;
@@ -39,6 +38,10 @@ export const clientRegister = {
       const result = await dataClient.query(insert, values);
       return result.rows[0];
     } catch (error) {
+
+      if (error.code === "23505") { // Código de erro para chave duplicada no PostgreSQL
+        throw new Error("Código de cliente já cadastrado. Tente outro.");
+      }
       console.error("Erro no registro do cliente");
       throw error;
     }

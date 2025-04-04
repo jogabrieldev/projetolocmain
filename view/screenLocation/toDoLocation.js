@@ -12,12 +12,31 @@ btnAtivRegister.addEventListener("click", () => {
   document.querySelector(".btnCadFabri").style.display = "flex";
   document.querySelector(".btnCadTypeProd").style.display = "flex";
   document.querySelector(".btnCadMotorista").style.display = "flex";
+  document.querySelector('.outSectionRegister').style.display = "flex"
 
   //none
   document.querySelector(".delivery").style.display = "none";
   document.querySelector(".btnLogistic").style.display = "none";
   document.querySelector(".btnRegisterLocation").style.display = "none";
 });
+
+const btnOutSectionRegister =  document.querySelector('.outSectionRegister')
+btnOutSectionRegister.addEventListener('click' , ()=>{
+
+  document.querySelector(".btnCadBens").style.display = "none";
+  document.querySelector(".btnCadAutomo").style.display = "none";
+  document.querySelector(".btnCadClie").style.display = "none";
+  document.querySelector(".btnCadForn").style.display = "none";
+  document.querySelector(".btnCadProd").style.display = "none";
+  document.querySelector(".btnCadFabri").style.display = "none";
+  document.querySelector(".btnCadTypeProd").style.display = "none";
+  document.querySelector(".btnCadMotorista").style.display = "none";
+  document.querySelector('.outSectionRegister').style.display = "none"
+
+  document.querySelector(".delivery").style.display = "flex";
+  document.querySelector(".btnLogistic").style.display = "flex";
+  document.querySelector(".btnRegisterLocation").style.display = "flex";
+})
 
 const btnLocation = document.querySelector(".btnRegisterLocation");
 btnLocation.addEventListener("click", () => {
@@ -139,7 +158,7 @@ async function obterNumeroLocacao() {
     }
 
     const data = await response.json();
-    return data.numericLocation;  // Retorna o número gerado pelo backend
+    return data.numericLocation; 
   } catch (error) {
     console.error("Erro ao gerar número de locação:", error);
     throw error;
@@ -211,6 +230,10 @@ document.addEventListener('DOMContentLoaded' , ()=>{
 
     renderTable(listaLocacoes); 
   });
+
+  socketUpdateContainerLocation.on("updateRunTimeFamilyBens", (updatedFamily) => {
+    carregarFamilias(); 
+});
 })
 
 // BUSCAR CLIENTE E VERIFICAR SE ELE JA TEM CADASTRO.
@@ -281,76 +304,126 @@ searchClient.addEventListener("click", async (event) => {
     const resultDiv = document.querySelector(".searchClient");
     resultDiv.innerHTML = ""; // Limpa os resultados anteriores
 
-    if (clienteEncontrado.length > 1) {
-      clienteEncontrado.forEach((cliente) => {
-        const clienteDiv = document.createElement("div");
-        clienteDiv.classList.add("cliente-info");
-        clienteDiv.style.border = "2px solid #000000";
-        clienteDiv.style.margin = "10px";
-        clienteDiv.style.padding = "10px";
-        clienteDiv.style.borderRadius = "5px";
-        clienteDiv.style.backgroundColor = "#f9f9f9";
+// Verifica se encontrou apenas um cliente e já preenche automaticamente
+if (clienteEncontrado.length === 1) {
+  const cliente = clienteEncontrado[0];
 
-        clienteDiv.innerHTML = `
-          <p><strong>Nome:</strong> ${cliente.clienome || "N/A"}</p>
-          <p><strong>CPF:</strong> ${cliente.cliecpf || "N/A"}</p>
-          <p><strong>Rua:</strong> ${cliente.clierua || "N/A"}</p>
-          <p><strong>Cidade:</strong> ${cliente.cliecity || "N/A"}</p>
-          <p><strong>CEP:</strong> ${cliente.cliecep || "N/A"}</p>
-          <p><strong>Email:</strong> ${cliente.cliemail || "N/A"}</p>
-        `;
+  document.querySelector('#nameClient').value = cliente.clienome || '';
+  document.querySelector('#cpfClient').value = cliente.cliecpf || '';
+  document.querySelector('#ruaClient').value = cliente.clierua || '';
+  document.querySelector('#cityClient').value = cliente.cliecity || '';
+  document.querySelector('#cepClient').value = cliente.cliecep || '';
+  document.querySelector('#mailClient').value = cliente.cliemail || '';
 
-        resultDiv.appendChild(clienteDiv);
-      });
+  resultDiv.style.display = "none"; 
 
-      const buttonVoltar = document.createElement("button");
-      buttonVoltar.type = "button";
-      buttonVoltar.textContent = "Voltar";
-      buttonVoltar.classList.add("btnOutSearchClient");
-      buttonVoltar.addEventListener("click", () => {
+  verificarPreenchimentoCliente();
+
+  Toastify({
+    text: `Cliente "${cliente.clienome}" encontrado com sucesso!`,
+    duration: 3000,
+    close: true,
+    gravity: "top",
+    position: "center",
+    backgroundColor: "green",
+  }).showToast();
+} else if (clienteEncontrado.length > 1) {
+ 
+  clienteEncontrado.forEach((cliente) => {
+    const checkboxSelect = document.createElement('input');
+    checkboxSelect.type = 'checkbox';
+    checkboxSelect.name = 'selectClient';
+    checkboxSelect.value = cliente.cliecode;
+    checkboxSelect.style.marginRight = '10px';
+
+    
+    const clienteDiv = document.createElement("div");
+    clienteDiv.classList.add("cliente-info");
+    clienteDiv.style.border = "2px solid #000000";
+    clienteDiv.style.margin = "10px";
+    clienteDiv.style.padding = "10px";
+    clienteDiv.style.borderRadius = "5px";
+    clienteDiv.style.backgroundColor = "#f9f9f9";
+    clienteDiv.style.display = "flex";
+    clienteDiv.style.alignItems = "flex-start";
+    clienteDiv.style.gap = "10px";
+
+    const infoDiv = document.createElement("div");
+    infoDiv.innerHTML = `
+      <p><strong>Nome:</strong> ${cliente.clienome || "N/A"}</p>
+      <p><strong>CPF:</strong> ${cliente.cliecpf || "N/A"}</p>
+      <p><strong>Rua:</strong> ${cliente.clierua || "N/A"}</p>
+      <p><strong>Cidade:</strong> ${cliente.cliecity || "N/A"}</p>
+      <p><strong>CEP:</strong> ${cliente.cliecep || "N/A"}</p>
+      <p><strong>Email:</strong> ${cliente.cliemail || "N/A"}</p>
+    `;
+
+  const buttonOutContainerSearch =  document.createElement('button')
+  buttonOutContainerSearch.textContent = "Voltar"
+  buttonOutContainerSearch.style.cursor = "pointer"
+  buttonOutContainerSearch.addEventListener('click' , ()=>{
+    resultDiv.style.display = 'none'
+  })
+
+    checkboxSelect.addEventListener('change', (event) => {
+      if (event.target.checked) {
+     
+        document.querySelectorAll('input[name="selectClient"]').forEach(cb => {
+          if (cb !== event.target) cb.checked = false;
+        });
+
+        // Preenche os campos
+        document.querySelector('#nameClient').value = cliente.clienome || '';
+        document.querySelector('#cpfClient').value = cliente.cliecpf || '';
+        document.querySelector('#ruaClient').value = cliente.clierua || '';
+        document.querySelector('#cityClient').value = cliente.cliecity || '';
+        document.querySelector('#cepClient').value = cliente.cliecep || '';
+        document.querySelector('#mailClient').value = cliente.cliemail || '';
+
+        // Oculta a div com os resultados
         resultDiv.style.display = "none";
-      });
 
-      resultDiv.appendChild(buttonVoltar);
-      resultDiv.style.display = "flex";
+        Toastify({
+          text: `Cliente "${cliente.clienome}" selecionado com sucesso!`,
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "green",
+        }).showToast();
+      }
+    });
 
-      Toastify({
-        text: `Foram encontrados ${clienteEncontrado.length} clientes com o critério "${inputSearchClient}"`,
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "orange",
-      }).showToast();
-    } else if (clienteEncontrado.length === 1) {
-      const primeiroCliente = clienteEncontrado[0];
-      document.getElementById("nameClient").value = primeiroCliente.clienome || "";
-      document.getElementById("cpfClient").value = primeiroCliente.cliecpf || "";
-      document.getElementById("ruaClient").value = primeiroCliente.clierua || "";
-      document.getElementById("cityClient").value = primeiroCliente.cliecity || "";
-      document.getElementById("cepClient").value = primeiroCliente.cliecep || "";
-      document.getElementById("mailClient").value = primeiroCliente.cliemail || "";
+    clienteDiv.appendChild(checkboxSelect);
+    clienteDiv.appendChild(infoDiv);
+    clienteDiv.appendChild(buttonOutContainerSearch)
+    resultDiv.appendChild(clienteDiv);
+  });
+   
+ 
+  resultDiv.style.display = "flex";
+  resultDiv.style.flexDirection = "column";
 
-      verificarPreenchimentoCliente();
+  Toastify({
+    text: `Foram encontrados ${clienteEncontrado.length} clientes com o critério "${inputSearchClient}"`,
+    duration: 3000,
+    close: true,
+    gravity: "top",
+    position: "center",
+    backgroundColor: "orange",
+  }).showToast();
+} else {
+  
+  Toastify({
+    text: `Cliente "${inputSearchClient}" não encontrado.`,
+    duration: 3000,
+    close: true,
+    gravity: "top",
+    position: "center",
+    backgroundColor: "red",
+  }).showToast();
+}
 
-      Toastify({
-        text: `Cliente "${inputSearchClient}" encontrado com sucesso!`,
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "green",
-      }).showToast();
-    } else {
-      Toastify({
-        text: `Cliente "${inputSearchClient}" não encontrado.`,
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-    }
   } catch (error) {
     console.error("Erro ao validar o cliente:", error);
     Toastify({

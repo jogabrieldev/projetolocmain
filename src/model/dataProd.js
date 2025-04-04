@@ -34,6 +34,10 @@ export const crudRegisterProd = {
   
       return result.rows[0];
     } catch (error) {
+
+      if (error.code === "23505") { 
+        throw new Error("Código do Produto ja cadastrado. Tente outro.");
+      }
       console.error("erro para registrar tipo");
       throw error;
     }

@@ -42,6 +42,11 @@ export const autoRegister = {
       const result = await dataClient.query(insert, values);
       return result.rows[0];
     } catch (error) {
+
+      if (error.code === "23505") { // Código de erro para chave duplicada no PostgreSQL
+        throw new Error("Código do veiculo já cadastrado. Tente outro.");
+      }
+
       console.error("Erro ao registrar automóvel:", error);
       throw error;
     }

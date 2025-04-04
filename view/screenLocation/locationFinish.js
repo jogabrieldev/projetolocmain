@@ -1,6 +1,5 @@
 // locação finalizada
 
-
 const btnOutPageLocation = document.querySelector(".buttonExitLocation");
 btnOutPageLocation.addEventListener("click", () => {
   const containerAppLocation = document.querySelector(".containerAppLocation");
@@ -17,9 +16,9 @@ outPageSearchLocation.addEventListener("click", () => {
 });
 
 
-
+// TABELA COM AS LOCAÇOES
 async function frontLocation() {
-  const token = localStorage.getItem("token"); // Pega o token armazenado no login
+  const token = localStorage.getItem("token"); 
 
   if (!token || isTokenExpired(token)) {
     Toastify({
@@ -47,23 +46,21 @@ async function frontLocation() {
       },
     });
 
-    if (!response.ok) {
-      throw new Error(`Erro ao buscar locações. Status: ${response.status}`);
+     if (response.status === 404) {
+      document.querySelector(".tableLocation").innerHTML = `<p style="text-align:center;">Nenhuma locação encontrada.</p>`;
+      return;
     }
-
-    // Obter os dados da API
+  
+    // if (!response.ok) {
+    //   throw new Error(`Erro ao buscar locações. Status: ${response.status}`);
+    // }
+   
     const dataFinish = await response.json();
     const locacoesFinishTable = dataFinish.locacoes || [];
 
     // Limpa a tabela antes de popular os dados
     document.querySelector(".tableLocation").innerHTML = "";
 
-    if (locacoesFinishTable.length === 0) {
-      document.querySelector(
-        ".tableLocation"
-      ).innerHTML = `<p style="text-align:center;">Nenhuma locação encontrada.</p>`;
-      return;
-    }
     // Criar array unindo clientes e bens
     const listaLocacoes = locacoesFinishTable.map((locacao) => {
       if (locacao.bens.length > 0) {
@@ -232,151 +229,6 @@ function renderTable(data) {
 }
 
 
-
-// async function filterTable() {
-//   const token = localStorage.getItem("token");
-
-//   if (!token || isTokenExpired(token)) {
-//     Toastify({
-//       text: "Sessão expirada. Faça login novamente.",
-//       duration: 3000,
-//       close: true,
-//       gravity: "top",
-//       position: "center",
-//       backgroundColor: "red",
-//     }).showToast();
-
-//     localStorage.removeItem("token");
-//     setTimeout(() => {
-//       window.location.href = "/index.html";
-//     }, 2000);
-//     return;
-//   }
-
-//   try {
-//     const response = await fetch("/api/locationFinish", {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//         'Authorization': `Bearer ${token}`,
-//       },
-//     });
-
-//     if (!response.ok) {
-//       throw new Error(`Erro ao buscar locações. Status: ${response.status}`);
-//     }
-
-//     const dataFinish = await response.json();
-//     const locacoes = dataFinish.locacoes || [];
-
-//     const numberLocation = document.getElementById("numberLocation").value.trim();
-//     const statusLocation = document.getElementById("statusLocation").value.trim();
-//     const nameClient = document.getElementById("nameClientSearch").value.trim();
-//     const dateLocation = document.getElementById("dateLocation").value.trim().split("-").join("/");
-
-//     if (!numberLocation && !statusLocation && !nameClient && !dateLocation) {
-//       Toastify({
-//         text: "Por favor, preencha algum campo de pesquisa.",
-//         duration: 3000,
-//         close: true,
-//         gravity: "top",
-//         position: "center",
-//         backgroundColor: "red",
-//       }).showToast();
-//       return;
-//     }
-
-//     const filteredData = locacoes.filter(loc => {
-//       const matchNumero = numberLocation ? loc.cllonmlo.includes(numberLocation) : true;
-//       const matchStatus = statusLocation ? loc.bens.some(bem => bem.belostat.toLowerCase().includes(statusLocation.toLowerCase())) : true;
-
-//       const matchNome = nameClient ? loc.clloclno.toLowerCase().includes(nameClient.toLowerCase()) : true;
-//       const matchData = dateLocation
-//       ? new Date(loc.cllodtlo).toISOString().split("T")[0] === dateLocation
-//       : true;
-      
-//       return matchNumero && matchStatus && matchNome && matchData;
-//     });
-
-//     if(filteredData.length > 1){
-//       Toastify({
-//         text: "Preencha somente 1 campo",
-//         duration: 3000,
-//         close: true,
-//         gravity: "top",
-//         position: "center",
-//         backgroundColor: "orange",
-//       }).showToast();
-//       return;
-//     }
-
-
-//     if (filteredData.length === 0) {
-//       Toastify({
-//         text: "Nenhuma locação encontrada. Insira um valor válido.",
-//         duration: 3000,
-//         close: true,
-//         gravity: "top",
-//         position: "center",
-//         backgroundColor: "red",
-//       }).showToast();
-//       return;
-//     }
-
-//     const listaLocacoesFilter = filteredData.map(locacao => {
-//       if (locacao.bens.length > 0) {
-//         return locacao.bens.map(bem => ({
-//           idClient: locacao.clloid,
-//           numeroLocacao: locacao.cllonmlo || "Não definido",
-//           nomeCliente: locacao.clloclno || "Não definido",
-//           cpfCliente: locacao.cllocpf || "Não definido",
-//           dataLocacao: formatDate(locacao.cllodtlo),
-//           dataDevolucao: formatDate(locacao.cllodtdv),
-//           formaPagamento: locacao.cllopgmt || "Não definido",
-//           codigoBem: bem.bencodb || "-",
-//           produto: bem.beloben || "Nenhum bem associado",
-//           quantidade: bem.beloqntd || "-",
-//           status: bem.belostat || "Não definido",
-//           observacao: bem.beloobsv || "Sem observação",
-//           dataInicio: formatDate(bem.belodtin),
-//           dataFim: formatDate(bem.belodtfi),
-//         }));
-//       } else {
-//         return [{
-//           idClient: locacao.clloid,
-//           numeroLocacao: locacao.cllonmlo || "Não definido",
-//           nomeCliente: locacao.clloclno || "Não definido",
-//           cpfCliente: locacao.cllocpf || "Não definido",
-//           dataLocacao: formatDate(locacao.cllodtlo),
-//           dataDevolucao: formatDate(locacao.cllodtdv),
-//           formaPagamento: locacao.cllopgmt || "Não definido",
-//           codigoBem: "-",
-//           produto: "Nenhum bem associado",
-//           quantidade: "-",
-//           status: "-",
-//           observacao: "Nenhuma observação",
-//           dataInicio: "-",
-//           dataFim: "-",
-//         }];
-//       }
-//     }).flat();
-
-//     renderTable(listaLocacoesFilter);
-
-//     document.getElementById("resetFilterBtn").style.display = "inline-block";
-//     document.getElementById("messsageFilter").style.display = "inline-block";
-//     document.getElementById("messsageFilter").textContent = "Tabela filtrada por sua pesquisa.";
-
-//     document.getElementById("resetFilterBtn").addEventListener("click", () => {
-//       frontLocation();
-//       document.getElementById("resetFilterBtn").style.display = "none";
-//     });
-
-//   } catch (error) {
-//     console.error("Erro ao buscar e filtrar locações:", error);
-//   }
-// };
-
 // DELETAR LOCAÇÃO
 async function filterTable() {
   const token = localStorage.getItem("token");
@@ -417,10 +269,9 @@ async function filterTable() {
     const numberLocation = document.getElementById("numberLocation").value.trim();
     const statusLocation = document.getElementById("statusLocation").value.trim();
     const nameClient = document.getElementById("nameClientSearch").value.trim();
-    const dateLocation = document.getElementById("dateLocation").value.trim();
 
     // Verifica quantos campos foram preenchidos
-    const camposPreenchidos = [numberLocation, statusLocation, nameClient, dateLocation]
+    const camposPreenchidos = [numberLocation, statusLocation, nameClient]
       .filter(value => value !== "").length;
 
     if (camposPreenchidos === 0) {
@@ -447,13 +298,7 @@ async function filterTable() {
       return;
     }
 
-    // Função para converter datas no formato DD/MM/AAAA para YYYY-MM-DD
-    const formatDateToISO = (dateString) => {
-      if (!dateString.includes("/")) return dateString; // Já está no formato YYYY-MM-DD
-      const [day, month, year] = dateString.split("/");
-      return `${year}-${month}-${day}`;
-    };
-
+  
     const filteredData = locacoes.filter(loc => {
       const matchNumero = numberLocation ? loc.cllonmlo.includes(numberLocation) : true;
       const matchStatus = statusLocation
@@ -461,11 +306,8 @@ async function filterTable() {
         : true;
       const matchNome = nameClient ? loc.clloclno.toLowerCase().includes(nameClient.toLowerCase()) : true;
       
-      // Formatar a data antes da comparação
-      const locacaoDateISO = formatDateToISO(loc.cllodtlo);
-      const matchData = dateLocation ? locacaoDateISO === dateLocation : true;
-
-      return matchNumero && matchStatus && matchNome && matchData;
+     
+      return matchNumero && matchStatus && matchNome;
     });
 
     if (filteredData.length === 0) {
@@ -656,114 +498,3 @@ async function deletelocation(id, rowProd) {
   }
 }
 
-// Editar locação
-function editLocationFinish(){
-   const contentEditlocation = document.querySelector('.contentEditlocation')
-   contentEditlocation.style.display  = 'flex'
-
-   const btnInitMainPageLoc = document.querySelector('.btnInitPageMainLoc')
-   btnInitMainPageLoc.style.display = 'none'
-
-}
-const buttonEditLocation = document.querySelector(".buttonEditLocation");
-
-buttonEditLocation.addEventListener("click", async () => {
-  const selectedCheckbox = document.querySelector('.locacao-checkbox:checked');
-
-  if (!selectedCheckbox) {
-    Toastify({
-      text: "Selecione pelo menos 1 locação para editar",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
-  }
-
-  const locacaoData = JSON.parse(selectedCheckbox.value); 
-
-  carregarDadosLocacao(locacaoData);
-});
-
-// Função para preencher os campos do formulário diretamente com os dados do checkbox
-async function carregarDadosLocacao(locacao) {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    Toastify({
-      text: "Usuário não autorizado",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
-  }
-
-  // Buscar cliente
-  const response = await fetch('/api/listclient', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
-  });
-
-  const clientes = await response.json();
-  const clientSelect = clientes.find(cl => cl.cliecpf === locacao.cpfCliente);
-  
-  if (!clientSelect) {
-    Toastify({
-      text: "Cliente não encontrado",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "orange",
-    }).showToast();
-    return;
-  }
-  
-  document.querySelector('.contentEditlocation').style.display = 'flex';
-  document.querySelector('.btnInitPageMainLoc').style.display = 'none';
-
-  document.getElementById("numeroLocationEdit").value = locacao.numeroLocacao || "";
-  document.getElementById("dataLocEdit").value = formatDate(locacao.dataLocacao);
-  document.getElementById("DataDevoEdit").value = formatDate(locacao.dataDevolucao);
-  document.getElementById("pagamentEdit").value = locacao.formaPagamento || "";
-
-  // Preenchendo os dados do cliente
-  document.getElementById("nameClientEdit").value = locacao.nomeCliente || "";
-  document.getElementById("cpfClientEdit").value = locacao.cpfCliente || "";
-  document.getElementById("ruaClientEdit").value = clientSelect.clierua || "";
-  document.getElementById("cityClientEdit").value = clientSelect.cliecity || "";
-  document.getElementById("cepClientEdit").value = clientSelect.cliecep || "";
-  document.getElementById("mailClientEdit").value = clientSelect.cliemail || "";
-  
-  // Preenchendo os bens da locação
-  locacao.forEach((bem, index) => {
-    if (index < 4) {
-      document.getElementById(`family${index + 1}Edit`).value = bem.codigoBem || "";
-      document.getElementById(`produto${index + 1}Edit`).value = bem.produto || "";
-      document.getElementById(`quantidade${index + 1}Edit`).value = bem.quantidade || "";
-      document.getElementById(`observacao${index + 1}Edit`).value = bem.observacao || "";
-      document.getElementById(`dataInicio${index + 1}Edit`).value = formatDate(bem.dataInicio);
-      document.getElementById(`dataFim${index + 1}Edit`).value = formatDate(bem.dataFim);
-    }
-  });
-
-  Toastify({
-    text: "Locação carregada para edição!",
-    duration: 3000,
-    close: true,
-    gravity: "top",
-    position: "center",
-    backgroundColor: "green",
-  }).showToast();
-}
-
-async function submitLocationEdit() {
-  
-}
