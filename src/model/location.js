@@ -226,7 +226,8 @@ verificarDependenciaLocacao: async (id) => {
       throw error;
     }
   },
-
+ 
+  // atualizando status de locação
   async updateBemStatus(bemId, beloStat) {
     const query = `UPDATE bensloc SET belostat = $1 WHERE bencodb = $2 RETURNING *;`;
 

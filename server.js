@@ -1,5 +1,6 @@
 import express from 'express';
 import { route } from './src/routes/route.js';
+import { routeEscreen } from './src/routes/routeScreen.js';
 import path from 'path';
 import { Server } from "socket.io";
 import http from "http";
@@ -13,9 +14,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(express.static(path.join(__dirname, 'view')));
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(route);
+app.use("/" , routeEscreen);
 
 // Criar servidor HTTP
 const server = http.createServer(app);

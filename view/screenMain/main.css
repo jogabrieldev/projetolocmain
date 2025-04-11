@@ -3,7 +3,7 @@ body{
     margin: 0px;
     font-size: 15px;
     font-family: Arial, Helvetica, sans-serif;
-    background-color:   lightslategray;
+    background-color:   darkgrey;
 }
 input{
     height: 23px;
@@ -12,15 +12,36 @@ input{
 /* Cabeçalho */
 .containerHeader{
     height: 117px;
-    background-color: darkgray;
+    background-color:  #6c757d;
     display: flex;
     justify-content: space-between;
     position: sticky;
     top: 0;
     right: 0;
     border-radius: 10px;
-    border: 2px solid white;
+    /* border-end-start-radius: 2px solid white; */
 }
+.information {
+  background-color: #6c757d;
+  font-size: 15px !important;
+  padding: 0.4rem 0.9rem !important;
+  border: 2px solid white;
+  font-size: 16px;
+  width: auto;
+  max-width: 90%;
+  margin-right: 2%;
+}
+@media (max-width: 576px) {
+    #photo {
+      width: 60px;
+    }
+  
+    .information {
+      font-size: 15px !important;
+      padding: 0.3rem 0.8rem !important;
+    }
+  }
+  
 
 .material-symbols-outlined {
     font-family: sans-serif;
@@ -36,179 +57,102 @@ input{
   
 }
 
-.logo{
- width: 130px;
- margin-top:0.5%;
- margin-left: 1%;
-}
-#photo{
-    width: 100px;
-    border-radius: 100%;
-    border: 1px solid white;
-}
-.information{
-  font-size: 19px;
- display: none;
- border-radius: 15px;
-  width: 15%;
- text-align: center;
- background-color: lightslategray;
- margin-right: 10%;
- padding: 20px;
- height: 40px;
- margin-top: 1%;
- border: solid , 2px , white;
-}
 #ContainerMainApp{
     display: flex;
     flex-direction:column;
     gap: 2px;
     height: 100%;
-    
 }
 
-.workButton{
+/* .workButton{
     display: flex;
-    background-color: darkgray;
     width: 20%;
     height: 80%;
     margin-top: 0.5%;
-    justify-content: flex-end;
     border-radius: 10px;
-    border: solid , 2px , white;
+    border: solid , 2px , darkgray;
     position: fixed;
     margin-left: 0.1%;
     padding: 5px;
     box-shadow:8px 8px 8px rgba(0, 0, 0, 0.929) ;
+} */
+
+.workButton {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 8;
+  left: 0;
+  width: 20%;
+  height: 95vh;
+  padding: 10px;
+  background-color: #6c757d; /* caso queira manter a cor de bg-secondary */
+  box-shadow: 7px 0  4px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  border-radius: 10px;
+  z-index: 1000;
+  border-top-right-radius: 1.5px solid white ;
 }
-     
+
+/* Para telas menores */
+@media (max-width: 768px) {
+  .workButton {
+    width: 100%;
+    height: auto;
+    position: relative;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 10px;
+  }
+
+  .workButton ul.nav {
+    flex-direction: row !important;
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+
+  .workButton ul.nav li,
+  .workButton .collapse {
+    flex: 1 0 auto;
+    width: auto;
+  }
+
+  .collapse {
+    display: none !important; /* você pode esconder submenus ou usar JS para abrir tipo dropdown */
+  }
+}
+#btnStartRegister{
+ background-color: rgb(100, 137, 189);
+}
+#btnStartRegister:hover{
+background-color: white;
+}
+@media (max-width: 768px) {
+    .workButton {
+      padding: 1rem;
+      font-size: 0.95rem;
+    }
+  
+    .btn-submenu {
+      font-size: 0.9rem;
+    }
+  }
+  
 ul{
     width: 100%;
     list-style-type: none;
 }
+
 button{
     border-radius: 10px;
 }
-button:hover {
-    background-color: #b1c4b2;
-  }
-/* Botoes do menu principais */
-.btnCadBens{ 
-    margin-top: 11%;
-    width: 90%;
-    height: 35px;
-    border: none;
-    background-color: lightslategray;
-    cursor: pointer;
-    margin-right: 2.5%;
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.4s;
-}
-.btnCadBens:active{
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(6px);
-}
 
-.btnCadClie{
-    width: 90%;
-    height: 35px;
-    border: none;
-    background-color: lightslategray;
-    cursor: pointer;
-    margin-right: 2.5%;
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.4s;
-}
-.btnCadClie:active{
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(6px);
-}
-.btnCadForn{
-    width: 90%;
-    height: 35px;
-    border: none;
-    background-color: lightslategray;
-    cursor: pointer;
-    margin-right: 2.5%;
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.4s;
-}
-.btnCadForn:active{
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(6px);
-}
-.btnCadProd{
-    width: 90%;
-    height: 35px;
-    border: none;
-    background-color: lightslategray;
-    cursor: pointer;
-    margin-right: 2.5%;
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.4s;
-}
-.btnCadProd:active{
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(6px);
-}
-.btnCadFabri{
-    width: 90%;
-    height: 35px;
-    border: none;
-    background-color: lightslategray;
-    cursor: pointer;
-    margin-right: 2.5%;
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.4s;
-}
-.btnCadFabri:active{
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(6px);
-}
-.btnCadTypeProd{
-    width: 90%;
-    height: 35px;
-    border: none;
-    background-color: lightslategray;
-    cursor: pointer;
-    margin-right: 2.5%;
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.4s;
-}
+.btnCadBens:focus.btnCadBens:active{
+   background-color:rgb(95, 101, 107);
+} 
 
-.btnCadTypeProd:active{
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(6px);
-}
-.btnCadMotorista{
-    width: 90%;
-    height: 35px;
-    border: none;
-    background-color: lightslategray;
-    cursor: pointer;
-    margin-right: 2.5%;
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.4s;
-}
-.btnCadMotorista:active{
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(6px);
-}
 
-.btnCadAutomo{
-    width: 90%;
-    height: 35px;
-    border: none;
-    background-color: lightslategray;
-    cursor: pointer;
-    margin-right: 2.5%;
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.4s;
-}
-.btnCadAutomo:active{
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(6px);
-}
 .outSectionRegister{
     width: 90%;
     height: 35px;
@@ -224,7 +168,7 @@ button:hover {
     transform: translateY(6px);
 }
 
-
+/* MENSSAGEM DE ERRO */
 .error-text{
     color: red;
     display: block;
@@ -234,7 +178,7 @@ button:hover {
 .error-field{
     border-color: red;
 }
-
+/* CONNFIG TABELA GLOBAL */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -282,48 +226,6 @@ table {
 .inputGroup label{
     font-weight: bold;
     margin-bottom: 5px;
-}
-
-
-.btnOutNext{
-    display: flex;
-    width:50%;
-     gap: 5.5%;
-     justify-content: center;
-     margin-top: 5%;
-}
-.btnOut{
-    cursor: pointer;
-    width: 80px;
-    margin-bottom: 2%;
-    background-color: lightslategray; 
-    border: none;
-    height:27px;
-}
-.btnNext{
-    cursor: pointer;
-    width: 80px;
-    margin-bottom: 2%;
-    background-color: lightslategray; 
-    border: none;
-    height: 27px;
-}
-
-/* Interação no software */
-.btnAtivRegister{
-    margin-top: 3.5%;
-    width: 90%;
-    height: 35px;
-    border: none;
-    background-color: rgb(100, 137, 189);
-    cursor: pointer;
-    margin-right: 2.5%;
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.4s;
-}
-.btnAtivRegister:active{
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(6px);
 }
 
 .OutOfMainBtn{

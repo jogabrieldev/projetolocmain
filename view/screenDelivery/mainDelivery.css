@@ -14,7 +14,7 @@
 .delivery{
     width: 90%;
     height: 35px;
-    border: none;
+    border: 1px solid white;
     background-color: rgb(100, 137, 189);
     cursor: pointer;
     margin-right: 2.5%;

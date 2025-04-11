@@ -17,10 +17,13 @@ import logistics from '../controllers/logistcsController.js'
 import { controllerDelivery } from "../controllers/deliveryController.js";
 
 
+
 // Olhar pois e uma classe
-route.get("/", () => {
-  control.submitStart();
-});
+
+// route.get("/", () => {
+//  control.submitStart();
+// });
+
 
 route.post("/autenticar",  (req, res) => {
   AuthController(req, res);

@@ -474,6 +474,7 @@ async function carregarFamilias() {
 
     for (let i = 1; i <= 4; i++) {
       const select = document.getElementById(`family${i}`);
+      const selectEdit = document.getElementById(`family${i}Edit`)
 
       select.addEventListener("change", () => preencherProduto(i, familias));
 
@@ -482,6 +483,7 @@ async function carregarFamilias() {
         option.value = fabecode;
         option.textContent = fabecode;
         select.appendChild(option);
+        selectEdit.appendChild(option)
       });
     }
   } catch (error) {
@@ -823,25 +825,23 @@ async function gerarContrato() {
 const formRegisterClientLoc = document.querySelector("#formRegisterClientLoc");
 formRegisterClientLoc.addEventListener("submit", async (event) => {
   event.preventDefault();
+  
 
-  const formData = new FormData(event.target);
-  const data = Object.fromEntries(formData.entries());
+  const formDataLocation = {
+    clieCode: document.querySelector("#clieCodeLoc").value, // Codigo
+    clieName: document.querySelector("#clieNameLoc").value, // Nome
+    cpf: document.querySelector("#cpfClientLoc").value, // CPF
+    dtCad: document.querySelector("#dtCadLoc").value, // Data de Cadastro
+    dtNasc: document.querySelector("#dtNascLoc").value, // Data de Nascimento
+    clieCelu: document.querySelector("#clieCeluLoc").value, // Celular
+    clieCity: document.querySelector("#clieCityLoc").value, // Cidade
+    clieEstd: document.querySelector("#clieEstdLoc").value, // Estado
+    clieRua: document.querySelector("#clieRuaLoc").value, // Rua
+    clieCep: document.querySelector("#clieCepLoc").value, // Cep
+    clieMail: document.querySelector("#clieMailLoc").value, // E-mail
+  };
 
-  if (
-    Object.keys(data).length === 0 ||
-    Object.values(data).some((val) => val === "")
-  ) {
-
-    Toastify({
-      text: "Por favor, preencha o formulário antes de enviar.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
-  }
+  
   const token = localStorage.getItem('token');
 
   if (!token || isTokenExpired(token)) {
@@ -860,42 +860,50 @@ formRegisterClientLoc.addEventListener("submit", async (event) => {
     }, 2000); 
     return;
 }
-  try {
-    await fetch("/api/client/submit", {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+try {
+  const response = await fetch("/api/client/submit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      'Authorization': `Bearer ${token}`,
     },
-      body: JSON.stringify(data),
-    }).then((response) => {
-      if (response.ok) {
-        console.log("deu certo");
+    body: JSON.stringify(formDataLocation),
+  });
 
-        Toastify({
-          text: "Cadastrado com Sucesso",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "green",
-        }).showToast();
+  const result = await response.json();
 
-        document.querySelector("#formRegisterClientLoc").reset();
-      } else {
-        console.log("deu erro viu");
+  if (response.ok) {
+    Toastify({
+      text: "Cliente cadastrado com sucesso!",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "green",
+    }).showToast();
 
-        Toastify({
-          text: "Erro no cadastro",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-      }
-    });
-  } catch (error) {
-    console.error("deu erro no envio", error);
+    document.querySelector("#formRegisterClientLoc").reset();
+  } else if (response.status === 409) {
+    Toastify({
+      text: result.message,
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "orange",
+    }).showToast();
+  } else {
+    Toastify({
+      text: "Erro ao cadastrar Cliente",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
   }
+} catch (error) {
+  console.error("Erro ao enviar formulário:", error);
+  alert("Erro ao enviar os dados para o server.");
+}
 });

@@ -1,91 +1,3 @@
-const btnProd = document.querySelector(".btnCadProd");
-btnProd.addEventListener("click", () => {
-  const listingProd = document.querySelector(".listingProd");
-  listingProd.style.display = "flex";
-
-  const btnMainPageProd = document.querySelector(".btnMainPageProd");
-  btnMainPageProd.style.display = "flex";
-
-  const containerAppProd = document.querySelector(".containerAppProd");
-  containerAppProd.style.display = "flex";
-
-  const containerAppClient = document.querySelector(".containerAppClient");
-  containerAppClient.style.display = "none";
-
-  const containerAppFabri = document.querySelector(".containerAppFabri");
-  containerAppFabri.style.display = "none";
-
-  const containerAppBens = document.querySelector(".containerAppBens");
-  containerAppBens.style.display = "none";
-
-  const containerAppForn = document.querySelector(".containerAppForn");
-  containerAppForn.style.display = "none";
-
-  const containerAppTypeProd = document.querySelector(".containerAppTipoProd");
-  containerAppTypeProd.style.display = "none";
-
-  const containerAppDriver = document.querySelector(".containerAppDriver");
-  containerAppDriver.style.display = "none";
-
-  const containerAppAutomo = document.querySelector(".containerAppAutomo");
-  containerAppAutomo.style.display = "none";
-
-  const containerFormRegisterProd = document.querySelector(".formRegisterProd");
-  containerFormRegisterProd.style.display = "none";
-
-  const containerFormEdit = document.querySelector(".formEditProd");
-  containerFormEdit.style.display = "none";
-
-  const informative = document.querySelector(".information");
-  informative.style.display = "block";
-  informative.textContent = "SEÇÃO PRODUTO";
-});
-
-const registerProd = document.querySelector(".registerProd");
-registerProd.addEventListener("click", () => {
-  const formRegisterProd = document.querySelector(".formRegisterProd");
-  const btnMainPageProd = document.querySelector(".btnMainPageProd");
-  const listingProd = document.querySelector(".listingProd");
-
-  formRegisterProd.style.display = "flex";
-
-  listingProd.style.display = "none";
-  btnMainPageProd.style.display = "none";
-});
-
-const btnExitProd = document.querySelector(".buttonExitProd");
-btnExitProd.addEventListener("click", () => {
-  const containerAppProd = document.querySelector(".containerAppProd");
-
-  containerAppProd.style.display = "none";
-});
-
-const btnOutInitProd = document.querySelector(".btnOutInitProd");
-btnOutInitProd.addEventListener("click", (event) => {
-  event.preventDefault();
-
-  const btnMainPageProd = document.querySelector(".btnMainPageProd");
-  btnMainPageProd.style.display = "flex";
-
-  const listingProd = document.querySelector(".listingProd");
-  listingProd.style.display = "flex";
-
-  const containerFormProd = document.querySelector(".formRegisterProd");
-  containerFormProd.style.display = "none";
-});
-const btnOutEditForm = document.querySelector(".btnOutInitProdEdit");
-btnOutEditForm.addEventListener("click", (event) => {
-  event.preventDefault();
-
-  const btnMainPageProd = document.querySelector(".btnMainPageProd");
-  btnMainPageProd.style.display = "flex";
-
-  const listingProd = document.querySelector(".listingProd");
-  listingProd.style.display = "flex";
-
-  const containerFormEditProd = document.querySelector(".formEditProd");
-  containerFormEditProd.style.display = "none";
-});
 
 function isTokenExpired(token) {
   try {
@@ -97,21 +9,202 @@ function isTokenExpired(token) {
   }
 }
 
-const socketUpdateProduto = io();
-document.addEventListener("DOMContentLoaded", async () => {
-  await fetchListProdutos();
+function maskFieldProduto(){
+  $("#prodValor").mask('R$ 000.000.000,00',{ reverse: true,  } )
+   
+  $("#prodPeli").mask('R$ 000.000.000,00',{ reverse: true,  } );
 
-  await loadSelectOptions("/api/codetipoprod", "prodTipo", "tiprcode");
+  $("#prodPebr").mask('R$ 000.000.000,00', { reverse: true,  });
 
-  socketUpdateProduto.on("updateRunTimeProduto", (produtos) => {
+  $("#editProdValor").mask('R$ 000.000.000,00',{ reverse: true,  } )
+ 
+  $("#editProdPeli").mask('R$ 000.000.000,00',{ reverse: true,  } );
+
+  $("#editProdPebr").mask('R$ 000.000.000,00', { reverse: true,  });
+}
+
+const socketProduto = io();
+document.addEventListener('DOMContentLoaded' , ()=>{
+    
+  const btnLoadProd = document.querySelector('.btnCadProd')
+  if(btnLoadProd){
+      btnLoadProd.addEventListener('click' , async ()=>{
+
+         try {
+            const responseProd = await fetch('/produto' , {
+              method:'GET'
+            })
+
+            if (!responseProd.ok) throw new Error(`Erro HTTP: ${responseProd.status}`);
+            const html = await responseProd.text();
+            const mainContent = document.querySelector('#mainContent');
+            if (mainContent) {
+              mainContent.innerHTML = html;
+                 maskFieldProduto()
+                interationSystemProduto()
+                 registerNewProduto()
+                 deleteProduto()
+                 editProduto()
+            }else{
+              console.error('#mainContent não encontrado no DOM')
+            }
+
+            const containerAppProd = document.querySelector('.containerAppProd');
+            if (containerAppProd) containerAppProd.classList.add('flex') ;
+      
+            const sectionsToHide = [
+              '.containerAppForn', '.containerAppFabri', '.containerAppTipoProd',
+              '.containerAppDriver', '.containerAppAutomo', '.containerAppBens',
+              '.containerAppClient'
+            ];
+            sectionsToHide.forEach((selector) => {
+              const element = document.querySelector(selector);
+              if (element) element.style.display = 'none';
+            });
+      
+            const  containerRegisterProd = document.querySelector('.formRegisterProd');
+            const btnMainPageProd = document.querySelector('.btnMainPageProd');
+            const listingProd = document.querySelector('.listingProd');
+            const editFormProd = document.querySelector('.formEditProd');
+            const informative = document.querySelector('.information');
+      
+            if (containerRegisterProd) containerRegisterProd.style.display = 'none';
+            if (btnMainPageProd) btnMainPageProd.style.display = 'flex';
+            if (listingProd)listingProd.style.display = 'flex';
+            if (editFormProd ) editFormProd.style.display = 'none';
+            if (informative) {
+              informative.style.display = 'block';
+              informative.textContent = 'SEÇÃO PRODUTO';
+            }
+            
+            await fetchListProdutos();
+            await loadSelectOptions("/api/codetipoprod", "prodTipo", "tiprcode");
+         } catch (error) {
+          Toastify({
+            text: "Erro na pagina",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "green",
+          }).showToast();
+           console.error("btnLoadProd não encontrado no DOM")
+         }
+      })
+  }
+
+  socketProduto.on("updateRunTimeProduto", (produtos) => {
     insertProductTableRunTime(produtos);
   });
 
-  socketUpdateProduto.on("updateRunTimeTableProduto", (updatedProduct) => {
+  socketProduto.on("updateRunTimeTableProduto", (updatedProduct) => {
     updateProductInTableRunTime(updatedProduct);
   });
+})
 
-  document.querySelector(".cadProd").addEventListener("click", async (event) => {
+function interationSystemProduto(){
+
+ const registerProd = document.querySelector(".registerProd");
+ if(registerProd){
+   registerProd.addEventListener("click", () => {
+
+    const formRegisterProd = document.querySelector(".formRegisterProd");
+    if(formRegisterProd){
+       formRegisterProd.classList.remove('hidden')
+       formRegisterProd.classList.add('flex')
+    }
+    const btnMainPageProd = document.querySelector(".btnMainPageProd");
+    if(btnMainPageProd){
+      btnMainPageProd.classList.remove('flex')
+      btnMainPageProd.classList.add('hidden')
+    }
+    const listingProd = document.querySelector(".listingProd");
+    if(listingProd){
+       listingProd.classList.remove('flex')
+       listingProd.classList.add('hidden')
+    }
+    
+  });
+ }
+ 
+
+const btnExitProd = document.querySelector(".buttonExitProd");
+if(btnExitProd){
+  btnExitProd.addEventListener("click", () => {
+
+    const containerAppProd = document.querySelector(".containerAppProd");
+    if(containerAppProd){
+      containerAppProd.classList.remove('flex')
+      containerAppProd.classList.add('hidden')
+    }
+
+    const informative = document.querySelector('.information')
+            if (informative) {
+              informative.style.display = 'block';
+              informative.textContent = 'Sessão ativa';
+            }
+   
+  });
+}
+
+
+const btnOutInitProd = document.querySelector(".btnOutInitProd");
+
+if(btnOutInitProd){
+  btnOutInitProd.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    const btnMainPageProd = document.querySelector(".btnMainPageProd");
+    if(btnMainPageProd){
+       btnMainPageProd.classList.remove('hidden')
+       btnMainPageProd.classList.add('flex')
+    }
+
+    const listingProd = document.querySelector(".listingProd");
+    if(listingProd){
+       listingProd.classList.remove('hidden')
+       listingProd.classList.add('flex')
+    }
+
+    const containerFormProd = document.querySelector(".formRegisterProd");
+    if(containerFormProd){
+      containerFormProd.classList.remove('flex')
+      containerFormProd.classList.add('hidden')
+    }
+  });
+}
+
+const btnOutEditForm = document.querySelector(".btnOutInitProdEdit");
+if(btnOutEditForm){
+  btnOutEditForm.addEventListener("click", (event) => {
+    event.preventDefault();
+  
+    const btnMainPageProd = document.querySelector(".btnMainPageProd");
+    if(btnMainPageProd){
+       btnMainPageProd.classList.remove('hidden')
+       btnMainPageProd.classList.add('flex')
+    }
+    
+    const listingProd = document.querySelector(".listingProd");
+    if(listingProd){
+       listingProd.classList.remove('hidden')
+       listingProd.classList.add('flex')
+    }
+    
+  
+    const containerFormEditProd = document.querySelector(".formEditProd");
+    if(containerFormEditProd){
+      containerFormEditProd.classList.remove('flex')
+      containerFormEditProd.classList.add('hidden')
+    }
+   
+  });
+  };
+}
+
+function registerNewProduto(){
+
+    document.querySelector(".cadProd").addEventListener("click", async (event) => {
       event.preventDefault(); 
 
       const token = localStorage.getItem("token"); 
@@ -200,8 +293,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
   validationFormProd();
-});
-
+}
+  
 async function loadSelectOptions(url, selectId, fieldName) {
   const token = localStorage.getItem("token");
 
@@ -260,16 +353,15 @@ async function loadSelectOptions(url, selectId, fieldName) {
   }
 }
 
-// inserção em runtime in table 
+//inserção em runtime in table 
 function insertProductTableRunTime(produtos) {
   const produtosListDiv = document.querySelector(".listingProd");
   produtosListDiv.innerHTML = "";
 
   if (produtos.length > 0) {
     const tabela = document.createElement("table");
-    tabela.style.width = "100%";
-    tabela.setAttribute("border", "1");
-
+    tabela.classList.add('tableProd')
+   
     // Cabeçalho
     const cabecalho = tabela.createTHead();
     const linhaCabecalho = cabecalho.insertRow();
@@ -357,8 +449,7 @@ async function fetchListProdutos() {
 
     if (produtos.length > 0) {
       const tabela = document.createElement("table");
-      tabela.style.width = "100%";
-      tabela.setAttribute("border", "1");
+      tabela.classList.add('tableProd')
 
       const cabecalho = tabela.createTHead();
       const linhaCabecalho = cabecalho.insertRow();
@@ -421,9 +512,13 @@ async function fetchListProdutos() {
 }
 
 // deletar produto
-const btnDeleteProd = document.querySelector(".buttonDeleteProd");
-btnDeleteProd.addEventListener("click", async () => {
-  const selectedCheckbox = document.querySelector(
+
+function deleteProduto(){
+
+  const btnDeleteProd = document.querySelector(".buttonDeleteProd");
+    btnDeleteProd.addEventListener("click", async () => {
+
+    const selectedCheckbox = document.querySelector(
     'input[name="selectProduto"]:checked'
   );
   if (!selectedCheckbox) {
@@ -514,11 +609,14 @@ async function deleteProd(id, rowProd) {
       backgroundColor: "red",
     }).showToast();
   }
+ }
 }
+// EDITAR PRODUTO
 
-//  EVENTO Editar
-const editProdButton = document.querySelector(".buttonEditProd");
-editProdButton.addEventListener("click", (event) => {
+function editProduto(){
+
+  const editProdButton = document.querySelector(".buttonEditProd");
+  editProdButton.addEventListener("click", (event) => {
   loadSelectOptions("/api/codetipoprod", "editProdTipo", "tiprcode");
 
   const selectedCheckbox = document.querySelector(
@@ -537,6 +635,24 @@ editProdButton.addEventListener("click", (event) => {
     return;
   }
 
+  const btnMainPageProd = document.querySelector(".btnMainPageProd");
+  if(btnMainPageProd ){
+    btnMainPageProd.classList.remove('flex')
+    btnMainPageProd .classList.add('hidden')
+  }
+
+  const listProd = document.querySelector(".listingProd");
+  if(listProd){
+    listProd.classList.remove('flex')
+    listProd.classList.add('hidden')
+  }
+
+const containerEditForm = document.querySelector('.formEditProd')
+   if(containerEditForm){
+      containerEditForm.classList.remove('hidden')
+      containerEditForm.classList.add('flex')
+   }
+
   const produtoData = selectedCheckbox.dataset.produto;
   if (!produtoData) {
     console.error("O atributo data-bem está vazio ou indefinido.");
@@ -546,7 +662,7 @@ editProdButton.addEventListener("click", (event) => {
   try {
     const produtoSelecionado = JSON.parse(produtoData);
 
-    // Campos e IDs correspondentes
+
     const campos = [
       { id: "editProdCode", valor: produtoSelecionado.prodcode },
       { id: "editProdDesc", valor: produtoSelecionado.proddesc },
@@ -559,7 +675,7 @@ editProdButton.addEventListener("click", (event) => {
       { id: "editProdAtiv", valor: produtoSelecionado.prodativ },
     ];
 
-    // Atualizar valores no formulário
+
     campos.forEach(({ id, valor }) => {
       const elemento = document.getElementById(id);
       if (elemento) {
@@ -575,7 +691,7 @@ editProdButton.addEventListener("click", (event) => {
       }
     });
 
-    // Mostrar o formulário de edição e ocultar a lista
+
     const spaceEditprod = document.querySelector(".formEditProd");
     const btnMainPageProd = document.querySelector(".btnMainPageProd");
     const listingProd = document.querySelector(".listingProd");
@@ -600,7 +716,6 @@ editProdButton.addEventListener("click", (event) => {
   }
 });
 
-//FUNÇÃO DE EDIÇÃO
 async function editAndUpdateOfProduct() {
   const formEditProd = document.querySelector(".editProd");
 
@@ -675,13 +790,11 @@ async function editAndUpdateOfProduct() {
         body: JSON.stringify(updateProduct),
       });
 
-      console.log("resposta:", response);
 
       if (response.ok) {
-        console.log("Atualização bem-sucedida");
 
         Toastify({
-          text: `Bem '${prodIdParsed}' Atualizado com sucesso!!`,
+          text: `Produto '${prodIdParsed}' Atualizado com sucesso!!`,
           duration: 3000,
           close: true,
           gravity: "top",
@@ -691,6 +804,15 @@ async function editAndUpdateOfProduct() {
 
         formEditProd.reset();
       } else {
+        Toastify({
+          text: `Produto '${prodIdParsed}' Atualizado com sucesso!!`,
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "green",
+        }).showToast();
+        formEditProd.reset();
         console.error("Erro ao atualizar produto:", await response.text());
       }
     } catch (error) {
@@ -698,7 +820,8 @@ async function editAndUpdateOfProduct() {
     }
   });
 }
-editAndUpdateOfProduct();
+ editAndUpdateOfProduct();
+}
 
 //atualizar em run time A EDIÇÃO
 function updateProductInTableRunTime(updatedProduct) {

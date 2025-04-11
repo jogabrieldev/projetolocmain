@@ -1,0 +1,157 @@
+<section class="containerAppClient d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded"
+style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid white;">
+
+    <div class="listClient flex-grow-1 overflow-auto mb-3">
+      <!-- informações do cadastro do client -->
+    </div>
+  
+    <!-- Botões principais -->
+    <div class="buttonsMainPage d-flex flex-wrap justify-content-center align-items-center gap-3 mb-3">
+      <button class="registerClient btn btn-primary text-dark fw-semibold">Incluir</button>
+      <button class="buttonDeleteClient btn btn-danger text-dark fw-semibold">Excluir</button>
+      <button class="buttonEditClient btn btn-warning text-dark fw-semibold">Editar</button>
+      <button class="buttonExitClient btn btn-light text-dark fw-semibold border">Voltar</button>
+    </div>
+
+    <div class="containerOfForm container py-4" style="display: none">
+        <form id="formRegisterClient" class="border border-secondary-subtle rounded-3 p-4 shadow-sm ">
+          <div class="row g-3">
+      
+            <!-- Linha 1: Código e Nome -->
+            <div class="col-md-3">
+              <label for="clieCode" class="form-label">Código</label>
+              <input type="text" class="form-control" name="clieCode" id="clieCode" placeholder="Código" maxlength="15" />
+            </div>
+            <div class="col-md-9">
+              <label for="clieName" class="form-label">Nome</label>
+              <input type="text" class="form-control" name="clieName" id="clieName" placeholder="Nome" maxlength="80" />
+            </div>
+      
+            <!-- Linha 2: CPF e Celular -->
+            <div class="col-md-6">
+              <label for="cpf" class="form-label">CPF</label>
+              <input type="text" class="form-control" name="cpf" id="cpf" placeholder="CPF" maxlength="14" />
+            </div>
+            <div class="col-md-6">
+              <label for="clieCelu" class="form-label">Celular</label>
+              <input type="text" class="form-control" name="clieCelu" id="clieCelu" placeholder="Celular" maxlength="11" />
+            </div>
+      
+            <!-- Linha 3: Data de Nascimento e Cadastro -->
+            <div class="col-md-6">
+              <label for="dtNasc" class="form-label">Data de Nascimento</label>
+              <input type="date" class="form-control" name="dtNasc" id="dtNasc" />
+            </div>
+            <div class="col-md-6">
+              <label for="dtCad" class="form-label">Data do Cadastro</label>
+              <input type="date" class="form-control" name="dtCad" id="dtCad" />
+            </div>
+      
+            <!-- Linha 4: Endereço - Rua, Cidade, Estado -->
+            <div class="col-md-6">
+              <label for="clieRua" class="form-label">Rua</label>
+              <input type="text" class="form-control" name="clieRua" id="clieRua" placeholder="Rua" maxlength="40" />
+            </div>
+            <div class="col-md-3">
+              <label for="clieCity" class="form-label">Cidade</label>
+              <input type="text" class="form-control" name="clieCity" id="clieCity" placeholder="Cidade" maxlength="25" />
+            </div>
+            <div class="col-md-3">
+              <label for="clieEstd" class="form-label">Estado</label>
+              <input type="text" class="form-control" name="clieEstd" id="clieEstd" placeholder="Estado" maxlength="20" />
+            </div>
+      
+            <!-- Linha 5: CEP e E-mail -->
+            <div class="col-md-4">
+              <label for="clieCep" class="form-label">CEP</label>
+              <input type="text" class="form-control" name="clieCep" id="clieCep" placeholder="CEP" maxlength="10" />
+            </div>
+            <div class="col-md-8">
+              <label for="clieMail" class="form-label">E-mail</label>
+              <input type="email" class="form-control" name="clieMail" id="clieMail" placeholder="E-mail" maxlength="35" />
+            </div>
+      
+            <!-- Botões -->
+            <div class="col-12 d-flex justify-content-center gap-4 mt-4 btnOutNext">
+              <button type="button" class="btn btn-secondary btnRegisterClient w-25">Cadastrar</button>
+              <button type="button" class="btn btn-outline-secondary btnOutInit w-25">Voltar</button>
+            </div>
+      
+          </div>
+        </form>
+      </div>
+      
+      
+    <!-- Formulário de edição -->
+    <div class="formEditClient container py-4" style="display: none;">
+        <form id="formEditRegisterClient" class="border border-secondary-subtle rounded-3 p-4 shadow-sm">
+          <div class="row g-3 justify-content-center">
+      
+            <div class="col-md-4">
+              <label for="editClieCode" class="form-label">Código</label>
+              <input type="text" class="form-control" name="editClieCode" id="editClieCode" placeholder="Código" maxlength="15" readonly />
+            </div>
+      
+            <div class="col-md-4">
+              <label for="editClieName" class="form-label">Nome</label>
+              <input type="text" class="form-control" name="editClieName" id="editClieName" placeholder="Nome" maxlength="80" />
+            </div>
+      
+            <div class="col-md-4">
+              <label for="editCliecpf" class="form-label">CPF</label>
+              <input type="text" class="form-control" name="editCliecpf" id="editCliecpf" placeholder="CPF" maxlength="15" />
+            </div>
+      
+            <div class="col-md-4">
+              <label for="editClieDtCad" class="form-label">Data do cadastro</label>
+              <input type="date" class="form-control" name="editClieDtCad" id="editClieDtCad" />
+            </div>
+      
+            <div class="col-md-4">
+              <label for="editClieDtNasc" class="form-label">Data de Nascimento</label>
+              <input type="date" class="form-control" name="editClieDtNasc" id="editClieDtNasc" />
+            </div>
+      
+            <div class="col-md-4">
+              <label for="editClieCelu" class="form-label">Celular</label>
+              <input type="text" class="form-control" name="editClieCelu" id="editClieCelu" placeholder="Celular" maxlength="20" />
+            </div>
+      
+            <div class="col-md-4">
+              <label for="editClieCity" class="form-label">Cidade</label>
+              <input type="text" class="form-control" name="editClieCity" id="editClieCity" placeholder="Cidade" maxlength="25" />
+            </div>
+      
+            <div class="col-md-4">
+              <label for="editClieEstd" class="form-label">Estado</label>
+              <input type="text" class="form-control" name="editClieEstd" id="editClieEstd" placeholder="Estado" maxlength="20" />
+            </div>
+      
+            <div class="col-md-4">
+              <label for="editClieRua" class="form-label">Rua</label>
+              <input type="text" class="form-control" name="editClieRua" id="editClieRua" placeholder="RUA QD LT" maxlength="40" />
+            </div>
+      
+            <!-- CEP e E-mail na mesma linha -->
+            <div class="col-md-4">
+              <label for="editClieCep" class="form-label">Cep</label>
+              <input type="text" class="form-control" name="editClieCep" id="editClieCep" placeholder="CEP" maxlength="13" />
+            </div>
+      
+            <div class="col-md-4">
+              <label for="editClieMail" class="form-label">E-mail</label>
+              <input type="email" class="form-control" name="editClieMail" id="editClieMail" placeholder="E-mail" maxlength="35" />
+            </div>
+      
+            <!-- Botões -->
+            <div class="col-12 d-flex justify-content-end gap-3 mt-3">
+              <button type="submit" class="submitEditClient btn btn-success w-25">Salvar</button>
+              <button type="button" class="outPageEditClient btn btn-outline-secondary w-25">Voltar</button>
+            </div>
+      
+          </div>
+        </form>
+      </div>
+      
+  </section>
+  

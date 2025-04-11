@@ -11,104 +11,29 @@
     border: solid , 2px , white;
     padding: 7px;
     border-radius: 10px;
+    overflow: auto;
 }
+
+.hidden {
+    display: none !important;
+  }
+
+  .flex {
+    display: flex !important;
+  }
 .listingProd{
     overflow: auto;
 }
-.btnMainPageProd{
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin-top: 3%;
-}
-.registerProd{
-    cursor: pointer;
-    width: 15%;
-    margin-bottom: 2%;
-    background-color: lightslategray; 
-    border: none;
-    height:28px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.4s;
-}
 
-.registerProd:active{
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(6px);
+.tableProd{
+    width: 100%;
+    border-collapse: collapse;
+    color: black;
+    font-size: 14px;
 }
-
-.buttonDeleteProd{
-    cursor: pointer;
-    width: 15%;
-    margin-bottom: 2%;
-    background-color: lightslategray; 
-    border: none;
-    height:28px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.4s;
-}
-
-.buttonDeleteProd:active{
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(6px);
+.tableProd td{
+    background-color:darkgray ;
 }
 
 
-.buttonEditProd{
-    cursor: pointer;
-    width: 15%;
-    margin-bottom: 2%;
-    background-color: lightslategray; 
-    border: none;
-    height:28px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.4s;
-}
 
-.buttonEditProd:active{
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(6px);
-}
-
-.buttonExitProd{
-    cursor: pointer;
-    width: 15%;
-    margin-bottom: 2%;
-    background-color: lightslategray; 
-    border: none;
-    height:28px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.4s;
-}
-
-.buttonExitProd:active{
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(6px);
-}
-
-.btnOutInitProd{
-    cursor: pointer;
-    width: 15%;
-    margin-bottom: 2%;
-    background-color: lightslategray; 
-    border: none;
-    height:28px;
-}
-.btnOutInitProdEdit{
-    cursor: pointer;
-    width: 15%;
-    margin-bottom: 2%;
-    background-color: lightslategray; 
-    border: none;
-    height:28px;
-}
-.cadProd{
-    cursor: pointer;
-    width: 16%;
-    margin-bottom: 2%;
-    background-color: lightslategray; 
-    border: none;
-    height:28px;
-}

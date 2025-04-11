@@ -1,0 +1,326 @@
+
+<section id="containerAppBens"  class="d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded"
+style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid white;">
+    
+    
+    <!-- Lista de Bens -->
+    <div id="listingBens" class="mb-3 overflow-auto bg-darkgray rounded p-1" style="max-height: 630px;">
+      <!-- Conteúdo JS será inserido aqui -->
+    </div>
+  
+    <!-- Botões principais -->
+    <div id="btnPageListGoods" class="d-flex justify-content-center flex-wrap gap-3 mb-4">
+        <button class="btn btn-primary text-dark fw-semibold" id="registerGoods">Incluir</button>
+        <button class="btn btn-danger text-dark fw-semibold" id="buttonDelete">Excluir</button>
+        <button class="btn btn-warning text-dark fw-semibold" id="buttonEdit">Editar</button>
+        <button class="btn btn-light text-dark fw-semibold border" id="buttonExit">Voltar</button>
+      </div>
+      
+  
+    <!-- Formulário de Edição -->
+    <div class="editForm container" style="display: none;">
+        <form id="formEditBens">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label for="codeEdit" class="form-label">Código</label>
+              <input type="text" class="form-control" id="codeEdit" name="codeEdit" placeholder="bensCode" maxlength="15" readonly>
+            </div>
+      
+            <div class="col-md-8">
+              <label for="nameEdit" class="form-label">Nome</label>
+              <input type="text" class="form-control" id="nameEdit" name="nameEdit" placeholder="bensnome" maxlength="80">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="cofaEdit" class="form-label">Família de bem</label>
+              <select class="form-select" id="cofaEdit" name="cofaEdit">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+      
+            <div class="col-md-6">
+              <label for="modelEdit" class="form-label">Modelo</label>
+              <input type="text" class="form-control" id="modelEdit" name="modelEdit" placeholder="bensMode" maxlength="20">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="serialEdit" class="form-label">Número de Série</label>
+              <input type="text" class="form-control" id="serialEdit" name="serialEdit" placeholder="bensNuse" maxlength="25">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="placaEdit" class="form-label">Placa</label>
+              <input type="text" class="form-control" id="placaEdit" name="placaEdit" placeholder="bensPlac" maxlength="10">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="bensAnmoEdit" class="form-label">Ano do modelo</label>
+              <input type="date" class="form-control" id="bensAnmoEdit" name="bensAnmoEdit">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="dtCompraEdit" class="form-label">Data da compra</label>
+              <input type="date" class="form-control" id="dtCompraEdit" name="dtCompraEdit">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="valorCpEdit" class="form-label">Valor da compra</label>
+              <input type="text" class="form-control" id="valorCpEdit" name="valorCpEdit" placeholder="R$" maxlength="25">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="ntFiscalEdit" class="form-label">Nota Fiscal</label>
+              <input type="number" class="form-control" id="ntFiscalEdit" name="ntFiscalEdit" placeholder="bensNunf" maxlength="11">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="cofoEdit" class="form-label">Código Fornecedor</label>
+              <select class="form-select" id="cofoEdit" name="cofoEdit"></select>
+            </div>
+      
+            <div class="col-md-6">
+              <label for="kmAtualEdit" class="form-label">KM Atual</label>
+              <input type="number" class="form-control" id="kmAtualEdit" name="kmAtualEdit" placeholder="km Atual" maxlength="7">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="dtKmEdit" class="form-label">Data do KM</label>
+              <input type="date" class="form-control" id="dtKmEdit" name="dtKmEdit">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="statusEdit" class="form-label">Status</label>
+              <select class="form-select" id="statusEdit" name="statusEdit">
+                <option value="">Selecione...</option>
+                <option value="Disponivel">Disponivel</option>
+                <option value="Em locação">Locado</option>
+                <option value="Saida do cliente">Saída do Cliente</option>
+                <option value="Saida do aterro">Saída do Aterro</option>
+                <option value="Saida do aterro para o cliente">Saída do aterro para o cliente</option>
+                <option value="Transito para o cliente">Trânsito para o cliente</option>
+                <option value="Cliente para o aterro">Cliente para o aterro</option>
+              </select>
+            </div>
+      
+            <div class="col-md-6">
+              <label for="dtStatusEdit" class="form-label">Data do Status</label>
+              <input type="date" class="form-control" id="dtStatusEdit" name="dtStatusEdit">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="hrStatusEdit" class="form-label">Hora do Status</label>
+              <input type="time" class="form-control" id="hrStatusEdit" name="hrStatusEdit" placeholder="bensHrus">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="chassiEdit" class="form-label">Chassi</label>
+              <input type="text" class="form-control" id="chassiEdit" name="chassiEdit" placeholder="Chassi" maxlength="20">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="corEdit" class="form-label">Cor</label>
+              <input type="text" class="form-control" id="corEdit" name="corEdit" placeholder="bensCore" maxlength="15">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="nuMOEdit" class="form-label">nuMO</label>
+              <input type="text" class="form-control" id="nuMOEdit" name="nuMOEdit" placeholder="bensNumo" maxlength="15">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="renaEdit" class="form-label">Renavam</label>
+              <input type="text" class="form-control" id="renaEdit" name="renaEdit" placeholder="bensRena" maxlength="15">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="bensCtepEdit" class="form-label">bensCtep</label>
+              <input type="text" class="form-control" id="bensCtepEdit" name="bensCtepEdit" placeholder="bensCtep" maxlength="40">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="bensAtivEdit" class="form-label">Ativo</label>
+              <select class="form-select" id="bensAtivEdit" name="bensAtivEdit">
+                <option value="">Selecione...</option>
+                <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
+              </select>
+            </div>
+      
+            <div class="col-md-6">
+              <label for="alugEdit" class="form-label">Alugado</label>
+              <select class="form-select" id="alugEdit" name="alugEdit">
+                <option value="">Selecione...</option>
+                <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
+              </select>
+            </div>
+      
+            <div class="col-md-6">
+              <label for="valorAlugEdit" class="form-label">Valor Alugado</label>
+              <input type="text" class="form-control" id="valorAlugEdit" name="valorAlugEdit" placeholder="R$" maxlength="25">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="fabriEdit" class="form-label">Fabricante</label>
+              <input type="text" class="form-control" id="fabriEdit" name="fabriEdit" placeholder="bensFabr" maxlength="25">
+            </div>
+          </div>
+      
+          <div class="col-12 d-flex justify-content-end gap-3 mt-3">
+            <button type="submit" class="btn btn-primary submitEditBtn w-25">Salvar</button>
+            <button type="button" class="btn btn-secondary btnOutPageEdit w-25">Voltar</button>
+          </div>
+        </form>
+      </div>
+      
+  
+    <!-- Formulário de Cadastro -->
+    <div class="showContentBens mt-4" style="display: none;">
+      
+        <form id="formRegisterBens">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label for="code" class="form-label">Código</label>
+              <input type="text" class="form-control" id="code" name="code" maxlength="15" placeholder="Código">
+            </div>
+            <div class="col-md-8">
+              <label for="name" class="form-label">Nome</label>
+              <input type="text" class="form-control" id="name" name="name" maxlength="80" placeholder="Nome">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="cofa" class="form-label">Família de bem</label>
+              <select class="form-select" id="cofa" name="cofa">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="model" class="form-label">Modelo</label>
+              <input type="text" class="form-control" id="model" name="model" maxlength="20" placeholder="Modelo">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="serial" class="form-label">Número de Série</label>
+              <input type="text" class="form-control" id="serial" name="serial" maxlength="25" placeholder="Número de Série">
+            </div>
+            <div class="col-md-6">
+              <label for="placa" class="form-label">Placa</label>
+              <input type="text" class="form-control" id="placa" name="placa" maxlength="10" placeholder="Placa">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="bensAnmo" class="form-label">Ano do Modelo</label>
+              <input type="date" class="form-control" id="bensAnmo" name="bensAnmo">
+            </div>
+            <div class="col-md-6">
+              <label for="dtCompra" class="form-label">Data da Compra</label>
+              <input type="date" class="form-control" id="dtCompra" name="dtCompra">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="valorCpMain" class="form-label">Valor de Compra</label>
+              <input type="text" class="form-control" id="valorCpMain" name="valorCpMain" maxlength="12" placeholder="R$ 0,00">
+            </div>
+            <div class="col-md-6">
+              <label for="ntFiscal" class="form-label">Nota Fiscal</label>
+              <input type="text" class="form-control" id="ntFiscal" name="ntFiscal" maxlength="10" placeholder="Nota Fiscal">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="cofo" class="form-label">Código Fornecedor</label>
+              <select class="form-select" id="cofo" name="cofo">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="kmAtual" class="form-label">KM Atual</label>
+              <input type="number" class="form-control" id="kmAtual" name="kmAtual" maxlength="7" placeholder="Km Atual">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="dtKm" class="form-label">Data do KM</label>
+              <input type="date" class="form-control" id="dtKm" name="dtKm">
+            </div>
+            <div class="col-md-6">
+              <label for="status" class="form-label">Status</label>
+              <select class="form-select" id="status" name="status">
+                <option value="">Selecione...</option>
+                <option value="Disponivel">Disponível</option>
+                <option value="Em locação">Locado</option>
+                <option value="Saida do cliente">Saída do cliente</option>
+                <option value="Saida do aterro">Saída do aterro</option>
+                <option value="Saida do aterro para o cliente">Saída do aterro para o cliente</option>
+                <option value="Transito para o cliente">Trânsito para o cliente</option>
+                <option value="Cliente para o aterro">Cliente para o aterro</option>
+              </select>
+            </div>
+      
+            <div class="col-md-6">
+              <label for="dtStatus" class="form-label">Data do Status</label>
+              <input type="date" class="form-control" id="dtStatus" name="dtStatus">
+            </div>
+            <div class="col-md-6">
+              <label for="hrStatus" class="form-label">Hora do Status</label>
+              <input type="time" class="form-control" id="hrStatus" name="hrStatus">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="chassi" class="form-label">Chassi</label>
+              <input type="number" class="form-control" id="chassi" name="chassi" maxlength="20" placeholder="Chassi">
+            </div>
+            <div class="col-md-6">
+              <label for="cor" class="form-label">Cor</label>
+              <input type="text" class="form-control" id="cor" name="cor" maxlength="15" placeholder="Cor">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="nuMO" class="form-label">Número</label>
+              <input type="number" class="form-control" id="nuMO" name="nuMO" maxlength="15" placeholder="Número">
+            </div>
+            <div class="col-md-6">
+              <label for="rena" class="form-label">Renavam</label>
+              <input type="text" class="form-control" id="rena" name="rena" maxlength="20" placeholder="Renavam">
+            </div>
+      
+            <div class="col-md-6">
+              <label for="bensCtep" class="form-label">Ctep</label>
+              <input type="text" class="form-control" id="bensCtep" name="bensCtep" maxlength="40" placeholder="Ctep">
+            </div>
+            <div class="col-md-6">
+              <label for="bensAtiv" class="form-label">Ativo</label>
+              <select class="form-select" id="bensAtiv" name="bensAtiv">
+                <option value="">Selecione...</option>
+                <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
+              </select>
+            </div>
+      
+            <div class="col-md-6">
+              <label for="alug" class="form-label">Alugado</label>
+              <select class="form-select" id="alug" name="alug">
+                <option value="">Selecione</option>
+                <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="valorAlugMain" class="form-label">Valor Alugado</label>
+              <input type="text" class="form-control" id="valorAlugMain" name="valorAlugMain" maxlength="13" placeholder="R$ 0,00">
+            </div>
+      
+            <div class="col-md-12">
+              <label for="fabri" class="form-label">Fabricante</label>
+              <input type="text" class="form-control" id="fabri" name="fabri" maxlength="25" placeholder="Fabricante">
+            </div>
+      
+            <!-- Botões -->
+            <div class="col-12 d-flex justify-content-center gap-3 mt-4">
+              <button type="submit" class="btn btn-primary w-25" id="btnNext">Cadastrar</button>
+              <button type="button" class="btn btn-light w-25" id="btnOut">Voltar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+  </section>
+  

@@ -1,86 +1,6 @@
-const btnCadAutomo = document.querySelector(".btnCadAutomo");
-btnCadAutomo.addEventListener("click", () => {
-  const informative = document.querySelector(".information");
-  informative.style.display = "block";
-  informative.textContent = "SEÇÃO VEICULOS";
 
-  const containerAppAutomo = document.querySelector(".containerAppAutomo");
-  containerAppAutomo.style.display = "flex";
 
-  const containerAppFabri = document.querySelector(".containerAppFabri");
-  containerAppFabri.style.display = "none";
 
-  const containerAppClient = document.querySelector(".containerAppClient");
-  containerAppClient.style.display = "none";
-
-  const containerAppBens = document.querySelector(".containerAppBens");
-  containerAppBens.style.display = "none";
-
-  const containerAppForn = document.querySelector(".containerAppForn");
-  containerAppForn.style.display = "none";
-
-  const containerAppProd = document.querySelector(".containerAppProd");
-  containerAppProd.style.display = "none";
-
-  const containerAppTypeProd = document.querySelector(".containerAppTipoProd");
-  containerAppTypeProd.style.display = "none";
-
-  const containerForm = document.querySelector(".RegisterDriver");
-  containerForm.style.display = "none";
-
-  const containerFormEditDriver = document.querySelector(
-    ".containerFormEditDriver"
-  );
-  containerFormEditDriver.style.display = "none";
-
-  const containerAppDriver = document.querySelector(".containerAppDriver");
-  containerAppDriver.style.display = "none";
-});
-
-const btnRegisterAutomo = document.querySelector(".registerAuto");
-btnRegisterAutomo.addEventListener("click", () => {
-  const formCadAuto = document.querySelector(".formCadAuto");
-  formCadAuto.style.display = "flex";
-
-  const btnInitAutoPageMain = document.querySelector(".btnInitAutoPageMain");
-  btnInitAutoPageMain.style.display = "none";
-
-  const listingAutomo = document.querySelector(".listingAutomo");
-  listingAutomo.style.display = "none";
-});
-
-const btnOutCadAuto = document.querySelector(".btnOutCadAuto");
-btnOutCadAuto.addEventListener("click", (event) => {
-  event.preventDefault();
-  const formCadAuto = document.querySelector(".formCadAuto");
-  formCadAuto.style.display = "none";
-
-  const btnInitAutoPageMain = document.querySelector(".btnInitAutoPageMain");
-  btnInitAutoPageMain.style.display = "flex";
-
-  const listingAutomo = document.querySelector(".listingAutomo");
-  listingAutomo.style.display = "flex";
-});
-
-const btnOutCadAutoEdit = document.querySelector(".btnOutCadAutoEdit");
-btnOutCadAutoEdit.addEventListener("click", (event) => {
-  event.preventDefault();
-
-  const btnInitAutoPageMain = document.querySelector(".btnInitAutoPageMain");
-  btnInitAutoPageMain.style.display = "flex";
-
-  const editFormAuto = document.querySelector(".editFormAuto");
-  editFormAuto.style.display = "none";
-
-  const listingAutomo = document.querySelector(".listingAutomo");
-  listingAutomo.style.display = "flex";
-});
-const buttonExitAuto = document.querySelector(".buttonExitAuto");
-buttonExitAuto.addEventListener("click", () => {
-  const containerAppAutomo = document.querySelector(".containerAppAutomo");
-  containerAppAutomo.style.display = "none";
-});
-//listar motorista
 const loadDrivers = async () => {
   const token = localStorage.getItem("token");
 
@@ -141,20 +61,186 @@ function isTokenExpired(token) {
   }
 }
 
-// cadastrar
-const socketUpdateAutomovel = io();
-document.addEventListener("DOMContentLoaded", async () => {
-  await loadDrivers();
+const socketAutomovel = io();
+document.addEventListener('DOMContentLoaded' ,()=>{
+     
+  const btnLoadVehicles = document.querySelector('.btnCadAutomo')
+  if(btnLoadVehicles){
+    btnLoadVehicles.addEventListener('click', async(event)=>{
+          event.preventDefault()
+          try { 
+               
+            const responseVehicles = await fetch('/veiculos' ,{
+              method: 'GET'
+            });
+            if (!responseVehicles.ok) throw new Error(`Erro HTTP: ${responseVehicles.status}`);
+            const html = await responseVehicles.text();
+            const mainContent = document.querySelector('#mainContent');
+            if (mainContent) {
+              mainContent.innerHTML = html;
+                  loadDrivers()
+                  interationSystemVehicles()
+                  registerNewVehicles()
+                  deleteVehicles()
+                  editVehicles()
+              }else{
+                console.error('#mainContent não encontrado no DOM');
+              }
+            
 
-  await listarVeiculos();
+              
+          const containerAppVehicles = document.querySelector('.containerAppAutomo');
+          if (containerAppVehicles)containerAppVehicles.classList.add('flex') ;
+    
+          const sectionsToHide = [
+            '.containerAppProd', '.containerAppFabri', '.containerAppTipoProd',
+            '.containerAppDriver', '.containerAppClient', '.containerAppBens',
+            '.containerAppForn'
+          ];
+          sectionsToHide.forEach((selector) => {
+            const element = document.querySelector(selector);
+            if (element) element.style.display = 'none';
+          });
+    
+          const containerRegisterVehicles = document.querySelector('.formCadAuto');
+          const btnMainPageVehicles = document.querySelector('.btnInitAutoPageMain');
+          const listingVehicles = document.querySelector('.listingAutomo');
+          const editFormVehicles = document.querySelector('.formEditClient');
+          const informative = document.querySelector('.information');
+    
+          if (containerRegisterVehicles) containerRegisterVehicles.style.display = 'none';
+          if (btnMainPageVehicles) btnMainPageVehicles.style.display = 'flex';
+          if (listingVehicles) listingVehicles.style.display = 'flex';
+          if (editFormVehicles) editFormVehicles.style.display = 'none';
+          if (informative) {
+            informative.style.display = 'block';
+            informative.textContent = 'SEÇÃO VEÍCULOS';
+          }
+          
+          await listarVeiculos()
 
-  socketUpdateAutomovel.on("updateRunTimeAutomovel", (veiculos) => {
+          } catch (error) {
+            
+          }
+    })
+  }
+
+  socketAutomovel.on("updateRunTimeAutomovel", (veiculos) => {
     insertVehicleTableRunTime(veiculos);
   });
 
-  socketUpdateAutomovel.on("updateTableAutomovel", (updatedVeiculo) => {
+  socketAutomovel.on("updateTableAutomovel", (updatedVeiculo) => {
     updateVeiculoInTableRunTime(updatedVeiculo);
   });
+})
+
+
+function interationSystemVehicles(){
+          
+ 
+const btnRegisterAutomo = document.querySelector(".registerAuto");
+if(btnRegisterAutomo){
+  btnRegisterAutomo.addEventListener("click", () => {
+
+    const formCadAuto = document.querySelector(".formCadAuto");
+    if(formCadAuto){
+       formCadAuto.classList.remove('hidden')
+       formCadAuto.classList.add('flex')
+    }
+   
+    const btnInitAutoPageMain = document.querySelector(".btnInitAutoPageMain");
+    if(btnInitAutoPageMain){
+      btnInitAutoPageMain.classList.remove('flex')
+      btnInitAutoPageMain.classList.add('hidden')
+    }
+   
+    const listingAutomo = document.querySelector(".listingAutomo");
+    if(listingAutomo){
+      listingAutomo.classList.remove('flex')
+      listingAutomo.classList.add('hidden')
+    }
+    
+  });
+  
+}
+
+const btnOutCadAuto = document.querySelector(".btnOutCadAuto");
+if(btnOutCadAuto){
+     
+  btnOutCadAuto.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    const formCadAuto = document.querySelector(".formCadAuto");
+    if(formCadAuto){
+      formCadAuto.classList.remove('flex')
+      formCadAuto.classList.add('hidden')
+    }
+  
+    const btnInitAutoPageMain = document.querySelector(".btnInitAutoPageMain");
+     if(btnInitAutoPageMain){
+      btnInitAutoPageMain.classList.remove('hidden')
+      btnInitAutoPageMain.classList.add('flex')
+     }
+   
+    const listingAutomo = document.querySelector(".listingAutomo");
+    if(listingAutomo){
+      listingAutomo.classList.remove('hidden')
+      listingAutomo.classList.add('flex')
+    }
+   
+  });
+}
+
+
+const btnOutCadAutoEdit = document.querySelector(".btnOutCadAutoEdit");
+if(btnOutCadAutoEdit){
+
+  btnOutCadAutoEdit.addEventListener("click", (event) => {
+    event.preventDefault();
+  
+    const btnInitAutoPageMain = document.querySelector(".btnInitAutoPageMain");
+    if(btnInitAutoPageMain){
+      btnInitAutoPageMain.classList.remove('hidden')
+      btnInitAutoPageMain.classList.add('flex')
+    }
+  
+    const editFormAuto = document.querySelector(".editFormAuto");
+    if(editFormAuto){
+       editFormAuto.classList.remove('flex')
+       editFormAuto.classList.add('hidden')
+    }
+  
+    const listingAutomo = document.querySelector(".listingAutomo");
+    if(listingAutomo){
+      listingAutomo.classList.remove('hidden')
+      listingAutomo.classList.add('flex')
+    }
+   
+  });
+}
+
+const buttonExitAuto = document.querySelector(".buttonExitAuto");
+if(buttonExitAuto){
+  buttonExitAuto.addEventListener("click", () => {
+    const containerAppAutomo = document.querySelector(".containerAppAutomo");
+    if(containerAppAutomo){
+      containerAppAutomo.classList.remove('flex')
+      containerAppAutomo.classList.add('hidden')
+    } 
+
+    const informative = document.querySelector('.information')
+    if (informative) {
+      informative.style.display = 'block';
+      informative.textContent = 'Sessão ativa';
+    }
+
+  });
+}
+
+}
+
+ async function registerNewVehicles(){
+    
   document.querySelector(".cadAutomo").addEventListener("click", async (event) => {
       event.preventDefault();
 
@@ -245,7 +331,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
   validationFormAutomovel();
-});
+}
+
+
+
+  
 
 // inserindo os dados na tabela em runtime
 function insertVehicleTableRunTime(veiculos) {
@@ -254,8 +344,7 @@ function insertVehicleTableRunTime(veiculos) {
 
   if (veiculos.length > 0) {
     const tabela = document.createElement("table");
-    tabela.style.width = "100%";
-    tabela.setAttribute("border", "1");
+   tabela.classList.add('tableVehicles')
 
     // Cabeçalho da tabela
     const cabecalho = tabela.createTHead();
@@ -340,20 +429,17 @@ async function listarVeiculos() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
       },
     });
     const veiculos = await response.json();
-
-    console.log('Meus Veiculos:' ,  veiculos)
 
     const veiculosListDiv = document.querySelector(".listingAutomo");
     veiculosListDiv.innerHTML = "";
 
     if (veiculos.length > 0) {
       const tabela = document.createElement("table");
-      tabela.style.width = "100%";
-      tabela.setAttribute("border", "1");
+      tabela.classList.add('tableVehicles')
 
       // Cabeçalho
       const cabecalho = tabela.createTHead();
@@ -429,8 +515,10 @@ async function listarVeiculos() {
   }
 }
 
-// DELETAR AUTOMOVEL
-const buttonDeleteAuto = document.querySelector(".buttonDeleteAuto");
+// DELETAR VEICULOS
+function deleteVehicles(){
+      
+   const buttonDeleteAuto = document.querySelector(".buttonDeleteAuto");
 buttonDeleteAuto.addEventListener("click", async () => {
   const selectedCheckbox = document.querySelector(
     'input[name="selectVeiculo"]:checked'
@@ -488,7 +576,6 @@ async function deleteAuto(id, autoRow) {
       },
     });
     const data = await response.json();
-    console.log("Resposta do servidor:", data);
 
     if (response.ok) {
       Toastify({
@@ -502,7 +589,6 @@ async function deleteAuto(id, autoRow) {
 
       autoRow.remove();
     } else {
-      console.log("Erro para excluir:", data);
       Toastify({
         text: "Erro na exclusão do veículo",
         duration: 2000,
@@ -525,7 +611,11 @@ async function deleteAuto(id, autoRow) {
   }
 }
 
-// EDITAR AUTOMOVEL
+}
+
+  // EDITAR AUTOMOVEL
+function editVehicles(){
+       
 const editButtonAuto = document.querySelector(".buttonEditAuto");
 editButtonAuto.addEventListener("click", () => {
   const selectedCheckbox = document.querySelector(
@@ -543,6 +633,24 @@ editButtonAuto.addEventListener("click", () => {
     }).showToast();
     return;
   }
+
+  const btnMainPageVehicles = document.querySelector(".btnInitAutoPageMain");
+  if(btnMainPageVehicles){
+    btnMainPageVehicles.classList.remove('flex')
+    btnMainPageVehicles.classList.add('hidden')
+  }
+
+  const listVehicles = document.querySelector(".listingAutomo ");
+  if(listVehicles){
+    listVehicles.classList.remove('flex')
+    listVehicles.classList.add('hidden')
+  }
+
+const containerEditForm = document.querySelector('.editFormAuto')
+   if(containerEditForm){
+      containerEditForm.classList.remove('hidden')
+      containerEditForm.classList.add('flex')
+   }
 
   // Exibir o formulário de edição e ocultar a listagem
   document.querySelector(".editFormAuto").style.display = "flex";
@@ -695,6 +803,8 @@ async function editAndUpdateOfAuto() {
 }
 
 editAndUpdateOfAuto();
+}
+
 
 // ATUALIZAR EM TEMPO REAL 
 function updateVeiculoInTableRunTime(updatedVeiculo) {

@@ -1,99 +1,4 @@
-// botoes relacionado aos clientes
-const btnRegisterClient = document.querySelector(".btnCadClie");
-btnRegisterClient.addEventListener("click", () => {
 
-  const containerAppClient = document.querySelector(".containerAppClient");
-  containerAppClient.style.display = "flex";
-
-  const listingClient = document.querySelector(".listClient");
-  listingClient.style.display = "flex";
-
-  const btnMainPage = document.querySelector(".buttonsMainPage");
-  btnMainPage.style.display = "flex";
-
-  const containerAppForn = document.querySelector(".containerAppForn");
-  containerAppForn.style.display = "none";
-
-  const containerAppProd = document.querySelector(".containerAppProd");
-  containerAppProd.style.display = "none";
-
-  const containerAppFabri = document.querySelector(".containerAppFabri");
-  containerAppFabri.style.display = "none";
-
-  const containerAppDriver = document.querySelector(".containerAppDriver");
-  containerAppDriver.style.display = "none";
-
-  const containerAppAutomo = document.querySelector(".containerAppAutomo");
-  containerAppAutomo.style.display = "none";
-
-  const containerAppTypeProd = document.querySelector(".containerAppTipoProd");
-  containerAppTypeProd.style.display = "none";
-
-  const containerAppBens = document.querySelector(".containerAppBens");
-  containerAppBens.style.display = "none";
-
-  const containerFormEdit = document.querySelector(".formEditClient");
-  containerFormEdit.style.display = "none";
-
-  const informative = document.querySelector(".information");
-  informative.style.display = "block";
-  informative.textContent = "SEÇÃO CLIENTE";
-});
-
-const buttonRegisterClient = document.querySelector(".registerClient");
-buttonRegisterClient.addEventListener("click", () => {
-  const formRegisterClient = document.querySelector(".containerOfForm");
-  formRegisterClient.style.display = "flex";
-
-  const listingClient = document.querySelector(".listClient");
-  listingClient.style.display = "none";
-
-  const btnMainPage = document.querySelector(".buttonsMainPage");
-  btnMainPage.style.display = "none";
-});
-
-const buttonOutPageClient = document.querySelector(".btnOutInit");
-buttonOutPageClient.addEventListener("click", (event) => {
-  event.preventDefault();
-
-  const listingClient = document.querySelector(".listClient");
-  listingClient.style.display = "flex";
-
-  const btnMainPage = document.querySelector(".buttonsMainPage");
-  btnMainPage.style.display = "flex";
-
-  const containeFormClient = document.querySelector(".containerOfForm");
-  containeFormClient.style.display = "none";
-});
-
-const buttonOutPageEdit = document.querySelector(".outPageEditClient");
-buttonOutPageEdit.addEventListener("click", (event) => {
-  event.preventDefault();
-
-  const listingClient = document.querySelector(".listClient");
-  listingClient.style.display = "flex";
-
-  const btnMainPage = document.querySelector(".buttonsMainPage");
-  btnMainPage.style.display = "flex";
-
-  const containerEditClient = document.querySelector(".formEditClient");
-  containerEditClient.style.display = "none";
-  return;
-});
-
-const buttonEditClient = document.querySelector(".buttonEditClient");
-buttonEditClient.addEventListener("click", () => {
-  const btnMainPage = document.querySelector(".buttonsMainPage");
-  btnMainPage.style.display = "none";
-});
-
-const buttonToBack = document.querySelector(".buttonExitClient");
-buttonToBack.addEventListener("click", () => {
-  const containerAppClient = document.querySelector(".containerAppClient");
-  containerAppClient.style.display = "none";
-});
-
-// validação jwt
 function isTokenExpired(token) {
   try {
     const payload = JSON.parse(atob(token.split(".")[1]));
@@ -104,6 +9,26 @@ function isTokenExpired(token) {
   }
 }
 
+function maskFieldClient(){
+  $("#cpf").mask("000.000.000-00")
+    
+  $("#clieCelu").mask("(00) 00000-0000");
+
+  $("#clieCep").mask("00000-000");
+
+  $("#editCliecpf").mask("000.000.000-00")
+    
+  $("#editClieCelu").mask("(00) 00000-0000");
+
+  $("#editClieCep").mask("00000-000");
+
+  $("#clieCepLoc").mask("00000-000");
+
+  $("#clieCeluLoc").mask("(00) 00000-0000");
+
+  $("#cpfClientLoc").mask("000.000.000-00")
+}
+
 const formatDate = (isoDate) => {
   if (!isoDate) return "";
   const dateObj = new Date(isoDate);
@@ -112,21 +37,195 @@ const formatDate = (isoDate) => {
   const day = String(dateObj.getDate()).padStart(2, "0");
   return `${year}/${month}/${day}`;
 };
+const socketClient = io()
 
-const socketUpdateClient = io();
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener('DOMContentLoaded' , ()=>{
    
-  await fetchListClientes();
+  const btnloadClie = document.querySelector('.btnCadClie')
+  if(btnloadClie){
 
-  socketUpdateClient.on("updateClients", (updatedClient) => {
+     btnloadClie.addEventListener('click', async (event)=>{
+        event.preventDefault()
+
+        try {
+          const response = await fetch('/client' ,{
+            method: 'GET'
+          });
+          if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+          const html = await response.text();
+          const mainContent = document.querySelector('#mainContent');
+          if (mainContent) {
+            mainContent.innerHTML = html;
+            maskFieldClient()
+            interationSystemClient()
+            registerNewClient()
+            deleteClient()
+            editarCliente()
+          }else {
+            console.error('#mainContent não encontrado no DOM');
+            return;
+          }
+
+
+          const containerAppClient = document.querySelector('.containerAppClient');
+        if (containerAppClient) containerAppClient.classList.add('flex') ;
+  
+        const sectionsToHide = [
+          '.containerAppProd', '.containerAppFabri', '.containerAppTipoProd',
+          '.containerAppDriver', '.containerAppAutomo', '.containerAppBens',
+          '.containerAppForn'
+        ];
+        sectionsToHide.forEach((selector) => {
+          const element = document.querySelector(selector);
+          if (element) element.style.display = 'none';
+        });
+  
+        const showContentBens = document.querySelector('.showContentBens');
+        const btnMainPageClient = document.querySelector('.buttonsMainPage');
+        const listingClient = document.querySelector('.listClient');
+        const editFormClient = document.querySelector('.formEditClient');
+        const informative = document.querySelector('.information');
+  
+        if (showContentBens) showContentBens.style.display = 'none';
+        if (btnMainPageClient) btnMainPageClient.style.display = 'flex';
+        if (listingClient) listingClient.style.display = 'flex';
+        if (editFormClient) editFormClient.style.display = 'none';
+        if (informative) {
+          informative.style.display = 'block';
+          informative.textContent = 'SEÇÃO CLIENTE';
+        }
+        
+        await fetchListClientes()
+        
+     }catch(error){
+      Toastify({
+        text: "Erro na pagina",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+          console.error('Erro na chamada do "CONTENT CLIENT"')
+     } 
+   });
+  };
+
+  socketClient.on("updateClients", (updatedClient) => {
     updateClientInTableRunTime(updatedClient);
   });
 
-  socketUpdateClient.on("clienteAtualizado", (clientes) => {
+  socketClient.on("clienteAtualizado", (clientes) => {
     insertClientTableRunTime(clientes); 
   });
+})
 
-  document.querySelector(".btnRegisterClient").addEventListener("click", async (event) => {
+
+
+ async function interationSystemClient() {
+
+  const buttonRegisterClient = document.querySelector(".registerClient");
+
+  if(buttonRegisterClient){
+  buttonRegisterClient.addEventListener("click", () => {
+
+    const formRegisterClient = document.querySelector(".containerOfForm");
+    if(formRegisterClient){
+      formRegisterClient.classList.remove('hidden')
+      formRegisterClient.classList.add('flex')
+    }
+    
+    const listingClient = document.querySelector(".listClient");
+    if(listingClient){
+      listingClient.classList.remove('flex')
+      listingClient.classList.add('hidden')
+    }
+ 
+  
+    const btnMainPage = document.querySelector(".buttonsMainPage");
+    if(btnMainPage){
+       btnMainPage.classList.remove('flex')
+       btnMainPage.classList.add('hidden')
+    }
+    return;
+  });
+ }
+
+const buttonOutPageClient = document.querySelector(".btnOutInit");
+ 
+ if(buttonOutPageClient){
+  buttonOutPageClient.addEventListener("click", (event) => {
+    event.preventDefault();
+  
+    const listingClient = document.querySelector(".listClient");
+    if(listingClient){
+       listingClient.classList.remove('hidden')
+       listingClient.classList.add('flex')
+    }
+    
+  
+    const btnMainPage = document.querySelector(".buttonsMainPage");
+    if(btnMainPage){
+      btnMainPage.classList.remove('hidden')   
+      btnMainPage.classList.add('flex')
+    }
+    
+    const containeFormClient = document.querySelector(".containerOfForm");
+    if(containeFormClient){
+      containeFormClient.classList.remove('flex')
+      containeFormClient.classList.add('hidden')
+    }
+    return;
+  });
+ }
+
+const buttonOutPageEdit = document.querySelector(".outPageEditClient");
+  if(buttonOutPageEdit){
+    buttonOutPageEdit.addEventListener("click", (event) => {
+      event.preventDefault();
+    
+      const listingClient = document.querySelector(".listClient");
+      if(listingClient){
+        listingClient.classList.remove('hidden')
+        listingClient.classList.add('flex')
+      }
+    
+      const btnMainPage = document.querySelector(".buttonsMainPage");
+      if(btnMainPage){
+        btnMainPage.classList.remove('hidden')
+        btnMainPage.classList.add('flex')
+      }
+      
+      
+      const containerEditClient = document.querySelector(".formEditClient");
+      if(containerEditClient){
+        containerEditClient.classList.remove('flex')
+        containerEditClient.classList.add('hidden')
+      }
+      
+      return;
+    });
+ }
+
+    const buttonToBack = document.querySelector(".buttonExitClient");
+    if(buttonToBack){
+      buttonToBack.addEventListener("click", () => {
+        const containerAppClient = document.querySelector(".containerAppClient");
+        containerAppClient.classList.remove('flex')
+        containerAppClient.classList.add('hidden')
+
+        const continformation = document.querySelector('.information')
+        if(continformation){
+          continformation.textContent = 'Sessão ativa'
+        }
+      });
+      return;
+    }
+}
+
+ async function registerNewClient(){
+
+      document.querySelector(".btnRegisterClient").addEventListener("click", async (event) => {
       event.preventDefault();
       const token = localStorage.getItem("token");
 
@@ -215,7 +314,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
   validationFormClient();
-});
+
+};
+
 
 //ATUALIZAR EM TEMPO REAL NA INSERÇÃO
 function insertClientTableRunTime(clientes) {
@@ -224,8 +325,7 @@ function insertClientTableRunTime(clientes) {
 
   if (clientes.length > 0) {
     const tabela = document.createElement("table");
-    tabela.style.width = "100%";
-    tabela.setAttribute("border", "1");
+    tabela.classList.add('tableClient')
 
     // Cabeçalho
     const cabecalho = tabela.createTHead();
@@ -327,8 +427,7 @@ async function fetchListClientes() {
 
     if (clientes.length > 0) {
       const tabela = document.createElement("table");
-      tabela.style.width = "100%";
-      tabela.setAttribute("border", "1");
+      tabela.classList.add('tableClient')
 
       // Cabeçalho
       const cabecalho = tabela.createTHead();
@@ -400,10 +499,12 @@ async function fetchListClientes() {
   }
 }
 
-//deletar cliente
-const buttonDeleteClient = document.querySelector(".buttonDeleteClient");
-buttonDeleteClient.addEventListener("click", async () => {
-  const selectedCheckbox = document.querySelector(
+// //deletar cliente
+function deleteClient(){
+
+    const buttonDeleteClient = document.querySelector(".buttonDeleteClient");
+    buttonDeleteClient.addEventListener("click", async () => {
+    const selectedCheckbox = document.querySelector(
     'input[name="selectCliente"]:checked'
   );
   if (!selectedCheckbox) {
@@ -431,6 +532,7 @@ buttonDeleteClient.addEventListener("click", async () => {
   await deleteClient(clienteId, selectedCheckbox.closest("tr"));
 });
 
+// função para deletar
 async function deleteClient(id, clientRow) {
   const token = localStorage.getItem("token");
 
@@ -507,8 +609,10 @@ async function deleteClient(id, clientRow) {
     }).showToast();
   }
 }
+}
 
-// Botão para iniciar a edição
+function editarCliente(){
+     // Botão para iniciar a edição
 const editButtonClient = document.querySelector(".buttonEditClient");
 editButtonClient.addEventListener("click", () => {
   const selectedCheckbox = document.querySelector(
@@ -523,12 +627,29 @@ editButtonClient.addEventListener("click", () => {
       gravity: "top",
       position: "center",
       backgroundColor: "red",
-    }).showToast();
-
-    document.querySelector(".buttonsMainPage").style.display = "flex";
+    }).showToast(); 
     return;
   }
 
+  const btnMainPageClient = document.querySelector(".buttonsMainPage");
+  if(btnMainPageClient){
+    btnMainPageClient.classList.remove('flex')
+    btnMainPageClient.classList.add('hidden')
+  }
+
+  const listClient = document.querySelector(".listClient");
+  if(listClient){
+    listClient.classList.remove('flex')
+    listClient.classList.add('hidden')
+  }
+
+const containerEditForm = document.querySelector('.formEditClient')
+   if(containerEditForm){
+      containerEditForm.classList.remove('hidden')
+      containerEditForm.classList.add('flex')
+   }
+
+ 
   const clientData = selectedCheckbox.getAttribute("data-cliente");
 
   if (!clientData) {
@@ -677,6 +798,7 @@ async function editAndUpdateOfClient() {
   });
 }
 editAndUpdateOfClient();
+}
 
 // atualizar a celula da tabela runtime
 function updateClientInTableRunTime(updatedClient) {

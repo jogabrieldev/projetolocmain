@@ -1,95 +1,3 @@
-const btnInitCadDrive = document.querySelector(".btnCadMotorista");
-btnInitCadDrive.addEventListener("click", () => {
-
-  const containerAppFabri = document.querySelector(".containerAppFabri");
-  containerAppFabri.style.display = "none";
-
-  const containerAppClient = document.querySelector(".containerAppClient");
-  containerAppClient.style.display = "none";
-
-  const containerAppBens = document.querySelector(".containerAppBens");
-  containerAppBens.style.display = "none";
-
-  const containerAppForn = document.querySelector(".containerAppForn");
-  containerAppForn.style.display = "none";
-
-  const containerAppProd = document.querySelector(".containerAppProd");
-  containerAppProd.style.display = "none";
-
-  const containerAppTypeProd = document.querySelector(".containerAppTipoProd");
-  containerAppTypeProd.style.display = "none";
-
-  const containerForm = document.querySelector(".RegisterDriver");
-  containerForm.style.display = "none";
-
-   const containerAppAutomo = document.querySelector('.containerAppAutomo')
-      containerAppAutomo.style.display = 'none'
-
-  const containerFormEditDriver = document.querySelector(".containerFormEditDriver");
-  containerFormEditDriver.style.display = "none";
-
-  const containerAppDriver = document.querySelector(".containerAppDriver");
-  containerAppDriver.style.display = "flex";
-
-  const listingDrive = document.querySelector(".listingDriver");
-  listingDrive.style.display = "flex";
-
-  const btnMainPage = document.querySelector(".btnInitPageMain");
-  btnMainPage.style.display = "flex";
-
-  const informative = document.querySelector(".information");
-  informative.style.display = "block";
-  informative.textContent = "SEÇÃO MOTORISTA";
-});
-
-const registerDriver = document.querySelector(".registerDriver");
-registerDriver.addEventListener("click", () => {
-
-  const formRegisterDriver = document.querySelector(".RegisterDriver");
-  formRegisterDriver.style.display = "flex";
-
-  const listingDriver = document.querySelector(".listingDriver");
-  listingDriver.style.display = "none";
-
-  const btnPageMain = document.querySelector(".btnInitPageMain");
-  btnPageMain.style.display = "none";
-});
-
-const btnOutSectionDriver = document.querySelector('.buttonExitDriver')
-btnOutSectionDriver.addEventListener('click', ()=>{
-
-  const containerAppDriver = document.querySelector(".containerAppDriver");
-  containerAppDriver.style.display = "none";
-
-})
-
-const btnOutPageDrive = document.querySelector(".btnOutPageRegister");
-btnOutPageDrive.addEventListener("click", (event) => {
-  event.preventDefault();
-
-  const formRegisterDriver = document.querySelector(".RegisterDriver");
-  formRegisterDriver.style.display = "none";
-
-  const listingDriver = document.querySelector(".listingDriver");
-  listingDriver.style.display = "flex";
-
-  const btnPageMain = document.querySelector(".btnInitPageMain");
-  btnPageMain.style.display = "flex";
-});
-
-const btnOutformPageEdit = document.querySelector('.btnOutPageRegisterEdit')
-btnOutformPageEdit.addEventListener('click' , (event)=>{
-    event.preventDefault()
-
-    const containerFormEditDriver = document.querySelector('.containerFormEditDriver')
-    containerFormEditDriver.style.display = 'none'
-
-    const listingDriver = document.querySelector(".listingDriver");
-    listingDriver.style.display = "flex";
-
-    const btnPageMain = document.querySelector(".btnInitPageMain");
-     btnPageMain.style.display = "flex";
-});
 
 function isTokenExpired(token) {
   try {
@@ -101,22 +9,212 @@ function isTokenExpired(token) {
   }
 };
  
-const sokectUpdateDriver = io()
-document.addEventListener('DOMContentLoaded', async () => {
-   
-  await fetchListMotorista();
+function maskFieldDriver(){
+     
+  $("#motoCpf").mask("000.000.000-00")
+      
+    $("#motoCelu").mask("(00) 00000-0000");
   
-  sokectUpdateDriver.on("updateRunTimeDriver", (motorista) => {
+    $("#motoCep").mask("00000-000");
+
+    $("#editMotoCpf").mask("000.000.000-00")
+      
+    $("#editMotoCelu").mask("(00) 00000-0000");
+  
+    $("#editMotoCep").mask("00000-000");
+}
+
+const sokectDriver = io()
+document.addEventListener('DOMContentLoaded' , ()=>{
+      
+      const btnLoadDriver = document.querySelector('.btnCadMotorista')
+      if(btnLoadDriver){
+          btnLoadDriver.addEventListener('click' , async(event)=>{
+             event.preventDefault()
+
+             try {
+              const responseDriver = await fetch('/driver' ,{
+                method: 'GET'
+              });
+              if (!responseDriver.ok) throw new Error(`Erro HTTP: ${responseDriver.status}`);
+              const html = await responseDriver.text();
+              const mainContent = document.querySelector('#mainContent');
+              if (mainContent) {
+                mainContent.innerHTML = html;
+                maskFieldDriver()
+                interationSystemDriver()
+                registerNewDriver()
+                deleteMotista()
+                editDriver()
+              }else{
+                console.error('#mainContent não encontrado no DOM');
+                return;
+              }
+
+              const containerAppDriver = document.querySelector('.containerAppDriver');
+              if (containerAppDriver) containerAppDriver.classList.add('flex') ;
+        
+              const sectionsToHide = [
+                '.containerAppProd', '.containerAppFabri', '.containerAppFabri',
+                '.containerAppTipoProd', '.containerAppAutomo', '.containerAppBens',
+                '.containerAppForn'
+              ];
+              sectionsToHide.forEach((selector) => {
+                const element = document.querySelector(selector);
+                if (element) element.style.display = 'none';
+              });
+        
+              const containerRegisterDriver = document.querySelector('.RegisterDriver');
+              const btnMainPageDriver = document.querySelector('.btnInitPageMain');
+              const listingDrive = document.querySelector('.listingDriver');
+              const editFormClient = document.querySelector('.containerFormEditDriver');
+              const informative = document.querySelector('.information');
+        
+              if (containerRegisterDriver) containerRegisterDriver.style.display = 'none';
+              if (btnMainPageDriver) btnMainPageDriver.style.display = 'flex';
+              if (listingDrive)listingDrive.style.display = 'flex';
+              if (editFormClient) editFormClient.style.display = 'none';
+              if (informative) {
+                informative.style.display = 'block';
+                informative.textContent = 'SEÇÃO MOTORISTA';
+              }
+              
+              await fetchListMotorista()
+             } catch (error) {
+              Toastify({
+                text: "Erro na pagina",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "red",
+              }).showToast();
+
+             }
+         })
+      }
+
+      sokectDriver.on("updateRunTimeDriver", (motorista) => {
     insertDriverTableRunTime(motorista);
     loadingDriver()
   });
 
-  sokectUpdateDriver.on("updateRunTimeTableDrive", (updatedDriver) => {
+  sokectDriver.on("updateRunTimeTableDrive", (updatedDriver) => {
     updateDriverInTableRunTime(updatedDriver)
     loadingDriver()
   });
 
-  document.querySelector('.cadDriver').addEventListener('click', async (event) => {
+})
+
+
+function interationSystemDriver(){
+
+const registerDriver = document.querySelector(".registerDriver");
+if(registerDriver){
+  registerDriver.addEventListener("click", () => {
+
+    const formRegisterDriver = document.querySelector(".RegisterDriver");
+    if(formRegisterDriver){
+       formRegisterDriver.classList.remove('hidden')
+       formRegisterDriver.classList.add('flex')
+    }
+  
+    const listingDriver = document.querySelector(".listingDriver");
+    if(listingDriver){
+      listingDriver.classList.remove('flex')
+      listingDriver.classList.add('hidden')
+    }
+    
+  
+    const btnPageMain = document.querySelector(".btnInitPageMain");
+    if(btnPageMain){
+      btnPageMain.classList.remove('flex')
+      btnPageMain.classList.add('hidden')
+    }
+   
+  });
+}
+
+
+const btnOutSectionDriver = document.querySelector('.buttonExitDriver')
+if(btnOutSectionDriver){
+  btnOutSectionDriver.addEventListener('click', ()=>{
+
+    const containerAppDriver = document.querySelector(".containerAppDriver");
+    if(containerAppDriver){
+      containerAppDriver.classList.remove('flex')
+      containerAppDriver.classList.add('hidden')
+    }
+
+    const informative = document.querySelector('.information')
+    if (informative) {
+      informative.style.display = 'block';
+      informative.textContent = 'Sessão ativa';
+    }
+  
+  })
+}
+
+
+const btnOutPageDrive = document.querySelector(".btnOutPageRegister");
+if(btnOutPageDrive){
+  btnOutPageDrive.addEventListener("click", (event) => {
+    event.preventDefault();
+  
+    const formRegisterDriver = document.querySelector(".RegisterDriver");
+    if(formRegisterDriver){
+      formRegisterDriver.classList.remove('flex')
+      formRegisterDriver.classList.add('hidden')
+    }
+   
+    const listingDriver = document.querySelector(".listingDriver");
+    if(listingDriver){
+      listingDriver.classList.remove('hidden')
+      listingDriver.classList.add('flex')
+    }
+  
+    const btnPageMain = document.querySelector(".btnInitPageMain");
+    if(btnPageMain){
+      btnPageMain.classList.remove('hidden')
+      btnPageMain.classList.add('flex')
+    }
+    
+  });
+  
+}
+
+const btnOutformPageEdit = document.querySelector('.btnOutPageRegisterEdit')
+if(btnOutformPageEdit){
+  btnOutformPageEdit.addEventListener('click' , (event)=>{
+    event.preventDefault()
+
+    const containerFormEditDriver = document.querySelector('.containerFormEditDriver')
+    if(containerFormEditDriver){
+      containerFormEditDriver.classList.remove('flex')
+      containerFormEditDriver.classList.add('hidden')
+    }
+   
+    const listingDriver = document.querySelector(".listingDriver");
+    if(listingDriver){
+       listingDriver.classList.remove('hidden')
+       listingDriver.classList.add('flex')
+    }
+    
+
+    const btnPageMain = document.querySelector(".btnInitPageMain");
+    if(btnPageMain){
+      btnPageMain.classList.remove('hidden')
+      btnPageMain.classList.add('flex')
+    }
+     
+});
+}
+
+}
+
+function registerNewDriver(){
+      
+         document.querySelector('.cadDriver').addEventListener('click', async (event) => {
       event.preventDefault(); 
 
       const token = localStorage.getItem('token'); 
@@ -210,7 +308,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
   });
   validationFormMoto()
-});
+
+}
+
 
 // ATUALIZAR EM RUNTIME QUANDO INSERIR
 function insertDriverTableRunTime(motorista) {
@@ -219,8 +319,7 @@ function insertDriverTableRunTime(motorista) {
 
   if (motorista.length > 0) {
     const tabela = document.createElement("table");
-    tabela.style.width = "100%";
-    tabela.setAttribute("border", "1");
+    tabela.classList.add('tableDriver')
 
     // Cabeçalho da tabela
     const cabecalho = tabela.createTHead();
@@ -329,8 +428,7 @@ async function fetchListMotorista() {
 
     if (motorista.length > 0) {
       const tabela = document.createElement("table");
-      tabela.style.width = "100%";
-      tabela.setAttribute("border", "1");
+      tabela.classList.add('tableDriver')
 
       const cabecalho = tabela.createTHead();
       const linhaCabecalho = cabecalho.insertRow();
@@ -415,304 +513,328 @@ async function fetchListMotorista() {
   }
 }
 
-//delete motorista
-const btnDeleteDriver = document.querySelector(".buttonDeleteDriver");
-btnDeleteDriver.addEventListener("click", async () => {
-  const selectedCheckbox = document.querySelector(
-    'input[name="selectDriver"]:checked'
-  );
-  if (!selectedCheckbox) {
-    Toastify({
-      text: "Selecione um Motorista para excluir",
-      duration: 2000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
-  }
+function deleteMotista(){
 
-  const MotoristaSelecionado = JSON.parse(selectedCheckbox.dataset.motorista);
-  const motoristaId = MotoristaSelecionado.motocode;
-
-  const confirmacao = confirm(
-    `Tem certeza de que deseja excluir o Fabricante com código ${motoristaId}?`
-  );
-  if (!confirmacao) {
-    return;
-  }
-
-  await deleteDriver(motoristaId, selectedCheckbox.closest("tr"));
-});
-
-async function deleteDriver(id, driverRow) {
-  const token = localStorage.getItem('token'); 
-
-  if (!token || isTokenExpired(token)) {
-      Toastify({
-          text: "Sessão expirada. Faça login novamente.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-      }).showToast();
-
-      localStorage.removeItem("token"); 
-      setTimeout(() => {
-          window.location.href = "/index.html"; 
-      }, 2000);
-      return;
-  }
-
-  try {
-      const response = await fetch(`/api/deletedriver/${id}`, {
-          method: "DELETE",
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-          },
-      });
-
-      const data = await response.json();
-      console.log("Resposta do servidor:", data);
-
-      if (response.ok) {
-          Toastify({
-              text: "Motorista deletado com sucesso!",
-              duration: 2000,
-              close: true,
-              gravity: "top",
-              position: "center",
-              backgroundColor: "green",
-          }).showToast();
-
-          driverRow.remove();
-      } else {
-          // Caso o status seja 400, 404 ou outro erro do servidor
-          let errorMessage = "Erro ao excluir o motorista.";
-          
-          if (response.status === 400 || response.status === 404) {
-              errorMessage = data.message;
-          }
-
-          Toastify({
-              text: errorMessage,
-              duration: 3000,
-              close: true,
-              gravity: "top",
-              position: "center",
-              backgroundColor: "orange",
-          }).showToast();
-      }
-
-  } catch (error) {
-      console.error("Erro ao excluir motorista:", error);
-      Toastify({
-          text: "Erro ao excluir motorista. Tente novamente.",
-          duration: 2000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-      }).showToast();
-  }
-};
-// botão de editar
-const btnFormEditDrive = document.querySelector(".buttonEditDriver");
-btnFormEditDrive.addEventListener("click", () => {
-  const selectedCheckbox = document.querySelector(
-    'input[name="selectDriver"]:checked'
-  );
-
-  if (!selectedCheckbox) {
-    Toastify({
-      text: "Selecione um Motorista para editar",
-      duration: 2000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
-  }
-
-  const motoristaData = selectedCheckbox.dataset.motorista;
-  if (!motoristaData) {
-    console.error("O atributo data-motocode está vazio ou indefinido.");
-    return;
-  }
-
-  try {
-    const motoristaSelecionado = JSON.parse(motoristaData);
-       
-    const campos = [
-      { id: "editMotoCode", valor: motoristaSelecionado.motocode },
-      { id: "editMotoNome", valor: motoristaSelecionado.motoname },
-      { id: "editMotoDtnc", valor: motoristaSelecionado.motodtnc },
-      { id: "editMotoCpf", valor: motoristaSelecionado.motocpf },
-      { id: "editMotoDtch", valor: motoristaSelecionado.motodtch },
-      { id: "editMotoCtch", valor: motoristaSelecionado.motoctch },
-      { id: "editMotoDtvc", valor: motoristaSelecionado.motodtvc },
-      { id: "editMotoRest", valor: motoristaSelecionado.motorest },
-      { id: "editMotoOrem", valor: motoristaSelecionado.motoorem },
-      { id: "editMotoCelu", valor: motoristaSelecionado.motocelu },
-      { id: "editMotoCep", valor: motoristaSelecionado.motocep },
-      { id: "editMotoRua", valor: motoristaSelecionado.motorua },
-      { id: "editMotoCity", valor: motoristaSelecionado.motorua },
-      { id: "editMotoEstd", valor: motoristaSelecionado.motoestd },
-      { id: "editMotoMail", valor: motoristaSelecionado.motomail },
-      {id:"editMotoStat" , valor: motoristaSelecionado.motostat}
-    ];
-
-    // Atualizar valores no formulário
-    campos.forEach(({ id, valor }) => {
-      const elemento = document.getElementById(id);
-      if (elemento) {
-        if (elemento.type === "date" && valor) {
-          // Formata a data para YYYY-MM-DD, caso seja necessário
-          const dataFormatada = new Date(valor).toISOString().split('T')[0];
-          elemento.value = dataFormatada;
-        } else {
-          elemento.value = valor || ""; 
-        }
-        
-      } else {
-        console.warn(`Elemento com ID '${id}' não encontrado.`);
-      }
-    });
-
-    // Mostrar o formulário de edição e ocultar a lista
-    const spaceEditDriver = document.querySelector(".containerFormEditDriver");
-    const btnMainPageDriver = document.querySelector(".btnInitPageMain");
-    const listingDriver = document.querySelector(".listingDriver");
-
-    if (spaceEditDriver) {
-      spaceEditDriver.style.display = "flex";
-    } else {
-      console.error("O formulário de edição não foi encontrado.");
-    }
-
-    if (listingDriver) {
-      listingDriver.style.display = "none";
-    } else {
-      console.error("A lista de motoristas não foi encontrada.");
-    }
-
-    if (btnMainPageDriver) {
-      btnMainPageDriver.style.display = "none";
-    }
-  } catch (error) {
-    console.error("Erro ao fazer parse de data-bem:", error);
-  }
-});
-
-async function editAndUpdateOfDriver() {
-  const formEditDrive = document.querySelector(".formEditDriver");
-
-  formEditDrive.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData.entries());
-
+  const btnDeleteDriver = document.querySelector(".buttonDeleteDriver");
+  btnDeleteDriver.addEventListener("click", async () => {
     const selectedCheckbox = document.querySelector(
       'input[name="selectDriver"]:checked'
     );
-
     if (!selectedCheckbox) {
-      console.error("Nenhum checkbox foi selecionado.");
-      return;
-    }
-
-    const motoristaId = selectedCheckbox.dataset.motorista;
-
-    if (!motoristaId) {
-      console.error("O atributo data-bem está vazio ou inválido.");
-      return;
-    }
-
-    let motoIdParsed;
-    try {
-      motoIdParsed = JSON.parse(motoristaId).motocode;
-    } catch (error) {
-      console.error("Erro ao fazer parse de bemId:", error);
-      return;
-    }
-
-  
-
-    const updateDriver = {
-      motocode: document.getElementById("editMotoCode").value,
-      motoname: document.getElementById("editMotoNome").value,
-      motodtnc: document.getElementById("editMotoDtnc").value,
-      motocpf: document.getElementById("editMotoCpf").value,
-      motodtch: document.getElementById("editMotoDtch").value,
-      motoctch: document.getElementById("editMotoCtch").value,
-      motodtvc: document.getElementById("editMotoDtvc").value,
-      motorest: document.getElementById("editMotoRest").value,
-      motoorem: document.getElementById("editMotoOrem").value,
-      motocelu: document.getElementById("editMotoCelu").value,
-      motocep: document.getElementById("editMotoCep").value,
-      motorua: document.getElementById("editMotoRua").value,
-      motocity: document.getElementById("editMotoCity").value,
-      motoestd: document.getElementById("editMotoEstd").value,
-      motomail: document.getElementById("editMotoMail").value,
-      motostat: document.getElementById("editMotoStat").value
-    };
-       
-    const token = localStorage.getItem('token'); 
-
-    if (!token || isTokenExpired(token)) {
       Toastify({
-          text: "Sessão expirada. Faça login novamente.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
+        text: "Selecione um Motorista para excluir",
+        duration: 2000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
       }).showToast();
-  
-      localStorage.removeItem("token"); 
-      setTimeout(() => {
-          window.location.href = "/index.html"; 
-      }, 2000); 
       return;
-  }
-        
-    try {
-      const response = await fetch(`/api/updatemoto/${motoIdParsed}`, {
-        method: "PUT",
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-      },
-        body: JSON.stringify(updateDriver),
-      });
-
-      if (response.ok) {
-
+    }
+  
+    const MotoristaSelecionado = JSON.parse(selectedCheckbox.dataset.motorista);
+    const motoristaId = MotoristaSelecionado.motocode;
+  
+    const confirmacao = confirm(
+      `Tem certeza de que deseja excluir o Fabricante com código ${motoristaId}?`
+    );
+    if (!confirmacao) {
+      return;
+    }
+  
+    await deleteDriver(motoristaId, selectedCheckbox.closest("tr"));
+  });
+  
+  async function deleteDriver(id, driverRow) {
+    const token = localStorage.getItem('token'); 
+  
+    if (!token || isTokenExpired(token)) {
         Toastify({
-          text: `Motorista '${motoIdParsed}' Atualizado com sucesso!!`,
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "green",
+            text: "Sessão expirada. Faça login novamente.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
         }).showToast();
+  
+        localStorage.removeItem("token"); 
+        setTimeout(() => {
+            window.location.href = "/index.html"; 
+        }, 2000);
+        return;
+    }
+  
+    try {
+        const response = await fetch(`/api/deletedriver/${id}`, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+  
+        const data = await response.json();
+      
+        if (response.ok) {
+            Toastify({
+                text: "Motorista deletado com sucesso!",
+                duration: 2000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "green",
+            }).showToast();
+  
+            driverRow.remove();
+        } else {
+            // Caso o status seja 400, 404 ou outro erro do servidor
+            let errorMessage = "Erro ao excluir o motorista.";
+            
+            if (response.status === 400 || response.status === 404) {
+                errorMessage = data.message;
+            }
+  
+            Toastify({
+                text: errorMessage,
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "orange",
+            }).showToast();
+        }
+  
+    } catch (error) {
+        console.error("Erro ao excluir motorista:", error);
+        Toastify({
+            text: "Erro ao excluir motorista. Tente novamente.",
+            duration: 2000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+        }).showToast();
+    }
+  };
+}
 
-        
-        formEditDrive.reset();
+function editDriver(){
+  const btnFormEditDrive = document.querySelector(".buttonEditDriver");
+  btnFormEditDrive.addEventListener("click", () => {
+    const selectedCheckbox = document.querySelector(
+      'input[name="selectDriver"]:checked'
+    );
+  
+    if (!selectedCheckbox) {
+      Toastify({
+        text: "Selecione um Motorista para editar",
+        duration: 2000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+      return;
+    }
+     
+
+    const btnMainPageDrive = document.querySelector(".btnInitPageMain");
+  if( btnMainPageDrive){
+    btnMainPageDrive.classList.remove('flex')
+    btnMainPageDrive.classList.add('hidden')
+  }
+
+  const listDriver = document.querySelector(".listingDriver");
+  if(listDriver){
+    listDriver.classList.remove('flex')
+    listDriver.classList.add('hidden')
+  }
+
+   const containerEditForm = document.querySelector('.containerFormEditDriver')
+   if(containerEditForm){
+      containerEditForm.classList.remove('hidden')
+      containerEditForm.classList.add('flex')
+   }
+
+    const motoristaData = selectedCheckbox.dataset.motorista;
+    if (!motoristaData) {
+      console.error("O atributo data-motocode está vazio ou indefinido.");
+      return;
+    }
+  
+    try {
+      const motoristaSelecionado = JSON.parse(motoristaData);
+         
+      const campos = [
+        { id: "editMotoCode", valor: motoristaSelecionado.motocode },
+        { id: "editMotoNome", valor: motoristaSelecionado.motoname },
+        { id: "editMotoDtnc", valor: motoristaSelecionado.motodtnc },
+        { id: "editMotoCpf", valor: motoristaSelecionado.motocpf },
+        { id: "editMotoDtch", valor: motoristaSelecionado.motodtch },
+        { id: "editMotoCtch", valor: motoristaSelecionado.motoctch },
+        { id: "editMotoDtvc", valor: motoristaSelecionado.motodtvc },
+        { id: "editMotoRest", valor: motoristaSelecionado.motorest },
+        { id: "editMotoOrem", valor: motoristaSelecionado.motoorem },
+        { id: "editMotoCelu", valor: motoristaSelecionado.motocelu },
+        { id: "editMotoCep", valor: motoristaSelecionado.motocep },
+        { id: "editMotoRua", valor: motoristaSelecionado.motorua },
+        { id: "editMotoCity", valor: motoristaSelecionado.motorua },
+        { id: "editMotoEstd", valor: motoristaSelecionado.motoestd },
+        { id: "editMotoMail", valor: motoristaSelecionado.motomail },
+        {id:"editMotoStat" , valor: motoristaSelecionado.motostat}
+      ];
+  
+      // Atualizar valores no formulário
+      campos.forEach(({ id, valor }) => {
+        const elemento = document.getElementById(id);
+        if (elemento) {
+          if (elemento.type === "date" && valor) {
+            // Formata a data para YYYY-MM-DD, caso seja necessário
+            const dataFormatada = new Date(valor).toISOString().split('T')[0];
+            elemento.value = dataFormatada;
+          } else {
+            elemento.value = valor || ""; 
+          }
+          
+        } else {
+          console.warn(`Elemento com ID '${id}' não encontrado.`);
+        }
+      });
+  
+      // Mostrar o formulário de edição e ocultar a lista
+      const spaceEditDriver = document.querySelector(".containerFormEditDriver");
+      const btnMainPageDriver = document.querySelector(".btnInitPageMain");
+      const listingDriver = document.querySelector(".listingDriver");
+  
+      if (spaceEditDriver) {
+        spaceEditDriver.style.display = "flex";
       } else {
-        console.error("Erro ao atualizar produto:", await response.text());
+        console.error("O formulário de edição não foi encontrado.");
+      }
+  
+      if (listingDriver) {
+        listingDriver.style.display = "none";
+      } else {
+        console.error("A lista de motoristas não foi encontrada.");
+      }
+  
+      if (btnMainPageDriver) {
+        btnMainPageDriver.style.display = "none";
       }
     } catch (error) {
-      console.error("Erro na requisição:", error);
+      console.error("Erro ao fazer parse de data-bem:", error);
     }
   });
+  
+  async function editAndUpdateOfDriver() {
+    const formEditDrive = document.querySelector(".formEditDriver");
+  
+    formEditDrive.addEventListener("submit", async (event) => {
+      event.preventDefault();
+  
+      const formData = new FormData(event.target);
+      const data = Object.fromEntries(formData.entries());
+  
+      const selectedCheckbox = document.querySelector(
+        'input[name="selectDriver"]:checked'
+      );
+  
+      if (!selectedCheckbox) {
+        console.error("Nenhum checkbox foi selecionado.");
+        return;
+      }
+  
+      const motoristaId = selectedCheckbox.dataset.motorista;
+  
+      if (!motoristaId) {
+        console.error("O atributo data-bem está vazio ou inválido.");
+        return;
+      }
+  
+      let motoIdParsed;
+      try {
+        motoIdParsed = JSON.parse(motoristaId).motocode;
+      } catch (error) {
+        console.error("Erro ao fazer parse de bemId:", error);
+        return;
+      }
+  
+    
+  
+      const updateDriver = {
+        motocode: document.getElementById("editMotoCode").value,
+        motoname: document.getElementById("editMotoNome").value,
+        motodtnc: document.getElementById("editMotoDtnc").value,
+        motocpf: document.getElementById("editMotoCpf").value,
+        motodtch: document.getElementById("editMotoDtch").value,
+        motoctch: document.getElementById("editMotoCtch").value,
+        motodtvc: document.getElementById("editMotoDtvc").value,
+        motorest: document.getElementById("editMotoRest").value,
+        motoorem: document.getElementById("editMotoOrem").value,
+        motocelu: document.getElementById("editMotoCelu").value,
+        motocep: document.getElementById("editMotoCep").value,
+        motorua: document.getElementById("editMotoRua").value,
+        motocity: document.getElementById("editMotoCity").value,
+        motoestd: document.getElementById("editMotoEstd").value,
+        motomail: document.getElementById("editMotoMail").value,
+        motostat: document.getElementById("editMotoStat").value
+      };
+         
+      const token = localStorage.getItem('token'); 
+  
+      if (!token || isTokenExpired(token)) {
+        Toastify({
+            text: "Sessão expirada. Faça login novamente.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+        }).showToast();
+    
+        localStorage.removeItem("token"); 
+        setTimeout(() => {
+            window.location.href = "/index.html"; 
+        }, 2000); 
+        return;
+    }
+          
+      try {
+        const response = await fetch(`/api/updatemoto/${motoIdParsed}`, {
+          method: "PUT",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+          body: JSON.stringify(updateDriver),
+        });
+  
+        if (response.ok) {
+  
+          Toastify({
+            text: `Motorista '${motoIdParsed}' Atualizado com sucesso!!`,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "green",
+          }).showToast();
+  
+          
+          formEditDrive.reset();
+        } else {
+          console.error("Erro ao atualizar produto:", await response.text());
+        }
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+      }
+    });
+  }
+  editAndUpdateOfDriver();
 }
-editAndUpdateOfDriver();
+// botão de editar
+
 
 // ATUALIZAÇÃO EM RUNTIME
 function updateDriverInTableRunTime(updatedDriver) {

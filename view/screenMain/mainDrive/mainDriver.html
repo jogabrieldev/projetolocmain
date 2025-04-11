@@ -1,0 +1,213 @@
+<section class="containerAppDriver  d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded"
+style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid white;">
+    <div class="listingDriver mb-3">
+      <!-- informações -->
+    </div>
+  
+    <div class="btnInitPageMain d-flex justify-content-center gap-3 mb-4">
+      <button class="registerDriver text-dark fw-semibold btn btn-primary">Incluir</button>
+      <button class="buttonDeleteDriver btn btn-danger text-dark fw-semibold">Excluir</button>
+      <button class="buttonEditDriver btn btn-warning text-dark fw-semibold">Editar</button>
+      <button class="buttonExitDriver btn btn-light text-dark fw-semibold">Voltar</button>
+    </div>
+  
+    <div class="RegisterDriver container py-4 border border-secondary-subtle rounded-3" style="display: none">
+      <form class="formRegisterDriver  h-100">
+        <div class="row gy-3">
+  
+          <div class="col-md-4">
+            <label for="motoCode" class="form-label">Codigo</label>
+            <input type="text" name="motoCode" id="motoCode" class="form-control" placeholder="Codigo" maxlength="15" />
+          </div>
+  
+          <div class="col-md-8">
+            <label for="motoNome" class="form-label">Nome</label>
+            <input type="text" name="motoNome" id="motoNome" class="form-control" placeholder="Nome" maxlength="80" />
+          </div>
+  
+          <div class="col-md-4">
+            <label for="motoDtnc" class="form-label">Data de nascimento</label>
+            <input type="date" name="motoDtnc" id="motoDtnc" class="form-control" />
+          </div>
+  
+          <div class="col-md-4">
+            <label for="motoCpf" class="form-label">CPF</label>
+            <input type="text" name="motoCpf" id="motoCpf" class="form-control" placeholder="CPF" maxlength="14" />
+          </div>
+  
+          <div class="col-md-4">
+            <label for="motoDtch" class="form-label">Data de emisão</label>
+            <input type="date" name="motoDtch" id="motoDtch" class="form-control" />
+          </div>
+  
+          <div class="col-md-4">
+            <label for="motoctch" class="form-label">Categoria da CNH</label>
+            <input type="text" name="motoctch" id="motoctch" class="form-control" maxlength="10" placeholder="Categoria da CNH" />
+          </div>
+  
+          <div class="col-md-4">
+            <label for="motoDtvc" class="form-label">Data de vencimento</label>
+            <input type="date" name="motoDtvc" id="motoDtvc" class="form-control" />
+          </div>
+  
+          <div class="col-md-4">
+            <label for="motoRest" class="form-label">Restrições</label>
+            <input type="text" name="motoRest" id="motoRest" class="form-control" placeholder="Restrições" maxlength="40" />
+          </div>
+  
+          <div class="col-md-6">
+            <label for="motoOrem" class="form-label">Orgão Emissor</label>
+            <input type="text" name="motoOrem" id="motoOrem" class="form-control" placeholder="Orgão Emissor" maxlength="40" />
+          </div>
+  
+          <div class="col-md-6">
+            <label for="motoCelu" class="form-label">Celular</label>
+            <input type="text" name="motoCelu" id="motoCelu" class="form-control" placeholder="Celular" maxlength="40" />
+          </div>
+  
+          <div class="col-md-4">
+            <label for="motoCep" class="form-label">Cep</label>
+            <input type="text" name="motoCep" id="motoCep" class="form-control" placeholder="CEP" maxlength="9" />
+          </div>
+  
+          <div class="col-md-4">
+            <label for="motoRua" class="form-label">Rua</label>
+            <input type="text" name="motoRua" id="motoRua" class="form-control" placeholder="Rua" maxlength="50" />
+          </div>
+  
+          <div class="col-md-4">
+            <label for="motoCity" class="form-label">Cidade</label>
+            <input type="text" name="motoCity" id="motoCity" class="form-control" placeholder="cidade" maxlength="25" />
+          </div>
+  
+          <div class="col-md-6">
+            <label for="motoEstd" class="form-label">Estado</label>
+            <input type="text" name="motoEstd" id="motoEstd" class="form-control" placeholder="cidade" maxlength="20" />
+          </div>
+  
+          <div class="col-md-6">
+            <label for="motoMail" class="form-label">E-mail</label>
+            <input type="email" name="motoMail" id="motoMail" class="form-control" placeholder="E-mail" maxlength="35" />
+          </div>
+  
+          <div class="col-md-6">
+            <label for="motoStat" class="form-label">Status</label>
+            <select name="motoStat" id="motoStat" class="form-select">
+              <option value="">Selecione...</option>
+              <option value="Disponivel">Disponivel</option>
+              <option value="Entrega destinada">Entrega destinada</option>
+              <option value="Indisponivel">Indisponivel</option>
+            </select>
+          </div>
+  
+          <div class="col-12 d-flex justify-content-end gap-4 mt-4">
+            <button type="button" class="cadDriver btn btn-success">Cadastrar</button>
+            <button type="button" class="btnOutPageRegister btn btn-secondary">Voltar</button>
+          </div>
+  
+        </div>
+      </form>
+    </div>
+
+    <!-- FORMULARIO DE EDIÇÃO -->
+
+    <div class="containerFormEditDriver container py-4" style="display: none">
+        <form class="formEditDriver">
+          <div class="row g-3">
+      
+            <div class="col-md-3">
+              <label for="editMotoCode" class="form-label">Código</label>
+              <input type="text" class="form-control" name="editMotoCode" id="editMotoCode" placeholder="Código" maxlength="15" readonly>
+            </div>
+      
+            <div class="col-md-5">
+              <label for="editMotoNome" class="form-label">Nome</label>
+              <input type="text" class="form-control" name="editMotoNome" id="editMotoNome" placeholder="Discrição" maxlength="80">
+            </div>
+      
+            <div class="col-md-4">
+              <label for="editMotoDtnc" class="form-label">Data de nascimento</label>
+              <input type="date" class="form-control" name="editMotoDtnc" id="editMotoDtnc">
+            </div>
+      
+            <div class="col-md-3">
+              <label for="editMotoCpf" class="form-label">CPF</label>
+              <input type="text" class="form-control" name="editMotoCpf" id="editMotoCpf" placeholder="CPF" maxlength="14">
+            </div>
+      
+            <div class="col-md-3">
+              <label for="editMotoDtch" class="form-label">Data de emissão</label>
+              <input type="date" class="form-control" name="editMotoDtch" id="editMotoDtch">
+            </div>
+      
+            <div class="col-md-3">
+              <label for="editMotoCtch" class="form-label">Categoria da CNH</label>
+              <input type="text" class="form-control" name="editMotoCtch" id="editMotoCtch">
+            </div>
+      
+            <div class="col-md-3">
+              <label for="editMotoDtvc" class="form-label">Data de vencimento</label>
+              <input type="date" class="form-control" name="editMotoDtvc" id="editMotoDtvc">
+            </div>
+      
+            <div class="col-md-4">
+              <label for="editMotoRest" class="form-label">Restrições</label>
+              <input type="text" class="form-control" name="editMotoRest" id="editMotoRest" placeholder="Restrições" maxlength="40">
+            </div>
+      
+            <div class="col-md-3">
+              <label for="editMotoOrem" class="form-label">Orgão Emissor</label>
+              <input type="text" class="form-control" name="editMotoOrem" id="editMotoOrem" placeholder="Orgão Emissor" maxlength="10">
+            </div>
+      
+            <div class="col-md-3">
+              <label for="editMotoCelu" class="form-label">Celular</label>
+              <input type="text" class="form-control" name="editMotoCelu" id="editMotoCelu" placeholder="Celular" maxlength="11">
+            </div>
+      
+            <div class="col-md-3">
+              <label for="editMotoCep" class="form-label">Cep</label>
+              <input type="text" class="form-control" name="editMotoCep" id="editMotoCep" placeholder="Celular" maxlength="9">
+            </div>
+      
+            <div class="col-md-4">
+              <label for="editMotoRua" class="form-label">Rua</label>
+              <input type="text" class="form-control" name="editMotoRua" id="editMotoRua" placeholder="Rua" maxlength="50">
+            </div>
+      
+            <div class="col-md-3">
+              <label for="editMotoCity" class="form-label">Cidade</label>
+              <input type="text" class="form-control" name="editMotoCity" id="editMotoCity" placeholder="Cidade" maxlength="25">
+            </div>
+      
+            <div class="col-md-2">
+              <label for="editMotoEstd" class="form-label">Estado</label>
+              <input type="text" class="form-control" name="editMotoEstd" id="editMotoEstd" placeholder="Estado" maxlength="20">
+            </div>
+      
+            <div class="col-md-4">
+              <label for="editMotoMail" class="form-label">E-mail</label>
+              <input type="email" class="form-control" name="editMotoMail" id="editMotoMail" placeholder="E-mail" maxlength="35">
+            </div>
+      
+            <div class="col-md-4">
+              <label for="editMotoStat" class="form-label">Status</label>
+              <select class="form-select" name="editMotoStat" id="editMotoStat">
+                <option value="">Selecione...</option>
+                <option value="Disponivel">Disponivel</option>
+                <option value="Entrega destinada">Entrega destinada</option>
+                <option value="Indisponivel">Indisponivel</option>
+              </select>
+            </div>
+      
+            <div class="col-12 d-flex justify-content-end gap-2 pt-3">
+              <button type="submit" class="btn btn-success cadDriverEdit">Salvar</button>
+              <button type="button" class="btn btn-secondary btnOutPageRegisterEdit">Voltar</button>
+            </div>
+      
+          </div>
+        </form>
+      </div>
+      
+  </section>
+  

@@ -1,0 +1,190 @@
+<section class="containerAppProd d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded"
+style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid white;">
+
+    <div class="listingProd mb-4">
+      <!-- Informações do produto -->
+    </div>
+  
+    <div class="btnMainPageProd d-flex justify-content-center gap-3 mb-4">
+      <button class="btn btn-primary text-dark fw-semibold registerProd">Incluir</button>
+      <button class="btn btn-danger text-dark fw-semibold buttonDeleteProd">Excluir</button>
+      <button class="btn btn-warning text-dark fw-semibold buttonEditProd">Editar</button>
+      <button class="btn btn-light text-dark fw-semibold  buttonExitProd">Voltar</button>
+    </div>
+  
+    <div class="formRegisterProd" style="display: none">
+      <form class="formRegisterProduto border border-secondary-subtle rounded-3 p-4 shadow-sm">
+        <div class="row g-3">
+  
+          <!-- Linha 1 -->
+          <div class="col-md-4">
+            <label for="prodCode" class="form-label">Código</label>
+            <input type="text" name="prodCode" id="prodCode" class="form-control" placeholder="Código" maxlength="15" />
+          </div>
+          <div class="col-md-8">
+            <label for="prodDesc" class="form-label">Descrição</label>
+            <input type="text" name="prodDesc" id="prodDesc" class="form-control" placeholder="Descrição" maxlength="60" />
+          </div>
+  
+          <!-- Linha 2 -->
+          <div class="col-md-6">
+            <label for="prodTipo" class="form-label">Tipo de Produto</label>
+            <select name="prodTipo" id="prodTipo" class="form-select">
+              <option value="">Selecione...</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="prodUni" class="form-label">Unidade</label>
+            <input type="number" name="prodUni" id="prodUni" class="form-control" placeholder="Unidade" maxlength="8" />
+          </div>
+  
+          <!-- Linha 3 -->
+          <div class="col-md-6">
+            <label for="prodData" class="form-label">Data do cadastro</label>
+            <input type="date" name="prodData" id="prodData" class="form-control" />
+          </div>
+          <div class="col-md-6">
+            <label for="prodValor" class="form-label">Valor Compra</label>
+            <input type="text" name="prodValor" id="prodValor" class="form-control" placeholder="R$" maxlength="12" />
+          </div>
+  
+          <!-- Linha 4 -->
+          <div class="col-md-6">
+            <label for="prodPeli" class="form-label">Preço Líquido</label>
+            <input type="text" name="prodPeli" id="prodPeli" class="form-control" placeholder="R$" maxlength="6" />
+          </div>
+          <div class="col-md-6">
+            <label for="prodPebr" class="form-label">Preço Bruto</label>
+            <input type="text" name="prodPebr" id="prodPebr" class="form-control" placeholder="R$" maxlength="10" />
+          </div>
+  
+          <!-- Linha 5 -->
+          <div class="col-md-6">
+            <label for="prodAtiv" class="form-label">Ativo</label>
+            <select name="prodAtiv" id="prodAtiv" class="form-select">
+              <option value="">Selecione...</option>
+              <option value="Sim">SIM</option>
+              <option value="Não">NAO</option>
+            </select>
+          </div>
+  
+          <!-- Botões -->
+          <div class="col-12 d-flex justify-content-center gap-4 mt-4 btnOutNext">
+            <button type="submit" class="btn btn-success cadProd w-25">Cadastrar</button>
+            <button type="button" class="btn btn-outline-secondary btnOutInitProd w-25">Voltar</button>
+          </div>
+  
+        </div>
+      </form>
+    </div>
+
+    <!-- FORMULARIO DE EDIÇÃO -->
+
+    <div class="formEditProd border-secondary-subtle border p-4 rounded shadow text-white" style="display: none">
+        <form class="editProd" class="border border-secondary-subtle rounded-3 p-4 shadow-sm">
+          <div class="row g-3">
+            
+            <div class="col-md-4">
+              <label for="editProdCode" class="form-label">Código</label>
+              <input
+                type="text"
+                name="editProdCode"
+                id="editProdCode"
+                class="form-control"
+                placeholder="Código"
+                maxlength="10"
+                readonly
+              />
+            </div>
+      
+            <div class="col-md-8">
+              <label for="editProdDesc" class="form-label">Descrição</label>
+              <input
+                type="text"
+                name="editProdDesc"
+                id="editProdDesc"
+                class="form-control"
+                placeholder="Descrição"
+                maxlength="60"
+              />
+            </div>
+      
+            <div class="col-md-6">
+              <label for="editProdTipo" class="form-label">Tipo do Produto</label>
+              <select name="editProdTipo" id="editProdTipo" class="form-select">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+      
+            <div class="col-md-6">
+              <label for="editProdUni" class="form-label">Unidade</label>
+              <input
+                type="number"
+                name="editProdUni"
+                id="editProdUni"
+                class="form-control"
+                placeholder="Unidade"
+                maxlength="2"
+              />
+            </div>
+      
+            <div class="col-md-6">
+              <label for="editProdData" class="form-label">Data da Compra</label>
+              <input type="date" name="editProdData" id="editProdData" class="form-control" />
+            </div>
+      
+            <div class="col-md-6">
+              <label for="editProdValor" class="form-label">Valor</label>
+              <input
+                type="text"
+                name="editProdValor"
+                id="editProdValor"
+                class="form-control"
+                placeholder="Valor"
+                maxlength="12"
+              />
+            </div>
+      
+            <div class="col-md-6">
+              <label for="editProdPeli" class="form-label">Preço Líquido</label>
+              <input
+                type="text"
+                name="editProdPeli"
+                id="editProdPeli"
+                class="form-control"
+                placeholder=""
+                maxlength="6"
+              />
+            </div>
+      
+            <div class="col-md-6">
+              <label for="editProdPebr" class="form-label">Preço Bruto</label>
+              <input
+                type="text"
+                name="editProdPebr"
+                id="editProdPebr"
+                class="form-control"
+                placeholder=""
+                maxlength="10"
+              />
+            </div>
+      
+            <div class="col-md-6">
+              <label for="editProdAtiv" class="form-label">Ativo</label>
+              <select name="editProdAtiv" id="editProdAtiv" class="form-select">
+                <option value="">Selecione...</option>
+                <option value="S">SIM</option>
+                <option value="N">NÃO</option>
+              </select>
+            </div>
+      
+            <div class="col-12 d-flex justify-content-end gap-3 mt-3">
+              <button type="submit" class="btn btn-light w-25 cadProd">Salvar</button>
+              <button type="button" class="btn btn-outline-light w-25 btnOutInitProdEdit">Voltar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+  </section>
+  

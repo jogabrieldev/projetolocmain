@@ -1,71 +1,212 @@
-const btnForn = document.querySelector(".btnCadForn");
-btnForn.addEventListener("click", () => {
-  const containerAppClient = document.querySelector(".containerAppClient");
-  containerAppClient.style.display = "none";
 
-  const containerAppBens = document.querySelector(".containerAppBens");
-  containerAppBens.style.display = "none";
 
-  const containerAppProd = document.querySelector(".containerAppProd");
-  containerAppProd.style.display = "none";
+function isTokenExpired(token) {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    const expTime = payload.exp * 1000;
+    return Date.now() > expTime;
+  } catch (error) {
+    return true;
+  }
+}
 
-  const containerAppFabri = document.querySelector(".containerAppFabri");
-  containerAppFabri.style.display = "none";
+function masksFieldForne(){
+  $("#fornCnpj").mask('00.000.000/0000-00')
+   
+  $("#fornCelu").mask("(00) 00000-0000");
 
-  const containerAppTypeProd = document.querySelector(".containerAppTipoProd");
-  containerAppTypeProd.style.display = "none";
+  $("#fornCep").mask("00000-000");
 
-  const containerAppDriver = document.querySelector(".containerAppDriver");
-  containerAppDriver.style.display = "none";
+  $("#editFornCnpj").mask('00.000.000/0000-00')
+ 
+  $("#editFornCelu").mask("(00) 00000-0000");
 
-  const containerAppAutomo = document.querySelector(".containerAppAutomo");
-  containerAppAutomo.style.display = "none";
+  $("#editFornCep").mask("00000-000");
+}
 
-  const formRegisterForn = document.querySelector(".formRegisterForn");
-  formRegisterForn.style.display = "none";
+const socketForn = io()
+document.addEventListener('DOMContentLoaded', ()=>{
+     
+  const btnLoadForn = document.querySelector('.btnCadForn')
+  if(btnLoadForn){
+      btnLoadForn.addEventListener('click' , async()=>{
+          
+        try { 
 
-  const containerFormEdit = document.querySelector(".formEditRegisterForn");
-  containerFormEdit.style.display = "none";
+          const responseForn = await fetch('/fornecedor' , {
+            method: 'GET'
+           })
+  
+           if (!responseForn.ok) throw new Error(`Erro HTTP: ${responseForn.status}`);
+            const html = await responseForn.text();
+            const mainContent = document.querySelector('#mainContent');
+            if (mainContent) {
+              mainContent.innerHTML = html;
+              masksFieldForne()
+              interationSystemForne()
+              registerNewFornecedor()
+              deleteFornecedor()
+              editFornecedor()
+            }else{
+              console.error('#mainContent não encontrado no DOM')
+            }
+  
 
-  const listingForn = document.querySelector(".listingForn");
-  listingForn.style.display = "flex";
+            const containerAppForne = document.querySelector('.containerAppForn');
+            if (containerAppForne) containerAppForne.classList.add('flex') ;
+      
+            const sectionsToHide = [
+              '.containerAppProd', '.containerAppFabri', '.containerAppTipoProd',
+              '.containerAppDriver', '.containerAppAutomo', '.containerAppBens',
+              '.containerAppClient'
+            ];
+            sectionsToHide.forEach((selector) => {
+              const element = document.querySelector(selector);
+              if (element) element.style.display = 'none';
+            });
+      
+            const  containerRegisterForne = document.querySelector('.formRegisterForn');
+            const btnMainPageForn = document.querySelector('.btnMainPageForn');
+            const listingForn = document.querySelector('.listingForn');
+            const editFormforn = document.querySelector('.formEditRegisterForn');
+            const informative = document.querySelector('.information');
+      
+            if (containerRegisterForne) containerRegisterForne.style.display = 'none';
+            if ( btnMainPageForn)  btnMainPageForn.style.display = 'flex';
+            if (listingForn )listingForn .style.display = 'flex';
+            if (editFormforn) editFormforn.style.display = 'none';
+            if (informative) {
+              informative.style.display = 'block';
+              informative.textContent = 'SEÇÃO FORNECEDOR';
+            }
+            
+            await fetchListFornecedores() 
+          
+        } catch (error) {
+          console.warn('#btnLoadForn não encontrado no DOM')
+          Toastify({
+            text: "Erro na pagina",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
+          
+        }
+         
+      })
+  }
 
-  const btnMainPageForm = document.querySelector(".btnMainPageForn");
-  btnMainPageForm.style.display = "flex";
+  socketForn.on("updateRunTimeForne", (fornecedor) => {
+    insertFornecedoresInTableRunTime(fornecedor);
+     
+  });
+  socketForn.on("updateFornTable", (updateFornecedor) => {
+    updateFornecedorInTableRunTime(updateFornecedor) 
+     
+  });
+})
 
-  const containerAppForn = document.querySelector(".containerAppForn");
-  containerAppForn.style.display = "flex";
 
-  const informative = document.querySelector(".information");
-  informative.style.display = "block";
-  informative.textContent = "SEÇÃO FORNECEDOR";
-});
 
-const buttonEditForn = document.querySelector(".buttonEditForn");
-buttonEditForn.addEventListener("click", () => {
-  const btnMainPageForm = document.querySelector(".btnMainPageForn");
+function interationSystemForne(){
 
-  btnMainPageForm.style.display = "none";
-});
-const btnRegisterForn = document.querySelector(".registerForn");
-btnRegisterForn.addEventListener("click", () => {
-  const formRegisterForn = document.querySelector(".formRegisterForn");
-  const listingForn = document.querySelector(".listingForn");
-  const btnMainPageForm = document.querySelector(".btnMainPageForn");
+  const btnRegisterForn = document.querySelector(".registerForn");
+  if(btnRegisterForn){
+    btnRegisterForn.addEventListener("click", () => {
 
-  formRegisterForn.style.display = "flex";
+      const formRegisterForn = document.querySelector(".formRegisterForn");
+      if(formRegisterForn){
+        formRegisterForn.classList.remove('hidden')
+        formRegisterForn.classList.add('flex')
+      }
+      const listingForn = document.querySelector(".listingForn");
+      if(listingForn){
+         listingForn.classList.remove('flex')
+         listingForn.classList.add('hidden')
+      }
+      const btnMainPageForm = document.querySelector(".btnMainPageForn");
+      if(btnMainPageForm){
+        btnMainPageForm.classList.remove("flex")
+        btnMainPageForm.classList.add("hidden")
+      }
+    
+  })
+};
 
-  listingForn.style.display = "none";
-  btnMainPageForm.style.display = "none";
-});
+const btnOutInitForn = document.querySelector(".btnOutInitForn");
+if(btnOutInitForn){
+  btnOutInitForn.addEventListener("click", (event) => {
+    event.preventDefault();
+  
+    const caixaForn = document.querySelector(".formRegisterForn");
+    if(caixaForn){
+      caixaForn.classList.remove('flex')
+      caixaForn.classList.add("hidden")
+    }
+    
+  
+    const listingForn = document.querySelector(".listingForn");
+    if(listingForn){
+      listingForn.classList.remove("hidden")
+      listingForn.classList.add("flex")
+    }
+    
+  
+    const btnMainPageForm = document.querySelector(".btnMainPageForn");
+    if(btnMainPageForm){
+       btnMainPageForm.classList.remove('hidden')
+       btnMainPageForm.classList.add('flex')
+    }
+
+    return;
+  });
+}
+
+const btnOutPageEdit = document.querySelector('.btnOutInitFornEdit')
+if(btnOutPageEdit){
+  btnOutPageEdit.addEventListener('click' , ()=>{
+      
+    const listingForn = document.querySelector(".listingForn");
+      if(listingForn){
+         listingForn.classList.remove('hidden')
+         listingForn.classList.add('flex')
+      }
+      const btnMainPageForm = document.querySelector(".btnMainPageForn");
+      if(btnMainPageForm){
+        btnMainPageForm.classList.remove("hidden")
+        btnMainPageForm.classList.add("flex")
+      }
+
+      const formEditRegisterForn = document.querySelector('.formEditRegisterForn')
+      if(formEditRegisterForn){
+        formEditRegisterForn.classList.remove('flex')
+        formEditRegisterForn.classList.add('hidden')
+      }
+  })
+}
+
 
 const btnOutSectionForn = document.querySelector(".buttonExitForn");
-btnOutSectionForn.addEventListener("click", (event) => {
-  event.preventDefault();
-
-  const containerAppForn = document.querySelector(".containerAppForn");
-  containerAppForn.style.display = "none";
-});
+if(btnOutSectionForn){
+  btnOutSectionForn.addEventListener("click", (event) => {
+    event.preventDefault();
+  
+    const containerAppForn = document.querySelector(".containerAppForn");
+      if(containerAppForn){
+         containerAppForn.classList.remove('flex')
+         containerAppForn.classList.add('hidden')
+      }
+     
+      const informative = document.querySelector('.information')
+            if (informative) {
+              informative.style.display = 'block';
+              informative.textContent = 'Sessão ativa';
+            }
+    
+  });
+}
 
 const btnOutPage = document.querySelector(".btnOutInitForn");
 btnOutPage.addEventListener("click", (e) => {
@@ -79,51 +220,12 @@ btnOutPage.addEventListener("click", (e) => {
 
   const containerFormForn = document.querySelector(".formRegisterForn");
   containerFormForn.style.display = "none";
-});
+ });
+};
 
-const btnOutInitForn = document.querySelector(".btnOutInitFornEdit");
-btnOutInitForn.addEventListener("click", (event) => {
-  event.preventDefault();
+function registerNewFornecedor(){
 
-  const caixaForn = document.querySelector(".formEditRegisterForn");
-  caixaForn.style.display = "none";
-
-  const listingForn = document.querySelector(".listingForn");
-  listingForn.style.display = "flex";
-
-  const btnMainPageForm = document.querySelector(".btnMainPageForn");
-  btnMainPageForm.style.display = "flex";
-
-  return;
-});
-
-function isTokenExpired(token) {
-  try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    const expTime = payload.exp * 1000;
-    return Date.now() > expTime;
-  } catch (error) {
-    return true;
-  }
-}
-
-
-const socketUpdateForn = io();
-document.addEventListener("DOMContentLoaded", async () => {
-
-  await fetchListFornecedores() 
-    
-  socketUpdateForn.on("updateRunTimeForne", (fornecedor) => {
-    insertFornecedoresInTableRunTime(fornecedor);
-     
-  });
-  socketUpdateForn.on("updateFornTable", (updateFornecedor) => {
-    updateFornecedorInTableRunTime(updateFornecedor) 
-     
-  });
-   
-  
-    document .querySelector(".btnRegisterforn").addEventListener("click", async (event) => {
+        document .querySelector(".btnRegisterforn").addEventListener("click", async (event) => {
       event.preventDefault(); 
 
       const token = localStorage.getItem("token"); 
@@ -219,19 +321,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         alert("Erro ao enviar os dados para o server.");
       }
     });
-  validationFormForne();
-});
+    validationFormForne();
+}
 
 
-// ATUALIZA A TABELA E RUNTIME QUANDO INSERIR
+// // ATUALIZA A TABELA E RUNTIME QUANDO INSERIR
 function insertFornecedoresInTableRunTime(fornecedores) {
   const fornecedoresListDiv = document.querySelector(".listingForn");
   fornecedoresListDiv.innerHTML = "";
 
   if (fornecedores.length > 0) {
     const tabela = document.createElement("table");
-    tabela.style.width = "100%";
-    tabela.setAttribute("border", "1");
+    tabela.classList.add('tableFornecedor')
 
     const cabecalho = tabela.createTHead();
     const linhaCabecalho = cabecalho.insertRow();
@@ -318,8 +419,7 @@ async function fetchListFornecedores() {
 
     if (fornecedores.length > 0) {
       const tabela = document.createElement("table");
-      tabela.style.width = "100%";
-      tabela.setAttribute("border", "1");
+      tabela.classList.add('tableFornecedor')
 
       const cabecalho = tabela.createTHead();
       const linhaCabecalho = cabecalho.insertRow();
@@ -393,7 +493,9 @@ async function fetchListFornecedores() {
   }
 }
 
-// deletar fornecedor
+ // deletar fornecedor
+function deleteFornecedor(){
+    
 const btnDeleteForn = document.querySelector(".buttonDeleteForn");
 btnDeleteForn.addEventListener("click", async () => {
   const selectedCheckbox = document.querySelector(
@@ -496,8 +598,12 @@ async function deleteForne(id, fornRow) {
     }).showToast();
   }
 }
+}
 
-// atualização
+
+function editFornecedor(){
+
+    // atualização
 const editButtonForn = document.querySelector(".buttonEditForn");
 
 editButtonForn.addEventListener("click", (e) => {
@@ -515,9 +621,27 @@ editButtonForn.addEventListener("click", (e) => {
       position: "center",
       backgroundColor: "red",
     }).showToast();
-    document.querySelector(".btnMainPageForn").style.display = "flex";
     return;
   }
+
+  const btnMainPageForne = document.querySelector(".btnMainPageForn");
+  if(btnMainPageForne){
+    btnMainPageForne.classList.remove('flex')
+    btnMainPageForne.classList.add('hidden')
+  }
+
+  const listForn = document.querySelector(".listingForn ");
+  if(listForn ){
+    listForn.classList.remove('flex')
+    listForn.classList.add('hidden')
+  }
+
+const containerEditForm = document.querySelector('.formEditRegisterForn')
+   if(containerEditForm){
+      containerEditForm.classList.remove('hidden')
+      containerEditForm.classList.add('flex')
+   }
+
 
   const fornData = selectedCheckbox.dataset.fornecedor;
 
@@ -528,7 +652,6 @@ editButtonForn.addEventListener("click", (e) => {
 
   try {
     const fornecedorSelecionado = JSON.parse(fornData);
-    console.log("Fornecedor selecionado para edição:", fornecedorSelecionado);
 
     const campos = [
       { id: "editFornCode", valor: fornecedorSelecionado.forncode },
@@ -572,7 +695,7 @@ editButtonForn.addEventListener("click", (e) => {
   }
 });
 
-// função ENVIA O DADO ATUALIZADO
+ // função ENVIA O DADO ATUALIZADO
 async function editAndUpdateOfForn() {
   const formEditForn = document.querySelector(".formEditForn");
 
@@ -582,7 +705,6 @@ async function editAndUpdateOfForn() {
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
 
-    console.log("ESSE E MEU DADO:", data);
 
     const selectedCheckbox = document.querySelector(
       'input[name="selectFornecedor"]:checked'
@@ -656,10 +778,8 @@ async function editAndUpdateOfForn() {
         body: JSON.stringify(updateForn),
       });
 
-      console.log("corpo:", updateForn);
 
       if (response.ok) {
-        console.log("Atualização bem-sucedida");
 
         Toastify({
           text: `Fonecedor '${fornIdParsed}' Atualizado com sucesso!!`,
@@ -681,7 +801,9 @@ async function editAndUpdateOfForn() {
 }
 editAndUpdateOfForn();
 
-// ATUALIZAR EM RUNTIME A EDIÇÃO
+}
+
+// // ATUALIZAR EM RUNTIME A EDIÇÃO
 function updateFornecedorInTableRunTime(updatedFornecedor) {
   
   const row = document.querySelector(

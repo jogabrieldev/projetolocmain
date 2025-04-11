@@ -11,9 +11,14 @@ $(document).ready(function () {
     
   $("#editClieCelu").mask("(00) 00000-0000");
 
- 
   $("#editClieCep").mask("00000-000");
 
+  $("#clieCepLoc").mask("00000-000");
+
+  $("#clieCeluLoc").mask("(00) 00000-0000");
+
+  $("#cpfClientLoc").mask("000.000.000-00")
+  
 });
 
 $(document).ready(function () {

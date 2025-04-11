@@ -1,4 +1,5 @@
 
+
 function validationFormGoods() {
   $('#formRegisterBens').validate({
     rules: {
@@ -105,15 +106,17 @@ function validationFormGoods() {
     unhighlight: function (element) {
       $(element).removeClass('error-field');
     },
-    submitHandler: function (form) {
-      form.submit();
+    submitHandler: async function (form) {
+      
     }
   });
-}
+ }
+
 
 $(function () {
   validationFormGoods();
 });
+  
 
 // Client
 function validationFormClient(){

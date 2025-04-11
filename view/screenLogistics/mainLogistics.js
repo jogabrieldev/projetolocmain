@@ -57,8 +57,6 @@ async function locationPendente() {
       const tableDiv = document.querySelector(".orders");
       tableDiv.innerHTML = ""; 
 
-      
-  
       const listaLocacoes = locacao.flatMap((locacao) => {
         if (locacao.bens.length > 0) {
           return locacao.bens.map((bem) => ({
@@ -286,7 +284,7 @@ async function locationPendente() {
               const checkbox = document.createElement("input");
               checkbox.type = "checkbox";
               checkbox.classList.add("select-location");
-              checkbox.value = locacao.numeroLocacao;
+              checkbox.value = JSON.stringify(locacao);
               checkbox.dataset.quantidade = locacao.quantidade;
               checkbox.dataset.familia = locacao.codigoBem;
               checkbox.dataset.cliente = locacao.nomeCliente;
@@ -313,13 +311,17 @@ async function locationPendente() {
               tbody.appendChild(row);
 
               tbody.appendChild(row);
+
+              console.log('Logistica checkbox:' , checkbox.value)
           });
+
+          
 
           table.appendChild(tbody);
           tableDiv.appendChild(table);
 
           Toastify({
-            text: "Filtro com status (Em Locação) Aplicado!",
+            text:`Filtro aplicado (EM LOCAÇÃO)! quantidade ${filterStatusEmLocacao.length}`,
             duration: 4000,
             close: true,
             gravity: "top",

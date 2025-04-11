@@ -15,7 +15,17 @@
 .listingAutomo{
     overflow: auto;
 }
-.btnInitAutoPageMain{
+
+.tableVehicles{
+    width: 100%;
+    border-collapse: collapse;
+    color: black;
+    font-size: 14px;
+}
+.tableVehicles td{
+    background-color:darkgray;
+}
+/* .btnInitAutoPageMain{
     height: 40px;
     display: flex;
     justify-content: center;
@@ -107,4 +117,4 @@
     height: 26px;
     background-color: lightslategray;
     border: none;
-}
+} */

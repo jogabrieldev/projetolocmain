@@ -1,1903 +1,935 @@
 <!DOCTYPE html>
 <html lang="pt-BR ">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    <link rel="stylesheet" href="main.css">
-    <link rel="stylesheet" href="./mainGoods/mainGoods.css">
-    <link rel="stylesheet" href="./mainClient/mainClient.css">
-    <link rel="stylesheet" href="./mainForn/mainForn.css">
-    <link rel="stylesheet" href="./mainProd/mainProd.css">
-    <link rel="stylesheet" href="./mainFabe/mainFabri.css">
-    <link rel="stylesheet" href="./mainTypeProd/mainTypeProd.css">
-    <link rel="stylesheet" href="./mainDrive/mainDriver.css">
-    <link rel="stylesheet" href="./mainAutomovel/mainAuto.css">
-    <link rel="stylesheet" href="../screenLocation/location.css">
-    <link rel="stylesheet" href="../screenLogistics/logistics.css">
-    <link rel="stylesheet" href="../screenDelivery/mainDelivery.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <link rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" href="./mainGoods/mainGoods.css" />
+    <link rel="stylesheet" href="./mainClient/mainClient.css" />
+    <link rel="stylesheet" href="./mainForn/mainForn.css" />
+    <link rel="stylesheet" href="./mainProd/mainProd.css" />
+    <link rel="stylesheet" href="./mainFabe/mainFabri.css" />
+    <link rel="stylesheet" href="./mainTypeProd/mainTypeProd.css" />
+    <link rel="stylesheet" href="./mainDrive/mainDriver.css" />
+    <link rel="stylesheet" href="./mainAutomovel/mainAuto.css" />
+    <link rel="stylesheet" href="../screenLocation/location.css" />
+    <link rel="stylesheet" href="../screenLogistics/logistics.css" />
+    <link rel="stylesheet" href="../screenDelivery/mainDelivery.css" />
     
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
 
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-         <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script> 
-         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Caçamba</title>
+  </head>
 
-   
-    <title>Screen main</title>
-</head>
+  <body>
+    <section
+      class="container-fluid  bg-opacity-75 text-white d-flex flex-wrap align-items-center justify-content-between px-3 px-md-4 position-sticky top-0 rounded-3 "
+      style="height: auto; min-height: 100px; z-index: 1030"
+    >
+      <!-- Logo -->
+      <div
+        class="d-flex align-items-center mb-2 mb-md-0"
+        style="margin-left: 1%"
+      >
+        <img
+          src="../img/sgttec2.jpg"
+          alt="logo"
+          id="photo"
+          class="rounded-circle border border-white me-2 me-md-3"
+          style="width: 80px; max-width: 100px"
+        />
+        <h5 class="mb-0">SGTTEC</h5>
+      </div>
 
-<body>
-    <section class="containerHeader">
-        <div class="logo">
-            <img src="../img/sgttec2.jpg" alt="logo" id="photo">
-        </div>
+      <!-- Informação -->
+      <div
+        class="d-none d-sm-block  bg-opacity-50 text-white text-center rounded-pill px-3 px-md-4 py-2 information">
 
-        <div class="information">
-            <!-- <h3>Sessão</h3> -->
-        </div>
-
+        Sessão ativa
+      </div>
     </section>
 
     <main id="ContainerMainApp">
+      <div class="bg-secondary  p-3 workButton">
+        <ul class="nav flex-column mt-3 mt-md-5">
+          <!-- Botão Cadastros com submenu colapsável -->
+          <li class="nav-item mb-2">
+            <button
+              class="btn btn-outline-light w-100"
+              data-bs-toggle="collapse"
+              data-bs-target="#cadastrosMenu"
+              aria-expanded="false"
+              aria-controls="cadastrosMenu"
+              id="btnStartRegister"
+            >
+              Cadastros
+            </button>
+          </li>
 
-        <div class="workButton">
-
-         
-            <ul>
-                <li> <button class="btnAtivRegister">Cadastros</button></li>
-                <br>
-                <li><button class="btnCadBens" style="display: none;" >Bens</button></li>
-                <br>
-                <li><button class="btnCadClie" style="display: none;" >Clientes</button></li>
-                <br>
-                <li><button class="btnCadForn" style="display: none;" >Fornecedor</button></li>
-                <br>
-                <li><button class="btnCadProd" style="display: none;" >Produto</button></li>
-                <br>
-                <li><button class="btnCadFabri" style="display: none;">Familia de bens</button></li>
-                <br>
-                <li><button class="btnCadTypeProd" style="display: none;" > Tipo do produto</button></li>
-                <br>
-                <li><button class="btnCadMotorista" style="display: none;">Motorista</button></li>
-                <br>
-                <li><button class="btnCadAutomo" style="display: none;">Veiculos</button></li>
-                <br>
-                <li><button class="outSectionRegister" style="display: none;">Voltar</button></li>
-
-                <li> <button class="btnRegisterLocation"onclick="frontLocation()">Locação</button></li>
-                <br>
-                <li><button class="btnLogistic" onclick=" locationPendente()">Logistica</button></li>
-                <br>
-                <li><button class="delivery">Entrega</button></li>
-
-               
-
-                
+          <!-- Submenu dos cadastros -->
+          <div class="collapse" id="cadastrosMenu">
+            <ul class="nav flex-column ms-2 w-100">
+              <li class="nav-item my-1">
+                <button
+                  id="btnLoadBens"
+                  class="btn btn-submenu btn-outline-light btnCadBens w-100"
+                >
+                  Bens
+                </button>
+              </li>
+              <li class="nav-item my-1">
+                <button
+                  class="btn btn-submenu btn-outline-light btnCadClie w-100"
+                >
+                  Clientes
+                </button>
+              </li>
+              <li class="nav-item my-1">
+                <button
+                  class="btn btn-submenu btn-outline-light btnCadForn w-100"
+                >
+                  Fornecedor
+                </button>
+              </li>
+              <li class="nav-item my-1">
+                <button
+                  class="btn btn-submenu btn-outline-light btnCadProd w-100"
+                >
+                  Produto
+                </button>
+              </li>
+              <li class="nav-item my-1">
+                <button
+                  class="btn btn-submenu btn-outline-light btnCadFabri w-100"
+                >
+                  Família de Bens
+                </button>
+              </li>
+              <li class="nav-item my-1">
+                <button
+                  class="btn btn-submenu btn-outline-light btnCadTypeProd w-100"
+                >
+                  Tipo do Produto
+                </button>
+              </li>
+              <li class="nav-item my-1">
+                <button
+                  class="btn btn-submenu btn-outline-light btnCadMotorista w-100"
+                >
+                  Motorista
+                </button>
+              </li>
+              <li class="nav-item my-1">
+                <button
+                  class="btn btn-submenu btn-outline-light btnCadAutomo w-100"
+                >
+                  Veículos
+                </button>
+              </li>
             </ul>
+          </div>
 
-            <span class="material-symbols-outlined">
-                sync
-                </span>
+          <!-- Outros botões principais -->
+          <li class="nav-item mb-2">
+            <button
+              class="btn btn-outline-light w-100 btnRegisterLocation"
+              onclick="frontLocation()"
+            >
+              Locação
+            </button>
+          </li>
+
+          <li class="nav-item mb-2">
+            <button
+              class="btn btn-outline-light w-100 btnLogistic"
+              onclick="locationPendente()"
+            >
+              Logística
+            </button>
+          </li>
+
+          <li class="nav-item mb-2">
+            <button class="btn btn-outline-light w-100 delivery">
+              Entrega
+            </button>
+          </li>
+        </ul>
+
+        <div class="text-center mt-3">
+          <span class="material-symbols-outlined text-muted">sync</span>
         </div>
-
-    <section class="containerAppBens">
-        <!-- <div class="pageListingBens"> -->
-
-              <div class="listingBens">
-
-                 <!-- informações -->
-                 
-              </div>
-
-            <div class="btnPageListGoods">
-                <button class="registerGoods">Incluir</button>
-                <button class="buttonDelete">Excluir</button>
-                <button class="buttonEdit" data-benscode = '101'>Editar</button>
-                <button class="buttonExit">Voltar</button>
-            </div>
-            
-
-            <div class="editForm" style="display: none;">
-               <form id="formEditBens" >
-                
-                <div class="formGroup">               
-
-                    <div class="inputGroup">
-                       <label for="codeEdit">Codigo</label>
-                       <input type="text" name="codeEdit" id="codeEdit" placeholder="bensCode" maxlength="15" readonly>
-                    </div> 
-
-                    <div class="inputGroup">
-                          <label for="nameEdit">Nome</label>
-                          <input type="text" name="nameEdit" id="nameEdit" placeholder="bensnome" maxlength="80" >
-                   </div>
-
-                   <div class="inputGroup">
-                       <label for="cofaEdit"> Familia de bem</label>
-                       <select name="cofaEdit" id="cofaEdit">
-                            <option value="">Selecione...</option>
-                       </select>
-                  </div>
-
-                  <div class="inputGroup">
-                      <label for="modelEdit">Modelo</label>
-                       <input type="text" name="modelEdit" id="modelEdit" placeholder="bensMode" maxlength="20"  >
-                  </div>
-
-                   <div class="inputGroup">
-                       <label for="serialEdit">Numero de Serie</label>
-                       <input type="text" name="serialEdit" id="serialEdit" placeholder="bensNuse" maxlength="25">
-                   </div>
-                      
-                   <div class="inputGroup">
-                        <label for="placaEdit">Placa </label>
-                        <input type="text" name="placaEdit" id="placaEdit" placeholder="bensPlac" maxlength="10" >
-                  </div>
-               
-                   <div class="inputGroup">
-                        <label for="bensAnmoEdit">Ano do modelo</label>
-                        <input type="date" name="bensAnmoEdit" id="bensAnmoEdit">
-                   </div>
-                      
-                   <div class="inputGroup">
-                       <label for="dtCompraEdit"> Data da compra</label>
-                       <input type="date" name="dtCompraEdit" id="dtCompraEdit" >
-                    </div>
-                    
-                   <div class="inputGroup">
-                        <label for="valorCpEdit">Valor compra</label>
-                        <input type="text" name="valorCpEdit" id="valorCpEdit" placeholder="R$" maxlength="25">
-                    </div>
-
-                   <div class="inputGroup">
-                       <label for="ntFiscalEdit">Nota Fiscal</label>
-                       <input type="number" name="ntFiscalEdit" id="ntFiscalEdit" placeholder="bensNunf" maxlength="11" >
-                   </div>
-                      
-                   <div class="inputGroup">
-                        <label for="cofoEdit">codigo Fornecedor </label>
-                        <select name="cofoEdit"  id="cofoEdit">
-                            
-                        </select>
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="kmAtualEdit">KM Atual </label>
-                        <input type="number" name="kmAtualEdit" id="kmAtualEdit"
-                           placeholder="km Atual" maxlength="7" >
-                    </div>
-               
-                    <div class="inputGroup">
-                       <label for="dtKmEdit">Data do KM</label>
-                       <input type="date" name="dtKmEdit" id="dtKmEdit">
-                    </div>
-                          
-                    <div class="inputGroup">
-                           <label for="statusEdit">Status</label>
-                        <select name="statusEdit" id="statusEdit">
-                            <option value="">Selecione...</option>
-                           <option value="Disponivel">Disponivel</option>
-                           <option value="Em locação">Locado</option>
-                           <option value="Saida do cliente">Saida do Cliente</option>
-                           <option value="Saida do aterro">Saida do Aterro</option>
-                           <option value="Saida do aterro para o cliente">Saida do aterro para o cliente</option>
-                           <option value="Transito para o cliente">Transito para o cliente</option>
-                           <option value="Cliente para o aterro">cliente para o aterro</option>
-                        </select>
-                   </div>
-
-                    <div class="inputGroup">
-                         <label for="dtStatusEdit">Data do Status</label>
-                         <input type="date" name="dtStatusEdit" id="dtStatusEdit">
-                    </div>
-                      
-                    <div class="inputGroup">
-                        <label for="hrStatusEdit">Hora do Status</label>
-                        <input type="time" name="hrStatusEdit" id="hrStatusEdit" placeholder="bensHrus">
-                    </div>
-                    
-                    <div class="inputGroup">
-                        <label for="chassiEdit">Chassi</label>
-                        <input type="text" name="chassiEdit" id="chassiEdit" placeholder="Chassi" maxlength="20">
-                    </div>
-                  
-                    <div class="inputGroup">
-                       <label for="corEdit">Cor</label>
-                       <input type="text" name="corEdit" id="corEdit" placeholder="bensCore" maxlength="15">
-                   </div>
-
-                   <div class="inputGroup">
-                       <label for="nuMOEdit">nuMO </label>
-                       <input type="text" name="nuMOEdit" id="nuMOEdit" placeholder="bensNumo" maxlength="15">
-                   </div>
-
-                   <div class="inputGroup">
-                          <label for="renaEdit">Renavam</label>
-                          <input type="text" name="renaEdit" id="renaEdit" placeholder="bensRena" maxlength="15">
-                   </div>
-
-                   <div class="inputGroup">
-                          <label for="bensCtepEdit">bensCtep </label>
-                           <input type="text" name="bensCtepEdit" id="bensCtepEdit" placeholder="bensCtep" maxlength="40">
-                   </div>
-
-                   <div class="inputGroup">
-                           <label for="bensAtivEdit">Ativo</label>
-                           <select name="bensAtivEdit" id="bensAtivEdit">
-                             <option value="">Selecione...</option> 
-                               <option value="Sim">Sim</option>
-                               <option value="Não">Nao</option>
-                           </select>
-                   </div>
-                  
-                   <div class="inputGroup">
-                         <label for="alugEdit">Alugado</label>
-                            <select name="alugEdit" id="alugEdit">
-                                <option value="">Selecione...</option>
-                               <option value="Sim">Sim</option>
-                               <option value="Não">Nao</option>
-                            </select>
-                   </div>
-               
-                    <div class="inputGroup">
-                       <label for="valorAlugEdit">Valor Alugado</label>
-                       <input type="text" name="valorAlugEdit" id="valorAlugEdit" placeholder="R$" maxlength="25" >
-                   </div>
-                      
-                   <div class="inputGroup">
-                       <label for="fabriEdit">Fabricante</label>
-                        <input type="text" name="fabriEdit" id="fabriEdit" placeholder="bensFabr" maxlength="25">
-                   </div>
-                <div class="btnPageEdit">
-                     <button class="submitEditBtn">Salvar</button>
-                     <button class="btnOutPageEdit">Voltar</button>
-                </div>
-              </div>      
-            </form>
-        </div>
-
-        <div class="showContentBens" style="display: none;">
-             <form id="formRegisterBens">
-                 
-                    <div class="formGroup">               
-
-                         <div class="inputGroup">
-                            <label for="code">Codigo</label>
-                            <input type="text" name="code" id="code" placeholder="Codigo" maxlength="15">
-                         </div> 
-
-                         <div class="inputGroup">
-                               <label for="name">Nome</label>
-                               <input type="text" name="name" id="name" placeholder="Nome" maxlength="80" >
-                        </div>
-
-                        <div class="inputGroup">
-                            <label for="cofa"> Familia de bem </label>
-                            <select name="cofa" id="cofa">
-                               <option value="">Selecione...</option>
-                            </select>
-                       </div>
-
-                       <div class="inputGroup">
-                           <label for="model">Modelo</label>
-                            <input type="text" name="model" id="model" placeholder="Modelo" maxlength="20"  >
-                       </div>
-
-                        <div class="inputGroup">
-                            <label for="serial">Numero de Serie</label>
-                            <input type="text" name="serial" id="serial" placeholder="Numero de Serie" maxlength="25">
-                        </div>
-                           
-                        <div class="inputGroup">
-                             <label for="placa">Placa </label>
-                             <input type="text" name="placa" id="placa" placeholder="Placa" maxlength="10" >
-                       </div>
-                    
-                        <div class="inputGroup">
-                             <label for="bensAnmo">Ano do modelo</label>
-                             <input type="date" name="bensAnmo" id="bensAnmo" >
-                        </div>
-                           
-                        <div class="inputGroup">
-                            <label for="dtCompra"> Data da compra</label>
-                            <input type="date" name="dtCompra" id="dtCompra" >
-                         </div>
-                         
-                        <div class="inputGroup">
-                             <label for="valorCpMain">Valor compra</label>
-                             <input type="text" name="valorCpMain" id="valorCpMain" placeholder="R$ 0,00" maxlength="12">
-                         </div>
-
-                        <div class="inputGroup">
-                            <label for="ntFiscal">Nota Fiscal</label>
-                            <input type="text" name="ntFiscal" id="ntFiscal" placeholder="Nota Fiscal" maxlength="10" >
-                        </div>
-                           
-
-                        <div class="inputGroup">
-                             <label for="cofo">codigo Fornecedor </label>
-                            <select name="cofo" id="cofo">
-                                <option value="">Selecione...</option>
-                            </select>
-                         </div>
-
-                         <div class="inputGroup">
-                             <label for="kmAtual">KM Atual </label>
-                             <input type="number" name="kmAtual" id="kmAtual"
-                                placeholder="Km Atua" maxlength="7" >
-                         </div>
-                    
-                         <div class="inputGroup">
-                            <label for="dtKm">Data do KM</label>
-                            <input type="date" name="dtKm" id="dtKm">
-                         </div>
-                               
-                         <div class="inputGroup">
-                                <label for="status">Status</label>
-                                <select name="status" id="status">
-                                <option value="">Selecione...</option>
-                                <option value="Disponivel">Disponivel</option>
-                                <option value="Em locação">Locado</option>
-                                <option value="Saida do cliente">Saida do cliente</option>
-                                <option value="Saida do aterro">Saida do aterro</option>
-                                <option value="Saida do aterro para o cliente">Saida do aterro para o cliente</option>
-                                <option value="Transito para o cliente">Transito para o cliente</option>
-                                <option value="Cliente para o aterro">Cliente para o aterro</option>
-                             </select>
-                        </div>
-
-                         <div class="inputGroup">
-                              <label for="dtStatus">Data do Status</label>
-                              <input type="date" name="dtStatus" id="dtStatus">
-                         </div>
-                           
-                         <div class="inputGroup">
-                             <label for="hrStatus">Hora do Status</label>
-                             <input type="time" name="hrStatus" id="hrStatus" >
-                         </div>
-                         
-                         <div class="inputGroup">
-                             <label for="chassi">Chassi</label>
-                             <input type="number" name="chassi" id="chassi" placeholder="Chassi" maxlength="20">
-                         </div>
-                       
-                         <div class="inputGroup">
-                            <label for="cor">Cor</label>
-                            <input type="text" name="cor" id="cor" placeholder="Cor" maxlength="15">
-                        </div>
-
-                        <div class="inputGroup">
-                            <label for="nuMO">Numero</label>
-                            <input type="number" name="nuMO" id="nuMO" placeholder="Numero" maxlength="15">
-                        </div>
-
-                        <div class="inputGroup">
-                               <label for="rena">Renavam</label>
-                               <input type="text" name="rena" id="rena" placeholder="Renavam" maxlength="20">
-                        </div>
-
-                        <div class="inputGroup">
-                               <label for="bensCtep">bensCtep </label>
-                                <input type="text" name="bensCtep" id="bensCtep" placeholder="bensCtep" maxlength="40">
-                        </div>
-
-                        <div class="inputGroup">
-                                <label for="bensAtiv">Ativo</label>
-                                <select name="bensAtiv" id="bensAtiv">
-                                    <option value="">Selecione...</option>
-                                    <option value="Sim">Sim</option>
-                                    <option value="Não">Nao</option>
-                                </select>
-                        </div>
-                       
-                        <div class="inputGroup">
-                              <label for="alug">Alugado</label>
-                                 <select name="alug" id="alug">
-                                    <option value="">Selecione</option>
-                                    <option value="Sim">Sim</option>
-                                    <option value="Não">Nao</option>
-                                 </select>
-                        </div>
-                    
-                         <div class="inputGroup">
-                            <label for="valorAlugMain">Valor Alugado</label>
-                            <input type="text" name="valorAlugMain" id="valorAlugMain" placeholder="R$ 0,00" maxlength="13">
-                        </div>
-                           
-                        <div class="inputGroup">
-                            <label for="fabri">Fabricante</label>
-                            <input type="text" name="fabri" id="fabri" placeholder="Fabricante" maxlength="25">
-                        </div>
-                    
-                    <div class="btnOutNext">
-                        <button class="btnNext" >Cadastrar</button>
-                        <button class="btnOut">Voltar</button>
-                    </div>
-                </div>
-            </form>
-        </div>   
-</section>   
-
-         <!-- Cadastro do client -->
-    <section class="containerAppClient">
-          
-        <div class="listClient">
-            <!-- informações do cadastro do client -->
-        </div>
-
-        <div class="buttonsMainPage">
-            <button class="registerClient">Incluir</button>
-            <button class="buttonDeleteClient">Excluir</button>
-            <button class="buttonEditClient">Editar</button>
-            <button class="buttonExitClient">Voltar</button>
-        </div>
-
-        <div class="formEditClient"style="display: none;" >
-             
-             <form id="formEditRegisterClient" >
-                <div class="formGroup">
-  
-                    <div class="inputGroup">
-                        <label for="editClieCode">Codigo</label>
-                        <input type="text" name="editClieCode" id="editClieCode" placeholder="Codigo" maxlength="15" readonly>
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editClieName">Nome</label>
-                        <input type="text" name="editClieName" id="editClieName" placeholder="Nome" maxlength="80">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editCliecpf">CPF</label>
-                        <input type="text" name="editCliecpf" id="editCliecpf" placeholder="CPF" maxlength="15">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editClieDtCad">Data do cadastro</label>
-                        <input type="date" name="editClieDtCad" id="editClieDtCad">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editClieDtNasc">Data de Nascimento</label>
-                        <input type="date" name="editClieDtNasc" id="editClieDtNasc">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editClieCelu">Celular</label>
-                        <input type="text" name="editClieCelu" id="editClieCelu" placeholder="Celular" maxlength="20">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editClieCity">Cidade</label>
-                        <input type="text" name="editClieCity" id="editClieCity" placeholder="Cidade" maxlength="25">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editClieEstd">Estado</label>
-                        <input type="text" name="editClieEstd" id="editClieEstd" placeholder="Estado" maxlength="20">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editClieRua">Rua</label>
-                        <input type="text" name="editClieRua" id="editClieRua" placeholder="RUA QD LT" maxlength="40">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editClieCep">Cep</label>
-                        <input type="text" name="editClieCep" id="editClieCep" placeholder="CEP" maxlength="13">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editClieMail">E-mail</label>
-                        <input type="email" name="editClieMail" id="editClieMail" placeholder="E-mail" maxlength="35">
-                    </div>
-                      
-                     <div class="btnbtn">
-                        <button class="submitEditClient">Salvar</button>
-                        <button class="outPageEditClient">Voltar</button>
-                     </div>
-                  </div>
-                </form>  
-             </div>
-             
-        <div class="containerOfForm" style="display: none;">
-              <form id="formRegisterClient">
-                  <div class="formGroup">
-
-                  <div class="inputGroup">
-                      <label for="clieCode">Codigo</label>
-                      <input type="text" name="clieCode" id="clieCode" placeholder="Codigo" maxlength="15">
-                  </div>
-
-                  <div class="inputGroup">
-                      <label for="clieNome">Nome</label>
-                      <input type="text" name="clieName" id="clieName" placeholder="Nome" maxlength="80">
-                  </div>
-
-                  <div class="inputGroup">
-                      <label for="cpf">CPF</label>
-                      <input type="text" name="cpf" id="cpf" placeholder="CPF" maxlength="14">
-                  </div>
-
-                  <div class="inputGroup">
-                      <label for="dtCad">Data do cadastro</label>
-                      <input type="date" name="dtCad" id="dtCad">
-                  </div>
-
-                  <div class="inputGroup">
-                      <label for="dtNasc">Data de Nascimento</label>
-                      <input type="date" name="dtNasc" id="dtNasc">
-                  </div>
-
-                  <div class="inputGroup">
-                      <label for="clieCelu">Celular</label>
-                      <input type="text" name="clieCelu" id="clieCelu" placeholder="Celular" maxlength="11">
-                  </div>
-
-                  <div class="inputGroup">
-                      <label for="clieCity">Cidade</label>
-                      <input type="text" name="clieCity" id="clieCity" placeholder="Cidade" maxlength="25">
-                  </div>
-
-                  <div class="inputGroup">
-                      <label for="clieEstd">Estado</label>
-                      <input type="text" name="clieEstd" id="clieEstd" placeholder="Estado" maxlength="20">
-                  </div>
-
-                  <div class="inputGroup">
-                      <label for="clieRua ">Rua</label>
-                      <input type="text" name="clieRua" id="clieRua" placeholder="RUA" maxlength="40">
-                  </div>
-
-                  <div class="inputGroup">
-                      <label for="clieCep ">Cep</label>
-                      <input type="text" name="clieCep" id="clieCep" placeholder="CEP" maxlength="10">
-                  </div>
-
-                  <div class="inputGroup">
-                      <label for="clieMail ">E-mail</label>
-                      <input type="email" name="clieMail" id="clieMail" placeholder="E-mail" maxlength="35">
-                  </div>
-                    
-                  <div class="btnOutNext">
-                     <button class="btnRegisterClient">Cadastrar</button>
-                     <button class="btnOutInit">Voltar</button>
-                  </div>
-             </div>
-        </form>
-    </div>
-</section>
-        
-       <!-- Cadastro de fornecedores -->
-<section class="containerAppForn">
-
-     <div class="listingForn">
-              <!-- Informações do fornecedor -->
-        </div>
-
-    <div class="btnMainPageForn">
-        <button class="registerForn">Incluir</button>
-        <button class="buttonDeleteForn">Excluir</button>
-        <button class="buttonEditForn">Editar</button>
-        <button class="buttonExitForn">Voltar</button>
-       </div>
-
-           <div class="formRegisterForn" style="display: none;">
-
-             <form id="registerForn">
-                        
-                <div class="formGroup">
-
-                    <div class="inputGroup">
-                        <label for="fornCode">Codigo</label>
-                        <input type="text" name="fornCode" id="fornCode" placeholder="Codigo" maxlength="15">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="fornName">Nome</label>
-                        <input type="text" name="fornName" id="fornName" placeholder="Nome" maxlength="80">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="nomeFan">Nome fantasia</label>
-                        <input type="text" name="nomeFan" id="nomeFan" placeholder="Nome Fantasia" maxlength="50">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="fornCnpj">CNPJ</label>
-                        <input type="text" name="fornCnpj" id="fornCnpj" placeholder="CNPJ" maxlength="14">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="fornCep">CEP</label>
-                        <input type="text" name="fornCep" id="fornCep" placeholder="CEP" maxlength="9">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="fornRua">Rua</label>
-                        <input type="text" name="fornRua" id="fornRua" placeholder="Rua" maxlength="40">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="fornCity">Cidade</label>
-                        <input type="text" name="fornCity" id="fornCity" placeholder="Cidade" maxlength="25">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="fornEstd">Estado</label>
-                        <input type="text" name="fornEstd" id="fornEstd" placeholder="Estado" maxlength="20">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="fornCelu">Celular</label>
-                        <input type="text" name="fornCelu" id="fornCelu" placeholder="Celular" maxlength="11">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="fornMail ">E-mail</label>
-                        <input type="email" name="fornMail" id="fornMail" placeholder="E-mail" maxlength="35">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="fornBank ">Banco</label>
-                        <input type="text" name="fornBank" id="fornBank" placeholder="Banco" maxlength="20">
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="fornAge ">Agencia</label>
-                        <input type="number" name="fornAge" id="fornAge" placeholder="Agencia"  >
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="fornCont ">Conta</label>
-                        <input type="number" name="fornCont" id="fornCont" placeholder="Conta" maxlength="8">
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="fornPix ">Pix</label>
-                        <input type="text" name="fornPix" id="fornPix" placeholder="Pix" maxlength="35">
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="fornDtcd ">Data do cadastro</label>
-                        <input type="date" name="fornDtcd" id="fornDtcd">
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="fornDisPro ">Discrição do produto</label>
-                        <input type="text" name="fornDisPro" id="fornDisPro" placeholder="Discrição do produto" maxlength="85">
-                    </div>
-                      
-                      
-                    <div class="btnOutNext">
-                       <button class="btnRegisterforn">Cadastrar</button>
-                       <button class="btnOutInitForn">Voltar</button>
-                    </div>
-                </div>
-             </form>
-        </div>
-
-        <div class="formEditRegisterForn" style="display: none;" >
-            <form class="formEditForn">
-                  
-                <div class="formGroup">
-
-                    <div class="inputGroup">
-                        <label for="editFornCode">Codigo</label>
-                        <input type="text" name="editFornCode" id="editFornCode" placeholder="Codigo" maxlength="15" readonly>
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editFornName">Nome</label>
-                        <input type="text" name="editFornName" id="editFornName" placeholder="Nome" maxlength="80">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editNomeFan">Nome fantasia</label>
-                        <input type="text" name="editNomeFan" id="editNomeFan" placeholder="Nome Fantasia" maxlength="50">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editFornCnpj">CNPJ</label>
-                        <input type="text" name="editFornCnpj" id="editFornCnpj" placeholder="CNPJ" maxlength="20">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editFornCep">CEP</label>
-                        <input type="text" name="editFornCep" id="editFornCep" placeholder="CEP" maxlength="13">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editFornRua">Rua</label>
-                        <input type="text" name="editFornRua" id="editFornRua" placeholder="Rua" maxlength="40">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editFornCity">Cidade</label>
-                        <input type="text" name="editFornCity" id="editFornCity" placeholder="Cidade" maxlength="25">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editFornEstd">Estado</label>
-                        <input type="text" name="editFornEstd" id="editFornEstd" placeholder="Estado" maxlength="20">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editFornCelu">Celular</label>
-                        <input type="text" name="editFornCelu" id="editFornCelu" placeholder="Celular" maxlength="15">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editFornMail">E-mail</label>
-                        <input type="email" name="editFornMail" id="editFornMail" placeholder="E-mail" maxlength="35">
-                    </div>
-  
-                    <div class="inputGroup">
-                        <label for="editFornBank">Banco</label>
-                        <input type="text" name="editFornBank" id="editFornBank" placeholder="Banco" maxlength="20">
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="editFornAge">Agencia</label>
-                        <input type="number" name="editFornAge" id="editFornAge" placeholder="Agencia" maxlength="4">
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="editFornCont">Conta</label>
-                        <input type="number" name="editFornCont" id="editFornCont" placeholder="Conta" maxlength="8">
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="editFornPix">Pix</label>
-                        <input type="text" name="editFornPix" id="editFornPix" placeholder="Pix" maxlength="35">
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="editFornDtcd">Data do cadastro</label>
-                        <input type="date" name="editFornDtcd" id="editFornDtcd">
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="editFornDisPro">Discrição do produto</label>
-                        <input type="text" name="editFornDisPro" id="editFornDisPro" placeholder="Discrição do produto" maxlength="85">
-                    </div>
-                      
-                    <div class="btnOutNext">
-                       <button class="submitForn">Salvar</button>
-                       <button class="btnOutInitFornEdit">Voltar</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-</section>
-
-     <!-- Cadastro do produto -->
-
-     <section class="containerAppProd">
- 
-         <div class="listingProd">
-            <!-- Informações do produto-->
-        </div>
-
-        <div class="btnMainPageProd">
-            <button class="registerProd">Incluir</button>
-            <button class="buttonDeleteProd">Excluir</button>
-            <button class="buttonEditProd">Editar</button>
-            <button class="buttonExitProd">Voltar</button>
       </div>
 
-       <div class="formRegisterProd" style="display: none;">
-          <form class="formRegisterProduto">
-           
+      <section id="mainContent"> 
+        <!-- CONTEUDO DA MINHA PAGINA -->
+      </section>
+
+     
+
+
+      <!-- Cadastro de automovel -->
+      
+        <!-- <div class="formCadAuto" style="display: none">
+          <form class="foorm">
             <div class="formGroup">
-
-                <div class="inputGroup">
-                    <label for="prodCode">Codigo</label>
-                    <input type="text" name="prodCode" id="prodCode" placeholder="Codigo" maxlength="15">
-                </div>
-
-                <div class="inputGroup">
-                    <label for="prodDesc">Descrição</label>
-                    <input type="text" name="prodDesc" id="prodDesc" placeholder="Discrição" maxlength="60">
-                </div>
-
-                <div class="inputGroup">
-                    <label for="prodTipo">Tipo de Produto</label>
-                     <select name="prodTipo" id="prodTipo">
-                        <option value="">Selecione...</option>
-                     </select>
-                </div>
-
-                <div class="inputGroup">
-                    <label for="prodUni">Unidade</label>
-                    <input type="number" name="prodUni" id="prodUni" placeholder="Unidade" maxlength="8">
-                </div>
-
-                <div class="inputGroup">
-                    <label for="prodData">Data do cadastro</label>
-                    <input type="date" name="prodData" id="prodData" >
-                </div>
-
-                <div class="inputGroup">
-                    <label for="prodValor">Valor Compra</label>
-                    <input type="text" name="prodValor" id="prodValor" placeholder="R$" maxlength="12">
-                </div>
-
-                <div class="inputGroup">
-                    <label for="prodPeli">Preço Liguido</label>
-                    <input type="text" name="prodPeli" id="prodPeli" placeholder="R$" maxlength="6">
-                </div>
-
-                <div class="inputGroup">
-                    <label for="prodPebr">Preço Bruto</label>
-                    <input type="text" name="prodPebr" id="prodPebr" placeholder="R$" maxlength="10">
-                </div>
-
-                <div class="inputGroup">
-                    <label for="prodAtiv">Ativo</label>
-                      <select name="prodAtiv" id="prodAtiv">
-                        <option value="">Selecione...</option>
-                         <option value="Sim">SIM</option>
-                         <option value="Não">NAO</option>
-                      </select>
-                </div>
-
-                <div class="btnOutNext">
-                   <button class="cadProd">Cadastrar</button>
-                   <button class="btnOutInitProd">Voltar</button>
-                </div>
-            </div>
-        </form>
-    </div>
-        <div class="formEditProd" style="display: none;">
-            <form class="editProd" >
-
-                <div class="formGroup">
-
-                    <div class="inputGroup">
-                        <label for="editProdCode">Codigo</label>
-                        <input type="text" name="editProdCode" id="editProdCode" placeholder="Codigo" maxlength="10" readonly>
-                    </div>
-    
-                    <div class="inputGroup">
-                        <label for="editProdDesc">Descrição</label>
-                        <input type="text" name="editProdDesc" id="editProdDesc" placeholder="Discrição" maxlength="60">
-                    </div>
-    
-                    <div class="inputGroup">
-                        <label for="editProdTipo">Tipo do Produto</label>
-                         <select name="editProdTipo" id="editProdTipo">
-                            <option value="">Selecione...</option>
-                         </select>
-                    </div>
-    
-                    <div class="inputGroup">
-                        <label for="editProdUni">Unidade</label>
-                        <input type="number" name="editProdUni" id="editProdUni" placeholder="Unidade" maxlength="2">
-                    </div>
-    
-                    <div class="inputGroup">
-                        <label for="editProdData">Data da Compra</label>
-                        <input type="date" name="editProdData" id="editProdData" >
-                    </div>
-    
-                    <div class="inputGroup">
-                        <label for="editProdValor">Valor</label>
-                        <input type="text" name="editProdValor" id="editProdValor" placeholder="Valor " maxlength="12">
-                    </div>
-    
-                    <div class="inputGroup">
-                        <label for="editProdPeli">Preço Liquido</label>
-                        <input type="text" name="editProdPeli" id="editProdPeli" placeholder="" maxlength="6">
-                    </div>
-    
-                    <div class="inputGroup">
-                        <label for="editProdPebr">Preço Bruto</label>
-                        <input type="text" name="editProdPebr" id="editProdPebr" placeholder="" maxlength="10">
-                    </div>
-    
-                    <div class="inputGroup">
-                        <label for="editProdAtiv">Ativo</label>
-                          <select name="editProdAtiv" id="editProdAtiv">
-                            <option value="">Selecione...</option>
-                             <option value="S">SIM</option>
-                             <option value="N">NAO</option>
-                          </select>
-                    </div>
-    
-                    <div class="btnOutNext">
-                       <button class="cadProd">Salvar</button>
-                       <button class="btnOutInitProdEdit">Voltar</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-</section>
-
-<!-- Familia de bens-->
-
-<section class="containerAppFabri">
-       
-     <div class="listingFabri">
-        <!-- informações do fabricante-->
-     </div>
-      <div class="btnMainPageFabri">
-         <button class="registerFabri">incluir</button>
-         <button class="buttonDeleteFabri">Excluir</button>
-         <button class="buttonEditFabri">Editar</button>
-         <button class="buttonExitFabri">Voltar</button>
-      </div>
-
-      <div class="formRegisterFabri" style="display: none;">
-        <form class="formRegisterFabricante" >
-         
-          <div class="formGroup">
-
               <div class="inputGroup">
-                  <label for="fabeCode">Codigo</label>
-                  <input type="text" name="fabeCode" id="fabeCode" placeholder="Codigo" maxlength="5">
+                <label for="codeAuto">Codigo</label>
+                <input
+                  type="text"
+                  name="codeAuto"
+                  id="codeAuto"
+                  placeholder="Codigo"
+                  maxlength="15"
+                />
               </div>
 
               <div class="inputGroup">
-                  <label for="fabeDesc">Descrição</label>
-                  <input type="text" name="fabeDesc" id="fabeDesc" placeholder="Discrição" maxlength="80">
+                <label for="placAuto">Placa</label>
+                <input
+                  type="text"
+                  name="placAuto"
+                  id="placAuto"
+                  placeholder="Placa"
+                  maxlength="10"
+                />
               </div>
 
               <div class="inputGroup">
-                  <label for="fabeCate">Categoria</label>
-                  <input type="text" name="fabeCate" id="fabeCate" placeholder="categoria" maxlength="35">
+                <label for="chassAuto">Chassi</label>
+                <input
+                  type="text"
+                  name="chassAuto"
+                  id="chassAuto"
+                  placeholder="Chassi"
+                  maxlength="20"
+                />
               </div>
 
               <div class="inputGroup">
-                  <label for="fabeSuca">Subcategoria</label>
-                  <input type="text" name="fabeSuca" id="fabeSuca" placeholder="Subcategoria" maxlength="30">
+                <label for="renaAuto">Renavam</label>
+                <input
+                  type="text"
+                  name="renaAuto"
+                  id="renaAuto"
+                  placeholder="Renavam"
+                  maxlength="20"
+                />
               </div>
 
               <div class="inputGroup">
-                  <label for="fabeobs">Observação</label>
-                  <input type="text" name="fabeObs" id="fabeObs" placeholder="Observação" maxlength="100">
+                <label for="macaAuto">Marca</label>
+                <input
+                  type="text"
+                  name="macaAuto"
+                  id="macaAuto"
+                  placeholder="Marca"
+                  maxlength="25"
+                />
               </div>
 
               <div class="inputGroup">
-                  <label for="fabeCtct">Centro de custo</label>
-                  <input type="text" name="fabeCtct" id="fabeCtct"  placeholder="centro de custo" maxlength="40">
+                <label for="modeAuto">Modelo</label>
+                <input
+                  type="text"
+                  name="modeAuto"
+                  id="modeAuto"
+                  placeholder="Modelo"
+                  maxlength="30"
+                />
+              </div>
+
+              <div class="inputGroup">
+                <label for="corAuto">Cor</label>
+                <input
+                  type="text"
+                  name="corAuto"
+                  id="corAuto"
+                  placeholder="Cor"
+                  maxlength="20"
+                />
+              </div>
+
+              <div class="inputGroup">
+                <label for="tpCombusAuto">Tipo de Combustivel</label>
+                <input
+                  type="text"
+                  name="tpCombusAuto"
+                  id="tpCombusAuto"
+                  placeholder="Tipo de Combustivel"
+                  maxlength="20"
+                />
+              </div>
+
+              <div class="inputGroup">
+                <label for="kmAtAuto">Km atual</label>
+                <input
+                  type="number"
+                  name="kmAtAuto"
+                  id="kmAtAuto"
+                  placeholder="Quilometragem Atual"
+                  maxlength="8"
+                />
+              </div>
+
+              <div class="inputGroup">
+                <label for="motoAuto">Motorista</label>
+                <select name="motoAuto" id="motoAuto">
+                  <option value="">Selecione...</option>
+                </select>
+              </div>
+
+              <div class="inputGroup">
+                <label for="statAuto">Status</label>
+                <select name="statAuto" id="statAuto">
+                  <option value="">Selecione...</option>
+                  <option value="Ativo">Ativo</option>
+                  <option value="Desativo">Desativo</option>
+                </select>
+              </div>
+
+              <div class="inputGroup">
+                <label for="dtCadAuto">Data do cadastro</label>
+                <input type="date" name="dtCadAuto" id="dtCadAuto" />
               </div>
 
               <div class="btnOutNext">
-                 <button class="cadFabri">Cadastrar</button>
-                 <button class="btnOutInitFabri">Voltar</button>
+                <button class="cadAutomo">Cadastrar</button>
+                <button class="btnOutCadAuto">Voltar</button>
               </div>
-          </div>
-      </form>
-  </div>
+            </div>
+          </form>
+        </div> -->
+
       
-  <!-- edição de dados -->
+      <!-- sesão de locação  -->
+      <section class="containerAppLocation">
+        <div class="tableLocation">
+          <!-- Informações de locação -->
+        </div>
 
-      <div class="editFabri" style="display: none;">
-         <form class="formEditFabri">
+        <div class="btnInitPageMainLoc">
+          <button class="registerLocation">incluir</button>
+          <button class="buttonDeleteLocation">Excluir</button>
+          <button class="buttonEditLocation">Editar</button>
+          <button class="buttonExitLocation">Voltar</button>
+        </div>
+
+        <main class="content" style="display: none">
+          <div class="searchClient" style="display: none">
+            <!-- Informações caso tenha mais e um cliente -->
+          </div>
+
+          <div id="formClient">
             <div class="formGroup">
+              <div class="inputGroupSearchClient">
+                <label for="client"> <b>Pesquise o Cliente</b></label>
+                <div class="inputWrapper">
+                  <input
+                    type="text"
+                    name="client"
+                    id="client"
+                    placeholder="CPF ou Nome"
+                    required
+                  />
+                  <span class="material-symbols-outlined" id="search">
+                    search
+                  </span>
+                  <button type="button" class="locCadClient">
+                    Cadastrar Cliente
+                  </button>
+                </div>
+              </div>
 
-                <div class="inputGroup">
-                    <label for="editFabeCode">Codigo</label>
-                    <input type="text" name="editFabeCode" id="editFabeCode" placeholder="Codigo" maxlength="5" readonly>
-                </div>
-  
-                <div class="inputGroup">
-                    <label for="editFabeDesc">Descrição</label>
-                    <input type="text" name="editFabeDesc" id="editFabeDesc" placeholder="Discrição" maxlength="80">
-                </div>
-  
-                <div class="inputGroup">
-                    <label for="editFabeCate">Categoria</label>
-                    <input type="text" name="editFabeCate" id="editFabeCate" placeholder="categoria" maxlength="35">
-                </div>
-  
-                <div class="inputGroup">
-                    <label for="editFabeSuca">Subcategoria</label>
-                    <input type="text" name="editFabeSuca" id="editFabeSuca" placeholder="Subcategoria" maxlength="30">
-                </div>
-  
-                <div class="inputGroup">
-                    <label for="editFabeObs">Observação</label>
-                    <input type="text" name="editFabeObs" id="editFabeObs" placeholder="Observação" maxlength="100">
-                </div>
-  
-                <div class="inputGroup">
-                    <label for="editFabeCtct">Centro de custo</label>
-                    <input type="text" name="editFabeCtct" id="editFabeCtct"  placeholder="centro de custo" maxlength="40">
-                </div>
-  
-                <div class="btnOutNext">
-                   <button class="cadFabriEdit">Salvar</button>
-                   <button class="btnOutInitFabriEdit">Voltar</button>
-                </div>
+              <div class="Numeric">
+                <label for="numeroLocation"> <b>Locação</b></label>
+                <input
+                  type="number"
+                  name="numeroLocation"
+                  id="numeroLocation"
+                  placeholder="Locação"
+                  readonly
+                />
+              </div>
+
+              <div class="inputGroupDataLoc">
+                <label for="dataLoc"> <b>Data da locação</b></label>
+                <input
+                  type="datetime-local"
+                  name="dataLoc"
+                  id="dataLoc"
+                  required
+                />
+              </div>
+
+              <div class="inputGroupDataEvolu">
+                <label for="DataDevo"> <b>Data de devolução</b></label>
+                <input type="date" name="DataDevo" id="DataDevo" required />
+              </div>
+
+              <div class="inputGroupPagament">
+                <label for="pagament"> <b>Forma de pagamento</b></label>
+
+                <select name="pagament" id="pagament">
+                  <option value="">Selecione...</option>
+                  <option value="Pix">Pix</option>
+                  <option value="Credito">Credito</option>
+                  <option value="Debito">Debito</option>
+                  <option value="Boleto">Boleto</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="infoClient">
+            <label for="nameClient"> <b>Nome do Cliente</b></label>
+            <input
+              type="text"
+              id="nameClient"
+              placeholder="Nome do cliente"
+              readonly
+              required
+            />
+
+            <label for="cpfClient"> <b>CPF do Cliente</b></label>
+            <input
+              type="text"
+              id="cpfClient"
+              placeholder="CPF do cliente"
+              readonly
+              required
+            />
+
+            <label for="ruaClient"> <b>Rua do Cliente</b></label>
+            <input
+              type="text"
+              id="ruaClient"
+              placeholder="Rua do cliente"
+              readonly
+              required
+            />
+
+            <label for="cityClient"> <b>Cidade do Cliente</b></label>
+            <input
+              type="text"
+              id="cityClient"
+              placeholder="Cidade do cliente"
+              readonly
+              required
+            />
+
+            <label for="cepClient"> <b>CEP do Cliente</b></label>
+            <input
+              type="text"
+              id="cepClient"
+              placeholder="CEP do cliente"
+              readonly
+              required
+            />
+
+            <label for="mailClient"> <b>E-mail do Cliente</b></label>
+            <input
+              type="text"
+              id="mailClient"
+              placeholder="E-mail do cliente"
+              readonly
+              required
+            />
+          </div>
+
+          <div class="familyBens">
+            <div class="tableGrid">
+              <label for="codeBen1">Família de bens</label>
+              <label for="prod1">Nome da familia </label>
+              <label for="quantidade1">Quantidade</label>
+              <label for="descricao1">Observação</label>
+              <label for="dataInicio1">Data Início</label>
+              <label for="dataFim1">Data Fim</label>
+
+              <select id="family1">
+                <option value="">Selecione...</option>
+                <!-- informações  -->
+              </select>
+              <input type="text" id="produto1" placeholder="Produto" readonly />
+              <input
+                type="number"
+                id="quantidade1"
+                placeholder="quantidade"
+                required
+              />
+              <input
+                type="text"
+                id="observacao1"
+                placeholder="Ex.: TV, Computadores"
+              />
+              <input type="date" id="dataInicio1" required />
+              <input type="date" id="dataFim1" required />
+
+              <select id="family2">
+                <option value="">Selecione...</option>
+                <!-- informações  -->
+              </select>
+              <input type="text" id="produto2" placeholder="produto" readonly />
+              <input
+                type="number"
+                id="quantidade2"
+                placeholder="Ex.: 10"
+                required
+              />
+              <input
+                type="text"
+                id="observacao2"
+                placeholder="Ex.: Eletrônicos"
+              />
+              <input type="date" id="dataInicio2" required />
+              <input type="date" id="dataFim2" required />
+
+              <select id="family3">
+                <!-- informações  -->
+                <option value="">Selecione...</option>
+              </select>
+              <input type="text" id="produto3" placeholder="Produto" readonly />
+              <input
+                type="number"
+                id="quantidade3"
+                placeholder="Ex.: 10"
+                required
+              />
+              <input
+                type="text"
+                id="observacao3"
+                placeholder="Ex.: TV, Computadores"
+              />
+              <input type="date" id="dataInicio3" required />
+              <input type="date" id="dataFim3" required />
+
+              <select id="family4">
+                <!-- informações  -->
+                <option value="">Selecione...</option>
+              </select>
+              <input type="text" id="produto4" placeholder="Produto" readonly />
+              <input
+                type="number"
+                id="quantidade4"
+                placeholder="Ex.: 10"
+                required
+              />
+              <input
+                type="text"
+                id="observacao4"
+                placeholder="Ex.: TV, Computadores"
+              />
+              <input type="date" id="dataInicio4" required />
+              <input type="date" id="dataFim4" required />
             </div>
 
-         </form>
-      </div>
+            <div class="formGroupBtn">
+              <button class="finish" onclick=" handleSubmit()">
+                Finalizar
+              </button>
+              <button class="outLocation">Voltar</button>
+            </div>
+          </div>
+        </main>
 
-</section>
+        <!-- Edição de locação -->
 
-<!-- Tipo do produto -->
-
- <section class="containerAppTipoProd">
-   
-   
-    <div class="listingTipoProd">
-        <div class="tableWrapper"> 
-            <!-- A tabela será inserida aqui via JavaScript -->
-        </div>
-    </div>
-
-    <div class="btnMainPageTipoProd">
-        <button class="registerTipoProd">Incluir</button>
-        <button class="buttonDeleteTipoProd">Excluir</button>
-        <button class="buttonEditTipoProd">Editar</button>
-        <button class="buttonExitTipoProd">Voltar</button>
-     </div>
-        
-         <div class="formRegisterTipoProd" style="display: none;">
-               
-             <form class="formRegisterTipoProdu" >
-         
-                  <div class="formGroup">
-      
-                      <div class="inputGroup">
-                        <label for="tpCode">Codigo</label>
-                        <input type="text" name="tpCode" id="tpCode" placeholder="Codigo" maxlength="5">
-                      </div>
-      
-                      <div class="inputGroup">
-                        <label for="tpDesc">Descrição</label>
-                        <input type="text" name="tpDesc" id="tpDesc" placeholder="Discrição" maxlength="80">
-                     </div>
-      
-                     <div class="inputGroup">
-                        <label for="tpCat">Categoria</label>
-                        <input type="text" name="tpCat" id="tpCat" placeholder="categoria" maxlength="35">
-                     </div>
-      
-                     <div class="inputGroup">
-                        <label for="tpSubCat">Subcategoria</label>
-                        <input type="text" name="tpSubCat" id="tpSubCat" placeholder="Subcategoria" maxlength="30">
-                     </div>
-
-      
-                     <div class="inputGroup">
-                        <label for="tpObs">Observação</label>
-                        <input type="text" name="tpObs" id="tpObs" placeholder="Observação" maxlength="100">
-                     </div>
-      
-                     <div class="inputGroup">
-                        <label for="tpCtct">Centro de custo</label>
-                        <input type="text" name="tpCtct" id="tpCtct"  placeholder="centro de custo" maxlength="40">
-                     </div>
-      
-                    <div class="btnOutNext">
-                       <button class="cadTp">Cadastrar</button>
-                       <button class="btnOutInitTp">Voltar</button>
-                    </div>
-                </div>
-            </form>
-         </div>
-
-         <div class="containerRegisterEdit" style="display: none;">
-                <form class="formEditTp">
-                    <div class="formGroup">
-      
-                       <div class="inputGroup">
-                          <label for="editTpCode">Codigo</label>
-                          <input type="text" name="editTpCode" id="editTpCode" placeholder="Codigo" maxlength="5" readonly>
-                       </div>
-      
-                       <div class="inputGroup">
-                         <label for="editTpDesc">Descrição</label>
-                         <input type="text" name="editTpDesc" id="editTpDesc" placeholder="Discrição" maxlength="80">
-                       </div>
-      
-                      <div class="inputGroup">
-                         <label for="editTpCat">Categoria</label>
-                         <input type="text" name="editTpCat" id="editTpCat" placeholder="categoria" maxlength="35">
-                     </div>
-      
-                     <div class="inputGroup">
-                        <label for="editTpSubCat">Subcategoria</label>
-                        <input type="text" name="editTpSubCat" id="editTpSubCat" placeholder="Subcategoria" maxlength="30">
-                     </div>
-      
-                    <div class="inputGroup">
-                        <label for="editTpObs">Observação</label>
-                        <input type="text" name="editTpObs" id="editTpObs" placeholder="Observação" maxlength="100">
-                    </div>
-      
-                    <div class="inputGroup">
-                        <label for="editTpCtct">Centro de custo</label>
-                        <input type="text" name="editTpCtct" id="editTpCtct"  placeholder="centro de custo" maxlength="40">
-                    </div>
-      
-                    <div class="btnOutNext">
-                       <button class="cadTpEdit">Salvar</button>
-                       <button class="btnOutInitTpEdit">Voltar</button>
-                    </div>
-                </div>
-              </form>
-         </div>
- </section>
-
-     <!-- cadastros motoristas -->
-
-          <section class="containerAppDriver">
-
-             <div class="listingDriver">
-                <!-- informações -->
-             </div>
-
-             <div class="btnInitPageMain">
-                <button class="registerDriver">incluir</button>
-                <button class="buttonDeleteDriver">Excluir</button>
-                <button class="buttonEditDriver">Editar</button>
-                <button class="buttonExitDriver">Voltar</button>
-             </div>
-               
-             <div class="RegisterDriver" style="display: none;">
-                    <form class="formRegisterDriver">
-                         
-                        <div class="formGroup">
-      
-                            <div class="inputGroup">
-                               <label for="motoCode">Codigo</label>
-                               <input type="text" name="motoCode" id="motoCode" placeholder="Codigo" maxlength="15">
-                            </div>
-           
-                            <div class="inputGroup">
-                              <label for="motoNome">Nome</label>
-                              <input type="text" name="motoNome" id="motoNome" placeholder="Nome" maxlength="80">
-                            </div>
-
-                            <div class="inputGroup">
-                                <label for="motoDtnc">Data de nascimento</label>
-                                <input type="date" name="motoDtnc" id="motoDtnc"  >
-                              </div>
-           
-                           <div class="inputGroup">
-                              <label for="motoCpf">CPF</label>
-                              <input type="text" name="motoCpf" id="motoCpf" placeholder="CPF" maxlength="14">
-                          </div>
-           
-                          <div class="inputGroup">
-                             <label for="motoDtch">Data de emisão</label>
-                             <input type="date" name="motoDtch" id="motoDtch">
-                          </div>
-           
-                         <div class="inputGroup">
-                             <label for="motoctch">Categoria da CNH</label>
-                             <input type="text" name="motoctch" id="motoctch" maxlength="10" placeholder="Categoria da CNH">
-                         </div>
-           
-                         <div class="inputGroup">
-                             <label for="motoDtvc">Data de vencimento</label>
-                             <input type="date" name="motoDtvc" id="motoDtvc" >
-                         </div>
-
-                         <div class="inputGroup">
-                            <label for="motoRest">Restrições</label>
-                            <input type="text" name="motoRest" id="motoRest" placeholder="Restrições" maxlength="40">
-                        </div>
-
-                        <div class="inputGroup">
-                            <label for="motoOrem">Orgão Emissor</label>
-                            <input type="text" name="motoOrem" id="motoOrem" placeholder="Orgão Emissor" maxlength="40">
-                        </div>
-
-                        <div class="inputGroup">
-                            <label for="motoCelu">Celular</label>
-                            <input type="text" name="motoCelu" id="motoCelu" placeholder="Celular" maxlength="40">
-                        </div>
-
-                        <div class="inputGroup">
-                            <label for="motoCep">Cep</label>
-                            <input type="text" name="motoCep" id="motoCep" placeholder="CEP" maxlength="9">
-                        </div>
-
-                        <div class="inputGroup">
-                            <label for="motoRua">Rua</label>
-                            <input type="text" name="motoRua" id="motoRua" placeholder="Rua" maxlength="50">
-                        </div>
-
-                        <div class="inputGroup">
-                            <label for="motoCity">Cidade</label>
-                            <input type="text" name="motoCity" id="motoCity" placeholder="cidade" maxlength="25">
-                        </div>
-
-                        <div class="inputGroup">
-                            <label for="motoEstd">Estado</label>
-                            <input type="text" name="motoEstd" id="motoEstd" placeholder="cidade" maxlength="20">
-                        </div>
-
-                        <div class="inputGroup">
-                            <label for="motoMail">E-mail</label>
-                            <input type="email" name="motoMail" id="motoMail" placeholder="E-mail" maxlength="35">
-                        </div>
-
-                        <div class="inputGroup">
-                            <label for="motoStat">Status</label>
-                            <select name="motoStat" id="motoStat">
-                                <option value="">Selecione...</option>
-                                <option value="Disponivel">Disponivel</option>
-                                <option value="Entrega destinada">Entrega destinada</option>
-                                <option value="Indisponivel">Indisponivel</option>
-                            </select>
-                        </div>
-           
-                         <div class="btnOutNext">
-                            <button class="cadDriver">Cadastrar</button>
-                            <button class="btnOutPageRegister">Voltar</button>
-                         </div>
-                     </div>
-                </form>
-             </div>
-
-             <div class="containerFormEditDriver" style="display: none;">
-                 
-                <form class="formEditDriver">
-                       
-                    <div class="formGroup">
-      
-                        <div class="inputGroup">
-                           <label for="editMotoCode">Codigo</label>
-                           <input type="text" name="editMotoCode" id="editMotoCode" placeholder="Codigo" maxlength="15" readonly>
-                        </div>
-       
-                        <div class="inputGroup">
-                          <label for="editMotoNome">Nome</label>
-                          <input type="text" name="editMotoNome" id="editMotoNome" placeholder="Discrição" maxlength="80">
-                        </div>
-
-                        <div class="inputGroup">
-                            <label for="editMotoDtnc">Data de nascimento</label>
-                            <input type="date" name="editMotoDtnc" id="editMotoDtnc"  >
-                          </div>
-       
-                       <div class="inputGroup">
-                          <label for="editMotoCpf">CPF</label>
-                          <input type="text" name="editMotoCpf" id="editMotoCpf" placeholder="CPF" maxlength="14">
-                      </div>
-       
-                      <div class="inputGroup">
-                         <label for="editMotoDtch">Data de emisão</label>
-                         <input type="date" name="editMotoDtch" id="editMotoDtch">
-                      </div>
-       
-                     <div class="inputGroup">
-                         <label for="editMotoCtch">Categoria da CNH</label>
-                        <input type="text" name="editMotoCtch" id="editMotoCtch">
-                     </div>
-       
-                     <div class="inputGroup">
-                         <label for="editMotoDtvc">Data de vencimento</label>
-                         <input type="date" name="editMotoDtvc" id="editMotoDtvc" >
-                     </div>
-
-                     <div class="inputGroup">
-                        <label for="editMotoRest">Restrições</label>
-                        <input type="text" name="editMotoRest" id="editMotoRest" placeholder="Restrições" maxlength="40">
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="editMotoOrem">Orgão Emissor</label>
-                        <input type="text" name="editMotoOrem" id="editMotoOrem" placeholder="Orgão Emissor" maxlength="10">
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="editMotoCelu">Celular</label>
-                        <input type="text" name="editMotoCelu" id="editMotoCelu" placeholder="Celular" maxlength="11">
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="editMotoCep">Cep</label>
-                        <input type="text" name="editMotoCep" id="editMotoCep" placeholder="Celular" maxlength="9">
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="editMotoRua">Rua</label>
-                        <input type="text" name="editMotoRua" id="editMotoRua" placeholder="Rua" maxlength="50">
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="editMotoCity">Cidade</label>
-                        <input type="text" name="editMotoCity" id="editMotoCity" placeholder="cidade" maxlength="25">
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="editMotoEstd">Estado</label>
-                        <input type="text" name="editMotoEstd" id="editMotoEstd" placeholder="cidade" maxlength="20">
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="editMotoMail">E-mail</label>
-                        <input type="email" name="editMotoMail" id="editMotoMail" placeholder="E-mail" maxlength="35">
-                    </div>
-
-                    <div class="inputGroup">
-                        <label for="editMotoStat">Status</label>
-                        <select name="editMotoStat" id="editMotoStat">
-                            <option value="">Selecione...</option>
-                            <option value="Disponivel">Disponivel</option>
-                            <option value="Entrega destinada">Entrega destinada</option>
-                            <option value="Indisponivel">Indisponivel</option>
-                        </select>
-                    </div>
-       
-                     <div class="btnOutNext">
-                        <button class="cadDriverEdit">Salvar</button>
-                        <button class="btnOutPageRegisterEdit">Voltar</button>
-                     </div>
-                 </div>
-
-            </form>
-
-        </div>
-
-
-     </section>
-
-
-    <!-- Cadastro de automovel -->
-  <section class="containerAppAutomo">
-      
-    <div class="listingAutomo">
-        <!-- informações -->
-     </div>
-
-     <div class="btnInitAutoPageMain">
-        <button class="registerAuto">incluir</button>
-        <button class="buttonDeleteAuto">Excluir</button>
-        <button class="buttonEditAuto">Editar</button>
-        <button class="buttonExitAuto">Voltar</button>
-     </div>
-      <div class="formCadAuto" style="display: none;"> 
-          <form class="foorm" >
+        <main class="contentEditlocation" style="display: none">
+          <!-- <h3>Informações do Cliente</h3> -->
+          <div id="formClient">
             <div class="formGroup">
-      
-                <div class="inputGroup">
-                   <label for="codeAuto">Codigo</label>
-                   <input type="text" name="codeAuto" id="codeAuto" placeholder="Codigo" maxlength="15">
-                </div>
+              <div class="Numeric">
+                <label for="numeroLocationEdit"> <b>Locação</b></label>
+                <input
+                  type="number"
+                  name="numeroLocation"
+                  id="numeroLocationEdit"
+                  placeholder="Locação"
+                  readonly
+                />
+              </div>
 
-                <div class="inputGroup">
-                  <label for="placAuto">Placa</label>
-                  <input type="text" name="placAuto" id="placAuto" placeholder="Placa" maxlength="10">
-                </div>
+              <div class="inputGroupDataLoc">
+                <label for="dataLocEdit"> <b>Data da locação</b></label>
+                <input
+                  type="datetime-local"
+                  name="dataLocEdit"
+                  id="dataLocEdit"
+                  required
+                />
+              </div>
 
-               <div class="inputGroup">
-                  <label for="chassAuto">Chassi</label>
-                  <input type="text" name="chassAuto" id="chassAuto" placeholder="Chassi" maxlength="20">
+              <div class="inputGroupDataEvolu">
+                <label for="DataDevoEdit"> <b>Data de devolução</b></label>
+                <input
+                  type="date"
+                  name="DataDevoEdit"
+                  id="DataDevoEdit"
+                  required
+                />
+              </div>
+
+              <div class="inputGroupPagament">
+                <label for="pagamentdit"> <b>Forma de pagamento</b></label>
+
+                <select name="pagament" id="pagamentEdit">
+                  <option value="">Selecione...</option>
+                  <option value="Pix">Pix</option>
+                  <option value="Credito">Credito</option>
+                  <option value="Debito">Debito</option>
+                  <option value="Boleto">Boleto</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="infoClient">
+            <label for="nameClientEdit"> <b>Nome do Cliente</b></label>
+            <input
+              type="text"
+              id="nameClientEdit"
+              placeholder="Nome do cliente"
+              readonly
+              required
+            />
+
+            <label for="ruaClientEdit"> <b>CPF do Cliente</b></label>
+            <input
+              type="number"
+              id="cpfClientEdit"
+              placeholder="CPF do cliente"
+              readonly
+              required
+            />
+
+            <label for="ruaClient"> <b>Rua do Cliente</b></label>
+            <input
+              type="text"
+              id="ruaClientEdit"
+              placeholder="Rua do cliente"
+              readonly
+              required
+            />
+
+            <label for="cityClientEdit"> <b>Cidade do Cliente</b></label>
+            <input
+              type="text"
+              id="cityClientEdit"
+              placeholder="Cidade do cliente"
+              readonly
+              required
+            />
+
+            <label for="cepClientEdit"> <b>CEP do Cliente</b></label>
+            <input
+              type="text"
+              id="cepClientEdit"
+              placeholder="CEP do cliente"
+              readonly
+              required
+            />
+
+            <label for="mailClientEdit"> <b>E-mail do Cliente</b></label>
+            <input
+              type="text"
+              id="mailClientEdit"
+              placeholder="E-mail do cliente"
+              readonly
+              required
+            />
+          </div>
+
+          <!--  Familia de Bens -->
+
+          <div class="familyBens">
+            <div class="tableGrid">
+              <label for="codeBen1Edit">Família de bens</label>
+              <label for="prod1Edit">Nome da familia </label>
+              <label for="quantidade1Edit">Quantidade</label>
+              <label for="descricao1Edit">Observação</label>
+              <label for="dataInicio1Edit">Data Início</label>
+              <label for="dataFim1Edit">Data Fim</label>
+
+              <select id="family1Edit">
+                <option value="">Selecione...</option>
+                <!-- informações  -->
+              </select>
+              <input
+                type="text"
+                id="produto1Edit"
+                placeholder="Produto"
+                readonly
+              />
+              <input
+                type="number"
+                id="quantidade1Edit"
+                placeholder="quantidade"
+                required
+              />
+              <input
+                type="text"
+                id="observacao1Edit"
+                placeholder="Ex.: TV, Computadores"
+              />
+              <input type="date" id="dataInicio1Edit" required />
+              <input type="date" id="dataFim1Edit" required />
+
+              <select id="family2Edit">
+                <option value="">Selecione...</option>
+                <!-- informações  -->
+              </select>
+              <input
+                type="text"
+                id="produto2Edit"
+                placeholder="produto"
+                readonly
+              />
+              <input
+                type="number"
+                id="quantidade2Edit"
+                placeholder="Ex.: 10"
+                required
+              />
+              <input
+                type="text"
+                id="observacao2Edit"
+                placeholder="Ex.: Eletrônicos"
+              />
+              <input type="date" id="dataInicio2Edit" required />
+              <input type="date" id="dataFim2Edit" required />
+
+              <select id="family3Edit">
+                <!-- informações  -->
+                <option value="">Selecione...</option>
+              </select>
+              <input
+                type="text"
+                id="produto3Edit"
+                placeholder="Produto"
+                readonly
+              />
+              <input
+                type="number"
+                id="quantidade3Edit"
+                placeholder="Ex.: 10"
+                required
+              />
+              <input
+                type="text"
+                id="observacao3Edit"
+                placeholder="Ex.: TV, Computadores"
+              />
+              <input type="date" id="dataInicio3Edit" required />
+              <input type="date" id="dataFim3Edit" required />
+
+              <select id="family4Edit">
+                <!-- informações  -->
+                <option value="">Selecione...</option>
+              </select>
+              <input
+                type="text"
+                id="produto4Edit"
+                placeholder="Produto"
+                readonly
+              />
+              <input
+                type="number"
+                id="quantidade4Edit"
+                placeholder="Ex.: 10"
+                required
+              />
+              <input
+                type="text"
+                id="observacao4Edit"
+                placeholder="Ex.: TV, Computadores"
+              />
+              <input type="date" id="dataInicio4Edit" required />
+              <input type="date" id="dataFim4Edit" required />
+            </div>
+
+            <div class="formGroupBtn">
+              <button class="btnUpdateLocation">Atualizar</button>
+              <button class="outLocationEdit">Voltar</button>
+            </div>
+          </div>
+        </main>
+        <!--  -->
+
+        <div class="informationClient" style="display: none">
+          <!-- informação do client na tabela -->
+        </div>
+
+        <div class="LocRegisterClient" style="display: none">
+          <form id="formRegisterClientLoc">
+            <div class="formGroup">
+              <div class="inputGroup">
+                <label for="clieCodeLoc">Codigo</label>
+                <input
+                  type="text"
+                  name="clieCodeLoc"
+                  id="clieCodeLoc"
+                  placeholder="Codigo"
+                  maxlength="15"
+                />
               </div>
 
               <div class="inputGroup">
-                 <label for="renaAuto">Renavam</label>
-                 <input type="text" name="renaAuto" id="renaAuto" placeholder="Renavam" maxlength="20">
+                <label for="clieNameLoc">Nome</label>
+                <input
+                  type="text"
+                  name="clieNameLoc"
+                  id="clieNameLoc"
+                  placeholder="Nome"
+                  maxlength="80"
+                />
               </div>
 
-             <div class="inputGroup">
-                 <label for="macaAuto">Marca</label>
-                 <input type="text" name="macaAuto" id="macaAuto" placeholder="Marca" maxlength="25">
-             </div>
-
-             <div class="inputGroup">
-                 <label for="modeAuto">Modelo</label>
-                 <input type="text" name="modeAuto" id="modeAuto"  placeholder="Modelo" maxlength="30">
-             </div>
-
-             <div class="inputGroup">
-                <label for="corAuto">Cor</label>
-                <input type="text" name="corAuto" id="corAuto"  placeholder="Cor" maxlength="20">
-            </div>
-
-            <div class="inputGroup">
-                <label for="tpCombusAuto">Tipo de Combustivel</label>
-                <input type="text" name="tpCombusAuto" id="tpCombusAuto"  placeholder="Tipo de Combustivel" maxlength="20">
-            </div>
-
-            <div class="inputGroup">
-                <label for="kmAtAuto">Km atual</label>
-                <input type="number" name="kmAtAuto" id="kmAtAuto"  placeholder="Quilometragem Atual" maxlength="8">
-            </div>
-             
-            <div class="inputGroup">
-                <label for="motoAuto">Motorista</label>
-                <select name="motoAuto" id="motoAuto" >
-                    <option value="">Selecione...</option>
-                </select>
-            </div>
-
-            <div class="inputGroup">
-                <label for="statAuto">Status</label>
-                <select name="statAuto" id="statAuto" >
-                    <option value="">Selecione...</option>
-                    <option value="Ativo">Ativo </option>
-                    <option value="Desativo">Desativo</option>
-                </select>
-            </div>
-
-            <div class="inputGroup">
-                <label for="dtCadAuto">Data do cadastro</label>
-                <input type="date" name="dtCadAuto" id="dtCadAuto">
-            </div>
-
-             <div class="btnOutNext">
-                <button class="cadAutomo">Cadastrar</button>
-                <button class="btnOutCadAuto">Voltar</button>
-             </div>
-         </div>
-     </form>
- </div>
-
-   <div class="editFormAuto" style="display: none;">
-    <form class="foormEditVeicu" >
-        <div class="formGroup">
-  
-            <div class="inputGroup">
-               <label for="codeAutoEdit">Codigo</label>
-               <input type="text" name="codeAutoEdit" id="codeAutoEdit" placeholder="Codigo" maxlength="15" readonly>
-            </div>
-
-            <div class="inputGroup">
-              <label for="placAutoEdit">Placa</label>
-              <input type="text" name="placAutoEdit" id="placAutoEdit" placeholder="Placa" maxlength="10">
-            </div>
-
-           <div class="inputGroup">
-              <label for="chassAutoEdit">Chassi</label>
-              <input type="text" name="chassAutoEdit" id="chassAutoEdit" placeholder="Chassi" maxlength="20">
-          </div>
-
-          <div class="inputGroup">
-             <label for="renaAutoEdit">Renavam</label>
-             <input type="text" name="renaAutoEdit" id="renaAutoEdit" placeholder="Renavam" maxlength="20">
-          </div>
-
-         <div class="inputGroup">
-             <label for="macaAutoEdit">Marca</label>
-             <input type="text" name="macaAutoEdit" id="macaAutoEdit" placeholder="Marca" maxlength="25">
-         </div>
-
-         <div class="inputGroup">
-             <label for="modeAutoEdit">Modelo</label>
-             <input type="text" name="modeAutoEdit" id="modeAutoEdit"  placeholder="Modelo" maxlength="30">
-         </div>
-
-         <div class="inputGroup">
-            <label for="corAutoEdit">Cor</label>
-            <input type="text" name="corAutoEdit" id="corAutoEdit"  placeholder="Cor" maxlength="20">
-        </div>
-
-        <div class="inputGroup">
-            <label for="tpCombusAutoEdit">Tipo de Combustivel</label>
-            <input type="text" name="tpCombusAutoEdit" id="tpCombusAutoEdit"  placeholder="Tipo de Combustivel" maxlength="20">
-        </div>
-
-        <div class="inputGroup">
-            <label for="kmAtAutoEdit">Km atual</label>
-            <input type="number" name="kmAtAutoEdit" id="kmAtAutoEdit"  placeholder="Quilometragem Atual" maxlength="8">
-        </div>
-         
-        <div class="inputGroup">
-            <label for="motoAutoEdit">Motorista</label>
-            <select name="motoAutoEdit" id="motoAutoEdit" >
-                <option value="">Selecione...</option>
-            </select>
-        </div>
-
-        <div class="inputGroup">
-            <label for="statAutoEdit">Status</label>
-            <select name="statAutoEdit" id="statAutoEdit" >
-                <option value="">Selecione...</option>
-                <option value="Ativo">Ativo </option>
-                <option value="Desativo">Desativo</option>
-            </select>
-        </div>
-
-        <div class="inputGroup">
-            <label for="dtCadAutoEdit">Data do cadastro</label>
-            <input type="date" name="dtCadAutoEdit" id="dtCadAutoEdit">
-        </div>
-
-         <div class="btnOutNext">
-            <button class="cadAutomoEdit">Salvar</button>
-            <button class="btnOutCadAutoEdit">Voltar</button>
-         </div>
-     </div>
-  </form>
-</div>
-
-</section> 
-
-  <!-- sesão de locação  -->
-<section class="containerAppLocation">
-
-    <div class="tableLocation">
-        <!-- Informações de locação -->
-    </div>
-          
-    <div class="btnInitPageMainLoc">
-      
-        <button class="registerLocation">incluir</button>
-        <button class="buttonDeleteLocation">Excluir</button>
-        <!-- <button class="buttonEditLocation">Editar</button> -->
-        <button class="buttonExitLocation">Voltar</button>
-     </div>
-
-
-  <main class="content" style="display: none;">
-
-    <div class="searchClient" style= "display: none;" >
-        <!-- Informações caso tenha mais e um cliente -->
-         
-    </div>
-
-      <div id="formClient">
-        <div class="formGroup">
-          
-          <div class="inputGroupSearchClient ">
-              <label for="client"> <b>Pesquise o Cliente</b></label>
-             <div class="inputWrapper">
-                  <input type="text" name="client" id="client" placeholder="CPF ou Nome" required>
-                   <span class="material-symbols-outlined" id="search">
-                   search
-                  </span>
-                  <button type="button" class="locCadClient">Cadastrar Cliente</button>
-                  
+              <div class="inputGroup">
+                <label for="cpfClientLoc">CPF</label>
+                <input
+                  type="text"
+                  name="cpfClientLoc"
+                  id="cpfClientLoc"
+                  placeholder="CPF"
+                  maxlength="14"
+                />
               </div>
-          </div>
 
-           <div class="Numeric">
-            <label for="numeroLocation"> <b>Locação</b></label>
-              <input type="number" name="numeroLocation" id="numeroLocation" placeholder="Locação" readonly>
+              <div class="inputGroup">
+                <label for="dtCadLoc">Data do cadastro</label>
+                <input type="date" name="dtCadLoc" id="dtCadLoc" />
+              </div>
+
+              <div class="inputGroup">
+                <label for="dtNascLoc">Data de Nascimento</label>
+                <input type="date" name="dtNascLoc" id="dtNascLoc" />
+              </div>
+
+              <div class="inputGroup">
+                <label for="clieCeluLoc">Celular</label>
+                <input
+                  type="text"
+                  name="clieCeluLoc"
+                  id="clieCeluLoc"
+                  placeholder="Celular"
+                  maxlength="11"
+                />
+              </div>
+
+              <div class="inputGroup">
+                <label for="clieCityLoc">Cidade</label>
+                <input
+                  type="text"
+                  name="clieCityLoc"
+                  id="clieCityLoc"
+                  placeholder="Cidade"
+                  maxlength="25"
+                />
+              </div>
+
+              <div class="inputGroup">
+                <label for="clieEstdLoc">Estado</label>
+                <input
+                  type="text"
+                  name="clieEstdLoc"
+                  id="clieEstdLoc"
+                  placeholder="Estado"
+                  maxlength="20"
+                />
+              </div>
+
+              <div class="inputGroup">
+                <label for="clieRuaLoc">Rua</label>
+                <input
+                  type="text"
+                  name="clieRuaLoc"
+                  id="clieRuaLoc"
+                  placeholder="RUA"
+                  maxlength="40"
+                />
+              </div>
+
+              <div class="inputGroup">
+                <label for="clieCepLoc">Cep</label>
+                <input
+                  type="text"
+                  name="clieCepLoc"
+                  id="clieCepLoc"
+                  placeholder="CEP"
+                  maxlength="10"
+                />
+              </div>
+
+              <div class="inputGroup">
+                <label for="clieMailLoc">E-mail</label>
+                <input
+                  type="email"
+                  name="clieMailLoc"
+                  id="clieMailLoc"
+                  placeholder="E-mail"
+                  maxlength="35"
+                />
+              </div>
+
+              <div class="btnOutNext">
+                <button class="btnRegisterClientLoc">Cadastrar</button>
+                <button class="btnOutInitLoc">Voltar</button>
+              </div>
             </div>
-
-           <div class="inputGroupDataLoc">
-             <label for="dataLoc"> <b>Data da locação</b></label>
-             <input type="datetime-local" name="dataLoc" id="dataLoc" required>
-           </div>
-
-           <div class="inputGroupDataEvolu">
-              <label for="DataDevo"> <b>Data de devolução</b></label>
-              <input type="date" name="DataDevo" id="DataDevo" required>
-           </div>
-
-          <div class="inputGroupPagament">
-            <label for="pagament"> <b>Forma de pagamento</b></label>
-
-            <select name="pagament" id="pagament">
-                <option value="">Selecione...</option>
-                <option value="Pix">Pix</option>
-                <option value="Credito">Credito</option>
-                <option value="Debito">Debito</option>
-                <option value="Boleto">Boleto</option>
-            </select>
-
+          </form>
         </div>
-    </div>      
- </div>
 
-    <div class="infoClient">
-        <label for="nameClient"> <b>Nome do Cliente</b></label>
-        <input type="text" id="nameClient" placeholder="Nome do cliente" readonly required>
-    
-        <label for="cpfClient"> <b>CPF do Cliente</b></label>
-        <input type="text" id="cpfClient" placeholder="CPF do cliente" readonly required>
-    
-        <label for="ruaClient"> <b>Rua do Cliente</b></label>
-        <input type="text" id="ruaClient" placeholder="Rua do cliente" readonly required> 
-    
-        <label for="cityClient"> <b>Cidade do Cliente</b></label>
-        <input type="text" id="cityClient" placeholder="Cidade do cliente" readonly required>
-    
-        <label for="cepClient"> <b>CEP do Cliente</b></label>
-        <input type="text" id="cepClient" placeholder="CEP do cliente" readonly required>
-    
-        <label for="mailClient"> <b>E-mail do Cliente</b></label>
-        <input type="text" id="mailClient" placeholder="E-mail do cliente" readonly required>
-    </div>
-    
-    <div class="familyBens">
-
-           <div class="tableGrid">
-      
-        <label for="codeBen1">Família de bens</label>
-        <label for="prod1">Nome da familia </label>
-        <label for="quantidade1">Quantidade</label>
-        <label for="descricao1">Observação</label>
-        <label for="dataInicio1">Data Início</label>
-        <label for="dataFim1">Data Fim</label>
-      
-              <select  id="family1">
-                <option value="">Selecione...</option>
-            <!-- informações  -->
-             </select>
-              <input type="text"  id="produto1" placeholder="Produto" readonly >
-             <input type="number"  id="quantidade1" placeholder="quantidade" required>
-             <input type="text" id="observacao1" placeholder="Ex.: TV, Computadores" >
-             <input type="date" id="dataInicio1" required>
-             <input type="date" id="dataFim1" required>
-
-
-        <select  id="family2">
-            <option value="">Selecione...</option>
-            <!-- informações  -->
-        </select>
-        <input type="text"  id="produto2" placeholder="produto" readonly>
-        <input type="number" id="quantidade2" placeholder="Ex.: 10" required>
-        <input type="text"  id="observacao2" placeholder="Ex.: Eletrônicos">
-        <input type="date" id="dataInicio2" required>
-        <input type="date" id="dataFim2" required>
-
-
-        <select id="family3">
-            <!-- informações  -->
-             <option value="">Selecione...</option>
-        </select>
-        <input type="text"  id="produto3" placeholder="Produto" readonly>
-        <input type="number"  id="quantidade3" placeholder="Ex.: 10" required >
-        <input type="text"  id="observacao3" placeholder="Ex.: TV, Computadores">
-        <input type="date" id="dataInicio3" required>
-        <input type="date" id="dataFim3" required>
-
-        <select id="family4">
-            <!-- informações  -->
-             <option value="">Selecione...</option>
-        </select>
-        <input type="text"  id="produto4" placeholder="Produto" readonly>
-        <input type="number"  id="quantidade4" placeholder="Ex.: 10" required >
-        <input type="text"  id="observacao4" placeholder="Ex.: TV, Computadores">
-        <input type="date" id="dataInicio4" required>
-        <input type="date" id="dataFim4" required>
-  
-   </div>
- 
-          <div class="formGroupBtn">
-            <button class="finish" onclick=" handleSubmit()">Finalizar</button>
-            <button class="outLocation">Voltar</button>
-          </div> 
-       
-    </div>
-</main>
-
-<!-- Edição de locação -->
-
-<main class="contentEditlocation" style="display: none;">
-
-        <!-- <h3>Informações do Cliente</h3> -->
-      <div id="formClient">
-        <div class="formGroup">
-          
-    
-           <div class="Numeric">
-            <label for="numeroLocationEdit"> <b>Locação</b></label>
-              <input type="number" name="numeroLocation" id="numeroLocationEdit" placeholder="Locação" readonly>
-            </div>
-
-           <div class="inputGroupDataLoc">
-             <label for="dataLocEdit"> <b>Data da locação</b></label>
-             <input type="datetime-local" name="dataLocEdit" id="dataLocEdit" required>
-           </div>
-
-           <div class="inputGroupDataEvolu">
-              <label for="DataDevoEdit"> <b>Data de devolução</b></label>
-              <input type="date" name="DataDevoEdit" id="DataDevoEdit" required>
-           </div>
-
-          <div class="inputGroupPagament">
-            <label for="pagamentdit"> <b>Forma de pagamento</b></label>
-
-            <select name="pagament" id="pagamentEdit">
-                <option value="">Selecione...</option>
-                <option value="Pix">Pix</option>
-                <option value="Credito">Credito</option>
-                <option value="Debito">Debito</option>
-                <option value="Boleto">Boleto</option>
-            </select>
-
+        <div id="contrato" style="display: none">
+          <!-- Contrato de locação front-->
         </div>
-    </div>      
- </div>
+      </section>
 
-    <div class="infoClient">
-        <label for="nameClientEdit"> <b>Nome do Cliente</b></label>
-        <input type="text" id="nameClientEdit" placeholder="Nome do cliente" readonly required>
-    
-        <label for="ruaClientEdit"> <b>CPF do Cliente</b></label>
-        <input type="number" id="cpfClientEdit" placeholder="CPF do cliente" readonly required>
-    
-        <label for="ruaClient"> <b>Rua do Cliente</b></label>
-        <input type="text" id="ruaClientEdit" placeholder="Rua do cliente" readonly required> 
-    
-        <label for="cityClientEdit"> <b>Cidade do Cliente</b></label>
-        <input type="text" id="cityClientEdit" placeholder="Cidade do cliente" readonly required>
-    
-        <label for="cepClientEdit"> <b>CEP do Cliente</b></label>
-        <input type="text" id="cepClientEdit" placeholder="CEP do cliente" readonly required>
-    
-        <label for="mailClientEdit"> <b>E-mail do Cliente</b></label>
-        <input type="text" id="mailClientEdit" placeholder="E-mail do cliente" readonly required>
-    </div>
-    
-    <!--  Familia de Bens -->
-   
-    <div class="familyBens">
+      <!-- sesão Buscar locação -->
 
-           <div class="tableGrid">
-      
-        <label for="codeBen1Edit">Família de bens</label>
-        <label for="prod1Edit">Nome da familia </label>
-        <label for="quantidade1Edit">Quantidade</label>
-        <label for="descricao1Edit">Observação</label>
-        <label for="dataInicio1Edit">Data Início</label>
-        <label for="dataFim1Edit">Data Fim</label>
-      
-              <select  id="family1Edit">
-                <option value="">Selecione...</option>
-            <!-- informações  -->
-             </select>
-              <input type="text"  id="produto1Edit" placeholder="Produto" readonly >
-             <input type="number"  id="quantidade1Edit" placeholder="quantidade" required>
-             <input type="text" id="observacao1Edit" placeholder="Ex.: TV, Computadores" >
-             <input type="date" id="dataInicio1Edit" required>
-             <input type="date" id="dataFim1Edit" required>
-
-
-        <select  id="family2Edit">
-            <option value="">Selecione...</option>
-            <!-- informações  -->
-        </select>
-        <input type="text"  id="produto2Edit" placeholder="produto" readonly>
-        <input type="number" id="quantidade2Edit" placeholder="Ex.: 10" required>
-        <input type="text"  id="observacao2Edit" placeholder="Ex.: Eletrônicos">
-        <input type="date" id="dataInicio2Edit" required>
-        <input type="date" id="dataFim2Edit" required>
-
-
-        <select id="family3Edit">
-            <!-- informações  -->
-             <option value="">Selecione...</option>
-        </select>
-        <input type="text"  id="produto3Edit" placeholder="Produto" readonly>
-        <input type="number"  id="quantidade3Edit" placeholder="Ex.: 10" required >
-        <input type="text"  id="observacao3Edit" placeholder="Ex.: TV, Computadores">
-        <input type="date" id="dataInicio3Edit" required>
-        <input type="date" id="dataFim3Edit" required>
-
-        <select id="family4Edit">
-            <!-- informações  -->
-             <option value="">Selecione...</option>
-        </select>
-        <input type="text"  id="produto4Edit" placeholder="Produto" readonly>
-        <input type="number"  id="quantidade4Edit" placeholder="Ex.: 10" required >
-        <input type="text"  id="observacao4Edit" placeholder="Ex.: TV, Computadores">
-        <input type="date" id="dataInicio4Edit" required>
-        <input type="date" id="dataFim4Edit" required>
-  
-   </div>
- 
-          <div class="formGroupBtn">
-            <button  class="finish">Atualizar</button>
-            <button class="outLocation">Voltar</button>
-          </div> 
-       
-    </div>
-</main>
-<!--  -->
-
-      <div class="informationClient" style="display: none;">
-        <!-- informação do client na tabela -->
-    </div>
-
-     <div class="LocRegisterClient" style="display: none;">
-         <form id="formRegisterClientLoc">
-            <div class="formGroup">
-
-                <div class="inputGroup">
-                    <label for="clieCode">Codigo</label>
-                    <input type="text" name="clieCode" id="clieCode" placeholder="Codigo" maxlength="15">
-                </div>
-
-                <div class="inputGroup">
-                    <label for="clieName">Nome</label>
-                    <input type="text" name="clieName" id="clieName" placeholder="Nome" maxlength="80">
-                </div>
-
-                <div class="inputGroup">
-                    <label for="cpf">CPF</label>
-                    <input type="text" name="cpf" id="cpf" placeholder="CPF" maxlength="14">
-                </div>
-
-                <div class="inputGroup">
-                    <label for="dtCad">Data do cadastro</label>
-                    <input type="date" name="dtCad" id="dtCad">
-                </div>
-
-                <div class="inputGroup">
-                    <label for="dtNasc">Data de Nascimento</label>
-                    <input type="date" name="dtNasc" id="dtNasc">
-                </div>
-
-                <div class="inputGroup">
-                    <label for="clieCelu">Celular</label>
-                    <input type="text" name="clieCelu" id="clieCelu" placeholder="Celular" maxlength="11">
-                </div>
-
-                <div class="inputGroup">
-                    <label for="clieCity">Cidade</label>
-                    <input type="text" name="clieCity" id="clieCity" placeholder="Cidade" maxlength="25">
-                </div>
-
-                <div class="inputGroup">
-                    <label for="clieEstd">Estado</label>
-                    <input type="text" name="clieEstd" id="clieEstd" placeholder="Estado" maxlength="20">
-                </div>
-
-                <div class="inputGroup">
-                    <label for="clieRua ">Rua</label>
-                    <input type="text" name="clieRua" id="clieRua" placeholder="RUA" maxlength="40">
-                </div>
-
-                <div class="inputGroup">
-                    <label for="clieCep">Cep</label>
-                    <input type="text" name="clieCep" id="clieCep" placeholder="CEP" maxlength="10">
-                </div>
-
-                <div class="inputGroup">
-                    <label for="clieMail ">E-mail</label>
-                    <input type="email" name="clieMail" id="clieMail" placeholder="E-mail" maxlength="35">
-                </div>
-                  
-                <div class="btnOutNext">
-                   <button class="btnRegisterClientLoc">Cadastrar</button>
-                   <button class="btnOutInitLoc">Voltar</button>
-                </div>
-           </div>
-         </form>
-     </div>
-      
-            <div id="contrato" style="display: none;">
-             <!-- Contrato de locação front-->
-         </div>
-</section>
-
-<!-- sesão Buscar locação -->
-
-    <div class="searchLocation" style="display: none;">
-
+      <div class="searchLocation" style="display: none">
         <h4>Escolha um formato de Pesquisa:</h4>
-        
-      <label for="numberLocation">Numero da locação</label>
-      <input type="number" name="numberLocation" id="numberLocation">
-       
-      <label for="statusLocation">Status</label>
-      <input type="text" name="statusLocation" id="statusLocation">
 
-      <label for="nameClient"> Nome do Cliente</label>
-      <input type="text" name="nameClient" id="nameClientSearch">
-      <br>
-     <div class="btnMainTheSearch">
-       <button class="submitSearchLocation" onclick=" filterTable()" >Pesquisar</button>
-       <button class="outPageSearchLocation">Voltar</button>
-     </div>
- </div>
+        <label for="numberLocation">Numero da locação</label>
+        <input type="number" name="numberLocation" id="numberLocation" />
 
-    
-<!-- Logistica -->
- 
-  <section class="containerLogistica" style="display: none;">
+        <label for="statusLocation">Status</label>
+        <input type="text" name="statusLocation" id="statusLocation" />
 
-      <div class="logisticsMainTop">
+        <label for="nameClient"> Nome do Cliente</label>
+        <input type="text" name="nameClient" id="nameClientSearch" />
+        <br />
+        <div class="btnMainTheSearch">
+          <button class="submitSearchLocation" onclick=" filterTable()">
+            Pesquisar
+          </button>
+          <button class="outPageSearchLocation">Voltar</button>
+        </div>
+      </div>
+
+      <!-- Logistica -->
+
+      <section class="containerLogistica" style="display: none">
+        <div class="logisticsMainTop">
           <div class="orders">
             <!-- table de Necessidade -->
           </div>
@@ -1906,65 +938,53 @@
           </button>
 
           <div class="need">
-             <h3>Necessidade vs Disponibilidade</h3>
+            <h3>Necessidade vs Disponibilidade</h3>
           </div>
-         
-    </div>
-    
+        </div>
 
-    <div class="logisticsMainBottom">
-         <div class="validadeFamily">
+        <div class="logisticsMainBottom">
+          <div class="validadeFamily"></div>
+          <div class="linkDrive">
+            <h3>Motoristas</h3>
+          </div>
+        </div>
+      </section>
 
-         </div>
-         <div class="linkDrive">
-              <h3>Motoristas</h3>
-         </div>
+      <section class="modal" style="display: none">
+        <!-- informações para lincar o bem na locação -->
+      </section>
 
+      <!--  Entrega da locação -->
 
-    </div>
-</section>
-
-<section class="modal" style="display: none;">
-   <!-- informações para lincar o bem na locação -->
-</section>
-
-<!--  Entrega da locação -->
-
-<section class="deliveryFinish" style="display: none;">
-
-    <div class="containerTableDelivery">
-       <h2>Lista de Locações</h2>
-       <table id="tableDelivery" style="display: flex;">
-        <thead>
-            <tr>
+      <section class="deliveryFinish" style="display: none">
+        <div class="containerTableDelivery">
+          <h2>Lista de Locações</h2>
+          <table id="tableDelivery" style="display: flex">
+            <thead>
+              <tr>
                 <th>Código</th>
                 <th>ID do bem</th>
                 <th>Nome Cliente</th>
                 <th>Numero locação</th>
                 <th>Data e Hora</th>
                 <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
 
-    <button class="btnOutPageListLocationForDelivery">Voltar</button>
-</div>     
-         <div class="containerDelivery">
-              
-
-         </div>
-</section>
-         
-  
-
-</main>  
-     <script type = "module" src="maskFields.js"></script>
-    <script  src="validation.js"></script>
+          <button class="btnOutPageListLocationForDelivery">Voltar</button>
+        </div>
+        <div class="containerDelivery"></div>
+      </section>
+    </main>
+    <script src="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="maskFields.js"></script>
+    <script src="validation.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="./mainGoods/mainGoods.js"></script>
-    <script type = "module" src="./mainClient/mainClient.js"></script>
+    <script type="module" src="./mainClient/mainClient.js"></script>
     <script src="./mainForn/mainForn.js"></script>
     <script src="./mainProd/mainProd.js"></script>
     <script src="./mainFabe/mainFabri.js"></script>
@@ -1975,8 +995,8 @@
     <script src="../screenLocation/locationFinish.js"></script>
     <script src="../screenLogistics/mainLogistics.js"></script>
     <script src="../screenDelivery/mainDelivery.js"></script>
-    
+    <script src="main.js"></script>
 
-</body>
-
+    <!-- <script src="/assets/screenMain/mainGoods/mainGoods.js"></script> -->
+  </body>
 </html>

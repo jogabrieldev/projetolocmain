@@ -1,0 +1,191 @@
+<section class="containerAppTipoProd d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded"
+style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid white;">
+
+    <!-- TABELA -->
+    <div class="listingTipoProd mb-4">
+      <div class="tableWrapper  ">
+        <!-- A tabela será inserida aqui via JavaScript -->
+      </div>
+    </div>
+  
+    <!-- BOTÕES PRINCIPAIS -->
+    <div class="btnMainPageTipoProd d-flex flex-wrap justify-content-center align-items-center gap-3 mb-3">
+      <button class="btn btn-primary text-dark fw-semibold registerTipoProd">Incluir</button>
+      <button class="btn btn-danger text-dark fw-semibold buttonDeleteTipoProd">Excluir</button>
+      <button class="btn btn-warning text-dark fw-semibold buttonEditTipoProd">Editar</button>
+      <button class="btn btn-light text-dark fw-semibold buttonExitTipoProd">Voltar</button>
+    </div>
+  
+    <!-- FORMULÁRIO DE CADASTRO -->
+    <div class="formRegisterTipoProd border border-secondary-subtle p-4 rounded shadow " style="display: none">
+      <form class="formRegisterTipoProdu">
+        <div class="row g-3">
+  
+          <div class="col-md-4">
+            <label for="tpCode" class="form-label">Código</label>
+            <input
+              type="text"
+              name="tpCode"
+              id="tpCode"
+              class="form-control"
+              placeholder="Código"
+              maxlength="5"
+            />
+          </div>
+  
+          <div class="col-md-8">
+            <label for="tpDesc" class="form-label">Descrição</label>
+            <input
+              type="text"
+              name="tpDesc"
+              id="tpDesc"
+              class="form-control"
+              placeholder="Descrição"
+              maxlength="80"
+            />
+          </div>
+  
+          <div class="col-md-6">
+            <label for="tpCat" class="form-label">Categoria</label>
+            <input
+              type="text"
+              name="tpCat"
+              id="tpCat"
+              class="form-control"
+              placeholder="Categoria"
+              maxlength="35"
+            />
+          </div>
+  
+          <div class="col-md-6">
+            <label for="tpSubCat" class="form-label">Subcategoria</label>
+            <input
+              type="text"
+              name="tpSubCat"
+              id="tpSubCat"
+              class="form-control"
+              placeholder="Subcategoria"
+              maxlength="30"
+            />
+          </div>
+  
+          <div class="col-md-6">
+            <label for="tpObs" class="form-label">Observação</label>
+            <input
+              type="text"
+              name="tpObs"
+              id="tpObs"
+              class="form-control"
+              placeholder="Observação"
+              maxlength="100"
+            />
+          </div>
+  
+          <div class="col-md-6">
+            <label for="tpCtct" class="form-label">Centro de Custo</label>
+            <input
+              type="text"
+              name="tpCtct"
+              id="tpCtct"
+              class="form-control"
+              placeholder="Centro de Custo"
+              maxlength="40"
+            />
+          </div>
+  
+          <div class="col-12 d-flex justify-content-end gap-3 mt-3">
+            <button type="submit" class="btn btn-light cadTp">Cadastrar</button>
+            <button type="button" class="btn btn-outline-light btnOutInitTp">Voltar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+      
+    <!--  formulario de edição -->
+    <div class="containerRegisterEdit container mt-4" style="display: none">
+        <form class="formEditTp border border-secondary-subtle rounded-3 p-4 shadow-sm">
+          <div class="row g-3">
+      
+            <div class="col-md-4">
+              <label for="editTpCode" class="form-label">Código</label>
+              <input
+                type="text"
+                name="editTpCode"
+                id="editTpCode"
+                class="form-control"
+                placeholder="Código"
+                maxlength="5"
+                readonly
+              />
+            </div>
+      
+            <div class="col-md-8">
+              <label for="editTpDesc" class="form-label">Descrição</label>
+              <input
+                type="text"
+                name="editTpDesc"
+                id="editTpDesc"
+                class="form-control"
+                placeholder="Descrição"
+                maxlength="80"
+              />
+            </div>
+      
+            <div class="col-md-6">
+              <label for="editTpCat" class="form-label">Categoria</label>
+              <input
+                type="text"
+                name="editTpCat"
+                id="editTpCat"
+                class="form-control"
+                placeholder="Categoria"
+                maxlength="35"
+              />
+            </div>
+      
+            <div class="col-md-6">
+              <label for="editTpSubCat" class="form-label">Subcategoria</label>
+              <input
+                type="text"
+                name="editTpSubCat"
+                id="editTpSubCat"
+                class="form-control"
+                placeholder="Subcategoria"
+                maxlength="30"
+              />
+            </div>
+      
+            <div class="col-md-6">
+              <label for="editTpObs" class="form-label">Observação</label>
+              <input
+                type="text"
+                name="editTpObs"
+                id="editTpObs"
+                class="form-control"
+                placeholder="Observação"
+                maxlength="100"
+              />
+            </div>
+      
+            <div class="col-md-6">
+              <label for="editTpCtct" class="form-label">Centro de Custo</label>
+              <input
+                type="text"
+                name="editTpCtct"
+                id="editTpCtct"
+                class="form-control"
+                placeholder="Centro de Custo"
+                maxlength="40"
+              />
+            </div>
+      
+            <div class="col-12 d-flex justify-content-end gap-3 mt-3">
+              <button type="submit" class="btn btn-light w-25 cadTpEdit">Salvar</button>
+              <button type="button" class="btn btn-outline-light w-25 btnOutInitTpEdit">Voltar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+  </section>
+  

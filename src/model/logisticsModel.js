@@ -21,6 +21,7 @@ class logistcsModel  {
             console.error('erro model logistica:' , error)
      }
     }
+
 };
 
 export default new logistcsModel()

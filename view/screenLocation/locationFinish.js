@@ -51,9 +51,7 @@ async function frontLocation() {
       return;
     }
   
-    // if (!response.ok) {
-    //   throw new Error(`Erro ao buscar locações. Status: ${response.status}`);
-    // }
+
    
     const dataFinish = await response.json();
     const locacoesFinishTable = dataFinish.locacoes || [];
@@ -187,7 +185,7 @@ function renderTable(data) {
       td.textContent = locacao[key];
       row.appendChild(td);
     });
-  
+
     tbody.appendChild(row);
   });
   
@@ -210,7 +208,6 @@ function renderTable(data) {
       const locacaoData = JSON.parse(event.target.value);
       const isChecked = event.target.checked;
       console.log('locação:', locacaoData)
-      console.log('checando:' , isChecked)
   
       document.querySelectorAll(".locacao-checkbox").forEach(cb => {
         if (JSON.parse(cb.value).numeroLocacao === locacaoData.numeroLocacao) {
@@ -498,3 +495,140 @@ async function deletelocation(id, rowProd) {
   }
 }
 
+// Editar Locação
+
+const buttonEditLocation = document.querySelector('.buttonEditLocation')
+buttonEditLocation.addEventListener('click' , async ()=>{
+
+ 
+  const selectedCheckbox = document.querySelector('.locacao-checkbox:checked');
+ 
+    try {
+      if (!selectedCheckbox) {
+        Toastify({
+            text: "Selecione uma Locação para editar",
+            duration: 2000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+        }).showToast();
+        return;
+    }  
+    const contentEditlocation = document.querySelector('.contentEditlocation')
+    contentEditlocation.style.display = 'flex'
+  
+    const btnInitPageMainLoc = document.querySelector('.btnInitPageMainLoc')
+    btnInitPageMainLoc.style.display = 'none'
+
+    const locacaoData = JSON.parse(selectedCheckbox.value);
+    const locacaoId = locacaoData.numeroLocacao
+    
+    const token = localStorage.getItem('token');
+
+  if (!token || isTokenExpired(token)) {
+      Toastify({
+          text: "Sessão expirada. Faça login novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+      }).showToast();
+
+      localStorage.removeItem("token");
+      setTimeout(() => {
+          window.location.href = "/index.html";
+      }, 2000);
+      return;
+  }
+
+    const response = await fetch('/api/locationFinish' , {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    },
+    
+    })
+      const result = await response.json()
+
+      const locacaoEncontrada = result.locacoes.find(loc => loc.cllonmlo === locacaoId);
+
+      if (locacaoEncontrada) {
+         preencherFormularioDeEdicao(locacaoEncontrada);
+      } else {
+      console.log("Locação não encontrada.");
+      }
+
+      console.log('Resultado:', result)
+    // editarlocationFinish(locacaoId)
+  
+  }catch(error){
+
+  }
+});
+function preencherFormularioDeEdicao(locacao) {
+  // Preenche dados principais
+  document.getElementById("numeroLocationEdit").value = locacao.cllonmlo;
+  document.getElementById("dataLocEdit").value = locacao.cllodtlo.split('T')[0];
+  document.getElementById("DataDevoEdit").value = locacao.cllodtdv.split('T')[0];
+  document.getElementById("pagamentEdit").value = locacao.cllopgmt;
+
+  // Preenche dados do cliente
+  document.getElementById("nameClientEdit").value = locacao.clloclno;
+  document.getElementById("cpfClientEdit").value = locacao.cllocpf;
+
+  
+  // document.getElementById("ruaClientEdit").value = locacao.clloclrua || '';
+  // document.getElementById("cityClientEdit").value = locacao.clloclcidade || '';
+  // document.getElementById("cepClientEdit").value = locacao.clloclcep || '';
+  // document.getElementById("mailClientEdit").value = locacao.clloclemail || '';
+
+  // Preenche até 4 grupos de bens
+  locacao.bens.forEach((bem, index) => {
+    const i = index + 1;
+
+    if (i <= 4) {
+      document.getElementById(`family${i}Edit`).value = bem.bencodb;
+      document.getElementById(`produto${i}Edit`).value = bem.beloben;
+      document.getElementById(`quantidade${i}Edit`).value = bem.beloqntd;
+      document.getElementById(`observacao${i}Edit`).value = bem.beloobsv;
+      document.getElementById(`dataInicio${i}Edit`).value = bem.belodtin.split('T')[0];
+      document.getElementById(`dataFim${i}Edit`).value = bem.belodtfi.split('T')[0];
+    }
+  });
+}
+
+
+async function editarlocationFinish(id , body) {
+
+  const token = localStorage.getItem('token');
+
+  if (!token || isTokenExpired(token)) {
+      Toastify({
+          text: "Sessão expirada. Faça login novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+      }).showToast();
+
+      localStorage.removeItem("token");
+      setTimeout(() => {
+          window.location.href = "/index.html";
+      }, 2000);
+      return;
+  }
+
+  
+    await fetch(`/api/location/${id}` , {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(body)
+    })
+}

@@ -11,10 +11,18 @@
     border: solid , 2px , white;
     padding: 7px;
     border-radius: 10px;
+    overflow: auto;
 }
 .listingForn{
     overflow: auto;
 }
+.hidden {
+    display: none !important;
+  }
+
+  .flex {
+    display: flex !important;
+  }
 
 .btnMainPageForn{
     height: 40px;
@@ -24,94 +32,17 @@
     gap: 20px;
     margin-top: 3%;
 }
-.registerForn{
-    cursor: pointer;
-    width: 15%;
-    margin-bottom: 2%;
-    background-color: lightslategray; 
-    border: none;
-    height:28px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.4s;
-}
-.registerForn:active{
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(6px);
-}
-.buttonDeleteForn{
-    cursor: pointer;
-    width: 15%;
-    margin-bottom: 2%;
-    background-color: lightslategray; 
-    border: none;
-    height:28px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.4s;
+
+.tableFornecedor{
+    width: 100%;
+    border-collapse: collapse;
+    color: black;
+    font-size: 14px;
 }
 
-.buttonDeleteForn:active{
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(6px);
+.tableFornecedor td{
+    background-color:darkgray ;
 }
 
-.buttonEditForn{
-    cursor: pointer;
-    width: 15%;
-    margin-bottom: 2%;
-    background-color: lightslategray; 
-    border: none;
-    height:28px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.4s;
-}
 
-.buttonEditForn:active{
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(6px);
-}
 
-.buttonExitForn{
-    cursor: pointer;
-    width: 15%;
-    margin-bottom: 2%;
-    background-color: lightslategray; 
-    border: none;
-    height:28px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.4s;
-}
-
-.buttonExitForn:active{
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(6px);
-}
-
-.btnRegisterforn{
-    cursor: pointer;
-    width: 20%;
-    height: 26px;
-    background-color: lightslategray;
-    border: none;
-}
-.submitForn{
-    cursor: pointer;
-    width: 20%;
-    height: 26px;
-    background-color: lightslategray;
-    border: none;
-}
-
-.btnOutInitForn{
-    cursor: pointer;
-    width: 20%;
-    height: 26px;
-    background-color: lightslategray;
-    border: none;
-}
-.btnOutInitFornEdit{
-    cursor: pointer;
-    width: 20%;
-    height: 26px;
-    background-color: lightslategray;
-    border: none;
-}

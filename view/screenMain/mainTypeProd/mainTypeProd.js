@@ -1,91 +1,3 @@
-const btnInitCadTypeProd = document.querySelector(".btnCadTypeProd");
-btnInitCadTypeProd.addEventListener("click", () => {
-  const containerAppFabri = document.querySelector(".containerAppFabri");
-  containerAppFabri.style.display = "none";
-
-  const containerAppClient = document.querySelector(".containerAppClient");
-  containerAppClient.style.display = "none";
-
-  const containerAppBens = document.querySelector(".containerAppBens");
-  containerAppBens.style.display = "none";
-
-  const containerAppForn = document.querySelector(".containerAppForn");
-  containerAppForn.style.display = "none";
-
-  const containerAppProd = document.querySelector(".containerAppProd");
-  containerAppProd.style.display = "none";
-
-  const containerAppDriver = document.querySelector(".containerAppDriver");
-  containerAppDriver.style.display = "none";
-
-  const containerAppAutomo = document.querySelector(".containerAppAutomo");
-  containerAppAutomo.style.display = "none";
-
-  const containerFormRegisterTp = document.querySelector(
-    ".formRegisterTipoProd"
-  );
-  containerFormRegisterTp.style.display = "none";
-
-  const containerFormEditTp = document.querySelector(".containerRegisterEdit");
-  containerFormEditTp.style.display = "none";
-
-  const containerAppTypeProd = document.querySelector(".containerAppTipoProd");
-  containerAppTypeProd.style.display = "flex";
-
-  const listingTp = document.querySelector(".listingTipoProd");
-  listingTp.style.display = "flex";
-
-  const btnMainPageTp = document.querySelector(".btnMainPageTipoProd");
-  btnMainPageTp.style.display = "flex";
-
-  const informative = document.querySelector(".information");
-  informative.style.display = "block";
-  informative.textContent = "SEÇÃO TIPO DE PRODUTOS";
-});
-
-const btnRegisterTp = document.querySelector(".registerTipoProd");
-btnRegisterTp.addEventListener("click", () => {
-  const registerTp = document.querySelector(".formRegisterTipoProd");
-  registerTp.style.display = "flex";
-  const listingTp = document.querySelector(".listingTipoProd");
-  listingTp.style.display = "none";
-  const btnMainPage = document.querySelector(".btnMainPageTipoProd");
-  btnMainPage.style.display = "none";
-});
-
-const btnOutInitTp = document.querySelector(".btnOutInitTp");
-btnOutInitTp.addEventListener("click", (e) => {
-  e.preventDefault();
-
-  const registerTp = document.querySelector(".formRegisterTipoProd");
-  registerTp.style.display = "none";
-
-  const listingTp = document.querySelector(".listingTipoProd");
-  listingTp.style.display = "flex";
-
-  const btnMainPage = document.querySelector(".btnMainPageTipoProd");
-  btnMainPage.style.display = "flex";
-});
-
-const btnExitSectionTypeProd = document.querySelector(".buttonExitTipoProd");
-btnExitSectionTypeProd.addEventListener("click", () => {
-  const containerAppTypeProd = document.querySelector(".containerAppTipoProd");
-  containerAppTypeProd.style.display = "none";
-});
-
-const btnOutInitTpEdit = document.querySelector(".btnOutInitTpEdit");
-btnOutInitTpEdit.addEventListener("click", (e) => {
-  e.preventDefault();
-
-  const registerTpEdit = document.querySelector(".containerRegisterEdit");
-  registerTpEdit.style.display = "none";
-
-  const listingTp = document.querySelector(".listingTipoProd");
-  listingTp.style.display = "flex";
-
-  const btnMainPage = document.querySelector(".btnMainPageTipoProd");
-  btnMainPage.style.display = "flex";
-});
 
 function isTokenExpired(token) {
   try {
@@ -97,19 +9,188 @@ function isTokenExpired(token) {
   }
 }
 
-const socketUpdateTypeProd  = io()
-document.addEventListener("DOMContentLoaded", () => {
+const socketTypeProd  = io()
+document.addEventListener('DOMContentLoaded' , ()=>{
+       const btnLoadTypeProd = document.querySelector('.btnCadTypeProd')
+       if(btnLoadTypeProd){
+        btnLoadTypeProd.addEventListener('click' , async (event)=>{
+                 event.preventDefault()
+
+                 try {
+                  const responseTypeProd = await fetch("/typeprod", {
+                    method: "GET",
+                  });
+          
+                  if (!responseTypeProd.ok)
+                    throw new Error(`Erro HTTP: ${responseTypeProd.status}`);
+                  const html = await responseTypeProd.text();
+                  const mainContent = document.querySelector("#mainContent");
+                  if (mainContent) {
+                    mainContent.innerHTML = html;
+                    registerNewTypeProduct();
+                    deleteTypeProduct();
+                    interationSystemTypeProduct();
+                    EditTypeProduct();
+                  }else{
+                    console.error("#mainContent não encontrado no DOM");
+                  }
+                  const containerAppTypeProd = document.querySelector('.containerAppTipoProd');
+                  if (containerAppTypeProd) containerAppTypeProd.classList.add('flex') ;
+            
+                  const sectionsToHide = [
+                    '.containerAppProd', '.containerAppFabri', '.containerAppFabri',
+                    '.containerAppDriver', '.containerAppAutomo', '.containerAppBens',
+                    '.containerAppForn'
+                  ];
+                  sectionsToHide.forEach((selector) => {
+                    const element = document.querySelector(selector);
+                    if (element) element.style.display = 'none';
+                  });
+            
+                  const showContentBens = document.querySelector('.formRegisterTipoProd');
+                  const btnMainPageClient = document.querySelector('.btnMainPageTipoProd');
+                  const listingClient = document.querySelector('.listingTipoProd');
+                  const editFormClient = document.querySelector('.containerRegisterEdit');
+                  const informative = document.querySelector('.information');
+            
+                  if (showContentBens) showContentBens.style.display = 'none';
+                  if (btnMainPageClient) btnMainPageClient.style.display = 'flex';
+                  if (listingClient) listingClient.style.display = 'flex';
+                  if (editFormClient) editFormClient.style.display = 'none';
+                  if (informative) {
+                    informative.style.display = 'block';
+                    informative.textContent = 'SEÇÃO TIPO DE PRODUTO';
+                  }
+  
+                  await fetchListTypeProduct();
+                 } catch (error) {
+                  
+                 }
+                 
+                
+          })
+       }
+       socketTypeProd.on("updateRunTimeTypeProduto", (tipoProduto) => {
+        insertTypeProductTableRunTime(tipoProduto)
+      });
     
-  socketUpdateTypeProd.on("updateRunTimeTypeProduto", (tipoProduto) => {
-    insertTypeProductTableRunTime(tipoProduto)
+      socketTypeProd.on("updateRunTimeTableTypeProduto", (updatedTypeProduct) => {
+        updateTypeProductInTableRunTime(updatedTypeProduct)
+      });
+})
+
+
+function interationSystemTypeProduct(){
+
+       
+const btnRegisterTp = document.querySelector(".registerTipoProd");
+if(btnRegisterTp){
+  btnRegisterTp.addEventListener("click", () => {
+    const registerTp = document.querySelector(".formRegisterTipoProd");
+    if(registerTp){
+      registerTp.classList.remove('hidden')
+      registerTp.classList.add('flex')
+    }
+    
+    const listingTp = document.querySelector(".listingTipoProd");
+    if(listingTp){
+      listingTp.classList.remove('flex')
+      listingTp.classList.add('hidden')
+    }
+    
+    const btnMainPage = document.querySelector(".btnMainPageTipoProd");
+    if(btnMainPage){
+       btnMainPage.classList.remove('flex')
+       btnMainPage.classList.add('hidden')
+    }
+  
   });
 
-  socketUpdateTypeProd.on("updateRunTimeTableTypeProduto", (updatedTypeProduct) => {
-    updateTypeProductInTableRunTime(updatedTypeProduct)
+}
+
+
+const btnOutInitTp = document.querySelector(".btnOutInitTp");
+if(btnOutInitTp){
+  btnOutInitTp.addEventListener("click", (e) => {
+    e.preventDefault();
+  
+    const registerTp = document.querySelector(".formRegisterTipoProd");
+    if(registerTp){
+      registerTp.classList.remove('flex')
+      registerTp.classList.add('hidden')
+    }
+  
+    const listingTp = document.querySelector(".listingTipoProd");
+    if(listingTp){
+       listingTp.classList.remove('hidden')
+       listingTp.classList.add('flex')
+    }
+  
+    const btnMainPage = document.querySelector(".btnMainPageTipoProd");
+    if(btnMainPage){
+      btnMainPage.classList.remove('hidden')
+      btnMainPage.classList.add('flex')
+    }
+    
   });
+}
 
 
-  document.querySelector(".cadTp").addEventListener("click", async (event) => {
+const btnExitSectionTypeProd = document.querySelector(".buttonExitTipoProd");
+if(btnExitSectionTypeProd){
+    
+  btnExitSectionTypeProd.addEventListener("click", () => {
+    
+    const containerAppTypeProd = document.querySelector(".containerAppTipoProd");
+    if(containerAppTypeProd){
+      containerAppTypeProd.classList.remove('flex')
+      containerAppTypeProd.classList.add('hidden')
+    }
+     
+     const informative = document.querySelector('.information')
+            if (informative) {
+              informative.style.display = 'block';
+              informative.textContent = 'Sessão ativa';
+            }
+  });
+  
+}
+
+const btnOutInitTpEdit = document.querySelector(".btnOutInitTpEdit");
+if(btnOutInitTpEdit){
+  btnOutInitTpEdit.addEventListener("click", (e) => {
+    e.preventDefault();
+  
+    const registerTpEdit = document.querySelector(".containerRegisterEdit");
+    if(registerTpEdit){
+      registerTpEdit.classList.remove('flex')
+      registerTpEdit.classList.add('hidden')
+    }
+
+  
+    const listingTp = document.querySelector(".listingTipoProd");
+    if(listingTp){
+      listingTp.classList.remove('hidden')
+      listingTp.classList.add('flex')
+    }
+  
+    const btnMainPage = document.querySelector(".btnMainPageTipoProd");
+    if(btnMainPage){
+      btnMainPage.classList.remove('hidden')
+      btnMainPage.classList.add('flex')
+    }
+    
+  });
+  
+}
+
+
+}
+
+
+function registerNewTypeProduct(){
+       
+    document.querySelector(".cadTp").addEventListener("click", async (event) => {
     event.preventDefault();
 
     const token = localStorage.getItem("token");
@@ -200,17 +281,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   validationFormTipoProd();
-});
+}
 
-// ATUALIZAR A TABELA EM RUNTIME NA INSERÇÃO
+
+  
+// // ATUALIZAR A TABELA EM RUNTIME NA INSERÇÃO
 function insertTypeProductTableRunTime(tipoProduto) {
   const tableWrapper = document.querySelector(".tableWrapper");
   tableWrapper.innerHTML = ""; 
 
   if (tipoProduto.length > 0) {
     const tabela = document.createElement("table");
-    tabela.style.width = "100%";
-    tabela.setAttribute("border", "1");
+    tabela.classList.add('tableTypeProd')
 
     // Cabeçalho da tabela
     const cabecalho = tabela.createTHead();
@@ -303,10 +385,7 @@ async function fetchListTypeProduct() {
 
       if (tipoProduto.length > 0) {
           const tabela = document.createElement("table");
-          tabela.style.width = "100%"; // Define largura fixa
-
-          tabela.setAttribute("border", "1");
-
+           tabela.classList.add('tableTypeProd')
           const cabecalho = tabela.createTHead();
           const linhaCabecalho = cabecalho.insertRow();
           const colunas = [
@@ -363,10 +442,12 @@ async function fetchListTypeProduct() {
           "<p>Erro ao carregar tipo de produto.</p>";
   }
 }
-fetchListTypeProduct();
+
 
 //delete tipo do produto
-const btnDeleteTypeProd = document.querySelector(".buttonDeleteTipoProd");
+function deleteTypeProduct(){
+
+    const btnDeleteTypeProd = document.querySelector(".buttonDeleteTipoProd");
 btnDeleteTypeProd.addEventListener("click", async () => {
   const selectedCheckbox = document.querySelector(
     'input[name="selectTypeProd"]:checked'
@@ -448,7 +529,6 @@ async function deleteTypeProd(id, rowProd) {
           backgroundColor: "orange",
         }).showToast();
       } else {
-        console.log("Erro para excluir:", data);
         Toastify({
           text: "Erro na exclusão do tipo de produto",
           duration: 2000,
@@ -471,9 +551,12 @@ async function deleteTypeProd(id, rowProd) {
     }).showToast();
   }
 }
+}
 
-//botão editar
-const btnEditTp = document.querySelector(".buttonEditTipoProd");
+  
+function EditTypeProduct(){
+
+     const btnEditTp = document.querySelector(".buttonEditTipoProd");
 btnEditTp.addEventListener("click", () => {
   const selectedCheckbox = document.querySelector(
     'input[name="selectTypeProd"]:checked'
@@ -490,6 +573,24 @@ btnEditTp.addEventListener("click", () => {
     }).showToast();
     return;
   }
+     
+  const btnMainPageFamiliGoods = document.querySelector(".btnMainPageTipoProd");
+  if(btnMainPageFamiliGoods){
+    btnMainPageFamiliGoods.classList.remove('flex')
+    btnMainPageFamiliGoods.classList.add('hidden')
+  }
+
+  const listFamilyGoods = document.querySelector(".listingTipoProd");
+  if(listFamilyGoods){
+    listFamilyGoods.classList.remove('flex')
+    listFamilyGoods.classList.add('hidden')
+  }
+
+    const containerEditForm = document.querySelector('.containerRegisterEdit')
+   if(containerEditForm){
+      containerEditForm.classList.remove('hidden')
+      containerEditForm.classList.add('flex')
+   }
 
   const typeProdutoData = selectedCheckbox.dataset.typeProd;
   if (!typeProdutoData) {
@@ -542,9 +643,8 @@ btnEditTp.addEventListener("click", () => {
   } catch (error) {
     console.error("Erro ao fazer parse de data-bem:", error);
   }
-});
-
-//atualização
+ });
+// //atualização
 async function editAndUpdateOfTypeProduct() {
   const formEditProd = document.querySelector(".formEditTp");
 
@@ -638,8 +738,8 @@ async function editAndUpdateOfTypeProduct() {
   });
 };
 editAndUpdateOfTypeProduct();
-
-// atualização em runtime NA EDIÇÃO
+}
+// // atualização em runtime NA EDIÇÃO
 function updateTypeProductInTableRunTime(updatedTypeProduct) {
   const row = document.querySelector(
     `[data-typecode="${updatedTypeProduct.tiprcode}"]`
