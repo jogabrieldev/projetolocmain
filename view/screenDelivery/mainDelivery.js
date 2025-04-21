@@ -1,39 +1,108 @@
 
-const btnDelivery = document.querySelector('.delivery')
-btnDelivery.addEventListener('click' , ()=>{
-      const deliveryFinish = document.querySelector('.deliveryFinish')
-      deliveryFinish.style.display = 'flex'
-
-      const informative = document.querySelector(".information");
-      informative.style.display = "block";
-      informative.textContent = "SEÇÃO ENTREGA ";
-
-      const containerAppLocation = document.querySelector(".containerAppLocation");
-      containerAppLocation.style.display = "none";
-
-      const containerLogistica = document.querySelector(".containerLogistica");
-      containerLogistica.style.display = "none";
-
-      const containerDelivery = document.querySelector('.containerDelivery');
-      containerDelivery.style.display = 'none'
-
-})
-
-const btnOutPageListLocationForDelivery = document.querySelector('.btnOutPageListLocationForDelivery')
-btnOutPageListLocationForDelivery.addEventListener('click' , ()=>{
-
-      const deliveryFinish = document.querySelector('.deliveryFinish')
-      deliveryFinish.style.display = 'none'
-})
 const socketUpdateTableDelivey = io(); 
-document.addEventListener('DOMContentLoaded', ()=>{
-    
-    socketUpdateTableDelivey.on("updateRunTimeRegisterLinkGoodsLocation", async () => {
-        await getAllDelivery(); 
-        renderTableDelivery();  
-    });
+document.addEventListener('DOMContentLoaded' , ()=>{
 
+    const buttonLoadDelivery = document.querySelector('.delivery')
+    if(buttonLoadDelivery){
+       buttonLoadDelivery.addEventListener('click' , async ()=>{
+         
+        try {
+
+          const responseDelivery = await fetch('/delivery' , {
+            method:'GET'
+           })
+           if (!responseDelivery.ok) throw new Error(`Erro HTTP: ${responseDelivery.status}`);
+           const html = await responseDelivery.text();
+           const mainContent = document.querySelector('#mainContent');
+           if (mainContent) {
+             mainContent.innerHTML = html;
+             interationDelivey();
+             await getAllDelivery();
+              await getAllClients();
+             renderTableDelivery();
+             showDetails();
+             
+           }else{
+            console.error('#mainContent não encontrado no DOM');
+            return;
+           }
+        } catch (error) {
+          
+        }
+         
+        const informative = document.querySelector(".information");
+        informative.style.display = "block";
+        informative.textContent = "SEÇÃO ENTREGA ";
+
+        const deliveryFinish = document.querySelector('.deliveryFinish')
+        if(deliveryFinish){
+           deliveryFinish.classList.remove('hidden')
+           deliveryFinish.classList.add('flex')
+        }
+  
+        const containerAppLocation = document.querySelector(".containerAppLocation");
+        if(containerAppLocation){
+          containerAppLocation.classList.remove('flex')
+          containerAppLocation.classList.add('hidden')
+        }
+       
+  
+        const containerLogistica = document.querySelector(".containerLogistica");
+        if(containerLogistica){
+          containerLogistica.classList.remove('flex')
+          containerLogistica.classList.add('hidden')
+        }
+       
+       })
+    }
+
+    socketUpdateTableDelivey.on("updateRunTimeRegisterLinkGoodsLocation", async () => {
+  
+      await getAllDelivery(); 
+      renderTableDelivery();  
+  });
 })
+
+function interationDelivey(){
+    
+ 
+  const outPageDelivery = document.querySelector('.outPageDelivey')
+  if(outPageDelivery){
+     outPageDelivery.addEventListener('click' , ()=>{
+
+        const mainDelivery  = document.querySelector('.deliveryFinish')
+        if(mainDelivery){
+          mainDelivery.classList.remove('flex')
+          mainDelivery.classList.add('hidden')
+        }
+     })
+  }
+
+  const detalhes = document.querySelector('.detalhes')
+  if(detalhes){
+    detalhes.addEventListener('click' , ()=>{
+      const containerDetalhes = document.querySelector('.containerDelivery')
+      if(containerDetalhes){
+         containerDetalhes.classList.remove('hidden')
+         containerDetalhes.classList.add('flex')
+      }
+      
+      const tableDelivery = document.querySelector('.containerTableDelivery')
+      if(tableDelivery){
+        tableDelivery.classList.remove('flex')
+        tableDelivery.classList.add('hidden')
+      }
+
+      const btnOut = document.querySelector('.outPageDelivey')
+      if(btnOut){
+        btnOut.classList.remove('flex')
+        btnOut.classList.add('hidden')
+      }
+    })
+    
+  }
+}
+
 
 let deliveryData = [];
 let clientData = [];
@@ -54,7 +123,7 @@ async function getAllDelivery() {
 // Função para buscar clientes
 async function getAllClients() {
 
-      const token = localStorage.getItem('token'); // Pega o token armazenado no login
+      const token = localStorage.getItem('token'); 
 
       if (!token || isTokenExpired(token)) {
         Toastify({
@@ -96,6 +165,11 @@ function renderTableDelivery() {
     const thead = document.querySelector("#tableDelivery thead");
     const table = document.querySelector("#tableDelivery");
     const messageContainer = document.querySelector("#noDeliveriesMessage");
+
+    if (!tbody || !thead || !table) {
+      console.warn("Tabela de entregas ainda não está no DOM.");
+      return;
+  }
 
     tbody.innerHTML = ""; 
 
@@ -150,11 +224,8 @@ function renderTableDelivery() {
 }
 
 let motoris = []
-
 // Função para exibir os detalhes da locação e do cliente
  async function showDetails(codigo) {
-
-    btnOutPageListLocationForDelivery.style.display = "none"
 
     const token = localStorage.getItem('token'); 
 
@@ -174,6 +245,8 @@ let motoris = []
       }, 2000); 
       return;
   }
+
+ 
      
       try {
         const response  = await fetch ("/api/listingdriver" , {
@@ -199,8 +272,9 @@ let motoris = []
          // Criando os elementos
          const wrapper = document.createElement("div");
          wrapper.style.display = "flex";
+         wrapper.style.display = 'wrap'
          wrapper.style.gap = "20px";
-         wrapper.style.height = "65%"
+         wrapper.style.height = "auto"
          
          // Div de Detalhes da Locação
          const locacaoDiv = document.createElement("div");
@@ -255,8 +329,6 @@ let motoris = []
               const containerDelivery = document.querySelector('.containerDelivery');
               containerDelivery.style.display = 'none'
 
-              btnOutPageListLocationForDelivery.style.display = "flex"
-
              renderTableDelivery()
              
         })
@@ -286,7 +358,8 @@ let motoris = []
       }
       
   };
-
+   
+  // Pagina para imprimir a OS
   function printDelivery(element) {
     const printWindow = window.open('', '', 'width=800,height=600');
   
@@ -384,7 +457,6 @@ let motoris = []
     printWindow.document.close();
   }
 
-getAllDelivery();
 
 function formatContentForPrint(innerHTML) {
     return innerHTML

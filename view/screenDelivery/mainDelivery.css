@@ -11,6 +11,13 @@
     border: solid , 2px , white;
     border-radius: 10px;
 }
+.hidden {
+    display: none !important;
+  }
+
+  .flex {
+    display: flex !important;
+  }
 .delivery{
     width: 90%;
     height: 35px;
@@ -26,22 +33,14 @@
     transform: translateY(6px);
 }
 
-.containerTableDelivery{
-    overflow: auto;
-}
-.btnOutPageListLocationForDelivery{
-    cursor: pointer;
-    width: 120px;
-    background-color: lightslategray;
-    border: none;
-    height: 27px;
-    margin-left: 3%;
-    margin-top: 1.5%;
+#tableDelivery td{
+    background-color: darkgray;
 }
 
 .containerDelivery{
     height: 470px;
     padding: 7px;
+
 }
 
 .btnOutDelivery{

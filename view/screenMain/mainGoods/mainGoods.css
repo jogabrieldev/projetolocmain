@@ -1,17 +1,3 @@
-.containerAppBens{
-    display: none;
-     background-color: darkgray;
-     box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
-     width: 76%;
-     height: 550px;
-     margin-left: 22%;
-     margin-top:1% ;
-     flex-direction: column;
-     justify-content: space-between;
-     border: solid , 2px , white;
-     padding: 7px;
-     border-radius: 10px;
- }
 
  .listingBens{
     display: flex; 
@@ -39,14 +25,6 @@
 .bem-item p {
     margin: 5px 0;
   }
-/* .btnPageEdit{
-    display: flex;
-    width:50%;
-     gap: 5.5%;
-     justify-content: center;
-     margin-top: 5%;
-} */
-
 
 /* CSS */
 .hidden {

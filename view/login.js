@@ -1,4 +1,6 @@
 
+
+
 //iconPassword
 function showPassword() {
   const inputPassword = document.querySelector("#pin");
@@ -14,62 +16,76 @@ function showPassword() {
 }
 
 //to-enter-page main /valid login
-document.querySelector("#formLogin").addEventListener("submit", async (event) => {
- 
-  event.preventDefault()
-  const username = document.querySelector("#user").value.trim();
-  const password = document.querySelector("#pin").value.trim();
+ function submitFormLogin(){
+  const form = document.querySelector("#formLogin")
+  if(form){
+    form.addEventListener("submit", async (event) => {
 
+      event.preventDefault()
+    const username = document.querySelector("#user").value.trim();
+    const password = document.querySelector("#pin").value.trim();
   
-       await fetch('/autenticar' , {
-        method: 'POST',
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({username , password})
-       })
-       .then((responseData)=> responseData.json())
-       .then((response)=>{
-        if(response.token) {
-          localStorage.setItem('token' ,  response.token )
+    
+         await fetch('/autenticar' , {
+          method: 'POST',
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({username , password})
+         })
+         .then((responseData)=> responseData.json())
+         .then((response)=>{
+          if(response.token) {
+            localStorage.setItem('token' ,  response.token )
+            Toastify({
+              text: "Login com sucesso",
+              duration: 3000,
+              destination: "https://github.com/apvarun/toastify-js",
+              newWindow: true,
+              close: true,
+              gravity: "top", 
+              position: "center", 
+              stopOnFocus: true, 
+              style: {
+                background: "green",
+              },
+              onClick: function(){} 
+            }).showToast();
+           
+            setTimeout(()=>{
+            window.location.href = "screenMain/main.html"
+            },2000)
+            
+            return;
+            
+        } else {
           Toastify({
-            text: "Login com sucesso",
+            text: "Usuario invalido",
             duration: 3000,
             destination: "https://github.com/apvarun/toastify-js",
             newWindow: true,
             close: true,
-            gravity: "top", 
+            gravity: "top",
             position: "center", 
             stopOnFocus: true, 
             style: {
-              background: "green",
+              background: "red",
             },
             onClick: function(){} 
           }).showToast();
+         return;
+        }
+         })
+     })
+ }
+}
 
-          setTimeout(() => {
-            window.location.href = 'screenMain/main.html';
-          }, 2000);
+ 
+const buttonSubmitLogin = document.getElementById('buttonLogin')
+if(buttonSubmitLogin){
+   buttonSubmitLogin.addEventListener('click', submitFormLogin())
+}
+  
 
-          
-      } else {
-        Toastify({
-          text: "Usuario invalido",
-          duration: 3000,
-          destination: "https://github.com/apvarun/toastify-js",
-          newWindow: true,
-          close: true,
-          gravity: "top",
-          position: "center", 
-          stopOnFocus: true, 
-          style: {
-            background: "red",
-          },
-          onClick: function(){} 
-        }).showToast();
 
-      }
-       })
-        
-  })
       
       
    

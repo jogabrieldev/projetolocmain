@@ -9,7 +9,7 @@ export const LocacaoModel = {
     let existe;
 
     do {
-      numero = Math.floor(100000 + Math.random() * 900000); // Número de 6 dígitos
+      numero = Math.floor(100000 + Math.random() * 900000); 
 
       const query = "SELECT COUNT(*) FROM clieloc WHERE cllonmlo = $1";
       const result = await dataLocation.query(query, [numero]);

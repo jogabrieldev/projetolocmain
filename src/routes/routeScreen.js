@@ -21,4 +21,11 @@ routeEscreen.get('/typeprod' , control.typeProduto)
 routeEscreen.get('/driver' , control.driver)
 
 routeEscreen.get('/veiculos' , control.vehicles)
+
+routeEscreen.get('/location' , control.location)
+
+routeEscreen.get('/logistcs' , control.logistcs)
+
+routeEscreen.get('/delivery' , control.delivery)
+
 export { routeEscreen };

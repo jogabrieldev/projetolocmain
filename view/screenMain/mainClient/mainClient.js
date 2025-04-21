@@ -764,13 +764,13 @@ async function editAndUpdateOfClient() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(updateClient),
       });
 
       if (response.ok) {
-        console.log("Atualização bem-sucedida");
+    
         Toastify({
           text: `Cliente '${clientIdParsed}' atualizado com sucesso!`,
           duration: 3000,

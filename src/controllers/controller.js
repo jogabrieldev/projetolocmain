@@ -44,7 +44,15 @@ class Control {
    
   
   location(req ,res){
-    res.sendFile(path.join(__dirname , '..' , '..' , 'view' , 'screenLocation' , 'location.html' , 'mainAuto.html'))
+    res.sendFile(path.join(__dirname , '..' , '..' , 'view' , 'screenLocation' , 'location.html'))
+  }
+
+  logistcs(req ,res){
+    res.sendFile(path.join(__dirname , '..' , '..' , 'view' , 'screenLogistics' , 'logistics.html'))
+  }
+
+  delivery(req ,res){
+    res.sendFile(path.join(__dirname , '..' , '..' , 'view' , 'screenDelivery' , 'mainDelivery.html'))
   }
 }
 

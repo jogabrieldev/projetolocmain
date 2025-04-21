@@ -1,21 +1,5 @@
 // locação finalizada
 
-const btnOutPageLocation = document.querySelector(".buttonExitLocation");
-btnOutPageLocation.addEventListener("click", () => {
-  const containerAppLocation = document.querySelector(".containerAppLocation");
-  containerAppLocation.style.display = "none";
-});
-
-const outPageSearchLocation = document.querySelector(".outPageSearchLocation");
-outPageSearchLocation.addEventListener("click", () => {
-  const containerSearch = document.querySelector(".searchLocation");
-  containerSearch.style.display = "none";
-
-  const containerAppLocation = document.querySelector(".containerAppLocation");
-  containerAppLocation.style.display = "flex";
-});
-
-
 // TABELA COM AS LOCAÇOES
 async function frontLocation() {
   const token = localStorage.getItem("token"); 
@@ -57,7 +41,13 @@ async function frontLocation() {
     const locacoesFinishTable = dataFinish.locacoes || [];
 
     // Limpa a tabela antes de popular os dados
-    document.querySelector(".tableLocation").innerHTML = "";
+    const table = document.querySelector(".tableLocation");
+     if (table) {
+           table.innerHTML = "";
+     } else {
+    console.warn("Elemento .tableLocation não encontrado.");
+   return;
+     }
 
     // Criar array unindo clientes e bens
     const listaLocacoes = locacoesFinishTable.map((locacao) => {
@@ -105,7 +95,6 @@ async function frontLocation() {
     console.error("Erro ao gerar tabela de locação:", error);
   }
 }
-frontLocation();
 
 function renderTable(data) {
   const tableDiv = document.querySelector(".tableLocation");
@@ -143,10 +132,7 @@ function renderTable(data) {
   tableDiv.appendChild(container);
   
   const table = document.createElement("table");
-  table.style.border = "1";
-  table.style.width = "100%";
-  table.style.borderCollapse = "collapse";
-  table.style.textAlign = "left";
+  table.classList.add('tableLocationAll')
   
   const thead = document.createElement("thead");
   const headerRow = document.createElement("tr");
@@ -207,7 +193,6 @@ function renderTable(data) {
     checkbox.addEventListener("change", event => {
       const locacaoData = JSON.parse(event.target.value);
       const isChecked = event.target.checked;
-      console.log('locação:', locacaoData)
   
       document.querySelectorAll(".locacao-checkbox").forEach(cb => {
         if (JSON.parse(cb.value).numeroLocacao === locacaoData.numeroLocacao) {
@@ -225,8 +210,7 @@ function renderTable(data) {
   });
 }
 
-
-// DELETAR LOCAÇÃO
+//Filtar locação
 async function filterTable() {
   const token = localStorage.getItem("token");
 
@@ -374,35 +358,120 @@ async function filterTable() {
 };
 
 // BOTÃO DELETAR LOCAÇÃO
-const btnDeleteLocation = document.querySelector('.buttonDeleteLocation');
-btnDeleteLocation.addEventListener('click', async () => {
-    const selectedCheckbox = document.querySelector('.locacao-checkbox:checked');
-
-    try {
-      if (!selectedCheckbox) {
+function deletarLocation(){
+  
+   const btnDeleteLocation = document.querySelector('.buttonDeleteLocation');
+  btnDeleteLocation.addEventListener('click', async () => {
+      const selectedCheckbox = document.querySelector('.locacao-checkbox:checked');
+  
+      try {
+        if (!selectedCheckbox) {
+          Toastify({
+              text: "Selecione uma Locação para excluir",
+              duration: 2000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "red",
+          }).showToast();
+          return;
+      } 
+      const locacaoData = JSON.parse(selectedCheckbox.value);
+      const locacaoId = locacaoData.numeroLocacao
+  
+  
+        const confirmacao = confirm(`Tem certeza de que deseja excluir a locação com código ${locacaoId}?`);
+          if (!confirmacao) return;
+  
+          await deletelocation(locacaoId, selectedCheckbox.closest("tr"));
+      } catch (error) {
+          
+        console.error("Erro ao excluir locação", error);
+          Toastify({
+              text: "Erro ao validar locação antes da exclusão.",
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "red",
+          }).showToast();
+      }
+  
+  });
+  
+  // 🔹 Função de exclusão
+  async function deletelocation(id, rowProd) {
+    const token = localStorage.getItem('token');
+  
+    if (!token || isTokenExpired(token)) {
         Toastify({
-            text: "Selecione uma Locação para excluir",
-            duration: 2000,
+            text: "Sessão expirada. Faça login novamente.",
+            duration: 3000,
             close: true,
             gravity: "top",
             position: "center",
             backgroundColor: "red",
         }).showToast();
+  
+        localStorage.removeItem("token");
+        setTimeout(() => {
+            window.location.href = "/index.html";
+        }, 2000);
         return;
-    } 
-    const locacaoData = JSON.parse(selectedCheckbox.value);
-    const locacaoId = locacaoData.numeroLocacao
-
-
-      const confirmacao = confirm(`Tem certeza de que deseja excluir a locação com código ${locacaoId}?`);
-        if (!confirmacao) return;
-
-        await deletelocation(locacaoId, selectedCheckbox.closest("tr"));
+    }
+  
+    try {
+       
+        const response = await fetch(`/api/deletelocation/${id}`, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+  
+        const data = await response.json();
+  
+        if (response.ok) {
+          Toastify({
+            text: "Locação excluida com sucesso",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "green",
+          }).showToast();
+    
+          rowProd.remove();
+        } else { 
+          
+          if (response.status === 400) {
+            Toastify({
+              text: data.message, // Mensagem retornada do backend
+              duration: 4000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "orange",
+            }).showToast();
+          }
+        else{ 
+          console.log("Erro para excluir:", data);
+          Toastify({
+            text: "Erro a excluir locação. Server",
+            duration: 2000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
+    
+        }
+      }
     } catch (error) {
-        
-      console.error("Erro ao excluir locação", error);
+        console.error("Erro ao excluir locação:", error);
         Toastify({
-            text: "Erro ao validar locação antes da exclusão.",
+            text: "Erro ao excluir locação. Tente novamente.",
             duration: 3000,
             close: true,
             gravity: "top",
@@ -410,225 +479,144 @@ btnDeleteLocation.addEventListener('click', async () => {
             backgroundColor: "red",
         }).showToast();
     }
-
-});
-
-// 🔹 Função de exclusão
-async function deletelocation(id, rowProd) {
-  const token = localStorage.getItem('token');
-
-  if (!token || isTokenExpired(token)) {
-      Toastify({
-          text: "Sessão expirada. Faça login novamente.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-      }).showToast();
-
-      localStorage.removeItem("token");
-      setTimeout(() => {
-          window.location.href = "/index.html";
-      }, 2000);
-      return;
   }
-
-  try {
-     
-      const response = await fetch(`/api/deletelocation/${id}`, {
-          method: "DELETE",
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-          },
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        Toastify({
-          text: "Locação excluida com sucesso",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "green",
-        }).showToast();
   
-        rowProd.remove();
-      } else { 
-        
-        if (response.status === 400) {
-          Toastify({
-            text: data.message, // Mensagem retornada do backend
-            duration: 4000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "orange",
-          }).showToast();
-        }
-      else{ 
-        console.log("Erro para excluir:", data);
-        Toastify({
-          text: "Erro a excluir locação. Server",
-          duration: 2000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-  
-      }
-    }
-  } catch (error) {
-      console.error("Erro ao excluir locação:", error);
-      Toastify({
-          text: "Erro ao excluir locação. Tente novamente.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-      }).showToast();
-  }
 }
 
 // Editar Locação
 
-const buttonEditLocation = document.querySelector('.buttonEditLocation')
-buttonEditLocation.addEventListener('click' , async ()=>{
+// const buttonEditLocation = document.querySelector('.buttonEditLocation')
+// buttonEditLocation.addEventListener('click' , async ()=>{
 
  
-  const selectedCheckbox = document.querySelector('.locacao-checkbox:checked');
+//   const selectedCheckbox = document.querySelector('.locacao-checkbox:checked');
  
-    try {
-      if (!selectedCheckbox) {
-        Toastify({
-            text: "Selecione uma Locação para editar",
-            duration: 2000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "red",
-        }).showToast();
-        return;
-    }  
-    const contentEditlocation = document.querySelector('.contentEditlocation')
-    contentEditlocation.style.display = 'flex'
+//     try {
+//       if (!selectedCheckbox) {
+//         Toastify({
+//             text: "Selecione uma Locação para editar",
+//             duration: 2000,
+//             close: true,
+//             gravity: "top",
+//             position: "center",
+//             backgroundColor: "red",
+//         }).showToast();
+//         return;
+//     }  
+//     const contentEditlocation = document.querySelector('.contentEditlocation')
+//     contentEditlocation.style.display = 'flex'
   
-    const btnInitPageMainLoc = document.querySelector('.btnInitPageMainLoc')
-    btnInitPageMainLoc.style.display = 'none'
+//     const btnInitPageMainLoc = document.querySelector('.btnInitPageMainLoc')
+//     btnInitPageMainLoc.style.display = 'none'
 
-    const locacaoData = JSON.parse(selectedCheckbox.value);
-    const locacaoId = locacaoData.numeroLocacao
+//     const locacaoData = JSON.parse(selectedCheckbox.value);
+//     const locacaoId = locacaoData.numeroLocacao
     
-    const token = localStorage.getItem('token');
+//     const token = localStorage.getItem('token');
 
-  if (!token || isTokenExpired(token)) {
-      Toastify({
-          text: "Sessão expirada. Faça login novamente.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-      }).showToast();
+//   if (!token || isTokenExpired(token)) {
+//       Toastify({
+//           text: "Sessão expirada. Faça login novamente.",
+//           duration: 3000,
+//           close: true,
+//           gravity: "top",
+//           position: "center",
+//           backgroundColor: "red",
+//       }).showToast();
 
-      localStorage.removeItem("token");
-      setTimeout(() => {
-          window.location.href = "/index.html";
-      }, 2000);
-      return;
-  }
+//       localStorage.removeItem("token");
+//       setTimeout(() => {
+//           window.location.href = "/index.html";
+//       }, 2000);
+//       return;
+//   }
 
-    const response = await fetch('/api/locationFinish' , {
-      method: "GET",
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    },
+//     const response = await fetch('/api/locationFinish' , {
+//       method: "GET",
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Authorization': `Bearer ${token}`
+//     },
     
-    })
-      const result = await response.json()
+//     })
+//       const result = await response.json()
 
-      const locacaoEncontrada = result.locacoes.find(loc => loc.cllonmlo === locacaoId);
+//       const locacaoEncontrada = result.locacoes.find(loc => loc.cllonmlo === locacaoId);
 
-      if (locacaoEncontrada) {
-         preencherFormularioDeEdicao(locacaoEncontrada);
-      } else {
-      console.log("Locação não encontrada.");
-      }
+//       if (locacaoEncontrada) {
+//          preencherFormularioDeEdicao(locacaoEncontrada);
+//       } else {
+//       console.log("Locação não encontrada.");
+//       }
 
-      console.log('Resultado:', result)
-    // editarlocationFinish(locacaoId)
+//       console.log('Resultado:', result)
+//     // editarlocationFinish(locacaoId)
   
-  }catch(error){
+//   }catch(error){
 
-  }
-});
-function preencherFormularioDeEdicao(locacao) {
-  // Preenche dados principais
-  document.getElementById("numeroLocationEdit").value = locacao.cllonmlo;
-  document.getElementById("dataLocEdit").value = locacao.cllodtlo.split('T')[0];
-  document.getElementById("DataDevoEdit").value = locacao.cllodtdv.split('T')[0];
-  document.getElementById("pagamentEdit").value = locacao.cllopgmt;
+//   }
+// });
+// function preencherFormularioDeEdicao(locacao) {
+//   // Preenche dados principais
+//   document.getElementById("numeroLocationEdit").value = locacao.cllonmlo;
+//   document.getElementById("dataLocEdit").value = locacao.cllodtlo.split('T')[0];
+//   document.getElementById("DataDevoEdit").value = locacao.cllodtdv.split('T')[0];
+//   document.getElementById("pagamentEdit").value = locacao.cllopgmt;
 
-  // Preenche dados do cliente
-  document.getElementById("nameClientEdit").value = locacao.clloclno;
-  document.getElementById("cpfClientEdit").value = locacao.cllocpf;
-
-  
-  // document.getElementById("ruaClientEdit").value = locacao.clloclrua || '';
-  // document.getElementById("cityClientEdit").value = locacao.clloclcidade || '';
-  // document.getElementById("cepClientEdit").value = locacao.clloclcep || '';
-  // document.getElementById("mailClientEdit").value = locacao.clloclemail || '';
-
-  // Preenche até 4 grupos de bens
-  locacao.bens.forEach((bem, index) => {
-    const i = index + 1;
-
-    if (i <= 4) {
-      document.getElementById(`family${i}Edit`).value = bem.bencodb;
-      document.getElementById(`produto${i}Edit`).value = bem.beloben;
-      document.getElementById(`quantidade${i}Edit`).value = bem.beloqntd;
-      document.getElementById(`observacao${i}Edit`).value = bem.beloobsv;
-      document.getElementById(`dataInicio${i}Edit`).value = bem.belodtin.split('T')[0];
-      document.getElementById(`dataFim${i}Edit`).value = bem.belodtfi.split('T')[0];
-    }
-  });
-}
-
-
-async function editarlocationFinish(id , body) {
-
-  const token = localStorage.getItem('token');
-
-  if (!token || isTokenExpired(token)) {
-      Toastify({
-          text: "Sessão expirada. Faça login novamente.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-      }).showToast();
-
-      localStorage.removeItem("token");
-      setTimeout(() => {
-          window.location.href = "/index.html";
-      }, 2000);
-      return;
-  }
+//   // Preenche dados do cliente
+//   document.getElementById("nameClientEdit").value = locacao.clloclno;
+//   document.getElementById("cpfClientEdit").value = locacao.cllocpf;
 
   
-    await fetch(`/api/location/${id}` , {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify(body)
-    })
-}
+//   // document.getElementById("ruaClientEdit").value = locacao.clloclrua || '';
+//   // document.getElementById("cityClientEdit").value = locacao.clloclcidade || '';
+//   // document.getElementById("cepClientEdit").value = locacao.clloclcep || '';
+//   // document.getElementById("mailClientEdit").value = locacao.clloclemail || '';
+
+//   // Preenche até 4 grupos de bens
+//   locacao.bens.forEach((bem, index) => {
+//     const i = index + 1;
+
+//     if (i <= 4) {
+//       document.getElementById(`family${i}Edit`).value = bem.bencodb;
+//       document.getElementById(`produto${i}Edit`).value = bem.beloben;
+//       document.getElementById(`quantidade${i}Edit`).value = bem.beloqntd;
+//       document.getElementById(`observacao${i}Edit`).value = bem.beloobsv;
+//       document.getElementById(`dataInicio${i}Edit`).value = bem.belodtin.split('T')[0];
+//       document.getElementById(`dataFim${i}Edit`).value = bem.belodtfi.split('T')[0];
+//     }
+//   });
+// }
+
+
+// async function editarlocationFinish(id , body) {
+
+//   const token = localStorage.getItem('token');
+
+//   if (!token || isTokenExpired(token)) {
+//       Toastify({
+//           text: "Sessão expirada. Faça login novamente.",
+//           duration: 3000,
+//           close: true,
+//           gravity: "top",
+//           position: "center",
+//           backgroundColor: "red",
+//       }).showToast();
+
+//       localStorage.removeItem("token");
+//       setTimeout(() => {
+//           window.location.href = "/index.html";
+//       }, 2000);
+//       return;
+//   }
+
+  
+//     await fetch(`/api/location/${id}` , {
+//       method: 'PUT',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Authorization': `Bearer ${token}`
+//     },
+//     body: JSON.stringify(body)
+//     })
+// }

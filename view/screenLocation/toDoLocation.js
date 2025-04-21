@@ -1,151 +1,28 @@
-const btnAtivRegister = document.querySelector(".btnAtivRegister");
-btnAtivRegister.addEventListener("click", () => {
-  const informative = document.querySelector(".information");
-  informative.style.display = "block";
-  informative.textContent = "SEÇÃO CADASTROS";
 
-  document.querySelector(".btnCadBens").style.display = "flex";
-  document.querySelector(".btnCadAutomo").style.display = "flex";
-  document.querySelector(".btnCadClie").style.display = "flex";
-  document.querySelector(".btnCadForn").style.display = "flex";
-  document.querySelector(".btnCadProd").style.display = "flex";
-  document.querySelector(".btnCadFabri").style.display = "flex";
-  document.querySelector(".btnCadTypeProd").style.display = "flex";
-  document.querySelector(".btnCadMotorista").style.display = "flex";
-  document.querySelector('.outSectionRegister').style.display = "flex"
-
-  //none
-  document.querySelector(".delivery").style.display = "none";
-  document.querySelector(".btnLogistic").style.display = "none";
-  document.querySelector(".btnRegisterLocation").style.display = "none";
-});
-
-const btnOutSectionRegister =  document.querySelector('.outSectionRegister')
-btnOutSectionRegister.addEventListener('click' , ()=>{
-
-  document.querySelector(".btnCadBens").style.display = "none";
-  document.querySelector(".btnCadAutomo").style.display = "none";
-  document.querySelector(".btnCadClie").style.display = "none";
-  document.querySelector(".btnCadForn").style.display = "none";
-  document.querySelector(".btnCadProd").style.display = "none";
-  document.querySelector(".btnCadFabri").style.display = "none";
-  document.querySelector(".btnCadTypeProd").style.display = "none";
-  document.querySelector(".btnCadMotorista").style.display = "none";
-  document.querySelector('.outSectionRegister').style.display = "none"
-
-  document.querySelector(".delivery").style.display = "flex";
-  document.querySelector(".btnLogistic").style.display = "flex";
-  document.querySelector(".btnRegisterLocation").style.display = "flex";
-})
-
-const btnLocation = document.querySelector(".btnRegisterLocation");
-btnLocation.addEventListener("click", () => {
-  const informative = document.querySelector(".information");
-  informative.style.display = "block";
-  informative.textContent = "SEÇÃO LOCAÇÃO";
-
-  const containerAppLocation = document.querySelector(".containerAppLocation");
-  containerAppLocation.style.display = "flex";
-
-  const containerLogistica = document.querySelector(".containerLogistica");
-  containerLogistica.style.display = "none";
-
-  const deliveryFinish = document.querySelector(".deliveryFinish");
-  deliveryFinish.style.display = "none";
-});
-
-const registerLocation = document.querySelector(".registerLocation");
-registerLocation.addEventListener("click", () => {
-  const contentLocation = document.querySelector(".content");
-  contentLocation.style.display = "flex";
-
-  const formClient = document.querySelector("#formClient");
-  formClient.style.display = "flex";
-
-  const infoClient = document.querySelector(".infoClient");
-  infoClient.style.display = "flex";
-
-  const familyBens = document.querySelector(".familyBens");
-  familyBens.style.display = "flex";
-
-  const tableLocation = document.querySelector(".tableLocation");
-  tableLocation.style.display = "none";
-
-  const btnInitPageMainLoc = document.querySelector(".btnInitPageMainLoc");
-  btnInitPageMainLoc.style.display = "none";
-});
-
-const outPageRegisterLocation = document.querySelector(".outLocation");
-outPageRegisterLocation.addEventListener("click", () => {
-  const contentLocation = document.querySelector(".content");
-  contentLocation.style.display = "none";
-
-  const tableLocation = document.querySelector(".tableLocation");
-  tableLocation.style.display = "flex";
-
-  const btnInitPageMainLoc = document.querySelector(".btnInitPageMainLoc");
-  btnInitPageMainLoc.style.display = "flex";
-});
-const locBtnRegisterClient = document.querySelector(".locCadClient");
-locBtnRegisterClient.addEventListener("click", (event) => {
-  event.preventDefault();
-
-  const LocRegisterClient = document.querySelector(".LocRegisterClient");
-  LocRegisterClient.style.display = "flex";
-
-  const familyBens = document.querySelector(".familyBens");
-  familyBens.style.display = "none";
-
-  const informationClient = document.querySelector(".informationClient");
-  informationClient.style.display = "none";
-});
-
-const btnOutInitLoc = document.querySelector(".btnOutInitLoc");
-btnOutInitLoc.addEventListener("click", (event) => {
-  event.preventDefault();
-
-  const LocRegisterClient = document.querySelector(".LocRegisterClient");
-  LocRegisterClient.style.display = "none";
-
-  const familyBens = document.querySelector(".familyBens");
-  familyBens.style.display = "block";
-
-  const informationClient = document.querySelector(".informationClient");
-  informationClient.style.display = "flex";
-});
-
-const buttonOutPageLocation = document.querySelector(".outLocation");
-buttonOutPageLocation.addEventListener("click", () => {
-  const formClientLocation = document.querySelector("#formClient");
-  formClientLocation.style.display = "none";
-
-  const informationClient = document.querySelector(".infoClient");
-  informationClient.style.display = "none";
-
-  const containerFamilyBens = document.querySelector(".familyBens");
-  containerFamilyBens.style.display = "none";
-
-  const tableDivLocation = document.querySelector(".tableLocation");
-  tableDivLocation.style.display = "block";
-
-  const containerMainBtnPage = document.querySelector(".btnInitPageMainLoc");
-  containerMainBtnPage.style.display = "flex";
-});
-
-function atualizarDataHora() {
-  const agora = new Date();
-
-  const ano = agora.getFullYear();
-  const mes = String(agora.getMonth() + 1).padStart(2, "0");
-  const dia = String(agora.getDate()).padStart(2, "0");
-  const horas = String(agora.getHours()).padStart(2, "0");
-  const minutos = String(agora.getMinutes()).padStart(2, "0");
-
-  const dataHoraFormatada = `${ano}-${mes}-${dia}T${horas}:${minutos}`;
-
-  document.getElementById("dataLoc").value = dataHoraFormatada;
+// Funções utilitárias
+function mostrarElemento(el) {
+  if (el) {
+    el.classList.remove("hidden");
+    el.classList.add("flex");
+  }
 }
-setInterval(atualizarDataHora, 1000);
+
+function esconderElemento(el) {
+  
+  if (el) {
+    el.classList.remove("flex");
+    el.classList.add("hidden");
+  }
+}
+
+function maskFieldClientPageLocation(){
+  $("#clieCepLoc").mask("00000-000");
+
+  $("#clieCeluLoc").mask("(00) 00000-0000");
+
+  $("#cpfClientLoc").mask("000.000.000-00")
+}
+
 
 async function obterNumeroLocacao() {
   try {
@@ -165,6 +42,22 @@ async function obterNumeroLocacao() {
   }
 };
 
+function atualizarDataHora() {
+  const agora = new Date();
+
+  const ano = agora.getFullYear();
+  const mes = String(agora.getMonth() + 1).padStart(2, "0");
+  const dia = String(agora.getDate()).padStart(2, "0");
+  const horas = String(agora.getHours()).padStart(2, "0");
+  const minutos = String(agora.getMinutes()).padStart(2, "0");
+
+  const dataHoraFormatada = `${ano}-${mes}-${dia}T${horas}:${minutos}`;
+
+  document.getElementById("dataLoc").value = dataHoraFormatada;
+}
+
+
+
 // VERIFICA SE OS CAMPOS DOS CLIENTES ESTA OK
 function verificarPreenchimentoCliente() {
   const inputsCliente = [
@@ -183,32 +76,97 @@ function verificarPreenchimentoCliente() {
   });
 };
 
-//ATUALIZAÇÃO DA TABELA DE LOCAÇAO EM RUNTIME
-const socketUpdateContainerLocation = io()
-document.addEventListener('DOMContentLoaded' , ()=>{
-   
-  socketUpdateContainerLocation.on("updateRunTimeRegisterLocation", (listLocation) => {
-    const listaLocacoes = listLocation.map((locacao) => {
-      if (locacao.bens.length > 0) {
-        return locacao.bens.map((bem) => ({
-          idClient: locacao.clloid,
-          numeroLocacao: locacao.cllonmlo || "Não definido",
-          nomeCliente: locacao.clloclno || "Não definido",
-          cpfCliente: locacao.cllocpf || "Não definido",
-          dataLocacao: formatDate(locacao.cllodtlo),
-          dataDevolucao: formatDate(locacao.cllodtdv),
-          formaPagamento: locacao.cllopgmt || "Não definido",
-          codigoBem: bem.bencodb || "-",
-          produto: bem.beloben || "Nenhum bem associado",
-          quantidade: bem.beloqntd || "-",
-          status: bem.belostat || "Não definido",
-          observacao: bem.beloobsv || "Sem observação",
-          dataInicio: formatDate(bem.belodtin),
-          dataFim: formatDate(bem.belodtfi),
-        }));
-      } else {
-        return [
-          {
+const socketContainerLocation = io()
+
+document.addEventListener('DOMContentLoaded' , ()=> {
+        
+  const btnLoadLocation = document.querySelector(".btnRegisterLocation")
+  if(btnLoadLocation){
+    btnLoadLocation.addEventListener("click", async () => {
+
+      try {
+        
+        await fetch("/location" , {
+          method:'GET'
+        })
+          .then(response => response.text())
+          .then(html => {
+          const contentMain =  document.querySelector("#mainContent")
+          if(contentMain){
+            contentMain .innerHTML = html; 
+          }
+          interationSystemLocation();
+
+          const aguardarElementos = () => {
+            const select1 = document.getElementById("family1");
+            const tableLocation = document.querySelector('.tableLocation')
+            if (select1 && tableLocation) {
+              frontLocation();
+              searchClientForLocation();
+              carregarFamilias(); 
+              registerClientPageLocation();
+              maskFieldClientPageLocation();
+
+              const buttonSubmitLocationFinish = document.querySelector('.finish')
+              if(buttonSubmitLocationFinish){
+                buttonSubmitLocationFinish.addEventListener('click' , handleSubmit)
+              }
+          
+              deletarLocation()
+              atualizarDataHora();
+              esconderElemento()
+              mostrarElemento()
+              
+            } else {
+              setTimeout(aguardarElementos, 100);
+            }
+          };
+  
+          aguardarElementos();
+
+            
+          })
+          .catch(err => console.error("Erro ao carregar /location", err));
+           
+
+          const containerAppLocation = document.querySelector('.containerAppLocation');
+          if ( containerAppLocation) containerAppLocation.classList.add('flex') ;
+    
+          const sectionsToHide = [
+            'containerLogistica' , 'deliveryFinish'
+          ];
+          sectionsToHide.forEach((selector) => {
+            const element = document.querySelector(selector);
+            if (element) element.style.display = 'none';
+          });
+    
+          const showContentBens = document.querySelector('.content');
+          const btnMainPageClient = document.querySelector('.btnInitPageMainLoc');
+          const listingClient = document.querySelector('.tableLocation ');
+          const editFormClient = document.querySelector('.contentEditlocation');
+          const informative = document.querySelector('.information');
+    
+          if (showContentBens) showContentBens.style.display = 'none';
+          if (btnMainPageClient) btnMainPageClient.style.display = 'flex';
+          if (listingClient) listingClient.style.display = 'flex';
+          if (editFormClient) editFormClient.style.display = 'none';
+          if (informative) {
+            informative.style.display = 'block';
+            informative.textContent = 'SEÇÃO LOCAÇÃO';
+          }
+          
+      } catch (error) {
+          console.error('erro para carregar')
+      }
+     
+    
+  })
+} 
+
+socketContainerLocation.on("updateRunTimeRegisterLocation", (listLocation) => {
+      const listaLocacoes = listLocation.map((locacao) => {
+        if (locacao.bens.length > 0) {
+          return locacao.bens.map((bem) => ({
             idClient: locacao.clloid,
             numeroLocacao: locacao.cllonmlo || "Não definido",
             nomeCliente: locacao.clloclno || "Não definido",
@@ -216,33 +174,383 @@ document.addEventListener('DOMContentLoaded' , ()=>{
             dataLocacao: formatDate(locacao.cllodtlo),
             dataDevolucao: formatDate(locacao.cllodtdv),
             formaPagamento: locacao.cllopgmt || "Não definido",
-            codigoBem: "-",
-            produto: "Nenhum bem associado",
-            quantidade: "-",
-            status: "-",
-            observacao: "Nenhuma observação",
-            dataInicio: "-",
-            dataFim: "-",
-          },
-        ];
-      }
-    }).flat(); 
-
-    renderTable(listaLocacoes); 
+            codigoBem: bem.bencodb || "-",
+            produto: bem.beloben || "Nenhum bem associado",
+            quantidade: bem.beloqntd || "-",
+            status: bem.belostat || "Não definido",
+            observacao: bem.beloobsv || "Sem observação",
+            dataInicio: formatDate(bem.belodtin),
+            dataFim: formatDate(bem.belodtfi),
+          }));
+        } else {
+          return [
+            {
+              idClient: locacao.clloid,
+              numeroLocacao: locacao.cllonmlo || "Não definido",
+              nomeCliente: locacao.clloclno || "Não definido",
+              cpfCliente: locacao.cllocpf || "Não definido",
+              dataLocacao: formatDate(locacao.cllodtlo),
+              dataDevolucao: formatDate(locacao.cllodtdv),
+              formaPagamento: locacao.cllopgmt || "Não definido",
+              codigoBem: "-",
+              produto: "Nenhum bem associado",
+              quantidade: "-",
+              status: "-",
+              observacao: "Nenhuma observação",
+              dataInicio: "-",
+              dataFim: "-",
+            },
+          ];
+        }
+      }).flat(); 
+  
+      renderTable(listaLocacoes); 
+    });
+  
+    socketContainerLocation.on("updateRunTimeFamilyBens", (updatedFamily) => {
+      carregarFamilias(); 
   });
-
-  socketUpdateContainerLocation.on("updateRunTimeFamilyBens", (updatedFamily) => {
-    carregarFamilias(); 
+    
 });
-})
 
-// BUSCAR CLIENTE E VERIFICAR SE ELE JA TEM CADASTRO.
-const searchClient = document.querySelector("#search");
-searchClient.addEventListener("click", async (event) => {
-  event.preventDefault();
-  const inputSearchClient = document.querySelector("#client").value.trim();
 
-  const token = localStorage.getItem("token"); 
+function interationSystemLocation(){
+      
+  const btnOutPageLocation = document.querySelector(".buttonExitLocation");
+  if(btnOutPageLocation){
+  
+    btnOutPageLocation.addEventListener("click", () => {
+      const containerAppLocation = document.querySelector(".containerAppLocation");
+      if(containerAppLocation){
+        esconderElemento(containerAppLocation)
+      }
+
+      
+      const continformation = document.querySelector('.information')
+      if(continformation){
+        continformation.textContent = 'Sessão ativa'
+      }
+      
+    });
+  }
+   
+    const outPageSearchLocation = document.querySelector(".outPageSearchLocation");
+    if(outPageSearchLocation){
+  
+      outPageSearchLocation.addEventListener("click", () => {
+        const containerSearch = document.querySelector(".searchLocation");
+        if(containerSearch){
+          esconderElemento(containerSearch)
+        }
+       
+        const containerAppLocation = document.querySelector(".containerAppLocation");
+        if(containerAppLocation){
+          mostrarElemento(containerAppLocation)
+        }
+      });
+    
+    }
+   
+    const searchLoc =document.querySelector('.searchLoc')
+    if(searchLoc){
+      searchLoc.addEventListener('click' , ()=>{
+        const containerSearch = document.querySelector(".searchLocation");
+        if(containerSearch){
+          mostrarElemento(containerSearch)
+        }
+      })
+    }
+     
+    const btnAtivLocation = document.querySelector('.registerLocation')
+    if(btnAtivLocation){
+       btnAtivLocation.addEventListener('click' , ()=>{
+
+          const content = document.querySelector('.content')
+          if(content){
+            mostrarElemento(content)
+          }
+  
+  
+         const table = document.querySelector('.tableLocation')
+         if(table){
+         esconderElemento(table)
+         }
+  
+         const btnPageMain = document.querySelector('.btnInitPageMainLoc')
+         if(btnPageMain){
+         esconderElemento(btnPageMain)
+         
+         }
+       })
+    }
+   
+  
+     const buttonOutLocation = document.querySelector('.outLocation')
+      if(buttonOutLocation){
+          buttonOutLocation.addEventListener('click' , ()=>{
+
+            const content = document.querySelector('.content')
+            if(content){
+              esconderElemento(content)
+            }
+            const table = document.querySelector('.tableLocation')
+            if(table){
+               mostrarElemento(table)
+            }
+      
+            const btnMainPage = document.querySelector('.btnInitPageMainLoc')
+            if(btnMainPage){
+              mostrarElemento(btnMainPage)
+            }
+          });
+       };
+
+     
+      const registerClientPageLocationIn = document.querySelector('#registerClientPageLocation')
+      if(registerClientPageLocationIn){
+       registerClientPageLocationIn.addEventListener('click' , ()=>{
+         
+         const containerForm = document.querySelector('.LocRegisterClient')
+         if(containerForm){
+           mostrarElemento(containerForm)
+         }
+ 
+         const containerMain = document.querySelector('.container')
+         if(containerMain){
+            esconderElemento(containerMain)
+         }
+       });
+ 
+     };
+
+     const btnOutPageRegisterClientLoc = document.querySelector('.btnOutPageRegisterClientLoc')
+     if(btnOutPageRegisterClientLoc){
+      btnOutPageRegisterClientLoc.addEventListener('click' , ()=>{
+           
+        const containerForm = document.querySelector('.LocRegisterClient')
+         if(containerForm){
+           esconderElemento(containerForm)
+         }
+ 
+         const containerMain = document.querySelector('.container')
+         if(containerMain){
+            mostrarElemento(containerMain)
+         }
+      })
+     }
+};
+
+
+//BUSCAR CLIENTE
+function searchClientForLocation(){
+     
+  const searchClient = document.querySelector("#search");
+  if(searchClient){
+    searchClient.addEventListener("click", async (event) => {
+      event.preventDefault();
+      const inputSearchClient = document.querySelector("#client").value.trim();
+    
+      const token = localStorage.getItem("token"); 
+    
+      if (!token || isTokenExpired(token)) {
+        Toastify({
+          text: "Sessão expirada. Faça login novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+    
+        localStorage.removeItem("token");
+        setTimeout(() => {
+          window.location.href = "/index.html";
+        }, 2000);
+        return;
+      }
+    
+      try {
+        const response = await fetch("/api/listclient", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+    
+        if (!response.ok) {
+          throw new Error(`Erro na API: ${response.status}`);
+        }
+    
+        const clientes = await response.json();
+    
+        // Função para normalizar textos (remover acentos e converter para minúsculas)
+        const normalizeText = (text) => {
+          return text
+            ? text
+                .normalize("NFD") 
+                .replace(/[\u0300-\u036f]/g, "") 
+                .toLowerCase()
+            : "";
+        };
+    
+        // Função para remover caracteres não numéricos do CPF
+        const normalizeCPF = (cpf) => cpf.replace(/\D/g, "");
+    
+      
+        const inputNormalized = normalizeText(inputSearchClient);
+        const inputCpfNormalized = normalizeCPF(inputSearchClient);
+    
+        // Filtrando clientes
+        const clienteEncontrado = clientes.filter((cliente) => {
+          const nomeNormalizado = normalizeText(cliente.clienome);
+          const cpfNormalizado = normalizeCPF(cliente.cliecpf);
+    
+          return nomeNormalizado.includes(inputNormalized) || cpfNormalizado === inputCpfNormalized;
+        });
+    
+        const resultDiv = document.querySelector(".searchClient");
+        resultDiv.innerHTML = ""; 
+    
+    
+    if (clienteEncontrado.length === 1) {
+      const cliente = clienteEncontrado[0];
+    
+      document.querySelector('#nameClient').value = cliente.clienome || '';
+      document.querySelector('#cpfClient').value = cliente.cliecpf || '';
+      document.querySelector('#ruaClient').value = cliente.clierua || '';
+      document.querySelector('#cityClient').value = cliente.cliecity || '';
+      document.querySelector('#cepClient').value = cliente.cliecep || '';
+      document.querySelector('#mailClient').value = cliente.cliemail || '';
+    
+      resultDiv.style.display = "none"; 
+    
+      verificarPreenchimentoCliente();
+    
+      Toastify({
+        text: `Cliente "${cliente.clienome}" encontrado com sucesso!`,
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "green",
+      }).showToast();
+    } else if (clienteEncontrado.length > 1) {
+     
+      clienteEncontrado.forEach((cliente) => {
+        const checkboxSelect = document.createElement('input');
+        checkboxSelect.type = 'checkbox';
+        checkboxSelect.name = 'selectClient';
+        checkboxSelect.value = cliente.cliecode;
+        checkboxSelect.style.marginRight = '10px';
+    
+        
+        const clienteDiv = document.createElement("div");
+        clienteDiv.classList.add("cliente-info");
+        clienteDiv.style.border = "2px solid #000000";
+        clienteDiv.style.color = "black"
+        clienteDiv.style.margin = "10px";
+        clienteDiv.style.padding = "10px";
+        clienteDiv.style.borderRadius = "5px";
+        clienteDiv.style.backgroundColor = "#f9f9f9";
+        clienteDiv.style.display = "flex";
+        clienteDiv.style.alignItems = "flex-start";
+        clienteDiv.style.gap = "10px";
+    
+        const infoDiv = document.createElement("div");
+        infoDiv.innerHTML = `
+          <p><strong>Nome:</strong> ${cliente.clienome || "N/A"}</p>
+          <p><strong>CPF:</strong> ${cliente.cliecpf || "N/A"}</p>
+          <p><strong>Rua:</strong> ${cliente.clierua || "N/A"}</p>
+          <p><strong>Cidade:</strong> ${cliente.cliecity || "N/A"}</p>
+          <p><strong>CEP:</strong> ${cliente.cliecep || "N/A"}</p>
+          <p><strong>Email:</strong> ${cliente.cliemail || "N/A"}</p>
+        `;
+    
+      const buttonOutContainerSearch =  document.createElement('button')
+      buttonOutContainerSearch.textContent = "Voltar"
+      buttonOutContainerSearch.style.cursor = "pointer"
+      buttonOutContainerSearch.addEventListener('click' , ()=>{
+        resultDiv.style.display = 'none'
+      })
+    
+        checkboxSelect.addEventListener('change', (event) => {
+          if (event.target.checked) {
+         
+            document.querySelectorAll('input[name="selectClient"]').forEach(cb => {
+              if (cb !== event.target) cb.checked = false;
+            });
+    
+            // Preenche os campos
+            document.querySelector('#nameClient').value = cliente.clienome || '';
+            document.querySelector('#cpfClient').value = cliente.cliecpf || '';
+            document.querySelector('#ruaClient').value = cliente.clierua || '';
+            document.querySelector('#cityClient').value = cliente.cliecity || '';
+            document.querySelector('#cepClient').value = cliente.cliecep || '';
+            document.querySelector('#mailClient').value = cliente.cliemail || '';
+    
+            // Oculta a div com os resultados
+            resultDiv.style.display = "none";
+    
+            Toastify({
+              text: `Cliente "${cliente.clienome}" selecionado com sucesso!`,
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "green",
+            }).showToast();
+          }
+        });
+    
+        clienteDiv.appendChild(checkboxSelect);
+        clienteDiv.appendChild(infoDiv);
+        clienteDiv.appendChild(buttonOutContainerSearch)
+        resultDiv.appendChild(clienteDiv);
+      });
+       
+     
+      resultDiv.style.display = "flex";
+      resultDiv.style.flexDirection = "column";
+    
+      Toastify({
+        text: `Foram encontrados ${clienteEncontrado.length} clientes com o critério "${inputSearchClient}"`,
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "orange",
+      }).showToast();
+    } else {
+      
+      Toastify({
+        text: `Cliente "${inputSearchClient}" não encontrado.`,
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+    }
+    
+      } catch (error) {
+        console.error("Erro ao validar o cliente:", error);
+        Toastify({
+          text: "Erro ao validar o cliente. Tente novamente mais tarde.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+      }
+    }); 
+  };
+};
+
+// CARREGAR CODIGO DA FAMILIA
+async function carregarFamilias() {
+  const token = localStorage.getItem('token');
 
   if (!token || isTokenExpired(token)) {
     Toastify({
@@ -262,229 +570,40 @@ searchClient.addEventListener("click", async (event) => {
   }
 
   try {
-    const response = await fetch("/api/listclient", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Erro na API: ${response.status}`);
-    }
-
-    const clientes = await response.json();
-
-    // Função para normalizar textos (remover acentos e converter para minúsculas)
-    const normalizeText = (text) => {
-      return text
-        ? text
-            .normalize("NFD") 
-            .replace(/[\u0300-\u036f]/g, "") 
-            .toLowerCase()
-        : "";
-    };
-
-    // Função para remover caracteres não numéricos do CPF
-    const normalizeCPF = (cpf) => cpf.replace(/\D/g, "");
-
-    // Normaliza entrada do usuário
-    const inputNormalized = normalizeText(inputSearchClient);
-    const inputCpfNormalized = normalizeCPF(inputSearchClient);
-
-    // Filtrando clientes
-    const clienteEncontrado = clientes.filter((cliente) => {
-      const nomeNormalizado = normalizeText(cliente.clienome);
-      const cpfNormalizado = normalizeCPF(cliente.cliecpf);
-
-      return nomeNormalizado.includes(inputNormalized) || cpfNormalizado === inputCpfNormalized;
-    });
-
-    const resultDiv = document.querySelector(".searchClient");
-    resultDiv.innerHTML = ""; // Limpa os resultados anteriores
-
-// Verifica se encontrou apenas um cliente e já preenche automaticamente
-if (clienteEncontrado.length === 1) {
-  const cliente = clienteEncontrado[0];
-
-  document.querySelector('#nameClient').value = cliente.clienome || '';
-  document.querySelector('#cpfClient').value = cliente.cliecpf || '';
-  document.querySelector('#ruaClient').value = cliente.clierua || '';
-  document.querySelector('#cityClient').value = cliente.cliecity || '';
-  document.querySelector('#cepClient').value = cliente.cliecep || '';
-  document.querySelector('#mailClient').value = cliente.cliemail || '';
-
-  resultDiv.style.display = "none"; 
-
-  verificarPreenchimentoCliente();
-
-  Toastify({
-    text: `Cliente "${cliente.clienome}" encontrado com sucesso!`,
-    duration: 3000,
-    close: true,
-    gravity: "top",
-    position: "center",
-    backgroundColor: "green",
-  }).showToast();
-} else if (clienteEncontrado.length > 1) {
- 
-  clienteEncontrado.forEach((cliente) => {
-    const checkboxSelect = document.createElement('input');
-    checkboxSelect.type = 'checkbox';
-    checkboxSelect.name = 'selectClient';
-    checkboxSelect.value = cliente.cliecode;
-    checkboxSelect.style.marginRight = '10px';
-
-    
-    const clienteDiv = document.createElement("div");
-    clienteDiv.classList.add("cliente-info");
-    clienteDiv.style.border = "2px solid #000000";
-    clienteDiv.style.margin = "10px";
-    clienteDiv.style.padding = "10px";
-    clienteDiv.style.borderRadius = "5px";
-    clienteDiv.style.backgroundColor = "#f9f9f9";
-    clienteDiv.style.display = "flex";
-    clienteDiv.style.alignItems = "flex-start";
-    clienteDiv.style.gap = "10px";
-
-    const infoDiv = document.createElement("div");
-    infoDiv.innerHTML = `
-      <p><strong>Nome:</strong> ${cliente.clienome || "N/A"}</p>
-      <p><strong>CPF:</strong> ${cliente.cliecpf || "N/A"}</p>
-      <p><strong>Rua:</strong> ${cliente.clierua || "N/A"}</p>
-      <p><strong>Cidade:</strong> ${cliente.cliecity || "N/A"}</p>
-      <p><strong>CEP:</strong> ${cliente.cliecep || "N/A"}</p>
-      <p><strong>Email:</strong> ${cliente.cliemail || "N/A"}</p>
-    `;
-
-  const buttonOutContainerSearch =  document.createElement('button')
-  buttonOutContainerSearch.textContent = "Voltar"
-  buttonOutContainerSearch.style.cursor = "pointer"
-  buttonOutContainerSearch.addEventListener('click' , ()=>{
-    resultDiv.style.display = 'none'
-  })
-
-    checkboxSelect.addEventListener('change', (event) => {
-      if (event.target.checked) {
-     
-        document.querySelectorAll('input[name="selectClient"]').forEach(cb => {
-          if (cb !== event.target) cb.checked = false;
-        });
-
-        // Preenche os campos
-        document.querySelector('#nameClient').value = cliente.clienome || '';
-        document.querySelector('#cpfClient').value = cliente.cliecpf || '';
-        document.querySelector('#ruaClient').value = cliente.clierua || '';
-        document.querySelector('#cityClient').value = cliente.cliecity || '';
-        document.querySelector('#cepClient').value = cliente.cliecep || '';
-        document.querySelector('#mailClient').value = cliente.cliemail || '';
-
-        // Oculta a div com os resultados
-        resultDiv.style.display = "none";
-
-        Toastify({
-          text: `Cliente "${cliente.clienome}" selecionado com sucesso!`,
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "green",
-        }).showToast();
-      }
-    });
-
-    clienteDiv.appendChild(checkboxSelect);
-    clienteDiv.appendChild(infoDiv);
-    clienteDiv.appendChild(buttonOutContainerSearch)
-    resultDiv.appendChild(clienteDiv);
-  });
-   
- 
-  resultDiv.style.display = "flex";
-  resultDiv.style.flexDirection = "column";
-
-  Toastify({
-    text: `Foram encontrados ${clienteEncontrado.length} clientes com o critério "${inputSearchClient}"`,
-    duration: 3000,
-    close: true,
-    gravity: "top",
-    position: "center",
-    backgroundColor: "orange",
-  }).showToast();
-} else {
-  
-  Toastify({
-    text: `Cliente "${inputSearchClient}" não encontrado.`,
-    duration: 3000,
-    close: true,
-    gravity: "top",
-    position: "center",
-    backgroundColor: "red",
-  }).showToast();
-}
-
-  } catch (error) {
-    console.error("Erro ao validar o cliente:", error);
-    Toastify({
-      text: "Erro ao validar o cliente. Tente novamente mais tarde.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-  }
-});
-
-// CARREGAR CODIGO DA FAMILIA
-async function carregarFamilias() {
-  const token = localStorage.getItem('token'); 
-
-  if (!token || isTokenExpired(token)) {
-    Toastify({
-        text: "Sessão expirada. Faça login novamente.",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-    }).showToast();
-
-    localStorage.removeItem("token"); 
-    setTimeout(() => {
-        window.location.href = "/index.html"; 
-    }, 2000); 
-    return;
-}
-
-  try {
-    const response = await fetch("/api/codefamilybens" , {
+    const response = await fetch("/api/codefamilybens", {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
-    }
+      }
     });
+
     if (!response.ok) {
       throw new Error("Erro ao buscar famílias de bens");
     }
 
     const familias = await response.json();
-
-    for (let i = 1; i <= 4; i++) {
+  
+    for (let i = 1; i <= 5; i++) {
       const select = document.getElementById(`family${i}`);
-      const selectEdit = document.getElementById(`family${i}Edit`)
+      const selectEdit = document.getElementById(`family${i}Edit`);
 
-      select.addEventListener("change", () => preencherProduto(i, familias));
+      if (select) {
+        select.addEventListener("change", () => preencherProduto(i, familias));
 
-      familias.forEach(({ fabecode }) => {
-        const option = document.createElement("option");
-        option.value = fabecode;
-        option.textContent = fabecode;
-        select.appendChild(option);
-        selectEdit.appendChild(option)
-      });
+        familias.forEach(({ fabecode }) => {
+          const option = document.createElement("option");
+          option.value = fabecode;
+          option.textContent = fabecode;
+          select.appendChild(option);
+
+          if (selectEdit) {
+            selectEdit.appendChild(option.cloneNode(true));
+          }
+        });
+      } else {
+        console.warn(`Select family${i} não encontrado no DOM.`);
+      }
     }
   } catch (error) {
     console.error("Erro ao carregar famílias de bens:", error);
@@ -498,13 +617,13 @@ async function carregarFamilias() {
     }).showToast();
   }
 }
-//PREECHER  DISCRIÇÃO DO PRODUTO QUE FOI LOCADO
+
+// PRECHER A DESCRIÇÃO DE ACORDO COM O CODIGO DE FAMILIA
 function preencherProduto(index, familias) {
   const select = document.getElementById(`family${index}`);
   const inputProduto = document.getElementById(`produto${index}`);
   const codigoSelecionado = select.value;
 
- 
   const familiaSelecionada = familias.find(
     (familia) => familia.fabecode === codigoSelecionado
   );
@@ -530,10 +649,28 @@ function clearFields() {
   document.getElementById("mailClient").value = "";
 }
 
-document.addEventListener("DOMContentLoaded", carregarFamilias);
-
-// ENVIO DA LOCAÇÃO FINALIZADA
+// // ENVIO DA LOCAÇÃO FINALIZADA
 async function handleSubmit() {
+
+  const token = localStorage.getItem('token'); 
+
+    if (!token || isTokenExpired(token)) {
+      Toastify({
+          text: "Sessão expirada. Faça login novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+      }).showToast();
+  
+      localStorage.removeItem("token"); 
+      setTimeout(() => {
+          window.location.href = "/index.html"; 
+      }, 2000); 
+      return;
+  }
+
   const totalGrups = 4;
   const bens = [];
 
@@ -576,7 +713,7 @@ async function handleSubmit() {
       position: "center",
       backgroundColor: "red",
     }).showToast();
-    return;
+   
   }
 
   try {
@@ -612,25 +749,7 @@ async function handleSubmit() {
       bens,
     }; 
 
-    const token = localStorage.getItem('token'); 
-
-    if (!token || isTokenExpired(token)) {
-      Toastify({
-          text: "Sessão expirada. Faça login novamente.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-      }).showToast();
-  
-      localStorage.removeItem("token"); 
-      setTimeout(() => {
-          window.location.href = "/index.html"; 
-      }, 2000); 
-      return;
-  }
-
+    
     const response = await fetch("/api/datalocation", {
       method: "POST",
       headers: {
@@ -675,47 +794,6 @@ async function handleSubmit() {
       position: "center",
       backgroundColor: "red",
     }).showToast();
-  }
-}
-
-// BUSCAR CLIENTE
-async function buscarNomeCliente(cpf) {
-  const token = localStorage.getItem('token'); 
-
-  if (!token || isTokenExpired(token)) {
-    Toastify({
-        text: "Sessão expirada. Faça login novamente.",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-    }).showToast();
-
-    localStorage.removeItem("token"); 
-    setTimeout(() => {
-        window.location.href = "/index.html"; 
-    }, 2000); 
-    return;
-}
-  try {
-    const response = await fetch(`/api/client?cpf=${cpf}` , {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    },
-    });
-    if (response.ok) {
-      const data = await response.json();
-      return data.nome || "Nome não encontrado";
-    } else {
-      console.error("Erro ao buscar cliente:", response.statusText);
-      return "Nome não encontrado";
-    }
-  } catch (error) {
-    console.error("Erro ao conectar à API:", error);
-    return "Erro ao buscar cliente";
   }
 }
 
@@ -775,73 +853,79 @@ async function gerarContrato() {
   }
 
   // Esconder as outras divs
-  document.querySelector(".content").style.display = "none";
+  const containerContent = document.querySelector('.content')
+  if(containerContent){
+    esconderElemento(containerContent)
+  }
 
   // Gerar conteúdo do contrato
   const contratoDiv = document.getElementById("contrato");
   contratoDiv.innerHTML = `
-    <h2>Contrato de Locação</h2>
-    <hr>
-    <p><strong>Numero da locação:</strong>${numericLocation}</p>
-    <p><strong>Nome do Cliente:</strong> ${nomeCliente}</p>
-    <p><strong>CPF do Cliente:</strong> ${cpfCliente}</p>
-    <p><strong>Data da Locação:</strong> ${dataLocacao}</p>
-    <p><strong>Data de Devolução:</strong> ${dataDevolucao}</p>
-    <p><strong>Forma de Pagamento:</strong> ${pagamento}</p>
-    <hr>
-    <p><strong>Itens Locados:</strong></p>
-    ${
-      gruposBens.length > 0
-        ? `<table border="1" style="width: 30%; text-align: left; border-collapse: collapse;" class = "tableContrato">
-            <thead>
-              <tr>
-                <th>Código do Bem</th>
-                <th>Produto</th>
-                <th>Quantidade</th>
-                <th>Descrição</th>
-                <th>Data de Inicio</th>
-                <th>Data Final</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${gruposBens.join("")}
-            </tbody>
-          </table>`
-        : "<p>Nenhum item informado.</p>"
-    }
-    <button id="voltar">Voltar</button>
+    <div class=" text-white p-4 rounded">
+      <h2 class="text-center mb-4">Contrato de Locação</h2>
+      <hr class="border-light">
+      <p><strong>Número da locação:</strong> ${numericLocation}</p>
+      <p><strong>Nome do Cliente:</strong> ${nomeCliente}</p>
+      <p><strong>CPF do Cliente:</strong> ${cpfCliente}</p>
+      <p><strong>Data da Locação:</strong> ${dataLocacao}</p>
+      <p><strong>Data de Devolução:</strong> ${dataDevolucao}</p>
+      <p><strong>Forma de Pagamento:</strong> ${pagamento}</p>
+      <hr class="border-light">
+      <p><strong>Itens Locados:</strong></p>
+      ${
+        gruposBens.length > 0
+          ? `
+          <div class="table-responsive">
+            <table class="table table-bordered table-dark table-sm">
+              <thead class="table-light">
+                <tr>
+                  <th>Código do Bem</th>
+                  <th>Produto</th>
+                  <th>Quantidade</th>
+                  <th>Descrição</th>
+                  <th>Data de Início</th>
+                  <th>Data Final</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${gruposBens.join("")}
+              </tbody>
+            </table>
+          </div>
+          `
+          : "<p>Nenhum item informado.</p>"
+      }
+      <div class="text-center mt-4">
+        <button id="voltar" class="btn btn-light">Voltar</button>
+      </div>
+    </div>
   `;
   contratoDiv.style.display = "block";
+  
 
   // Adicionar evento ao botão de voltar
-  document.getElementById("voltar").addEventListener("click", () => {
-    contratoDiv.style.display = "none";
+ const voltarPageContrato = document.getElementById("voltar")
+ if(voltarPageContrato){
+  voltarPageContrato.addEventListener("click", () => {
+   esconderElemento(contratoDiv)
+    
+    const listLocation = document.querySelector('.tableLocation ')
+    if(listLocation){
+      mostrarElemento(listLocation)
+    }
 
-    document.querySelector(".content").style.display = "flex";
+    const buttonMainPage = document.querySelector('.btnInitPageMainLoc')
+     if(buttonMainPage){
+      mostrarElemento(buttonMainPage)
+     }
   });
+ }
+ 
 }
 
-// cadastrar o cliente pela a tela de locação
-const formRegisterClientLoc = document.querySelector("#formRegisterClientLoc");
-formRegisterClientLoc.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  
+ // cadastrar o cliente pela a tela de locação
+function registerClientPageLocation(){
 
-  const formDataLocation = {
-    clieCode: document.querySelector("#clieCodeLoc").value, // Codigo
-    clieName: document.querySelector("#clieNameLoc").value, // Nome
-    cpf: document.querySelector("#cpfClientLoc").value, // CPF
-    dtCad: document.querySelector("#dtCadLoc").value, // Data de Cadastro
-    dtNasc: document.querySelector("#dtNascLoc").value, // Data de Nascimento
-    clieCelu: document.querySelector("#clieCeluLoc").value, // Celular
-    clieCity: document.querySelector("#clieCityLoc").value, // Cidade
-    clieEstd: document.querySelector("#clieEstdLoc").value, // Estado
-    clieRua: document.querySelector("#clieRuaLoc").value, // Rua
-    clieCep: document.querySelector("#clieCepLoc").value, // Cep
-    clieMail: document.querySelector("#clieMailLoc").value, // E-mail
-  };
-
-  
   const token = localStorage.getItem('token');
 
   if (!token || isTokenExpired(token)) {
@@ -860,50 +944,82 @@ formRegisterClientLoc.addEventListener("submit", async (event) => {
     }, 2000); 
     return;
 }
-try {
-  const response = await fetch("/api/client/submit", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      'Authorization': `Bearer ${token}`,
-    },
-    body: JSON.stringify(formDataLocation),
-  });
 
-  const result = await response.json();
 
-  if (response.ok) {
-    Toastify({
-      text: "Cliente cadastrado com sucesso!",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "green",
-    }).showToast();
+        const buttonSubmitRegisterClient = document.querySelector('.btnRegisterClientLoc')
+        if(buttonSubmitRegisterClient){
+          buttonSubmitRegisterClient.addEventListener('click' , async ()=>{
 
-    document.querySelector("#formRegisterClientLoc").reset();
-  } else if (response.status === 409) {
-    Toastify({
-      text: result.message,
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "orange",
-    }).showToast();
-  } else {
-    Toastify({
-      text: "Erro ao cadastrar Cliente",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-  }
-} catch (error) {
-  console.error("Erro ao enviar formulário:", error);
-  alert("Erro ao enviar os dados para o server.");
-}
-});
+            if (!$("#formRegisterClientLoc").valid()) {
+              return;
+            }
+          
+            const formDataLocation = {
+              clieCode: document.querySelector("#clieCodeLoc").value, // Codigo
+              clieName: document.querySelector("#clieNameLoc").value, // Nome
+              cpf: document.querySelector("#cpfClientLoc").value, // CPF
+              dtCad: document.querySelector("#dtCadLoc").value, // Data de Cadastro
+              dtNasc: document.querySelector("#dtNascLoc").value, // Data de Nascimento
+              clieCelu: document.querySelector("#clieCeluLoc").value, // Celular
+              clieCity: document.querySelector("#clieCityLoc").value, // Cidade
+              clieEstd: document.querySelector("#clieEstdLoc").value, // Estado
+              clieRua: document.querySelector("#clieRuaLoc").value, // Rua
+              clieCep: document.querySelector("#clieCepLoc").value, // Cep
+              clieMail: document.querySelector("#clieMailLoc").value, // E-mail
+            };
+          
+            
+            
+          try {
+            const response = await fetch("/api/client/submit", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${token}`,
+              },
+              body: JSON.stringify(formDataLocation),
+            });
+          
+            const result = await response.json();
+          
+            if (response.ok) {
+              Toastify({
+                text: "Cliente cadastrado com sucesso!",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "green",
+              }).showToast();
+          
+              document.querySelector("#formRegisterClientLoc").reset();
+            } else if (response.status === 409) {
+              Toastify({
+                text: result.message,
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "orange",
+              }).showToast();
+            } else {
+              Toastify({
+                text: "Erro ao cadastrar Cliente",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "red",
+              }).showToast();
+            }
+          } catch (error) {
+            console.error("Erro ao enviar formulário:", error);
+            alert("Erro ao enviar os dados para o server.");
+          }
+          })
+        }
+       
+    
+     validationFormClientPageLocation();
+};
+

@@ -19,7 +19,6 @@ input{
     top: 0;
     right: 0;
     border-radius: 10px;
-    /* border-end-start-radius: 2px solid white; */
 }
 .information {
   background-color: #6c757d;
@@ -63,19 +62,6 @@ input{
     gap: 2px;
     height: 100%;
 }
-
-/* .workButton{
-    display: flex;
-    width: 20%;
-    height: 80%;
-    margin-top: 0.5%;
-    border-radius: 10px;
-    border: solid , 2px , darkgray;
-    position: fixed;
-    margin-left: 0.1%;
-    padding: 5px;
-    box-shadow:8px 8px 8px rgba(0, 0, 0, 0.929) ;
-} */
 
 .workButton {
   display: flex;
@@ -123,7 +109,7 @@ input{
   }
 }
 #btnStartRegister{
- background-color: rgb(100, 137, 189);
+  background-color: rgb(100, 137, 189);
 }
 #btnStartRegister:hover{
 background-color: white;
@@ -148,26 +134,6 @@ button{
     border-radius: 10px;
 }
 
-.btnCadBens:focus.btnCadBens:active{
-   background-color:rgb(95, 101, 107);
-} 
-
-
-.outSectionRegister{
-    width: 90%;
-    height: 35px;
-    border: none;
-    background-color: rgb(100, 137, 189);
-    cursor: pointer;
-    margin-right: 2.5%;
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 0.2s, transform 0.4s;
-}
-.outSectionRegister:active{
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    transform: translateY(6px);
-}
-
 /* MENSSAGEM DE ERRO */
 .error-text{
     color: red;
@@ -182,54 +148,73 @@ button{
 table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed;  /* Fixará as larguras das células */
+    table-layout: fixed;  
     border: 2px solid white;
   }
   
   th, td {
-    padding: 15px; /* Aumenta o espaço interno das células */
+    padding: 15px; 
     text-align: left;
-    border: 1.5px solid #ddd; /* Opcional: para adicionar borda */
+    border: 1.5px solid #ddd; 
     width: 150px;
   }
   
   
   tr:nth-child(even) {
-    background-color: #f2f2f2; /* Alterna a cor das linhas */
+    background-color: #f2f2f2; 
   }
   
   th {
-    background-color:rgb(29, 29, 29); /* Cor de fundo do cabeçalho */
+    background-color:rgb(29, 29, 29);
     color: white;
   }
   
-/* moude de como os inputs vão mostrar */
-.formGroup{
-    display: flex;
-    justify-content: space-between;
-    margin-top: 1.5%;
-    flex-wrap: wrap;
-    width: 90%;
-    gap: 5px;
-    margin-bottom: 2px; 
-    margin-left: 3%;
-    position: relative;
-}
-.inputGroup{
-    display: flex;
-    position: relative;
-    flex-direction: column;
-    flex: 1 1 calc(33% - 20px); 
-    min-width: 250px; 
-    gap: 7px;
-}
-.inputGroup label{
-    font-weight: bold;
-    margin-bottom: 5px;
+.welcome-container {
+  background: linear-gradient(145deg, #c1baba, #2d2d2d);
+  border-radius: 16px;
+  margin-left: 30%;
+  padding: 60px 20px;
+  max-width: 800px;
+  text-align: center;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  
+};
+
+.welcome-container.hidden {
+  opacity: 0;
+  visibility: hidden;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
 }
 
-.OutOfMainBtn{
-    height: 30px;
-    margin-top: 40%;
+/* Efeito de máquina de escrever */
+.typewriter {
+  display: inline-block;
+  border-right: 2px solid #00d1ff;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: typing 2.5s steps(30, end), blink-caret 0.7s step-end infinite;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #00d1ff;
+  }
 }
 

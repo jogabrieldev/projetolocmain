@@ -231,6 +231,120 @@ $(function () {
     validationFormClient();
   });
 
+// FORMULARIO CLIENTE PAGE LOCATION 
+function validationFormClientPageLocation(){
+  $('#formRegisterClientLoc').validate({
+      rules: {
+        clieCodeLoc: {
+            required: true,
+            minlength: 3
+          },
+          clieNameLoc: {
+            required: true,
+            minlength: 4
+          },
+          cpfClientLoc:{
+              required: true,
+              minlength: 8
+          },
+          dtCadLoc:{
+              required:true ,
+              date: true
+          },
+          dtNascLoc:{
+              required: true,
+              date: true
+          },
+          clieCeluLoc:{
+            required:true
+          },
+          clieCityLoc:{
+          required: true,
+          minlength:4
+         },
+         clieEstdLoc:{
+           required:true,
+           minlength:4
+         },
+         clieRuaLoc:{
+          required: true,
+          minlength: 5
+         },
+         clieCepLoc:{
+          required: true,
+          minlength: 4
+         },
+         clieMailLoc:{
+          required: true
+         }
+         
+    },
+          messages: {
+            clieCodeLoc: {
+                required: "OBRIGATORIO",
+                minlength: "O código deve ter no mínimo 3 caracteres."
+              },
+              clieNameLoc: {
+                required: "OBRIGATORIO",
+                minlength: "O nome deve ter no mínimo 4 caracteres."
+              },
+              cpfClientLoc: {
+                  required: "OBRIGATORIO",
+                minlength: "Insira a quantidade correta de numeros"
+              },
+              dtCadLoc:{
+                  required: 'OBRIGATORIO',
+                  date: 'Insira uma data valida'
+              },
+              dtNascLoc:{
+                  required: 'OBRIGATORIO',
+                  date: 'insira uma data valida'
+              },
+              clieCeluLoc:{
+                 required: "OBRIGATORIO"
+              },
+              clieCityLoc:{
+                required: "OBRIGATORIO",
+                minlength: 'Caracteres minimos são 4'
+               },
+               clieEstdLoc:{
+                required:'OBRIGATORIO',
+                minlength: 'Caracteres minimos são 4'
+              },
+              clieRuaLoc:{
+                required: 'OBRIGATORIO',
+                minlength: 'Caracteres minimos são 5 Se preciso inclua QD E LT'
+               },
+               clieCepLoc:{
+                required: "OBRIGATORIO",
+                minlength: 'Caracteres minimos são 4'
+               },
+               clieMailLoc:{
+                required: "OBRIGATORIO"
+               }
+
+          },
+
+          errorPlacement: function (error, element) {
+              error.addClass('error-text');
+              error.insertAfter(element);
+            },
+            highlight: function (element) {
+              $(element).addClass('error-field');
+            },
+            unhighlight: function (element) {
+              $(element).removeClass('error-field');
+            },
+            submitHandler: function (form) {
+              form.submit();
+            }
+  })
+}
+$(function () {
+  validationFormClientPageLocation();
+});
+
+
  // fornecedor
   function validationFormForne(){
     $('#registerForn').validate({
