@@ -30,11 +30,11 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
             <!-- Linha 2: CPF e Celular -->
             <div class="col-md-6">
               <label for="cpf" class="form-label">CPF</label>
-              <input type="text" class="form-control" name="cpf" id="cpf" placeholder="CPF" maxlength="14" />
+              <input type="text" class="form-control" name="cpf" id="cpf" placeholder="CPF" minlength="14" />
             </div>
             <div class="col-md-6">
               <label for="clieCelu" class="form-label">Celular</label>
-              <input type="text" class="form-control" name="clieCelu" id="clieCelu" placeholder="Celular" maxlength="11" />
+              <input type="text" class="form-control" name="clieCelu" id="clieCelu" placeholder="Celular" minlength="15" />
             </div>
       
             <!-- Linha 3: Data de Nascimento e Cadastro -->
@@ -50,7 +50,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
             <!-- Linha 4: Endereço - Rua, Cidade, Estado -->
             <div class="col-md-6">
               <label for="clieRua" class="form-label">Rua</label>
-              <input type="text" class="form-control" name="clieRua" id="clieRua" placeholder="Rua" maxlength="40" />
+              <input type="text" class="form-control" name="clieRua" id="clieRua" placeholder="RUA QD LT" maxlength="40" />
             </div>
             <div class="col-md-3">
               <label for="clieCity" class="form-label">Cidade</label>
@@ -64,7 +64,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
             <!-- Linha 5: CEP e E-mail -->
             <div class="col-md-4">
               <label for="clieCep" class="form-label">CEP</label>
-              <input type="text" class="form-control" name="clieCep" id="clieCep" placeholder="CEP" maxlength="10" />
+              <input type="text" class="form-control" name="clieCep" id="clieCep" placeholder="CEP" minlength="9" />
             </div>
             <div class="col-md-8">
               <label for="clieMail" class="form-label">E-mail</label>
@@ -94,27 +94,27 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       
             <div class="col-md-4">
               <label for="editClieName" class="form-label">Nome</label>
-              <input type="text" class="form-control" name="editClieName" id="editClieName" placeholder="Nome" maxlength="80" />
+              <input type="text" class="form-control" name="editClieName" id="editClieName" placeholder="Nome" maxlength="80" readonly />
             </div>
       
             <div class="col-md-4">
               <label for="editCliecpf" class="form-label">CPF</label>
-              <input type="text" class="form-control" name="editCliecpf" id="editCliecpf" placeholder="CPF" maxlength="15" />
+              <input type="text" class="form-control" name="editCliecpf" id="editCliecpf" placeholder="CPF" maxlength="15" readonly />
             </div>
       
             <div class="col-md-4">
               <label for="editClieDtCad" class="form-label">Data do cadastro</label>
-              <input type="date" class="form-control" name="editClieDtCad" id="editClieDtCad" />
+              <input type="date" class="form-control" name="editClieDtCad" id="editClieDtCad" readonly />
             </div>
       
             <div class="col-md-4">
               <label for="editClieDtNasc" class="form-label">Data de Nascimento</label>
-              <input type="date" class="form-control" name="editClieDtNasc" id="editClieDtNasc" />
+              <input type="date" class="form-control" name="editClieDtNasc" id="editClieDtNasc" readonly />
             </div>
       
             <div class="col-md-4">
               <label for="editClieCelu" class="form-label">Celular</label>
-              <input type="text" class="form-control" name="editClieCelu" id="editClieCelu" placeholder="Celular" maxlength="20" />
+              <input type="text" class="form-control" name="editClieCelu" id="editClieCelu" placeholder="Celular"  minlength="15" />
             </div>
       
             <div class="col-md-4">
@@ -135,7 +135,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
             <!-- CEP e E-mail na mesma linha -->
             <div class="col-md-4">
               <label for="editClieCep" class="form-label">Cep</label>
-              <input type="text" class="form-control" name="editClieCep" id="editClieCep" placeholder="CEP" maxlength="13" />
+              <input type="text" class="form-control" name="editClieCep" id="editClieCep" placeholder="CEP" minlength="9" />
             </div>
       
             <div class="col-md-4">

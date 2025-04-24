@@ -76,11 +76,7 @@
   
 }
 /* Edição */
-.contentEditlocation{
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
+
 
 
 .registerClientPageLocation {

@@ -28,13 +28,13 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       
             <div class="col-md-8">
               <label for="nameEdit" class="form-label">Nome</label>
-              <input type="text" class="form-control" id="nameEdit" name="nameEdit" placeholder="bensnome" maxlength="80">
+              <input type="text" class="form-control" id="nameEdit" name="nameEdit" placeholder="nome" maxlength="80" readonly>
             </div>
       
             <div class="col-md-6">
               <label for="cofaEdit" class="form-label">Família de bem</label>
-              <select class="form-select" id="cofaEdit" name="cofaEdit">
-                <option value="">Selecione...</option>
+              <select class="form-select" id="cofaEdit" name="cofaEdit" >
+                  
               </select>
             </div>
       
@@ -45,32 +45,32 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       
             <div class="col-md-6">
               <label for="serialEdit" class="form-label">Número de Série</label>
-              <input type="text" class="form-control" id="serialEdit" name="serialEdit" placeholder="bensNuse" maxlength="25">
+              <input type="text" class="form-control" id="serialEdit" name="serialEdit" placeholder="Serial" maxlength="25" readonly>
             </div>
       
             <div class="col-md-6">
               <label for="placaEdit" class="form-label">Placa</label>
-              <input type="text" class="form-control" id="placaEdit" name="placaEdit" placeholder="bensPlac" maxlength="10">
+              <input type="text" class="form-control" id="placaEdit" name="placaEdit" placeholder="placa" maxlength="10" readonly>
             </div>
       
             <div class="col-md-6">
               <label for="bensAnmoEdit" class="form-label">Ano do modelo</label>
-              <input type="date" class="form-control" id="bensAnmoEdit" name="bensAnmoEdit">
+              <input type="date" class="form-control" id="bensAnmoEdit" name="bensAnmoEdit" readonly>
             </div>
       
             <div class="col-md-6">
               <label for="dtCompraEdit" class="form-label">Data da compra</label>
-              <input type="date" class="form-control" id="dtCompraEdit" name="dtCompraEdit">
+              <input type="date" class="form-control" id="dtCompraEdit" name="dtCompraEdit" readonly>
             </div>
       
             <div class="col-md-6">
               <label for="valorCpEdit" class="form-label">Valor da compra</label>
-              <input type="text" class="form-control" id="valorCpEdit" name="valorCpEdit" placeholder="R$" maxlength="25">
+              <input type="text" class="form-control" id="valorCpEdit" name="valorCpEdit" placeholder="R$" maxlength="25" readonly>
             </div>
       
             <div class="col-md-6">
               <label for="ntFiscalEdit" class="form-label">Nota Fiscal</label>
-              <input type="number" class="form-control" id="ntFiscalEdit" name="ntFiscalEdit" placeholder="bensNunf" maxlength="11">
+              <input type="number" class="form-control" id="ntFiscalEdit" name="ntFiscalEdit" placeholder="bensNunf" maxlength="11" readonly>
             </div>
       
             <div class="col-md-6">
@@ -91,9 +91,9 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
             <div class="col-md-6">
               <label for="statusEdit" class="form-label">Status</label>
               <select class="form-select" id="statusEdit" name="statusEdit">
-                <option value="">Selecione...</option>
+                <!-- <option value="">Selecione...</option> -->
                 <option value="Disponivel">Disponivel</option>
-                <option value="Em locação">Locado</option>
+                <option value="Em Locação">Em Locação</option>
                 <option value="Saida do cliente">Saída do Cliente</option>
                 <option value="Saida do aterro">Saída do Aterro</option>
                 <option value="Saida do aterro para o cliente">Saída do aterro para o cliente</option>
@@ -114,12 +114,12 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       
             <div class="col-md-6">
               <label for="chassiEdit" class="form-label">Chassi</label>
-              <input type="text" class="form-control" id="chassiEdit" name="chassiEdit" placeholder="Chassi" maxlength="20">
+              <input type="text" class="form-control" id="chassiEdit" name="chassiEdit" placeholder="Chassi" maxlength="20" readonly>
             </div>
       
             <div class="col-md-6">
               <label for="corEdit" class="form-label">Cor</label>
-              <input type="text" class="form-control" id="corEdit" name="corEdit" placeholder="bensCore" maxlength="15">
+              <input type="text" class="form-control" id="corEdit" name="corEdit" placeholder="bensCore" maxlength="15" readonly>
             </div>
       
             <div class="col-md-6">
@@ -129,7 +129,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       
             <div class="col-md-6">
               <label for="renaEdit" class="form-label">Renavam</label>
-              <input type="text" class="form-control" id="renaEdit" name="renaEdit" placeholder="bensRena" maxlength="15">
+              <input type="text" class="form-control" id="renaEdit" name="renaEdit" placeholder="bensRena" maxlength="15" readonly>
             </div>
       
             <div class="col-md-6">
@@ -246,7 +246,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
               <select class="form-select" id="status" name="status">
                 <option value="">Selecione...</option>
                 <option value="Disponivel">Disponível</option>
-                <option value="Em locação">Locado</option>
+                <option value="Em locação">Em locação</option>
                 <option value="Saida do cliente">Saída do cliente</option>
                 <option value="Saida do aterro">Saída do aterro</option>
                 <option value="Saida do aterro para o cliente">Saída do aterro para o cliente</option>

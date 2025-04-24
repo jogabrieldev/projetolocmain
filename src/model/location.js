@@ -248,68 +248,126 @@ verificarDependenciaLocacao: async (id) => {
     }
   },
 
-
-async updateLocationAndBens(id, updateData, bens) {
+async updateLocationAndBens(id, bens) {
   try {
-    await dataLocation.query("BEGIN"); 
+    await dataLocation.query("BEGIN");
 
+    // Query para atualização dos bens
     const updateQuery = `
-      UPDATE clieloc
-      SET 
-        cllonmlo = $1, cllodtdv = $2, cllodtlo = $3, cllopgmt = $4, 
-        clloclno = $5, cllocpf = $6
-      WHERE clloidcl = $7
-      RETURNING *;
-    `;
-    
-    const updateValues = [
-      updateData.cllonmlo || null,
-      updateData.cllodtdv || null,
-      updateData.cllodtlo || null,
-      updateData.cllopgmt || null,
-      updateData.clloclno || null,
-      updateData.cllocpf || null,
-      id,
-    ];
-
-    const updatedLocation = await dataLocation.query(updateQuery, updateValues);
-    if (!updatedLocation.rows.length) {
-      throw new Error("Locação não encontrada para atualização.");
-    }
-
-    // 🔹 Inserir os novos bens vinculados à locação
-    const insertBensQuery = `
-      INSERT INTO bensloc (bencodb, beloben, belodtin, belodtfi, beloqntd, beloobsv, belostat, beloidcl)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      UPDATE bensloc
+      SET bencodb = $1, beloben = $2, belodtin = $3, belodtfi = $4, beloqntd = $5, 
+          beloobsv = $6, belostat = $7
+      WHERE belocode = $8 
       RETURNING belocode;
     `;
 
     const resultadosBens = [];
-    for (const { codeBen, produto, dataInicio, dataFim, quantidade, observacao, status } of bens) {
-      const bensValues = [
+
+    // Atualizando os bens existentes
+    for (const bem of bens) {
+      const {
+        belocode,     // Se existir, é um bem para UPDATE
         codeBen,
         produto,
         dataInicio,
         dataFim,
         quantidade,
         observacao,
-        status,
-        id,
-      ];
-      const resultado = await dataLocation.query(insertBensQuery, bensValues);
-      resultadosBens.push(resultado.rows[0]);
+        status
+      } = bem;
+
+      if (belocode) {
+        // Verificando se o bem já existe no banco de dados
+        const bemExistente = await dataLocation.query(
+          `SELECT * FROM bensloc WHERE belocode = $1`,
+          [belocode]
+        );
+
+        if (bemExistente.rows.length > 0) {
+          // Atualizando bem existente
+          const updateValues = [
+            codeBen,
+            produto,
+            dataInicio,
+            dataFim,
+            quantidade,
+            observacao,
+            status,
+            belocode,
+          ];
+
+          const result = await dataLocation.query(updateQuery, updateValues);
+          if (result.rows.length) {
+              resultadosBens.push(result.rows[0]);
+              console.log("Bem atualizado:", result.rows[0]);
+          } else {
+              console.log("Nenhum bem foi atualizado.");
+          }
+          
+        } else {
+          // Bem não encontrado, ignorando o bem
+          console.log(`Bem com belocode ${belocode} não encontrado para atualização.`);
+        }
+      } else {
+        // Se não houver belocode, ignora o bem (não faz nada)
+        console.log("Bem não possui belocode, não será atualizado.");
+      }
     }
 
-    await dataLocation.query("COMMIT"); // Confirma a transação
+    // Comitando as mudanças
+    await dataLocation.query("COMMIT");
 
     return {
-      locacaoAtualizada: updatedLocation.rows[0],
       bensAtualizados: resultadosBens,
     };
+
   } catch (error) {
-    await dataLocation.query("ROLLBACK"); // Desfaz alterações em caso de erro
+    // Rollback caso ocorra erro
+    await dataLocation.query("ROLLBACK");
     console.error("Erro ao atualizar locação e bens:", error);
     throw error;
   }
-},
+ },
+
+ // Método para inserção de novos bens na tabela bensloc
+async inserirNovosBens(bens) {
+  try {
+    const insertQuery = `
+      INSERT INTO bensloc (
+         bencodb, beloben, belodtin, belodtfi, beloqntd, beloobsv, belostat , beloidcl
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      RETURNING belocode;
+    `;
+
+    const resultados = [];
+
+    console.log('ID', bens)
+
+    for (const bem of bens) {
+      const { bencodb, beloben, belodtin, belodtfi, beloqntd, beloobsv, belostat, beloidcl } = bem;
+
+      // Inserção do novo bem
+      const result = await dataLocation.query(insertQuery, [
+        bencodb,
+        beloben,
+        belodtin,
+        belodtfi,
+        beloqntd,
+        beloobsv,
+        belostat,
+        beloidcl
+      ]);
+
+      if (result.rows.length > 0) {
+        resultados.push(result.rows[0]);
+      }
+    }
+
+    return resultados; // Retorna os bens inseridos
+  } catch (error) {
+    console.error("Erro ao inserir novos bens:", error);
+    throw error;
+  }
+}
+
 }

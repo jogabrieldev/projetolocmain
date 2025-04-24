@@ -132,7 +132,6 @@ function validationFormClient(){
             },
             cpf:{
                 required: true,
-                minlength: 8
             },
             dtCad:{
                 required:true ,
@@ -159,7 +158,6 @@ function validationFormClient(){
            },
            clieCep:{
             required: true,
-            minlength: 4
            },
            clieMail:{
             required: true
@@ -177,7 +175,7 @@ function validationFormClient(){
                 },
                 cpf: {
                     required: "OBRIGATORIO",
-                  minlength: "Insira a quantidade correta de numeros"
+                  minlength: "MINIMO 14 CARACTERES"
                 },
                 dtCad:{
                     required: 'OBRIGATORIO',
@@ -188,7 +186,8 @@ function validationFormClient(){
                     date: 'insira uma data valida'
                 },
                 clieCelu:{
-                   required: "OBRIGATORIO"
+                   required: "OBRIGATORIO",
+                   minlength: 'MINIMO 15 CARACTERES'
                 },
                 clieCity:{
                   required: "OBRIGATORIO",
@@ -204,7 +203,7 @@ function validationFormClient(){
                  },
                  clieCep:{
                   required: "OBRIGATORIO",
-                  minlength: 'Caracteres minimos são 4'
+                  minlength: 'MINIMO 9 CARACTERES'
                  },
                  clieMail:{
                   required: "OBRIGATORIO"
@@ -237,7 +236,7 @@ function validationFormClientPageLocation(){
       rules: {
         clieCodeLoc: {
             required: true,
-            minlength: 3
+            minlength: 4
           },
           clieNameLoc: {
             required: true,
@@ -245,7 +244,7 @@ function validationFormClientPageLocation(){
           },
           cpfClientLoc:{
               required: true,
-              minlength: 8
+              minlength: 14
           },
           dtCadLoc:{
               required:true ,
@@ -256,7 +255,8 @@ function validationFormClientPageLocation(){
               date: true
           },
           clieCeluLoc:{
-            required:true
+            required:true,
+            minlength: 15
           },
           clieCityLoc:{
           required: true,
@@ -272,7 +272,7 @@ function validationFormClientPageLocation(){
          },
          clieCepLoc:{
           required: true,
-          minlength: 4
+          minlength: 9
          },
          clieMailLoc:{
           required: true
@@ -290,7 +290,7 @@ function validationFormClientPageLocation(){
               },
               cpfClientLoc: {
                   required: "OBRIGATORIO",
-                minlength: "Insira a quantidade correta de numeros"
+                 minlength: "MINIMO 14 CARACTERES"
               },
               dtCadLoc:{
                   required: 'OBRIGATORIO',
@@ -301,7 +301,8 @@ function validationFormClientPageLocation(){
                   date: 'insira uma data valida'
               },
               clieCeluLoc:{
-                 required: "OBRIGATORIO"
+                 required: "OBRIGATORIO",
+                 minlength: 'MINIMO 15 CARACTERES'
               },
               clieCityLoc:{
                 required: "OBRIGATORIO",
@@ -317,7 +318,7 @@ function validationFormClientPageLocation(){
                },
                clieCepLoc:{
                 required: "OBRIGATORIO",
-                minlength: 'Caracteres minimos são 4'
+                minlength: 'MINIMO 9 CARACTERES'
                },
                clieMailLoc:{
                 required: "OBRIGATORIO"
@@ -415,12 +416,11 @@ $(function () {
              },
              fornCnpj:{
                required:'OBRIGATORIO',
-               number: 'Somente valor numerico',
-               minlength: 'minimo 14 caracteres'
+               minlength: 'MINIMO 18 CARACTERES'
              },
              fornCep:{
                 required:'OBRIGATORIO',
-                number: 'Somente valores numericos'
+                 minlength: 'MINIMO 9 CARACTERES'
              },
              fornRua:{
               required:"OBRIGATORIO"
@@ -433,7 +433,8 @@ $(function () {
             required: "OBRIGATORIO"
           },
           fornCelu:{
-            required: 'OBRIGATORIO'
+            required: 'OBRIGATORIO',
+            minlength:'MINIMO 15 CARACTERS'
           },
           fornMail:{
             required: 'OBRIGATORIO'
@@ -568,7 +569,7 @@ $(function () {
     validationFormProd();
   });
 
-// fabricante 
+// FAMILIA DE BEM
 
 function validationFormFabric(){
   $('.formRegisterFabricante').validate({
@@ -712,7 +713,8 @@ function  validationFormMoto(){
            date: true
         },
         motoCpf:{
-          required: true
+          required: true,
+          minlength:14
         },
         motoDtch:{
           required: true,
@@ -728,8 +730,13 @@ function  validationFormMoto(){
         motoOrem:{
           required: true
         },
+        motoCelu:{
+          required: true,
+          minlength:15
+        },
         motoCep:{
-           required: true
+           required: true,
+           minlength: 9
         },
         motoRua:{
            required: true
@@ -756,7 +763,8 @@ function  validationFormMoto(){
                date: 'Insira uma data valida'
             },
             motoCpf:{
-              required: "OBRIGATORIO"
+              required: "OBRIGATORIO",
+              minlength: 'MINIMO 14 CARACTERES'
             },
             motoDtch:{
               required: "OBRIGATORIO",
@@ -772,8 +780,13 @@ function  validationFormMoto(){
             motoOrem:{
               required: "OBRIGATORIO"
             },
+            motoCelu:{
+              required: "OBRIGATORIO",
+              minlength: 'MINIMO 15 CARACTERES'
+            },
             motoCep:{
-               required: "OBRIGATORIO"
+               required: "OBRIGATORIO",
+               minlength: 'MINIMO 9 CARACTERES'
             },
             motoRua:{
                required: "OBRIGATORIO"

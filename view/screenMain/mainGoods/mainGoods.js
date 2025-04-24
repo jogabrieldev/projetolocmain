@@ -284,6 +284,90 @@ if (buttonOutGoods) {
       fabri: document.querySelector("#fabri").value.trim(),
     };
 
+    if (!isDataValida(formData.dtCompra)) {
+      Toastify({
+        text: "Data de Compra inválida ou fora do intervalo (1900–2100).",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+      return;
+    }
+    const anoCompra = new Date(formData.dtCompra).getFullYear();
+      
+    const datas = [
+      { key: 'dtCompra', label: 'Data de Compra' },
+      { key: 'dtKm',     label: 'Data de Km' },
+      { key: 'dtStatus', label: 'Data de Status' },
+      { key: 'bensAnmo', label: 'Ano do modelo' }
+    ];
+     
+  
+    for (const { key, label } of datas) {
+      const str = formData[key];
+    
+      // 1) Validação de formato/intervalo de ano
+      if (!isDataValida(str)) {
+        Toastify({
+          text: `${label} inválida ou fora do intervalo (1900–2100).`,
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
+    
+      // 2) Regra extra: se for dtStatus, não pode ser futura
+      if (key === 'dtStatus') {
+        // parse “YYYY-MM-DD” manualmente
+        const [ano, mes, dia] = str.split('-').map(Number);
+        const statusDate = new Date(ano, mes - 1, dia);
+        const hoje       = new Date();
+        const hojeDate   = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+  
+        if (statusDate.getTime() !== hojeDate.getTime()) {
+          Toastify({
+            text: "Data de Status deve ser igual à data de hoje.",
+            duration: 3000, close: true,
+            gravity: "top", position: "center",
+            backgroundColor: "orange"
+          }).showToast();
+          return;
+        }
+      }
+
+      if (key === 'bensAnmo') {
+        // extrai o ano da string "YYYY-MM-DD"
+        const anoModelo = Number(str.split('-')[0]);
+        if (isNaN(anoModelo)) {
+          Toastify({
+            text: "Ano do Modelo inválido.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
+          return;
+        }
+        // se modelo > compra, bloqueia
+        if (anoModelo > anoCompra) {
+          Toastify({
+            text: "O ano da compra não pode ser menor que o ano do modelo.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "orange",
+          }).showToast();
+          return;
+        }
+      }
+    }
     const cleanedData = Object.fromEntries(
       Object.entries(formData).filter(([_, value]) => value !== "")
     );
@@ -729,18 +813,30 @@ async function updateGoodsSystem() {
         { id: "valorAlugEdit", valor: bemSelecionado.bensvaal },
         { id: "fabriEdit", valor: bemSelecionado.bensfabr },
       ];
-  
-      campos.forEach(({ id, valor }) => {
+        
+       console.log("campos:" , campos[13])
+       campos.forEach(({ id, valor }) => {
         const elemento = document.getElementById(id);
-        if (elemento) {
-          if (elemento.type === "date" && valor) {
-            const dataFormatada = new Date(valor).toISOString().split("T")[0];
-            elemento.value = dataFormatada;
-          } else {
-            elemento.value = valor || "";
-          }
-        } else {
+      
+        if (!elemento) {
           console.warn(`Elemento com ID '${id}' não encontrado.`);
+          return;
+        }
+      
+        let valorFormatado = (valor || "").trim();
+      
+        if (elemento.tagName === "SELECT") {
+          const option = [...elemento.options].find(opt => opt.value === valorFormatado);
+          if (option) {
+            elemento.value = valorFormatado;
+          } else {
+            console.warn(`Valor '${valorFormatado}' não encontrado em <select id="${id}">`);
+            elemento.selectedIndex = 0; // opcional: define a primeira opção como fallback
+          }
+        } else if (elemento.type === "date" && valorFormatado) {
+          elemento.value = formatDateInput(valorFormatado);
+        } else {
+          elemento.value = valorFormatado;
         }
       });
   

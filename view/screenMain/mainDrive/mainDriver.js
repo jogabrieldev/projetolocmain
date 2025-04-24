@@ -259,6 +259,31 @@ function registerNewDriver(){
           motoStat: document.querySelector("#motoStat").value
       };
 
+      if (!isDataValida(formData.motoDtnc)) {
+        Toastify({
+          text: "Data de nascimento e INVALIDA.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
+
+      if (!isDataVencimento(formData.motoDtvc)) {
+        Toastify({
+          text: "Data de vencimento tem que ser maior que a data de hoje!",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "orange",
+        }).showToast();
+        return;
+      }
+    
+
       try {
           const response = await fetch('http://localhost:3000/api/drive/submit', {
               method: 'POST',

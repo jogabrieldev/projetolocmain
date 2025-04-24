@@ -263,7 +263,74 @@ const buttonOutPageEdit = document.querySelector(".outPageEditClient");
         clieRua: document.querySelector("#clieRua").value, // Rua
         clieCep: document.querySelector("#clieCep").value, // Cep
         clieMail: document.querySelector("#clieMail").value, // E-mail
-      };
+      }; 
+
+      const datas = [
+        { key: 'dtCad',  label: 'Data de Cadastro' },
+        { key: 'dtNasc', label: 'Data de Nascimento' }
+      ];
+      for (const { key, label } of datas) {
+        const str = formData[key];
+        if (!isDataValida(str)) {
+          Toastify({
+            text: `${label} INVALIDA .`,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
+          return;
+        }
+      }
+    
+      // 4) Converte strings para Date, zerando horas
+      const [yCad,  mCad,  dCad]  = formData.dtCad.split('-').map(Number);
+      const [yNasc, mNasc, dNasc] = formData.dtNasc.split('-').map(Number);
+      const dtCad  = new Date(yCad,  mCad - 1, dCad);
+      const dtNasc = new Date(yNasc, mNasc - 1, dNasc);
+      const hoje   = new Date();
+      const hoje0  = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+    
+      // 5) Regras de negócio:
+      // 5.1) dtCad não pode ser futura
+      if (dtCad.getTime() > hoje0.getTime()) {
+        Toastify({
+          text: "Data de Cadastro não pode ser maior que a data de hoje.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "orange",
+        }).showToast();
+        return;
+      }
+    
+      // 5.2) dtNasc não pode ser futura
+      if (dtNasc.getTime() > hoje0.getTime()) {
+        Toastify({
+          text: "Data de Nascimento não pode ser maior que a data de hoje.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "orange",
+        }).showToast();
+        return;
+      }
+    
+      // 5.3) dtNasc deve ser anterior ou igual a dtCad
+      if (dtNasc.getTime() > dtCad.getTime()) {
+        Toastify({
+          text: "Data de Nascimento não pode ser posterior à data de cadastro.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "orange",
+        }).showToast();
+        return;
+      }
 
       try {
         const response = await fetch("/api/client/submit", {
@@ -744,6 +811,7 @@ async function editAndUpdateOfClient() {
       console.error("Erro ao fazer parse de clientId:", error);
       return;
     }
+
 
     const updateClient = {
       cliecode: document.getElementById("editClieCode").value,

@@ -1,3 +1,45 @@
+function isDataValida(data) {
+  const date = new Date(data);
+  const ano = date.getFullYear();
+
+  return (
+    !isNaN(date.getTime()) && // Verifica se o Date é válido
+    ano >= 1960 && ano <= 2027 // Define limites plausíveis para ano
+  );
+}
+
+function isDataVencimento(data) {
+  const date = new Date(data);
+  const ano = date.getFullYear();
+
+  return (
+    !isNaN(date.getTime()) && 
+    ano >= 2025 && ano <= 2035 
+  );
+}
+
+function validarPrecoLiquidoMenorOuIgual(precoLiquido, precoBruto) {
+  const valorLiquido = parseFloat(precoLiquido);
+  const valorBruto = parseFloat(precoBruto);
+
+  // Verifica se os valores são válidos
+  if (isNaN(valorLiquido) || isNaN(valorBruto)) {
+    console.warn("Valores inválidos informados para validação de preços.");
+    return false;
+  }
+
+  // Retorna true se o líquido for menor ou igual ao bruto
+  return valorLiquido <= valorBruto;
+}
+
+function formatDateInput(dataISO) {
+  if (!dataISO) return "";
+  const data = new Date(dataISO);
+  const offset = data.getTimezoneOffset();
+  data.setMinutes(data.getMinutes() - offset); // corrige o fuso horário
+  return data.toISOString().split("T")[0];
+}
+
 const buttonOutStart = document.querySelector(".material-symbols-outlined");
 buttonOutStart.addEventListener("click", () => {
   window.location.reload()

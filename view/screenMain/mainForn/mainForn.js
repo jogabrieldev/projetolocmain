@@ -270,6 +270,37 @@ function registerNewFornecedor(){
         fornDisPro: document.querySelector("#fornDisPro").value, // Descrição do Produto
       };
 
+      if (!isDataValida(formData.fornDtcd)) {
+        Toastify({
+          text: "Data de Cadastro INVALIDA.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
+    
+      //  Converte “YYYY-MM-DD” para Date local e zera horas
+      const [y, m, d] = formData.fornDtcd.split('-').map(Number);
+      const dtCd       = new Date(y, m - 1, d);
+      const hoje       = new Date();
+      const hoje0      = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+    
+      //  Regra: não pode ser futura
+      if (dtCd.getTime() !== hoje0.getTime()) {
+        Toastify({
+          text: "Data de cadastro deve ser a data de hoje",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "orange",
+        }).showToast();
+        return;
+      }
+
       try {
         const response = await fetch("http://localhost:3000/api/forne/submit", {
           method: "POST",

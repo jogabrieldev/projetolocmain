@@ -122,22 +122,22 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       
             <div class="col-md-5">
               <label for="editMotoNome" class="form-label">Nome</label>
-              <input type="text" class="form-control" name="editMotoNome" id="editMotoNome" placeholder="Discrição" maxlength="80">
+              <input type="text" class="form-control" name="editMotoNome" id="editMotoNome" placeholder="Discrição" maxlength="80" readonly>
             </div>
       
             <div class="col-md-4">
               <label for="editMotoDtnc" class="form-label">Data de nascimento</label>
-              <input type="date" class="form-control" name="editMotoDtnc" id="editMotoDtnc">
+              <input type="date" class="form-control" name="editMotoDtnc" id="editMotoDtnc" readonly>
             </div>
       
             <div class="col-md-3">
               <label for="editMotoCpf" class="form-label">CPF</label>
-              <input type="text" class="form-control" name="editMotoCpf" id="editMotoCpf" placeholder="CPF" maxlength="14">
+              <input type="text" class="form-control" name="editMotoCpf" id="editMotoCpf" placeholder="CPF" maxlength="14" readonly>
             </div>
       
             <div class="col-md-3">
               <label for="editMotoDtch" class="form-label">Data de emissão</label>
-              <input type="date" class="form-control" name="editMotoDtch" id="editMotoDtch">
+              <input type="date" class="form-control" name="editMotoDtch" id="editMotoDtch" readonly>
             </div>
       
             <div class="col-md-3">
@@ -147,7 +147,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       
             <div class="col-md-3">
               <label for="editMotoDtvc" class="form-label">Data de vencimento</label>
-              <input type="date" class="form-control" name="editMotoDtvc" id="editMotoDtvc">
+              <input type="date" class="form-control" name="editMotoDtvc" id="editMotoDtvc" readonly>
             </div>
       
             <div class="col-md-4">
@@ -162,12 +162,12 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       
             <div class="col-md-3">
               <label for="editMotoCelu" class="form-label">Celular</label>
-              <input type="text" class="form-control" name="editMotoCelu" id="editMotoCelu" placeholder="Celular" maxlength="11">
+              <input type="text" class="form-control" name="editMotoCelu" id="editMotoCelu" placeholder="Celular" minlength="15">
             </div>
       
             <div class="col-md-3">
               <label for="editMotoCep" class="form-label">Cep</label>
-              <input type="text" class="form-control" name="editMotoCep" id="editMotoCep" placeholder="Celular" maxlength="9">
+              <input type="text" class="form-control" name="editMotoCep" id="editMotoCep" placeholder="CEP" minlength="9">
             </div>
       
             <div class="col-md-4">
@@ -193,7 +193,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
             <div class="col-md-4">
               <label for="editMotoStat" class="form-label">Status</label>
               <select class="form-select" name="editMotoStat" id="editMotoStat">
-                <option value="">Selecione...</option>
+
                 <option value="Disponivel">Disponivel</option>
                 <option value="Entrega destinada">Entrega destinada</option>
                 <option value="Indisponivel">Indisponivel</option>

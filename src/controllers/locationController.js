@@ -192,16 +192,30 @@ export const location = {
   async updateLocationAndBens(req, res) {
     try {
       const { id } = req.params; // ID da locação vindo da URL
-      const { locacao, bens } = req.body; // Recebendo os dados da locação e bens
+      const { bens  } = req.body; // Recebendo os dados da locação e bens
 
-      if (!id || !locacao || !Array.isArray(bens)) {
+      console.log('locação:' , id ,{ bens})
+
+      const bensConvertidos = bens.map(bem => ({
+        codeBen: bem.bencodb,
+        produto: bem.beloben,
+        dataInicio: bem.belodtin,
+        dataFim: bem.belodtfi,
+        quantidade: bem.beloqntd,
+        observacao: bem.beloobsv,
+        status: bem.belostat,
+        belocode: bem.belocode // se tiver
+      }));
+
+      if (!id || !Array.isArray(bens)) {
         return res.status(400).json({ error: "Dados inválidos para atualização." });
       }
 
-      const resultado = await LocacaoModel.updateLocationAndBens(id, locacao, bens);
+      const resultado = await LocacaoModel.updateLocationAndBens(id, bensConvertidos);
 
+     
       res.status(200).json({
-        message: "Locação e bens atualizados com sucesso!",
+        message: "Locação atualizada com sucesso!",
         data: resultado,
       });
     } catch (error) {
@@ -209,4 +223,29 @@ export const location = {
       res.status(500).json({ error: "Erro interno ao atualizar locação e bens." });
     }
   },
+  
+  async insertNewGoods(req , res){
+      
+    try {
+        //  const {idLoc} = req.params
+         const {newGoods} = req.body 
+
+         console.log('novo' ,newGoods)
+
+         if ( !Array.isArray(newGoods)) {
+          return res.status(400).json({ error: "Dados inválidos para atualização." });
+        }
+
+       const novosbensInseridosLocacao = await LocacaoModel.inserirNovosBens(newGoods)
+      
+       return res.status(201).json({
+        message: "Novos bens inseridos com sucesso.",
+        inseridos: novosbensInseridosLocacao
+      });
+    } catch (error) {
+        
+      console.error("Erro no insertNewGoods:", error);
+      return res.status(500).json({ error: "Erro ao inserir novos bens." });
+    }
+  }
 };

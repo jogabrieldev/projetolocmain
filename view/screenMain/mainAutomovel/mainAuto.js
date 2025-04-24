@@ -282,6 +282,37 @@ if(buttonExitAuto){
         caaudtca: document.querySelector("#dtCadAuto").value,
       };
 
+      if (!isDataValida(formData.caaudtca)) {
+        Toastify({
+          text: "Data de Cadastro INVALIDA.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
+    
+      //  Converte “YYYY-MM-DD” para Date local e zera horas
+      const [y, m, d] = formData.caaudtca.split('-').map(Number);
+      const dtCd       = new Date(y, m - 1, d);
+      const hoje       = new Date();
+      const hoje0      = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+    
+      //  Regra: não pode ser futura
+      if (dtCd.getTime() !== hoje0.getTime()) {
+        Toastify({
+          text: "Data de cadastro deve ser a data de hoje",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "orange",
+        }).showToast();
+        return;
+      }
+
       try {
         const response = await fetch("http://localhost:3000/api/cadauto", {
           method: "POST",
@@ -335,7 +366,6 @@ if(buttonExitAuto){
 
 
 
-  
 
 // inserindo os dados na tabela em runtime
 function insertVehicleTableRunTime(veiculos) {
@@ -667,7 +697,6 @@ const containerEditForm = document.querySelector('.editFormAuto')
 
   try {
     const autoSelecionado = JSON.parse(autoData);
-    console.log("Editar veículo:", autoSelecionado);
 
     const campos = [
       { id: "codeAutoEdit", valor: autoSelecionado.caaucode },
@@ -681,14 +710,17 @@ const containerEditForm = document.querySelector('.editFormAuto')
       { id: "kmAtAutoEdit", valor: autoSelecionado.caaukmat },
       { id: "motoAutoEdit", valor: autoSelecionado.caaumoto },
       { id: "statAutoEdit", valor: autoSelecionado.caaustat },
-      { id: "dtCadAutoEdit", valor: formatDate(autoSelecionado.caaudtca) },
+      { id: "dtCadAutoEdit", valor: (autoSelecionado.caaudtca) },
     ];
 
+
+  
     campos.forEach(({ id, valor }) => {
       const elemento = document.getElementById(id);
       if (elemento) {
         if (elemento.type === "date" && valor) {
-          elemento.value = formatDate(valor);
+          elemento.value = formatDateInput(valor);
+
         } else {
           elemento.value = valor || "";
         }
@@ -743,8 +775,11 @@ async function editAndUpdateOfAuto() {
       caaukmat: document.getElementById("kmAtAutoEdit").value,
       caaumoto: document.getElementById("motoAutoEdit").value,
       caaustat: document.getElementById("statAutoEdit").value,
-      caaudtca: document.getElementById("dtCadAutoEdit").value || null,
+      caaudtca: document.getElementById("dtCadAutoEdit").value ,
     };
+
+    console.log("Atualização" , updateAuto.caaudtca)
+
     const token = localStorage.getItem("token"); // Pega o token armazenado no login
 
     if (!token || isTokenExpired(token)) {

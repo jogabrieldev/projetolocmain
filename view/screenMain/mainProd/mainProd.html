@@ -106,13 +106,14 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
                 class="form-control"
                 placeholder="Descrição"
                 maxlength="60"
+                readonly
               />
             </div>
       
             <div class="col-md-6">
               <label for="editProdTipo" class="form-label">Tipo do Produto</label>
               <select name="editProdTipo" id="editProdTipo" class="form-select">
-                <option value="">Selecione...</option>
+              
               </select>
             </div>
       
@@ -125,12 +126,13 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
                 class="form-control"
                 placeholder="Unidade"
                 maxlength="2"
+                readonly
               />
             </div>
       
             <div class="col-md-6">
               <label for="editProdData" class="form-label">Data da Compra</label>
-              <input type="date" name="editProdData" id="editProdData" class="form-control" />
+              <input type="date" name="editProdData" id="editProdData" class="form-control" readonly />
             </div>
       
             <div class="col-md-6">
@@ -142,6 +144,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
                 class="form-control"
                 placeholder="Valor"
                 maxlength="12"
+                readonly
               />
             </div>
       
@@ -154,6 +157,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
                 class="form-control"
                 placeholder=""
                 maxlength="6"
+                readonly
               />
             </div>
       
@@ -166,6 +170,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
                 class="form-control"
                 placeholder=""
                 maxlength="10"
+                readonly
               />
             </div>
       
@@ -173,8 +178,8 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
               <label for="editProdAtiv" class="form-label">Ativo</label>
               <select name="editProdAtiv" id="editProdAtiv" class="form-select">
                 <option value="">Selecione...</option>
-                <option value="S">SIM</option>
-                <option value="N">NÃO</option>
+                <option value="Sim">SIM</option>
+                <option value="Nâo">NÃO</option>
               </select>
             </div>
       

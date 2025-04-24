@@ -1163,7 +1163,7 @@ async function vincularBem(bemId, familiaBem, motoId) {
         "Content-Type": "application/json",
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ bensstat: "Locado" }),
+      body: JSON.stringify({ bensstat: "Em Locação" }),
     });
 
     const statusUpdateResponseLocation = await fetch(
@@ -1199,7 +1199,7 @@ async function vincularBem(bemId, familiaBem, motoId) {
     const bemRow = document.querySelector(`[data-benscode="${bemId}"]`);
     if (bemRow) {
       const statusBem = bemRow.querySelector(".status-bem");
-      if (statusBem) statusBem.textContent = "Locado";
+      if (statusBem) statusBem.textContent = "Em Locação";
     }
     
     const motoRow = document.querySelector(`[data-motocode="${motoId}"]`);

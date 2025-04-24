@@ -18,13 +18,6 @@ import { controllerDelivery } from "../controllers/deliveryController.js";
 
 
 
-// Olhar pois e uma classe
-
-// route.get("/", () => {
-//  control.submitStart();
-// });
-
-
 route.post("/autenticar",  (req, res) => {
   AuthController(req, res);
 });
@@ -200,6 +193,10 @@ route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
 
  route.post('/api/datalocation' , authenticateToken, (req , res)=>{
   location.dataLocacao(req , res)
+ })
+ 
+ route.post("/api/novobem/" , authenticateToken , (req ,res)=>{
+   location.insertNewGoods(req ,res)
  })
 
  route.get('/api/locationFinish' , authenticateToken, (req , res)=>{

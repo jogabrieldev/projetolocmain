@@ -106,7 +106,8 @@ document.addEventListener('DOMContentLoaded' , ()=> {
               carregarFamilias(); 
               registerClientPageLocation();
               maskFieldClientPageLocation();
-
+              editLocation();
+              isDataValida();
               const buttonSubmitLocationFinish = document.querySelector('.finish')
               if(buttonSubmitLocationFinish){
                 buttonSubmitLocationFinish.addEventListener('click' , handleSubmit)
@@ -336,6 +337,28 @@ function interationSystemLocation(){
          if(containerMain){
             mostrarElemento(containerMain)
          }
+      })
+     }
+
+
+     const outEditLocation = document.querySelector('.outEditLocation')
+     if(outEditLocation){
+        outEditLocation.addEventListener('click' , ()=>{
+         
+          const containerEditLocation = document.querySelector('.containerEditLocation')
+          if(containerEditLocation){
+            esconderElemento(containerEditLocation)
+          }
+
+          const table = document.querySelector('.tableLocation')
+            if(table){
+               mostrarElemento(table)
+            }
+      
+            const btnMainPage = document.querySelector('.btnInitPageMainLoc')
+            if(btnMainPage){
+              mostrarElemento(btnMainPage)
+            }
       })
      }
 };
@@ -598,6 +621,8 @@ async function carregarFamilias() {
           select.appendChild(option);
 
           if (selectEdit) {
+            selectEdit.addEventListener("change", () => preencherProduto(i, familias));
+
             selectEdit.appendChild(option.cloneNode(true));
           }
         });
@@ -621,17 +646,32 @@ async function carregarFamilias() {
 // PRECHER A DESCRIÇÃO DE ACORDO COM O CODIGO DE FAMILIA
 function preencherProduto(index, familias) {
   const select = document.getElementById(`family${index}`);
+  const selectEdit = document.getElementById(`family${index}Edit`);
+
   const inputProduto = document.getElementById(`produto${index}`);
+  const inputProdutoEdit = document.getElementById(`produto${index}Edit`);
   const codigoSelecionado = select.value;
+  const codigoSelecionadoEdit = selectEdit.value;
 
   const familiaSelecionada = familias.find(
     (familia) => familia.fabecode === codigoSelecionado
   );
 
+  const familiaSelecionadaEdit = familias.find(
+    (familia) => familia.fabecode === codigoSelecionadoEdit
+  );
+
+  // Atualizando o produto com base na seleção de 'family'
   if (familiaSelecionada) {
     inputProduto.value = familiaSelecionada.fabedesc || "Sem nome definido";
   } else {
     inputProduto.value = "";
+  }
+
+  if (familiaSelecionadaEdit) {
+    inputProdutoEdit.value = familiaSelecionadaEdit.fabedesc || "Sem nome definido";
+  } else {
+    inputProdutoEdit.value = "";
   }
 }
 
@@ -680,22 +720,74 @@ async function handleSubmit() {
     const produto = document.getElementById(`produto${i}`)?.value || "";
     const quantidade = document.getElementById(`quantidade${i}`)?.value || "";
     const observacao = document.getElementById(`observacao${i}`)?.value || "";
-    const dataInicio = document.getElementById(`dataInicio${i}`)?.value || "";
-    const dataFim = document.getElementById(`dataFim${i}`)?.value || "";
+    const dataInicioStr = document.getElementById(`dataInicio${i}`)?.value || "";
+    const dataFimStr = document.getElementById(`dataFim${i}`)?.value || "";
 
     if (
       codeBen &&
-      dataFim &&
-      dataInicio &&
+      dataInicioStr && 
+      dataFimStr &&
       observacao &&
       produto &&
       quantidade
     ) {
+
+      if (!isDataValida(dataInicioStr) || !isDataValida(dataFimStr)) {
+        Toastify({
+          text: `Grupo ${i}: Data de início ou fim inválida/outro ano.`,
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
+
+      function parseDataLocal(dateStr) {
+        const [ano, mes, dia] = dateStr.split('-').map(Number);
+        return new Date(ano, mes - 1, dia); // Mês começa do zero
+      } 
+
+     
+
+      const dataInicio = parseDataLocal(dataInicioStr);
+      const dataFim = parseDataLocal(dataFimStr);
+       
+      
+     
+      const hoje = new Date()
+      hoje.setHours(0, 0, 0, 0);
+    
+      if (dataInicio < hoje || dataInicio > hoje) {
+        Toastify({
+          text: `Item ${i}: A data INCICIO não pode ser nem maior nem menor que a data atual.`,
+          duration: 4000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "orange",
+        }).showToast();
+        return; 
+      }
+
+      
+      if (dataFim <= dataInicio) {
+        Toastify({
+          text: `Grupo ${i}: A data FIM deve ser maior que a data INÍCIO.`,
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "orange",
+        }).showToast();
+        return; 
+      }
       bens.push({
         codeBen,
         observacao,
-        dataInicio,
-        dataFim,
+        dataInicio: dataInicio,
+        dataFim: dataFim,
         quantidade,
         produto,
         status: "Pendente",
@@ -723,11 +815,11 @@ async function handleSubmit() {
     const cpfClient = document.querySelector("#cpfClient").value;
 
     const userClientValidade = [nameClient, cpfClient];
-    const dataLoc = document.getElementById("dataLoc")?.value || null;
-    const dataDevo = document.getElementById("DataDevo")?.value || null;
+    const dataLocStr = document.getElementById("dataLoc")?.value || null;
+    const dataDevoStr = document.getElementById("DataDevo")?.value || null;
     const pagament = document.getElementById("pagament")?.value || null;
 
-    if (!dataDevo || !pagament) {
+    if (!dataDevoStr || !pagament) {
       Toastify({
         text: "Insira a data de devolução e a Forma de pagamento",
         duration: 3000,
@@ -740,11 +832,72 @@ async function handleSubmit() {
       return;
     }
 
+    if (!isDataValida(dataLocStr) || !isDataValida(dataDevoStr)) {
+      Toastify({
+        text: "Data de devolução INVALIDA. Verifique por favor",
+        duration: 4000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+      return;
+    }
+
+    const dataLoc = new Date(dataLocStr);
+    const dataDevo = parseDataLocal(dataDevoStr);
+
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+  
+    const dataLocDia = new Date(dataLoc);
+    dataLocDia.setHours(0, 0, 0, 0);
+  
+    if (dataLocDia.getTime() !== hoje.getTime()) {
+      Toastify({
+        text: "A data da locação deve ser igual à data de hoje.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "orange",
+      }).showToast();
+      return;
+    }
+
+  
+    if (dataDevo <= dataLoc) {
+      Toastify({
+        text: "A data de devolução deve ser maior que a data da locação.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "orange",
+      }).showToast();
+      return;
+    }
+     
+    const dataFinal = new Date(bens[0].dataFim);
+    dataFinal.setHours(0, 0, 0, 0); // normaliza
+    
+    if (dataDevo.getTime() !== dataFinal.getTime()) {
+      Toastify({
+        text: `A data de devolução deve ser igual à data final do grupo 1.`,
+        duration: 4000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "orange",
+      }).showToast();
+      return;
+    }
+    
     const payload = {
       numericLocation,
       userClientValidade,
-      dataLoc,
-      dataDevo,
+      dataLoc: dataLocStr,
+      dataDevo: dataDevoStr,
       pagament,
       bens,
     }; 
@@ -967,7 +1120,75 @@ function registerClientPageLocation(){
               clieCep: document.querySelector("#clieCepLoc").value, // Cep
               clieMail: document.querySelector("#clieMailLoc").value, // E-mail
             };
+             
+
+            const datas = [
+              { key: 'dtCad',  label: 'Data de Cadastro' },
+              { key: 'dtNasc', label: 'Data de Nascimento' }
+            ];
+            for (const { key, label } of datas) {
+              const str = formDataLocation[key];
+              if (!isDataValida(str)) {
+                Toastify({
+                  text: `${label} INVALIDA .`,
+                  duration: 3000,
+                  close: true,
+                  gravity: "top",
+                  position: "center",
+                  backgroundColor: "red",
+                }).showToast();
+                return;
+              }
+            }
           
+            // 4) Converte strings para Date, zerando horas
+            const [yCad,  mCad,  dCad]  = formDataLocation.dtCad.split('-').map(Number);
+            const [yNasc, mNasc, dNasc] = formDataLocation.dtNasc.split('-').map(Number);
+            const dtCad  = new Date(yCad,  mCad - 1, dCad);
+            const dtNasc = new Date(yNasc, mNasc - 1, dNasc);
+            const hoje   = new Date();
+            const hoje0  = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+          
+            // 5) Regras de negócio:
+            // 5.1) dtCad não pode ser futura
+            if (dtCad.getTime() > hoje0.getTime()) {
+              Toastify({
+                text: "Data de Cadastro não pode ser maior que a data de hoje.",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "orange",
+              }).showToast();
+              return;
+            }
+          
+            // 5.2) dtNasc não pode ser futura
+            if (dtNasc.getTime() > hoje0.getTime()) {
+              Toastify({
+                text: "Data de Nascimento não pode ser maior que a data de hoje.",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "orange",
+              }).showToast();
+              return;
+            }
+          
+            // 5.3) dtNasc deve ser anterior ou igual a dtCad
+            if (dtNasc.getTime() > dtCad.getTime()) {
+              Toastify({
+                text: "Data de Nascimento não pode ser posterior à data de cadastro.",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "orange",
+              }).showToast();
+              return;
+            }
+      
             
             
           try {
