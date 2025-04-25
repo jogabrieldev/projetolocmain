@@ -725,7 +725,10 @@ function editarlocationFinish(id) {
           return;
         }
 
-        
+        function parseDataLocal(dateStr) {
+          const [ano, mes, dia] = dateStr.split('-').map(Number);
+          return new Date(ano, mes - 1, dia); // Mês começa do zero
+        }
       const dataInicio = parseDataLocal(dataInicioStr);
       const dataFim = parseDataLocal(dataFimStr);
 

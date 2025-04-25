@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded' , ()=>{
           if (mainContent) {
             mainContent.innerHTML = html;
             
-            
+            locationPendente()
             needVsAvaible();
             validateFamilyBensPending();
             loadingDriver();
@@ -96,163 +96,173 @@ document.addEventListener('DOMContentLoaded' , ()=>{
 })
 
 //  my table location 
+
 async function locationPendente() {
-  const token = localStorage.getItem('token'); 
+  const token = localStorage.getItem('token');
 
   if (!token || isTokenExpired(token)) {
-      Toastify({
-          text: "Sessão expirada. Faça login novamente.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-      }).showToast();
+    Toastify({
+      text: "Sessão expirada. Faça login novamente.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
 
-      localStorage.removeItem("token");
-      setTimeout(() => {
-          window.location.href = "/index.html";
-      }, 2000);
-      return;
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      window.location.href = "/index.html";
+    }, 2000);
+    return;
   }
 
   try {
-      const response = await fetch("/api/locationFinish", {
-          method: "GET",
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-          },
+    const response = await fetch("/api/locationFinish", {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+    });
+
+    if (response.status === 404) {
+      document.querySelector('.orders').innerHTML = "Nenhuma Locação encontrada";
+      return;
+    }
+
+    if (!response.ok) throw new Error("Erro ao buscar locações.");
+
+    const data = await response.json();
+    const locacoes = data.locacoes || [];
+
+    const tableDiv = document.querySelector(".orders");
+    if (tableDiv) {
+      tableDiv.innerHTML = ""; // Limpa a div antes de renderizar a tabela
+    }
+
+    const listaLocacoes = locacoes.flatMap(locacao => {
+      // Garante que a propriedade "bens" está definida e é um array
+      if (Array.isArray(locacao.bens) && locacao.bens.length > 0) {
+        return locacao.bens.map(bem => ({
+          idClient: locacao.clloid,
+          codigoLoc: bem.belocode,
+          numeroLocacao: locacao.cllonmlo || "Não definido",
+          nomeCliente: locacao.clloclno || "Não definido",
+          cpfCliente: locacao.cllocpf || "Não definido",
+          dataLocacao: formatDate(locacao.cllodtlo),
+          dataDevolucao: formatDate(locacao.cllodtdv),
+          formaPagamento: locacao.cllopgmt || "Não definido",
+          codigoBem: bem.bencodb || "-",
+          produto: bem.beloben || "Nenhum bem associado",
+          quantidade: bem.beloqntd || "-",
+          status: bem.belostat || "Não definido",
+          observacao: bem.beloobsv || "Sem observação",
+          dataInicio: formatDate(bem.belodtin),
+          dataFim: formatDate(bem.belodtfi),
+        }));
+      } else {
+        return [{
+          idClient: locacao.clloid,
+          numeroLocacao: locacao.cllonmlo || "Não definido",
+          nomeCliente: locacao.clloclno || "Não definido",
+          cpfCliente: locacao.cllocpf || "Não definido",
+          dataLocacao: formatDate(locacao.cllodtlo),
+          dataDevolucao: formatDate(locacao.cllodtdv),
+          formaPagamento: locacao.cllopgmt || "Não definido",
+          codigoBem: "-",
+          produto: "Nenhum bem associado",
+          quantidade: "-",
+          status: "-",
+          observacao: "Nenhuma observação",
+          dataInicio: "-",
+          dataFim: "-",
+        }];
+      }
+    });
+
+    const filterStatusPendente = listaLocacoes.filter(locacao => locacao.status === "Pendente");
+
+    if (filterStatusPendente.length > 0) {
+      const table = document.createElement("table");
+      table.id = "tableWithAllLocation";
+
+      const thead = document.createElement("thead");
+      const headerRow = document.createElement("tr");
+      const headers = ["Selecionar", "Número de Locação", "Status", "Nome do Cliente", "Data da Locação", "Data de Devolução", "Familia do bem", "Descrição", "Quantidade"];
+
+      headers.forEach(text => {
+        const th = document.createElement("th");
+        th.textContent = text;
+        headerRow.appendChild(th);
+      });
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+
+      filterStatusPendente.forEach(locacao => {
+        const row = document.createElement("tr");
+
+        // Criar checkbox
+        const tdCheckbox = document.createElement("td");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.classList.add("select-location");
+        checkbox.value = locacao.numeroLocacao;
+        checkbox.dataset.quantidade = locacao.quantidade;
+        checkbox.dataset.familia = locacao.codigoBem;
+        checkbox.dataset.cliente = locacao.nomeCliente;
+        checkbox.dataset.belocode = locacao.codigoLoc;
+
+        tdCheckbox.appendChild(checkbox);
+        row.appendChild(tdCheckbox);
+
+        // Criar células com os dados
+        const values = [
+          locacao.numeroLocacao,
+          locacao.status,
+          locacao.nomeCliente,
+          locacao.dataLocacao,
+          locacao.dataDevolucao,
+          locacao.codigoBem,
+          locacao.produto,
+          locacao.quantidade
+        ];
+
+        values.forEach(text => {
+          const td = document.createElement("td");
+          td.textContent = text;
+          row.appendChild(td);
+        });
+
+        tbody.appendChild(row);
       });
 
-      if(response.status === 404){
-         document.querySelector('.orders').innerHTML = "Nenhuma Locação encontrada"
-      }
+      table.appendChild(tbody);
+      tableDiv.appendChild(table);
 
-      if (!response.ok) throw new Error("Erro ao buscar locações.");
+      // Adicionar eventos aos checkboxes
+      document.querySelectorAll(".select-location").forEach(checkbox => {
+        checkbox.addEventListener("change", (event) => {
+          const quantidadeLocacao = parseInt(event.target.dataset.quantidade);
+          const isChecked = event.target.checked;
+          const familiaBem = event.target.dataset.familia;
+          const cliente = event.target.dataset.cliente;
+          const codeLoc = event.target.dataset.belocode;
 
-      const data = await response.json();
-      const locacao = data.locacoes || []
-
-      const tableDiv = document.querySelector(".orders");
-      if(tableDiv){
-        tableDiv.innerHTML = ""; 
-       }
-     
-
-      const listaLocacoes = locacao.flatMap((locacao) => {
-        if (locacao.bens.length > 0) {
-          return locacao.bens.map((bem) => ({
-            idClient: locacao.clloid,
-            numeroLocacao: locacao.cllonmlo || "Não definido",
-            nomeCliente: locacao.clloclno || "Não definido",
-            cpfCliente: locacao.cllocpf || "Não definido",
-            dataLocacao: formatDate(locacao.cllodtlo),
-            dataDevolucao: formatDate(locacao.cllodtdv),
-            formaPagamento: locacao.cllopgmt || "Não definido",
-            codigoBem: bem.bencodb || "-",
-            produto: bem.beloben || "Nenhum bem associado",
-            quantidade: bem.beloqntd || "-",
-            status: bem.belostat || "Não definido",
-            observacao: bem.beloobsv || "Sem observação",
-            dataInicio: formatDate(bem.belodtin),
-            dataFim: formatDate(bem.belodtfi),
-          }));
-        } else {
-          return [
-            {
-              idClient: locacao.clloid,
-              numeroLocacao: locacao.cllonmlo || "Não definido",
-              nomeCliente: locacao.clloclno || "Não definido",
-              cpfCliente: locacao.cllocpf || "Não definido",
-              dataLocacao: formatDate(locacao.cllodtlo),
-              dataDevolucao: formatDate(locacao.cllodtdv),
-              formaPagamento: locacao.cllopgmt || "Não definido",
-              codigoBem: "-",
-              produto: "Nenhum bem associado",
-              quantidade: "-",
-              status: "-",
-              observacao: "Nenhuma observação",
-              dataInicio: "-",
-              dataFim: "-",
-            },
-          ];
-        }
-      })
-     
-      const filterStatusPendente = listaLocacoes.filter(locacao => locacao.status === "Pendente");
-
-      if (filterStatusPendente.length > 0) {
-          // Criar tabela
-          const table = document.createElement("table");
-          table.id = "tableWithAllLocation";
-          // table.className = "compact-table table table-sm table-bordered table-striped table-hover";
-
-          const thead = document.createElement("thead");
-          const headerRow = document.createElement("tr");
-          const headers = ["Selecionar", "Número de Locação", "Status", "Nome do Cliente", "Data da Locação", "Data de Devolução", "Familia do bem", "Descrição", "Quantidade"];
-
-          headers.forEach(text => {
-              const th = document.createElement("th");
-              th.textContent = text;
-              headerRow.appendChild(th);
-          });
-          thead.appendChild(headerRow);
-          table.appendChild(thead);
-
-          // Criar corpo da tabela
-          const tbody = document.createElement("tbody");
-
-          filterStatusPendente.forEach(locacao => {
-              const row = document.createElement("tr");
-
-              // Criar checkbox
-              const tdCheckbox = document.createElement("td");
-              const checkbox = document.createElement("input");
-              checkbox.type = "checkbox";
-              checkbox.classList.add("select-location");
-              checkbox.value = locacao.numeroLocacao;
-              checkbox.dataset.quantidade = locacao.quantidade;
-              checkbox.dataset.familia = locacao.codigoBem;
-              checkbox.dataset.cliente = locacao.nomeCliente;
-              tdCheckbox.appendChild(checkbox);
-              row.appendChild(tdCheckbox);
-
-              // Criar células com os dados
-              const values = [locacao.numeroLocacao, locacao.status, locacao.nomeCliente, locacao.dataLocacao, locacao.dataDevolucao, locacao.codigoBem, locacao.produto, locacao.quantidade];
-              values.forEach(text => {
-                  const td = document.createElement("td");
-                  td.textContent = text;
-                  row.appendChild(td);
-              });
-
-              tbody.appendChild(row);
-          });
-
-          table.appendChild(tbody);
-          tableDiv.appendChild(table);
-
-          // Adicionar evento aos checkboxes
-          document.querySelectorAll(".select-location").forEach(checkbox => {
-              checkbox.addEventListener("change", (event) => {
-                  const quantidadeLocacao = parseInt(event.target.dataset.quantidade);
-                  const isChecked = event.target.checked;
-                  const familiaBem = event.target.dataset.familia;
-                  const cliente = event.target.dataset.cliente;
-
-                  needVsAvaible(cliente, quantidadeLocacao, familiaBem, isChecked);
-                  loadingDriver()
-              });
-          });
-
-      } else {
-          const msg = document.createElement("p");
-          msg.style.textAlign = "center";
-          msg.textContent = "Nenhuma locação pendente encontrada.";
-          tableDiv.appendChild(msg);
-      }
+          needVsAvaible(cliente, quantidadeLocacao, familiaBem, isChecked , codeLoc);
+          loadingDriver();
+        });
+      });
+    } else {
+      const msg = document.createElement("p");
+      msg.style.textAlign = "center";
+      msg.textContent = "Nenhuma locação pendente encontrada.";
+      tableDiv.appendChild(msg);
+    }
   } catch (error) {
-      console.error("Erro para gerar tabela locação!!", error);
+    console.error("Erro para gerar tabela locação!!", error);
   }
 };
 
@@ -446,7 +456,7 @@ function filterLocation(){
 
 
 // Necessidade vs Disponibilidade
-async function needVsAvaible(cliente, quantidadeLocacao, familiaBem, isChecked) {
+async function needVsAvaible(cliente, quantidadeLocacao, familiaBem, isChecked , codeLoc) {
     
   const token = localStorage.getItem('token'); 
 
@@ -548,6 +558,7 @@ async function needVsAvaible(cliente, quantidadeLocacao, familiaBem, isChecked) 
         btn.dataset.familia = familiaBem;
         btn.dataset.quantidade = quantidadeLocacao;
         btn.dataset.cliente = cliente;
+        btn.dataset.belocode =  codeLoc
         tdAcao.appendChild(btn);
       }
       
@@ -568,8 +579,9 @@ async function needVsAvaible(cliente, quantidadeLocacao, familiaBem, isChecked) 
           const familiaBem = event.target.dataset.familia;
           const quantidadeLocacao = event.target.dataset.quantidade;
           const cliente = event.target.dataset.cliente;
+          const codigo = event.target.dataset.belocode
 
-          abrirModal(cliente, familiaBem, quantidadeLocacao);
+          abrirModal(cliente, familiaBem, quantidadeLocacao , codigo);
         });
       }
     } else {
@@ -797,7 +809,7 @@ async function loadingDriver() {
 }
 
 
-async function abrirModal(cliente, familiaBem, quantidadeLocacao) {
+async function abrirModal(cliente, familiaBem, quantidadeLocacao , codigo) {
      
   const token = localStorage.getItem('token');
 
@@ -905,6 +917,7 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao) {
         const btn = document.createElement("button");
         btn.classList.add("vincular-bem");
         btn.dataset.id = bem.benscode;
+        btn.dataset.code = codigo
         btn.textContent = "Vincular";
         tdAcao.appendChild(btn);
     
@@ -972,7 +985,10 @@ modalWrapper.classList.add('flex')
         if (quantidadeVinculada >= quantidadeLocacao) return;
 
         const bemId = botao.dataset.id;
-        const sucesso = await vincularBem(bemId, familiaBem, motoristasSelecionados);
+        const codeLocation = botao.dataset.code
+
+        console.log('code' , codeLocation)
+        const sucesso = await vincularBem(bemId, familiaBem, motoristasSelecionados , codeLocation);
            
         if (sucesso) {
           quantidadeVinculada++;
@@ -1006,27 +1022,267 @@ modalWrapper.classList.add('flex')
 }
 
 // vincular o bem a locação marcada
-async function vincularBem(bemId, familiaBem, motoId) {
+// async function vincularBem(bemId, familiaBem, motoId , codeLocation) {
 
+//   const token = localStorage.getItem('token'); 
+
+//   if (!token || isTokenExpired(token)) {
+//     Toastify({
+//         text: "Sessão expirada. Faça login novamente.",
+//         duration: 3000,
+//         close: true,
+//         gravity: "top",
+//         position: "center",
+//         backgroundColor: "red",
+//     }).showToast();
+
+//     localStorage.removeItem("token"); 
+//     setTimeout(() => {
+//         window.location.href = "/index.html"; 
+//     }, 2000); 
+//     return;
+// }
+//   try {
+//     const resunt = await fetch('/api/locationFinish', {
+//       method: 'GET',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Authorization': `Bearer ${token}`
+//       }
+//     });
+    
+//     if (!resunt.ok) {
+//       throw new Error("Erro ao obter dados da locação");
+//     }
+ 
+//     const locacao = await resunt.json()
+   
+//     const locations = await locacao.locacoes || [];
+    
+    
+//     if (!Array.isArray(locations) || locations.length === 0) {
+//       throw new Error("Não foi possível localizar dados de locação.");
+//     }
+
+//     const locacaoSelecionada = document.querySelector(".select-location:checked");
+    
+//     if (!locacaoSelecionada) {
+//       Toastify({
+//         text: `Nenhuma locação selecionada`,
+//         duration: 3000,
+//         close: true,
+//         gravity: "top",
+//         position: "center",
+//         backgroundColor: "red",
+//       }).showToast();
+//       return;
+//     }
+
+//     console.log('select:' , locacaoSelecionada)
+    
+//     // Obtendo o número da locação selecionada
+//     const numeroLocacaoSelecionado = locacaoSelecionada.value;
+    
+//     // Filtrando a locação correspondente
+//     const locacaoEncontrada =  locations.find(loc => loc.cllonmlo === numeroLocacaoSelecionado);
+    
+//     if (!locacaoEncontrada) {
+//       Toastify({
+//         text: `Locação não encontrada na base de dados.`,
+//         duration: 3000,
+//         close: true,
+//         gravity: "top",
+//         position: "center",
+//         backgroundColor: "red",
+//       }).showToast();
+//       return;
+//     }
+    
+  
+//     const meioPagamento = locacaoEncontrada.cllopgmt;
+    
+//     const tr = locacaoSelecionada.closest("tr");
+
+//     const locationId = tr.querySelector("td:nth-child(2)").textContent.trim();
+
+//     const nomeCliente = tr
+//       .querySelector("td:nth-child(4)")
+//       .textContent.normalize("NFD")
+//       .replace(/[\u0300-\u036f]/g, "")
+//       .trim()
+//       .toLowerCase();
+
+//     const responseClientes = await fetch("/api/listclient" , {
+//       method: "GET",
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Authorization': `Bearer ${token}`
+//     },
+//     });
+//     if (!responseClientes.ok)
+//       throw new Error("Erro ao obter lista de clientes");
+
+//     const clientes = await responseClientes.json();
+
+//     const clienteEncontrado = clientes.find(
+//       (cliente) =>
+//         cliente.clienome
+//           .normalize("NFD")
+//           .replace(/[\u0300-\u036f]/g, "")
+//           .trim()
+//           .toLowerCase() === nomeCliente
+//     );
+
+//     if (!clienteEncontrado) {
+//       Toastify({
+//         text: `Cliente "${nomeCliente}" não encontrado na base de dados!`,
+//         duration: 4000,
+//         close: true,
+//         gravity: "top",
+//         position: "center",
+//         backgroundColor: "red",
+//       }).showToast();
+
+//       return;
+//     }
+
+//     const idClient = clienteEncontrado.cliecode;
+
+//     const confirmacao = confirm(
+//       `Deseja vincular o bem ${bemId} ao cliente ${nomeCliente} (Locação ${locationId})?`
+//     );
+
+//     if (!confirmacao) return;
+
+//     const response = await fetch("/logistics", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         bemId,
+//         familiaBem,
+//         idClient,
+//         locationId,
+//         driver: motoId,
+//         pagament: meioPagamento
+//       }),
+//     });
+
+//     if (!response.ok) throw new Error("Erro ao vincular bem.");
+
+//     if(response.ok){
+//       renderTableDelivery()
+//     }
+
+//     const statusUpdateResponse = await fetch(`/api/updatestatus/${bemId}`, {
+//       method: "PUT",
+//       headers:{ 
+//         "Content-Type": "application/json",
+//         'Authorization': `Bearer ${token}`
+//       },
+//       body: JSON.stringify({ bensstat: "Em Locação" }),
+//     });
+
+//     const statusUpdateResponseLocation = await fetch(
+//       `/api/updatestatuslocation/${codeLocation}`,
+//       {
+//         method: "PUT",
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'Authorization': `Bearer ${token}`
+//       },
+//         body: JSON.stringify({ belostat: "Em Locação" }),
+//       }
+//     );
+
+//     const statusUptadeDrive = await fetch(
+//       `/api/updatestatusMoto/${motoId}`,
+//       {
+//         method: "PUT",
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'Authorization': `Bearer ${token}`
+//       },
+//         body: JSON.stringify({ motostat: "Entrega destinada" }),
+//       }
+//     );
+//     console.log('locaçaõ' , locationId)
+//     console.log("bemId:", bemId);
+// console.log("familiaBem:", familiaBem);
+// console.log("motoId:", motoId);
+
+//     if ( !statusUpdateResponse.ok || !statusUpdateResponseLocation.ok || !statusUptadeDrive.ok) {
+//       throw new Error(
+//         "Erro ao atualizar status do bem , do motorista ou da locação."
+//       );
+//     }
+
+//     console.log('status:' ,statusUpdateResponse , statusTdLocation , statusUpdateResponseLocation)
+
+//     const bemRow = document.querySelector(`[data-benscode="${bemId}"]`);
+//     if (bemRow) {
+//       const statusBem = bemRow.querySelector(".status-bem");
+//       if (statusBem) statusBem.textContent = "Em Locação";
+//     }
+    
+//     const motoRow = document.querySelector(`[data-motocode="${motoId}"]`);
+//     if (motoRow) {
+//       const statusMoto = motoRow.querySelector(".status-moto");
+//       if (statusMoto) statusMoto.textContent = "Entrega destinada";
+//     }
+    
+//     const statusTdLocation = tr.querySelector("td:nth-child(3)");
+//     if (statusTdLocation) {
+//       statusTdLocation.textContent = "Em Locação";
+//     };
+
+    
+//     Toastify({
+//       text: "Bem vinculado com sucesso!",
+//       duration: 4000,
+//       close: true,
+//       gravity: "top",
+//       position: "center",
+//       backgroundColor: "green",
+//     }).showToast();
+
+//     return true;
+//   } catch (error) {
+//     console.error("Erro ao vincular bem", error);
+//     Toastify({
+//       text: "Erro ao vincular o bem!",
+//       duration: 4000,
+//       close: true,
+//       gravity: "top",
+//       position: "center",
+//       backgroundColor: "red",
+//     }).showToast();
+//   }
+// };
+
+async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
   const token = localStorage.getItem('token'); 
 
   if (!token || isTokenExpired(token)) {
     Toastify({
-        text: "Sessão expirada. Faça login novamente.",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
+      text: "Sessão expirada. Faça login novamente.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
     }).showToast();
 
     localStorage.removeItem("token"); 
     setTimeout(() => {
-        window.location.href = "/index.html"; 
+      window.location.href = "/index.html"; 
     }, 2000); 
     return;
-}
+  }
+
   try {
+    // Obter informações da API
     const resunt = await fetch('/api/locationFinish', {
       method: 'GET',
       headers: {
@@ -1034,22 +1290,20 @@ async function vincularBem(bemId, familiaBem, motoId) {
         'Authorization': `Bearer ${token}`
       }
     });
-    
+
     if (!resunt.ok) {
       throw new Error("Erro ao obter dados da locação");
     }
- 
-    const locacao = await resunt.json()
-   
-    const locations = await locacao.locacoes || [];
-    
+
+    const locacao = await resunt.json();
+    const locations = locacao.locacoes || [];
     
     if (!Array.isArray(locations) || locations.length === 0) {
       throw new Error("Não foi possível localizar dados de locação.");
     }
 
     const locacaoSelecionada = document.querySelector(".select-location:checked");
-    
+
     if (!locacaoSelecionada) {
       Toastify({
         text: `Nenhuma locação selecionada`,
@@ -1061,13 +1315,11 @@ async function vincularBem(bemId, familiaBem, motoId) {
       }).showToast();
       return;
     }
-    
-    // Obtendo o número da locação selecionada
+
+    // Obter informações do número da locação selecionada
     const numeroLocacaoSelecionado = locacaoSelecionada.value;
-    
-    // Filtrando a locação correspondente
-    const locacaoEncontrada =  locations.find(loc => loc.cllonmlo === numeroLocacaoSelecionado);
-    
+    const locacaoEncontrada = locations.find(loc => loc.cllonmlo === numeroLocacaoSelecionado);
+
     if (!locacaoEncontrada) {
       Toastify({
         text: `Locação não encontrada na base de dados.`,
@@ -1079,40 +1331,43 @@ async function vincularBem(bemId, familiaBem, motoId) {
       }).showToast();
       return;
     }
-    
-  
+
     const meioPagamento = locacaoEncontrada.cllopgmt;
-    
+
     const tr = locacaoSelecionada.closest("tr");
 
-    const locationId = tr.querySelector("td:nth-child(2)").textContent.trim();
+    if (!tr) {
+      throw new Error("Erro: Linha da locação não encontrada na tabela.");
+    }
 
-    const nomeCliente = tr
-      .querySelector("td:nth-child(4)")
-      .textContent.normalize("NFD")
+    const locationId = tr.querySelector("td:nth-child(2)").textContent.trim();
+    const nomeCliente = tr.querySelector("td:nth-child(4)").textContent
+      .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .trim()
       .toLowerCase();
 
-    const responseClientes = await fetch("/api/listclient" , {
+    // Obter lista de clientes
+    const responseClientes = await fetch("/api/listclient", {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
-    },
+      },
     });
-    if (!responseClientes.ok)
+
+    if (!responseClientes.ok) {
       throw new Error("Erro ao obter lista de clientes");
+    }
 
     const clientes = await responseClientes.json();
 
-    const clienteEncontrado = clientes.find(
-      (cliente) =>
-        cliente.clienome
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .trim()
-          .toLowerCase() === nomeCliente
+    const clienteEncontrado = clientes.find(cliente =>
+      cliente.clienome
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toLowerCase() === nomeCliente
     );
 
     if (!clienteEncontrado) {
@@ -1136,6 +1391,7 @@ async function vincularBem(bemId, familiaBem, motoId) {
 
     if (!confirmacao) return;
 
+    // Vincular bem
     const response = await fetch("/logistics", {
       method: "POST",
       headers: {
@@ -1153,13 +1409,14 @@ async function vincularBem(bemId, familiaBem, motoId) {
 
     if (!response.ok) throw new Error("Erro ao vincular bem.");
 
-    if(response.ok){
-      renderTableDelivery()
+    if (response.ok) {
+      renderTableDelivery();
     }
 
+    // Atualizar status do bem, locação e motorista
     const statusUpdateResponse = await fetch(`/api/updatestatus/${bemId}`, {
       method: "PUT",
-      headers:{ 
+      headers: {
         "Content-Type": "application/json",
         'Authorization': `Bearer ${token}`
       },
@@ -1167,13 +1424,13 @@ async function vincularBem(bemId, familiaBem, motoId) {
     });
 
     const statusUpdateResponseLocation = await fetch(
-      `/api/updatestatuslocation/${familiaBem}`,
+      `/api/updatestatuslocation/${codeLocation}`,
       {
         method: "PUT",
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
-      },
+        },
         body: JSON.stringify({ belostat: "Em Locação" }),
       }
     );
@@ -1185,35 +1442,35 @@ async function vincularBem(bemId, familiaBem, motoId) {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
-      },
+        },
         body: JSON.stringify({ motostat: "Entrega destinada" }),
       }
     );
 
-    if ( !statusUpdateResponse.ok || !statusUpdateResponseLocation.ok || !statusUptadeDrive) {
+    if (!statusUpdateResponse.ok || !statusUpdateResponseLocation.ok || !statusUptadeDrive.ok) {
       throw new Error(
-        "Erro ao atualizar status do bem , do motorista ou da locação."
+        "Erro ao atualizar status do bem, do motorista ou da locação."
       );
     }
 
+    // Atualizar informações da interface
     const bemRow = document.querySelector(`[data-benscode="${bemId}"]`);
     if (bemRow) {
       const statusBem = bemRow.querySelector(".status-bem");
       if (statusBem) statusBem.textContent = "Em Locação";
     }
-    
+
     const motoRow = document.querySelector(`[data-motocode="${motoId}"]`);
     if (motoRow) {
       const statusMoto = motoRow.querySelector(".status-moto");
       if (statusMoto) statusMoto.textContent = "Entrega destinada";
     }
-    
+
     const statusTdLocation = tr.querySelector("td:nth-child(3)");
     if (statusTdLocation) {
       statusTdLocation.textContent = "Em Locação";
     }
-;
-    
+
     Toastify({
       text: "Bem vinculado com sucesso!",
       duration: 4000,
@@ -1235,5 +1492,5 @@ async function vincularBem(bemId, familiaBem, motoId) {
       backgroundColor: "red",
     }).showToast();
   }
-};
+}
 

@@ -165,17 +165,17 @@ export const location = {
   },
 
   async updateStatus(req, res) {
-    const { bemId } = req.params;
+    const { codeLocation } = req.params;
     const { belostat } = req.body; // Novo status
 
-    if (!bemId || !belostat) {
+    if (!codeLocation || !belostat) {
       return res
         .status(400)
         .json({ error: " ID bem e novo status são obrigatórios." });
     }
 
     try {
-      const bemAtualizado = await LocacaoModel.updateBemStatus(bemId, belostat);
+      const bemAtualizado = await LocacaoModel.updateBemStatus(codeLocation, belostat);
       if (!bemAtualizado) {
         return res.status(404).json({ error: "Bem não encontrado." });
       }

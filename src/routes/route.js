@@ -219,7 +219,7 @@ route.get('/api/codefamilybens', authenticateToken,(req , res)=>{
   location.DeleteLocationFinish(req , res)
  })
 
- route.put('/api/updatestatuslocation/:bemId' , authenticateToken, (req , res)=>{
+ route.put('/api/updatestatuslocation/:codeLocation' , authenticateToken, (req , res)=>{
     location.updateStatus(req ,res)
  })
  route.put("/api/location/:id", authenticateToken, (req ,res)=>{

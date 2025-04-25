@@ -228,23 +228,24 @@ verificarDependenciaLocacao: async (id) => {
   },
  
   // atualizando status de locação
-  async updateBemStatus(bemId, beloStat) {
-    const query = `UPDATE bensloc SET belostat = $1 WHERE bencodb = $2 RETURNING *;`;
-
+  async updateBemStatus(codeLocation, beloStat) {
+    // Alterar a query para usar belocode como chave primária
+    const query = `UPDATE bensloc SET belostat = $1 WHERE belocode = $2 RETURNING *;`;
+  
     try {
       const { rowCount, rows } = await dataLocation.query(query, [
-        beloStat,
-        bemId,
+        beloStat, // Novo status que será atualizado
+        codeLocation, // Identificador da locação (belocode)
       ]);
-
+  
       if (rowCount === 0) {
-        return null;
+        return null; // Retorna null caso nenhum registro seja afetado
       }
-
-      return rows[0];
+  
+      return rows[0]; // Retorna o registro atualizado
     } catch (error) {
-      console.error("Erro ao atualizar status do bem:", error);
-      throw error;
+      console.error("Erro ao atualizar status locação:", error);
+      throw error; // Lança o erro para tratamento externo
     }
   },
 

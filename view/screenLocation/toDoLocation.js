@@ -711,6 +711,32 @@ async function handleSubmit() {
       return;
   }
 
+  const feriadosFixos = [
+    "01-01", // Ano Novo
+    "04-21", // Tiradentes
+    "05-01", // Dia do Trabalhador
+    "09-07", // Independência
+    "10-12", // Nossa Senhora Aparecida
+    "11-02", // Finados
+    "11-15", // Proclamação da República
+    "12-25", // Natal
+  ];
+
+  function isFeriado(data) {
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const dataFormatada = `${mes}-${dia}`;
+  
+    return feriadosFixos.includes(dataFormatada);
+  }
+
+  function parseDataLocal(dateStr) {
+    const [ano, mes, dia] = dateStr.split('-').map(Number);
+    return new Date(ano, mes - 1, dia); // Mês começa do zero
+  } 
+  
+   
+  
   const totalGrups = 4;
   const bens = [];
 
@@ -723,14 +749,22 @@ async function handleSubmit() {
     const dataInicioStr = document.getElementById(`dataInicio${i}`)?.value || "";
     const dataFimStr = document.getElementById(`dataFim${i}`)?.value || "";
 
-    if (
-      codeBen &&
-      dataInicioStr && 
-      dataFimStr &&
-      observacao &&
-      produto &&
-      quantidade
-    ) {
+    const isParcial = codeBen || dataInicioStr || dataFimStr || observacao || produto || quantidade;
+
+    if (isParcial) {
+         
+      if (!codeBen || !dataInicioStr || !dataFimStr || !quantidade) {
+        Toastify({
+          text: `Grupo ${i}: Preencha código, data de início e data fim.`,
+          duration: 4000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
+
 
       if (!isDataValida(dataInicioStr) || !isDataValida(dataFimStr)) {
         Toastify({
@@ -744,21 +778,26 @@ async function handleSubmit() {
         return;
       }
 
-      function parseDataLocal(dateStr) {
-        const [ano, mes, dia] = dateStr.split('-').map(Number);
-        return new Date(ano, mes - 1, dia); // Mês começa do zero
-      } 
-
      
-
       const dataInicio = parseDataLocal(dataInicioStr);
       const dataFim = parseDataLocal(dataFimStr);
-       
-      
-     
-      const hoje = new Date()
+
+      if (isFeriado(dataFim)) {
+        Toastify({
+          text: `A data FIM da locação (Grupo ${i}) cai em um feriado. Escolha outro dia.`,
+          duration: 4000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "orange",
+        }).showToast();
+        return;
+      }
+
+      const hoje = new Date();
       hoje.setHours(0, 0, 0, 0);
-    
+      
+       
       if (dataInicio < hoje || dataInicio > hoje) {
         Toastify({
           text: `Item ${i}: A data INCICIO não pode ser nem maior nem menor que a data atual.`,
@@ -786,8 +825,8 @@ async function handleSubmit() {
       bens.push({
         codeBen,
         observacao,
-        dataInicio: dataInicio,
-        dataFim: dataFim,
+        dataInicio: dataInicio.toISOString().split("T")[0],
+        dataFim: dataFim.toISOString().split("T")[0],
         quantidade,
         produto,
         status: "Pendente",
@@ -808,6 +847,7 @@ async function handleSubmit() {
    
   }
 
+  
   try {
     const numericLocation = await obterNumeroLocacao();
     document.querySelector("#numeroLocation").value = numericLocation;
@@ -878,21 +918,8 @@ async function handleSubmit() {
       return;
     }
      
-    const dataFinal = new Date(bens[0].dataFim);
-    dataFinal.setHours(0, 0, 0, 0); // normaliza
-    
-    if (dataDevo.getTime() !== dataFinal.getTime()) {
-      Toastify({
-        text: `A data de devolução deve ser igual à data final do grupo 1.`,
-        duration: 4000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "orange",
-      }).showToast();
-      return;
-    }
-    
+   
+  
     const payload = {
       numericLocation,
       userClientValidade,
@@ -901,6 +928,8 @@ async function handleSubmit() {
       pagament,
       bens,
     }; 
+
+    console.log('Envio de dado:' , payload)
 
     
     const response = await fetch("/api/datalocation", {
@@ -911,6 +940,7 @@ async function handleSubmit() {
     },
       body: JSON.stringify(payload),
     });
+    const errorData = await response.json();
 
     if (response.ok) {
       Toastify({
@@ -929,12 +959,12 @@ async function handleSubmit() {
       }, 500);
     } else {
       Toastify({
-        text: "Erro na locaçao!",
+        text: errorData.error || "Erro na locação!",
         duration: 3000,
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "Red",
+        backgroundColor: "red",
       }).showToast();
     }
   } catch (error) {
