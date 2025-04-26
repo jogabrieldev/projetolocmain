@@ -245,26 +245,81 @@ const buttonOutPageEdit = document.querySelector(".outPageEditClient");
         }, 2000);
         return;
       }
-
       if (!$("#formRegisterClient").valid()) {
         return;
       }
-
-      // Captura os valores do formulário
+      const clieCep = document.querySelector("#clieCep").value.replace(/\D/g, '');
+      try {
+        const response = await fetch(`https://viacep.com.br/ws/${clieCep}/json/`);
+    
+        if (!response.ok) {
+          throw new Error("Erro ao buscar o CEP.");
+        }
+    
+        const data = await response.json();
+    
+        if (data.erro) {
+          Toastify({
+            text: "CEP inválido.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
+          return;
+        }
+    
+      
+        // Preenchendo os campos do formulário
+        const ruaField = document.getElementById('clieRua');
+        const cityField = document.getElementById('clieCity');
+        const stateField = document.getElementById('clieEstd');
+    
+        if (ruaField) {
+          ruaField.value = `${data.logradouro} - ${data.bairro}` || "";
+          ruaField.readOnly = true;
+        }
+        if (cityField) {
+          cityField.value = data.localidade || "";
+          cityField.readOnly = true;
+        }
+        if (stateField) {
+          stateField.value = data.uf || "";
+          stateField.readOnly = true;
+        }
+    
+      } catch (error) {
+        console.error("Erro ao buscar o CEP:", error);
+        Toastify({
+          text: "Erro ao buscar o CEP, tente novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
+    
+    
+    
+      // Captura os valores do formulário após o preenchimento
       const formData = {
-        clieCode: document.querySelector("#clieCode").value, // Codigo
-        clieName: document.querySelector("#clieName").value, // Nome
-        cpf: document.querySelector("#cpf").value, // CPF
-        dtCad: document.querySelector("#dtCad").value, // Data de Cadastro
-        dtNasc: document.querySelector("#dtNasc").value, // Data de Nascimento
-        clieCelu: document.querySelector("#clieCelu").value, // Celular
-        clieCity: document.querySelector("#clieCity").value, // Cidade
-        clieEstd: document.querySelector("#clieEstd").value, // Estado
-        clieRua: document.querySelector("#clieRua").value, // Rua
-        clieCep: document.querySelector("#clieCep").value, // Cep
-        clieMail: document.querySelector("#clieMail").value, // E-mail
-      }; 
-
+        clieCode: document.querySelector("#clieCode").value,
+        clieName: document.querySelector("#clieName").value,
+        cpf: document.querySelector("#cpf").value,
+        dtCad: document.querySelector("#dtCad").value,
+        dtNasc: document.querySelector("#dtNasc").value,
+        clieCelu: document.querySelector("#clieCelu").value,
+        clieCity: document.querySelector("#clieCity").value, 
+        clieEstd: document.querySelector("#clieEstd").value, 
+        clieRua: document.querySelector("#clieRua").value,
+        clieCep: document.querySelector("#clieCep").value,
+        clieMail: document.querySelector("#clieMail").value,
+      };
+    
+      
       const datas = [
         { key: 'dtCad',  label: 'Data de Cadastro' },
         { key: 'dtNasc', label: 'Data de Nascimento' }
@@ -294,9 +349,9 @@ const buttonOutPageEdit = document.querySelector(".outPageEditClient");
     
       // 5) Regras de negócio:
       // 5.1) dtCad não pode ser futura
-      if (dtCad.getTime() > hoje0.getTime()) {
+      if (dtCad.getTime() > hoje0.getTime() || dtCad.getTime() < hoje0.getTime()) {
         Toastify({
-          text: "Data de Cadastro não pode ser maior que a data de hoje.",
+          text: "Data de Cadastro não pode ser maior  nem menor que a data de hoje.",
           duration: 3000,
           close: true,
           gravity: "top",
@@ -330,8 +385,10 @@ const buttonOutPageEdit = document.querySelector(".outPageEditClient");
           backgroundColor: "orange",
         }).showToast();
         return;
+
       }
 
+  
       try {
         const response = await fetch("/api/client/submit", {
           method: "POST",

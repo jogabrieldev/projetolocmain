@@ -63,6 +63,18 @@ export const crudRegisterFamilyGoods = {
       throw error;
     }
   },
+
+  verificarDepedenciaDeReservaLocacao: async (id) => {
+    try {
+      const checkQuery = "SELECT COUNT(*) FROM bensloc WHERE bencodb= $1";
+      const checkResult = await dbFamilyGoods.query(checkQuery, [id]);
+
+      return parseInt(checkResult.rows[0].count) > 0;
+    } catch (error) {
+      console.error("Erro ao verificar dependências do Motorista:", error);
+      throw error;
+    }
+  },
   deleteFabri: async (id) => {
     try {
       const deleteCadclie =

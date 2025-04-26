@@ -144,18 +144,7 @@ function validationFormClient(){
             clieCelu:{
               required:true
             },
-           clieCity:{
-            required: true,
-            minlength:4
-           },
-           clieEstd:{
-             required:true,
-             minlength:4
-           },
-           clieRua:{
-            required: true,
-            minlength: 5
-           },
+          
            clieCep:{
             required: true,
            },
@@ -189,18 +178,6 @@ function validationFormClient(){
                    required: "OBRIGATORIO",
                    minlength: 'MINIMO 15 CARACTERES'
                 },
-                clieCity:{
-                  required: "OBRIGATORIO",
-                  minlength: 'Caracteres minimos são 4'
-                 },
-                 clieEstd:{
-                  required:'OBRIGATORIO',
-                  minlength: 'Caracteres minimos são 4'
-                },
-                clieRua:{
-                  required: 'OBRIGATORIO',
-                  minlength: 'Caracteres minimos são 5 Se preciso inclua QD E LT'
-                 },
                  clieCep:{
                   required: "OBRIGATORIO",
                   minlength: 'MINIMO 9 CARACTERES'
@@ -368,15 +345,15 @@ $(function () {
           fornCep:{
             required: true,
           },
-          fornRua:{
-             required:true
-          },
-          fornCity:{
-            required: true
-          },
-          fornEstd:{
-            required: true
-          },
+          // fornRua:{
+          //    required:true
+          // },
+          // fornCity:{
+          //   required: true
+          // },
+          // fornEstd:{
+          //   required: true
+          // },
           fornCelu:{
             required: true
           },
@@ -418,17 +395,7 @@ $(function () {
                required:'OBRIGATORIO',
                minlength: 'MINIMO 18 CARACTERES'
              },
-             fornCep:{
-                required:'OBRIGATORIO',
-                 minlength: 'MINIMO 9 CARACTERES'
-             },
-             fornRua:{
-              required:"OBRIGATORIO"
-           },
-
-           fornCity:{
-            required: "OBRIGATORIO"
-          },
+          
           fornEstd:{
             required: "OBRIGATORIO"
           },
@@ -738,12 +705,12 @@ function  validationFormMoto(){
            required: true,
            minlength: 9
         },
-        motoRua:{
-           required: true
-        },
-        motoCity:{
-           required: true
-        },
+        // motoRua:{
+        //    required: true
+        // },
+        // motoCity:{
+        //    required: true
+        // },
         motoStat:{
            required:true
         }
@@ -788,12 +755,6 @@ function  validationFormMoto(){
                required: "OBRIGATORIO",
                minlength: 'MINIMO 9 CARACTERES'
             },
-            motoRua:{
-               required: "OBRIGATORIO"
-            },
-            motoCity:{
-               required: "OBRIGATORIO"
-            },
             motoStat:{
               required: "OBRIGATORIO"
            }
@@ -818,7 +779,6 @@ function  validationFormMoto(){
 $(function () {
   validationFormMoto();
 });
-
 
 // veiculos
 function  validationFormAutomovel(){

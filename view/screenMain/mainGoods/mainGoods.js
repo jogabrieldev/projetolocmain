@@ -339,6 +339,24 @@ if (buttonOutGoods) {
           return;
         }
       }
+      // 2) Regra extra: se for dtStatus, não pode ser futura
+      if (key === 'dtCompra') {
+        // parse “YYYY-MM-DD” manualmente
+        const [ano, mes, dia] = str.split('-').map(Number);
+        const statusDate = new Date(ano, mes - 1, dia);
+        const hoje       = new Date();
+        const hojeDate   = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+  
+        if (statusDate.getTime() <= hojeDate.getTime()) {
+          Toastify({
+            text: "A data da compra tem que ser menor ou igual o dia de hoje.",
+            duration: 3000, close: true,
+            gravity: "top", position: "center",
+            backgroundColor: "orange"
+          }).showToast();
+          return;
+        }
+      }
 
       if (key === 'bensAnmo') {
         // extrai o ano da string "YYYY-MM-DD"

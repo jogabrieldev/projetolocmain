@@ -50,11 +50,20 @@ export const movementOfFamilyGoods = {
     try {
       const temDependencia =
         await fabriRegister.verificarDependenciaDaFamiliaBens(id);
-
+ 
       if (temDependencia) {
         return res.status(400).json({
           message:
             "Não e possivel excluir. Temos bens vinculados a essa Familia de bem",
+        });
+      }
+
+      const dependenciaInLocacao = await fabriRegister.verificarDepedenciaDeReservaLocacao(id)
+
+      if(dependenciaInLocacao){
+        return res.status(400).json({
+          message:
+            "Não é possível excluir. Existem reservas ou locações vinculadas a essa Família de bem.",
         });
       }
       const deleteComponent = await fabriRegister.deleteFabri(id);

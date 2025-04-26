@@ -57,7 +57,6 @@ function atualizarDataHora() {
 }
 
 
-
 // VERIFICA SE OS CAMPOS DOS CLIENTES ESTA OK
 function verificarPreenchimentoCliente() {
   const inputsCliente = [

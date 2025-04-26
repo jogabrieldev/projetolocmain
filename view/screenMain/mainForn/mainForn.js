@@ -250,6 +250,61 @@ function registerNewFornecedor(){
       if (!$("#registerForn").valid()) {
         return;
       }
+
+      const cepforne = document.querySelector("#fornCep").value.replace(/\D/g, '');
+      try {
+        const response = await fetch(`https://viacep.com.br/ws/${cepforne}/json/`);
+    
+        if (!response.ok) {
+          throw new Error("Erro ao buscar o CEP.");
+        }
+    
+        const data = await response.json();
+    
+        if (data.erro) {
+          Toastify({
+            text: "CEP inválido.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
+          return;
+        }
+    
+        console.log("Dados da ViaCEP:", data);
+    
+        // Preenchendo os campos do formulário
+        const ruaField = document.getElementById('fornRua');
+        const cityField = document.getElementById('fornCity');
+        const stateField = document.getElementById('fornEstd');
+    
+        if (ruaField) {
+          ruaField.value = `${data.logradouro} - ${data.bairro}` || "";
+          ruaField.readOnly = true; 
+        }
+        if (cityField) {
+          cityField.value = data.localidade || "";
+          cityField.readOnly = true;
+        }
+        if (stateField) {
+          stateField.value = data.uf || "";
+          stateField.readOnly = true;
+        }
+    
+      } catch (error) {
+        console.error("Erro ao buscar o CEP:", error);
+        Toastify({
+          text: "Erro ao buscar o CEP, tente novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
       // Captura os valores do formulário
       const formData = {
         fornCode: document.querySelector("#fornCode").value, // Código

@@ -240,6 +240,61 @@ function registerNewDriver(){
         return;
     }
 
+    const cepDriver = document.querySelector("#motoCep").value.replace(/\D/g, '');
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cepDriver}/json/`);
+  
+      if (!response.ok) {
+        throw new Error("Erro ao buscar o CEP.");
+      }
+  
+      const data = await response.json();
+  
+      if (data.erro) {
+        Toastify({
+          text: "CEP inválido.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
+  
+      console.log("Dados da ViaCEP:", data);
+  
+      // Preenchendo os campos do formulário
+      const ruaField = document.getElementById('motoRua');
+      const cityField = document.getElementById('motoCity');
+      const stateField = document.getElementById('motoEstd');
+  
+      if (ruaField) {
+        ruaField.value = `${data.logradouro} - ${data.bairro}` || "";
+        ruaField.readOnly = true; 
+      }
+      if (cityField) {
+        cityField.value = data.localidade || "";
+        cityField.readOnly = true;
+      }
+      if (stateField) {
+        stateField.value = data.uf || "";
+        stateField.readOnly = true;
+      }
+  
+    } catch (error) {
+      console.error("Erro ao buscar o CEP:", error);
+      Toastify({
+        text: "Erro ao buscar o CEP, tente novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+      return;
+    }
+
       const formData = {
           motoCode: document.querySelector('#motoCode').value,     // Código
           motoNome: document.querySelector('#motoNome').value,     // Nome
@@ -256,24 +311,43 @@ function registerNewDriver(){
           motoCity: document.querySelector('#motoCity').value,     // Cidade
           motoEstd: document.querySelector('#motoEstd').value,     // Estado
           motoMail: document.querySelector('#motoMail').value,      // E-mail
-          motoStat: document.querySelector("#motoStat").value
+          motoStat: document.querySelector("#motoStat").value       // status
       };
 
-      if (!isDataValida(formData.motoDtnc)) {
-        Toastify({
-          text: "Data de nascimento e INVALIDA.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-        return;
+      const datas = [
+        { key: 'motoDtvc',  label: 'Data de Vencimento' },
+        { key: 'motoDtnc', label: 'Data de Nascimento' }
+      ];
+      for (const { key, label } of datas) {
+        const str = formData[key];
+        if (!isDataValida(str)) {
+          Toastify({
+            text: `${label} INVALIDA .`,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
+          return;
+        }
       }
-
-      if (!isDataVencimento(formData.motoDtvc)) {
+    
+      // 4) Converte strings para Date, zerando horas
+      const [yCad,  mCad,  dCad]  = formData.motoDtvc.split('-').map(Number);
+      const [yNasc, mNasc, dNasc] = formData.motoDtnc.split('-').map(Number);
+      const dtVenci  = new Date(yCad,  mCad - 1, dCad);
+      const dtNasc = new Date(yNasc, mNasc - 1, dNasc);
+      const hoje   = new Date();
+      const hoje0  = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+      
+      console.log('hoje' , hoje0)
+    
+      // 5) Regras de negócio:
+      // 5.1) dtCad não pode ser futura
+      if (dtVenci.getTime() <= hoje0.getTime() ) {
         Toastify({
-          text: "Data de vencimento tem que ser maior que a data de hoje!",
+          text: "A data de vencimento da CNH tem que ser maior que a de hoje",
           duration: 3000,
           close: true,
           gravity: "top",
@@ -283,7 +357,20 @@ function registerNewDriver(){
         return;
       }
     
-
+      // 5.2) dtNasc não pode ser futura
+      if (dtNasc.getTime() >= hoje0.getTime()) {
+        Toastify({
+          text: "Data de Nascimento não pode ser maior ou igual que a data de hoje.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "orange",
+        }).showToast();
+        return;
+      }
+    
+      
       try {
           const response = await fetch('http://localhost:3000/api/drive/submit', {
               method: 'POST',

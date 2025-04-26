@@ -483,7 +483,7 @@ async function listarVeiculos() {
         "Marca",
         "Ano",
         "Cor",
-        "Tipo",
+        "Tipo de combustivel",
         "Km Atual",
         "Motorista",
         "Status",
