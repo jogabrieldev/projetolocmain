@@ -1,0 +1,309 @@
+
+.tableLocationAll{
+  width: 100%;
+  border-collapse: collapse;
+  color: black;
+  font-size: 14px;
+}
+.tableLocationAll td{
+  background-color: darkgray;
+}
+
+.outPageSearchLocation {
+  cursor: pointer;
+  width: 80px;
+  margin-bottom: 2%;
+  background-color: lightslategray;
+  border: none;
+  height: 27px;
+}
+.btnRegisterLocation {
+  width: 90%;
+  height: 35px;
+  border: 1px solid white;
+  background-color: rgb(100, 137, 189);
+  cursor: pointer;
+  margin-right: 2.5%;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 0.2s, transform 0.4s;
+  text-align: center;
+  align-items: center;
+}
+.btnRegisterLocation:active{
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+}
+
+.searchloc {
+  width: 100%;
+  max-width: 200px;
+  height: 40px;
+  border: none;
+  background-color: #3b82f6; /* Azul botão de busca */
+  color: white;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 1% 2.5% 0 0;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  transition: box-shadow 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+}
+
+.searchloc:hover {
+  background-color: #2563eb; /* Azul mais escuro */
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+}
+
+.searchloc:active {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+  transform: translateY(4px);
+}
+
+/* Responsivo para telas menores */
+@media (max-width: 768px) {
+  .searchloc {
+    width: 100%;
+    max-width: none;
+    margin-right: 0;
+    margin-top: 10px;
+  }
+}
+/* parte da Locação  */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  
+}
+/* Edição */
+
+
+
+.registerClientPageLocation {
+  border: 1px  solid white;
+}
+
+.registerClientPageLocation:hover {
+  background-color: rgb(173, 161, 161);
+  color: black;
+}
+/* Contrato finalizado  */
+#contrato {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  width: 94%;
+  height: 510px;
+  margin-top: 1%;
+  margin-left: 1.5%;
+  padding: 16px;
+  border: 2px solid #ffffff;
+  border-radius: 12px;
+  background: linear-gradient(to right, #ece9e6, #ffffff);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  font-family: "Segoe UI", sans-serif;
+  color: #2c3e50;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+#contrato h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 12px;
+  font-size: 24px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+#contrato p {
+  margin: 6px 0;
+  line-height: 1.6;
+  font-size: 15px;
+  color: #4a4a4a;
+}
+
+.itensLocados {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+#contrato h3 {
+  margin-top: 14px;
+  color: #34495e;
+  font-size: 18px;
+  border-bottom: 2px solid #bbb;
+  padding-bottom: 6px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+#contrato hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 12px 0;
+}
+
+#contrato button {
+  display: block;
+  margin: 12px auto;
+  background-color: #2980b9;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 30%;
+  height: 36px;
+}
+
+#contrato button:hover {
+  background-color: #1f618d;
+}
+
+.tableContrato {
+  overflow: auto;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  #contrato {
+    width: 98%;
+    height: auto;
+    margin-left: 1%;
+    padding: 10px;
+  }
+
+  #contrato button {
+    width: 90%;
+  }
+
+  .itensLocados {
+    margin-bottom: 1rem;
+  }
+
+  #contrato h2 {
+    font-size: 20px;
+  }
+
+  #contrato h3 {
+    font-size: 16px;
+  }
+
+  #contrato p {
+    font-size: 14px;
+  }
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+.btnUpdateLocation{
+  height: 30px;
+  width: 35%;
+  background-color: rgb(100, 137, 189);
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.outLocationEdit{
+  height: 30px;
+  width: 35%;
+  background-color: rgb(100, 137, 189);
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* formulario de registro ao cliente */
+.btnOutInitLoc {
+  padding: 10px 20px;
+  background-color: rgb(100, 137, 189);
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btnRegisterClientLoc {
+  padding: 10px 20px;
+  background-color: rgb(100, 137, 189);
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tableLocation {
+  overflow: auto;
+}
+.resultLocationSearch {
+  overflow: auto;
+ 
+}
+
+.searchLocation {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: darkgray;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  width: 30%;
+  height: 40%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+#resetFilterBtn {
+  width: 20%;
+  height: 30px;
+  border: none;
+  background-color: rgb(100, 137, 189);
+  cursor: pointer;
+  margin-right: 2.5%;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 0.2s, transform 0.4s;
+  margin-top: 1%;
+}
+
+#resetFilterBtn:active {
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+  transform: translateY(6px);
+}
+.btnMainTheSearch {
+  display: flex;
+  justify-content: space-between;
+}
+
+.searchClient{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: darkgray;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  width: 50%;
+  height: 50%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+
+

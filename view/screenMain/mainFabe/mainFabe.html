@@ -1,0 +1,187 @@
+<section class="containerAppFabri d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded"
+style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid white;">
+
+    <div class="listingFabri mb-4">
+      <!-- informações do fabricante-->
+    </div>
+  
+    <div class="btnMainPageFabri d-flex justify-content-center gap-3 mb-4">
+      <button class="btn btn-primary text-dark fw-semibold registerFabri">Incluir</button>
+      <button class="btn btn-danger text-dark fw-semibold buttonDeleteFabri">Excluir</button>
+      <button class="btn btn-warning text-dark fw-semibold buttonEditFabri">Editar</button>
+      <button class="btn btn-light text-dark fw-semibold  buttonExitFabri">Voltar</button>
+    </div>
+  
+    <div class="formRegisterFabri bg-secondary border p-4 rounded shadow text-white" style="display: none">
+      <form class="formRegisterFabricante">
+        <div class="row g-3">
+  
+          <div class="col-md-3">
+            <label for="fabeCode" class="form-label">Código</label>
+            <input
+              type="text"
+              name="fabeCode"
+              id="fabeCode"
+              class="form-control"
+              placeholder="Código"
+              maxlength="5"
+            />
+          </div>
+  
+          <div class="col-md-9">
+            <label for="fabeDesc" class="form-label">Descrição</label>
+            <input
+              type="text"
+              name="fabeDesc"
+              id="fabeDesc"
+              class="form-control"
+              placeholder="Descrição"
+              maxlength="80"
+            />
+          </div>
+  
+          <div class="col-md-6">
+            <label for="fabeCate" class="form-label">Categoria</label>
+            <input
+              type="text"
+              name="fabeCate"
+              id="fabeCate"
+              class="form-control"
+              placeholder="Categoria"
+              maxlength="35"
+            />
+          </div>
+  
+          <div class="col-md-6">
+            <label for="fabeSuca" class="form-label">Subcategoria</label>
+            <input
+              type="text"
+              name="fabeSuca"
+              id="fabeSuca"
+              class="form-control"
+              placeholder="Subcategoria"
+              maxlength="30"
+            />
+          </div>
+  
+          <div class="col-md-12">
+            <label for="fabeObs" class="form-label">Observação</label>
+            <input
+              type="text"
+              name="fabeObs"
+              id="fabeObs"
+              class="form-control"
+              placeholder="Observação"
+              maxlength="100"
+            />
+          </div>
+  
+          <div class="col-md-12">
+            <label for="fabeCtct" class="form-label">Centro de Custo</label>
+            <input
+              type="text"
+              name="fabeCtct"
+              id="fabeCtct"
+              class="form-control"
+              placeholder="Centro de Custo"
+              maxlength="40"
+            />
+          </div>
+  
+          <div class="col-12 d-flex justify-content-center gap-3 mt-3">
+            <button type="submit" class="btn btn-success w-25 cadFabri">Cadastrar</button>
+            <button type="button" class="btn btn-secondary w-25  btnOutInitFabri">Voltar</button>
+          </div>
+  
+        </div>
+      </form>
+    </div>
+  
+    <!-- FORMULARIO EDIÇÃO -->
+    <div class="editFabri container mt-4" style="display: none">
+      <form class="formEditFabri row g-3" class="border border-secondary-subtle rounded-3 p-4 shadow-sm">
+        <div class="col-12 col-md-6">
+          <label for="editFabeCode" class="form-label">Código</label>
+          <input
+            type="text"
+            class="form-control"
+            name="editFabeCode"
+            id="editFabeCode"
+            placeholder="Código"
+            maxlength="5"
+            readonly
+          />
+        </div>
+    
+        <div class="col-12 col-md-6">
+          <label for="editFabeDesc" class="form-label">Descrição</label>
+          <input
+            type="text"
+            class="form-control"
+            name="editFabeDesc"
+            id="editFabeDesc"
+            placeholder="Descrição"
+            maxlength="80"
+            readonly
+          />
+        </div>
+    
+        <div class="col-12 col-md-6">
+          <label for="editFabeCate" class="form-label">Categoria</label>
+          <input
+            type="text"
+            class="form-control"
+            name="editFabeCate"
+            id="editFabeCate"
+            placeholder="Categoria"
+            maxlength="35"
+          />
+        </div>
+    
+        <div class="col-12 col-md-6">
+          <label for="editFabeSuca" class="form-label">Subcategoria</label>
+          <input
+            type="text"
+            class="form-control"
+            name="editFabeSuca"
+            id="editFabeSuca"
+            placeholder="Subcategoria"
+            maxlength="30"
+          />
+        </div>
+    
+        <div class="col-12">
+          <label for="editFabeObs" class="form-label">Observação</label>
+          <input
+            type="text"
+            class="form-control"
+            name="editFabeObs"
+            id="editFabeObs"
+            placeholder="Observação"
+            maxlength="100"
+          />
+        </div>
+    
+        <div class="col-12">
+          <label for="editFabeCtct" class="form-label">Centro de custo</label>
+          <input
+            type="text"
+            class="form-control"
+            name="editFabeCtct"
+            id="editFabeCtct"
+            placeholder="Centro de custo"
+            maxlength="40"
+            readonly
+          />
+        </div>
+    
+        <div class="col-12 d-flex justify-content-center gap-3 mt-3">
+          <button type="submit" class="btn btn-success w-25 cadFabriEdit">Salvar</button>
+          <button type="button" class="btn btn-secondary w-25 btnOutInitFabriEdit">Voltar</button>
+        </div>
+      </form>
+    </div>
+    
+  
+  </section>
+  

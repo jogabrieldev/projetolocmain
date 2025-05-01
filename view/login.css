@@ -1,0 +1,90 @@
+body{
+    padding: 0px;
+    margin: 0px;
+    font-size: 19px;
+    
+}
+img{
+   max-width:  100%;
+    height: 105%;
+}
+i{
+    font-size: 19px;
+    cursor: pointer;
+    position: absolute;
+    right : 15%;
+    color: #988f8f;
+}
+.left{
+    width: 80%;
+    height:710px;
+}
+.container{
+    background-color: rgb(21, 21, 21);
+    max-width: 100%;
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.right{
+    background-color: rgb(131, 152, 136);
+    width:89%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height:750px;
+   
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 30%;
+    text-align: center;
+    background-color: rgb(131, 152, 136);
+    color: white;
+    padding: 7px;
+    font-size: 14px;
+    margin-top: 0.5%;
+}
+.information{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+#formLogin{
+    width: 80%;
+    text-align: center;
+}
+
+.information h3{
+    font-size: 30px;
+}
+#user{
+    width: 65%;
+    height: 25px;
+    border-radius: 10px;
+    border: none;
+    padding: 5px;
+}
+#pin{
+    width: 65%;
+    height: 25px;
+    border-radius: 10px;
+    border: none;
+    padding: 5px;
+}
+.submit{
+    width: 30%;
+    height: 32px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: border 0.3s ease; 
+}   
+.submit:focus {
+    border: 2px solid black;
+}
+

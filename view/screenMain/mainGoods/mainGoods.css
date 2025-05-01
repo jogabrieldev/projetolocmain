@@ -1,0 +1,62 @@
+
+ .listingBens{
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: space-between;
+    overflow-y: auto;
+}
+.bem-item{
+    background: #f4f4f4;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 10px; 
+    min-height: 150px;
+    font-size: 13px;
+}
+.editForm{
+  overflow: auto;
+}
+
+.bem-item p {
+    margin: 5px 0;
+  }
+
+/* CSS */
+.hidden {
+    display: none !important;
+  }
+
+  .flex {
+    display: flex !important;
+  }
+  
+  .form-control,
+          .form-select {
+            max-width: 90%;
+          }
+      
+          .form-label {
+            color: black;
+            font-weight: 500;
+          }
+
+/* container de registro de bens */
+ .showContentBens{
+    overflow: auto;
+} 
+.dark-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: black;
+    font-size: 14px;
+  }
+  
+.dark-table td  {
+    background-color: darkgray;
+}
+  

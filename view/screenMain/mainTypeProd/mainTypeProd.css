@@ -1,0 +1,48 @@
+.containerAppTipoProd{
+    display: none;
+    background-color: darkgray;
+    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
+    width: 76%;
+    height: 550px;
+    margin-left: 22%;
+    margin-top:1%;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 2px solid white;
+    padding: 7px;
+    border-radius: 10px;
+};
+.listingTipoProd{
+    width: 100%;
+    height: 400px;
+    overflow: auto; /* Habilita rolagem */
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    position: relative;
+}
+.tableTypeProd{
+    width: 100%;
+    border-collapse: collapse;
+    color: black;
+    font-size: 14px;
+}
+.tableTypeProd td{
+    background-color:darkgray ;
+}
+.tableWrapper {
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+}
+
+.btnMainPageTipoProd{
+    margin-top: 3%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    height: 40px;
+}
+
+
+
+

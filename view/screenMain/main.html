@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR ">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <link rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" href="./mainGoods/mainGoods.css" />
+    <link rel="stylesheet" href="./mainClient/mainClient.css" />
+    <link rel="stylesheet" href="./mainForn/mainForn.css" />
+    <link rel="stylesheet" href="./mainProd/mainProd.css" />
+    <link rel="stylesheet" href="./mainFabe/mainFabri.css" />
+    <link rel="stylesheet" href="./mainTypeProd/mainTypeProd.css" />
+    <link rel="stylesheet" href="./mainDrive/mainDriver.css" />
+    <link rel="stylesheet" href="./mainAutomovel/mainAuto.css" />
+    <link rel="stylesheet" href="../screenLocation/location.css" />
+    <link rel="stylesheet" href="../screenLogistics/logistics.css" />
+    <link rel="stylesheet" href="../screenDelivery/mainDelivery.css" />
+    
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <title>Caçamba</title>
+  </head>
+
+  <body>
+    <section
+      class="container-fluid  bg-opacity-75 text-white d-flex flex-wrap align-items-center justify-content-between px-3 px-md-4 position-sticky top-0 rounded-3 "
+      style="height: auto; min-height: 100px; z-index: 1030"
+    >
+      <!-- Logo -->
+      <div
+        class="d-flex align-items-center mb-2 mb-md-0"
+        style="margin-left: 1%"
+      >
+        <img
+          src="../img/sgttec2.jpg"
+          alt="logo"
+          id="photo"
+          class="rounded-circle border border-white me-2 me-md-3"
+          style="width: 80px; max-width: 100px"
+        />
+        <h5 class="mb-0">SGTTEC</h5>
+      </div>
+
+      <!-- Informação -->
+      <div
+        class="d-none d-sm-block  bg-opacity-50 text-white text-center rounded-pill px-3 px-md-4 py-2 information">
+
+        Sessão ativa
+      </div>
+    </section>
+
+    <main id="ContainerMainApp">
+      <div class="bg-secondary  p-3 workButton">
+        <ul class="nav flex-column mt-3 mt-md-5">
+          <!-- Botão Cadastros com submenu colapsável -->
+          <li class="nav-item mb-2">
+            <button
+              class="btn btn-outline-light w-100"
+              data-bs-toggle="collapse"
+              data-bs-target="#cadastrosMenu"
+              aria-expanded="false"
+              aria-controls="cadastrosMenu"
+              id="btnStartRegister"
+            >
+              Cadastros
+            </button>
+          </li>
+
+          <!-- Submenu dos cadastros -->
+          <div class="collapse" id="cadastrosMenu">
+            <ul class="nav flex-column ms-2 w-100">
+              <li class="nav-item my-1">
+                <button
+                  id="btnLoadBens"
+                  class="btn btn-submenu btn-outline-light btnCadBens w-100"
+                >
+                  Bens
+                </button>
+              </li>
+              <li class="nav-item my-1">
+                <button
+                  class="btn btn-submenu btn-outline-light btnCadClie w-100"
+                >
+                  Clientes
+                </button>
+              </li>
+              <li class="nav-item my-1">
+                <button
+                  class="btn btn-submenu btn-outline-light btnCadForn w-100"
+                >
+                  Fornecedor
+                </button>
+              </li>
+              <li class="nav-item my-1">
+                <button
+                  class="btn btn-submenu btn-outline-light btnCadProd w-100"
+                >
+                  Produto
+                </button>
+              </li>
+              <li class="nav-item my-1">
+                <button
+                  class="btn btn-submenu btn-outline-light btnCadFabri w-100"
+                >
+                  Família de Bens
+                </button>
+              </li>
+              <li class="nav-item my-1">
+                <button
+                  class="btn btn-submenu btn-outline-light btnCadTypeProd w-100"
+                >
+                  Tipo do Produto
+                </button>
+              </li>
+              <li class="nav-item my-1">
+                <button
+                  class="btn btn-submenu btn-outline-light btnCadMotorista w-100"
+                >
+                  Motorista
+                </button>
+              </li>
+              <li class="nav-item my-1">
+                <button
+                  class="btn btn-submenu btn-outline-light btnCadAutomo w-100"
+                >
+                  Veículos
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Outros botões principais -->
+          <li class="nav-item mb-2">
+            <button
+              class="btn btn-outline-light w-100 btnRegisterLocation"
+            >
+              Locação
+            </button>
+          </li>
+
+          <li class="nav-item mb-2">
+            <button
+              class="btn btn-outline-light w-100 btnLogistic"
+              onclick="locationPendente()"
+            >
+              Logística
+            </button>
+          </li>
+
+          <li class="nav-item mb-2">
+            <button class="btn btn-outline-light w-100 delivery">
+              Entrega
+            </button>
+          </li>
+        </ul>
+
+      </ul>
+
+        <div class="text-center mt-3">
+          <span class="material-symbols-outlined text-muted">sync</span>
+        </div>
+      </div>
+      
+      <!-- CONTAINER MAIN DA APLICAÇÃO SPA -->
+      <section id="mainContent"> 
+
+        <section id="welcomeAnimation" class="welcome-container text-white">
+          <div class="text-center animate__animated animate__fadeInDown">
+            <svg
+              width="100"
+              height="100"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#00d1ff"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="mb-4 animate__animated animate__pulse animate__infinite"
+            >
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+            <h1 class="fw-bold mb-3 typewriter">Bem-vindo ao sistema SGTTEC!</h1>
+          </div>
+        </section>
+         
+      </section>
+
+   </main>  
+
+ </section>
+
+    </main>
+    <script src="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="maskFields.js"></script>
+    <script src="validation.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./mainGoods/mainGoods.js"></script>
+    <script type="module" src="./mainClient/mainClient.js"></script>
+    <script src="./mainForn/mainForn.js"></script>
+    <script src="./mainProd/mainProd.js"></script>
+    <script src="./mainFabe/mainFabri.js"></script>
+    <script src="./mainTypeProd/mainTypeProd.js"></script>
+    <script src="./mainDrive/mainDriver.js"></script>
+    <script src="./mainAutomovel/mainAuto.js"></script>
+    <script src="../screenLocation/toDoLocation.js"></script>
+    <script src="../screenLocation/locationFinish.js"></script>
+    <script src="../screenLogistics/mainLogistics.js"></script>
+    <script src="../screenDelivery/mainDelivery.js"></script>
+    <script src="../screenDelivery/mainReturn.js"></script>
+    <script src="main.js"></script>
+
+    <!-- <script src="/assets/screenMain/mainGoods/mainGoods.js"></script> -->
+  </body>
+</html>

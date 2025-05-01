@@ -1,0 +1,179 @@
+<section class="containerAppAutomo d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded"
+style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid white;">
+    <div class="mb-4">
+      <!-- Exibição da listagem de automóveis -->
+      <div class="listingAutomo flex-grow-1 overflow-auto mb-3">
+        <!-- informações -->
+      </div>
+  
+      <!-- Botões principais -->
+      <div class=" btnInitAutoPageMain d-flex flex-wrap justify-content-center align-items-center gap-3 mb-3">
+        <button class="btn btn-primary text-dark fw-semibold registerAuto">Incluir</button>
+        <button class="btn btn-danger text-dark fw-semibold buttonDeleteAuto">Excluir</button>
+        <button class="btn btn-warning text-dark fw-semibold buttonEditAuto">Editar</button>
+        <button class="btn btn-light text-dark fw-semibold border buttonExitAuto">Voltar</button>
+      </div>
+    </div>
+  
+    <!-- Formulário de Cadastro -->
+    <div class="formCadAuto container py-4  rounded-3" style="display: none;">
+      <form class="foorm">
+        <div class="row g-3">
+          <div class="col-md-3">
+            <label for="codeAuto" class="form-label">Código</label>
+            <input type="text" class="form-control" name="codeAuto" id="codeAuto" maxlength="15" placeholder="Código" />
+          </div>
+  
+          <div class="col-md-3">
+            <label for="placAuto" class="form-label">Placa</label>
+            <input type="text" class="form-control" name="placAuto" id="placAuto" maxlength="10" placeholder="Placa" />
+          </div>
+  
+          <div class="col-md-3">
+            <label for="chassAuto" class="form-label">Chassi</label>
+            <input type="text" class="form-control" name="chassAuto" id="chassAuto" maxlength="20" placeholder="Chassi" />
+          </div>
+  
+          <div class="col-md-3">
+            <label for="renaAuto" class="form-label">Renavam</label>
+            <input type="text" class="form-control" name="renaAuto" id="renaAuto" maxlength="20" placeholder="Renavam" />
+          </div>
+  
+          <div class="col-md-4">
+            <label for="macaAuto" class="form-label">Marca</label>
+            <input type="text" class="form-control" name="macaAuto" id="macaAuto" maxlength="25" placeholder="Marca" />
+          </div>
+  
+          <div class="col-md-4">
+            <label for="modeAuto" class="form-label">Modelo</label>
+            <input type="text" class="form-control" name="modeAuto" id="modeAuto" maxlength="30" placeholder="Modelo" />
+          </div>
+  
+          <div class="col-md-4">
+            <label for="corAuto" class="form-label">Cor</label>
+            <input type="text" class="form-control" name="corAuto" id="corAuto" maxlength="20" placeholder="Cor" />
+          </div>
+  
+          <div class="col-md-4">
+            <label for="tpCombusAuto" class="form-label">Tipo de Combustível</label>
+            <input type="text" class="form-control" name="tpCombusAuto" id="tpCombusAuto" maxlength="20" placeholder="Combustível" />
+          </div>
+  
+          <div class="col-md-4">
+            <label for="kmAtAuto" class="form-label">Km Atual</label>
+            <input type="number" class="form-control" name="kmAtAuto" id="kmAtAuto" placeholder="Quilometragem Atual" />
+          </div>
+  
+          <div class="col-md-4">
+            <label for="motoAuto" class="form-label">Motorista</label>
+            <select class="form-select" name="motoAuto" id="motoAuto">
+              <option value="">Selecione...</option>
+            </select>
+          </div>
+  
+          <div class="col-md-4">
+            <label for="statAuto" class="form-label">Status</label>
+            <select class="form-select" name="statAuto" id="statAuto">
+              <option value="">Selecione...</option>
+              <option value="Ativo">Ativo</option>
+              <option value="Desativo">Desativo</option>
+            </select>
+          </div>
+  
+          <div class="col-md-4">
+            <label for="dtCadAuto" class="form-label">Data do Cadastro</label>
+            <input type="date" class="form-control" name="dtCadAuto" id="dtCadAuto" />
+          </div>
+        </div>
+  
+        <!-- Botões do formulário -->
+        <div class="d-flex gap-2 justify-content-center mt-4">
+          <button type="submit" class="btn btn-success w-25 cadAutomo">Cadastrar</button>
+          <button type="button" class="btn btn-secondary w-25 btnOutCadAuto">Voltar</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- FORMULARIO DE EDIÇÃO -->
+
+    <div class="editFormAuto container mt-4" style="display: none">
+        <form class="foormEditVeicu">
+          <div class="row g-3">
+      
+            <div class="col-md-3">
+              <label for="codeAutoEdit" class="form-label">Código</label>
+              <input type="text" class="form-control" id="codeAutoEdit" name="codeAutoEdit" placeholder="Código" maxlength="15" readonly />
+            </div>
+      
+            <div class="col-md-3">
+              <label for="placAutoEdit" class="form-label">Placa</label>
+              <input type="text" class="form-control" id="placAutoEdit" name="placAutoEdit" placeholder="Placa" maxlength="10" readonly />
+            </div>
+      
+            <div class="col-md-3">
+              <label for="chassAutoEdit" class="form-label">Chassi</label>
+              <input type="text" class="form-control" id="chassAutoEdit" name="chassAutoEdit" placeholder="Chassi" maxlength="20" readonly/>
+            </div>
+      
+            <div class="col-md-3">
+              <label for="renaAutoEdit" class="form-label">Renavam</label>
+              <input type="text" class="form-control" id="renaAutoEdit" name="renaAutoEdit" placeholder="Renavam" maxlength="20" readonly />
+            </div>
+      
+            <div class="col-md-3">
+              <label for="macaAutoEdit" class="form-label">Marca</label>
+              <input type="text" class="form-control" id="macaAutoEdit" name="macaAutoEdit" placeholder="Marca" maxlength="25" readonly />
+            </div>
+      
+            <div class="col-md-3">
+              <label for="modeAutoEdit" class="form-label">Modelo</label>
+              <input type="text" class="form-control" id="modeAutoEdit" name="modeAutoEdit" placeholder="Modelo" maxlength="30" readonly />
+            </div>
+      
+            <div class="col-md-3">
+              <label for="corAutoEdit" class="form-label">Cor</label>
+              <input type="text" class="form-control" id="corAutoEdit" name="corAutoEdit" placeholder="Cor" maxlength="20" readonly />
+            </div>
+      
+            <div class="col-md-3">
+              <label for="tpCombusAutoEdit" class="form-label">Tipo de Combustível</label>
+              <input type="text" class="form-control" id="tpCombusAutoEdit" name="tpCombusAutoEdit" placeholder="Tipo de Combustível" maxlength="20" readonly />
+            </div>
+      
+            <div class="col-md-3">
+              <label for="kmAtAutoEdit" class="form-label">Km Atual</label>
+              <input type="number" class="form-control" id="kmAtAutoEdit" name="kmAtAutoEdit" placeholder="Quilometragem Atual" maxlength="8" />
+            </div>
+      
+            <div class="col-md-3">
+              <label for="motoAutoEdit" class="form-label">Motorista</label>
+              <select class="form-select" id="motoAutoEdit" name="motoAutoEdit">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+      
+            <div class="col-md-3">
+              <label for="statAutoEdit" class="form-label">Status</label>
+              <select class="form-select" id="statAutoEdit" name="statAutoEdit">
+                <option value="">Selecione...</option>
+                <option value="Ativo">Ativo</option>
+                <option value="Desativo">Desativo</option>
+              </select>
+            </div>
+      
+            <div class="col-md-3">
+              <label for="dtCadAutoEdit" class="form-label">Data do Cadastro</label>
+              <input type="date" class="form-control" id="dtCadAutoEdit" name="dtCadAutoEdit" readonly />
+            </div>
+      
+          </div>
+      
+          <div class="d-flex justify-content-center gap-2 mt-4">
+            <button type="submit" class="btn btn-success w-25 cadAutomoEdit">Salvar</button>
+            <button type="button" class="btn btn-secondary w-25 btnOutCadAutoEdit">Voltar</button>
+          </div>
+        </form>
+      </div>
+      
+  </section>
+  

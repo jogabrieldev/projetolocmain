@@ -1,0 +1,220 @@
+body{
+    padding: 0px;
+    margin: 0px;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color:   darkgrey;
+}
+input{
+    height: 23px;
+}
+
+/* Cabeçalho */
+.containerHeader{
+    height: 117px;
+    background-color:  #6c757d;
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    right: 0;
+    border-radius: 10px;
+}
+.information {
+  background-color: #6c757d;
+  font-size: 15px !important;
+  padding: 0.4rem 0.9rem !important;
+  border: 2px solid white;
+  font-size: 16px;
+  width: auto;
+  max-width: 90%;
+  margin-right: 2%;
+}
+@media (max-width: 576px) {
+    #photo {
+      width: 60px;
+    }
+  
+    .information {
+      font-size: 15px !important;
+      padding: 0.3rem 0.8rem !important;
+    }
+  }
+  
+
+.material-symbols-outlined {
+    font-family: sans-serif;
+    margin-top: 2.5%;
+    font-size: 20px;
+    cursor: pointer;
+    height:35px ;
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+  
+}
+
+#ContainerMainApp{
+    display: flex;
+    flex-direction:column;
+    gap: 2px;
+    height: 100%;
+}
+
+.workButton {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 8;
+  left: 0;
+  width: 20%;
+  height: 95vh;
+  padding: 10px;
+  background-color: #6c757d; /* caso queira manter a cor de bg-secondary */
+  box-shadow: 7px 0  4px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  border-radius: 10px;
+  z-index: 1000;
+  border-top-right-radius: 1.5px solid white ;
+}
+
+/* Para telas menores */
+@media (max-width: 768px) {
+  .workButton {
+    width: 100%;
+    height: auto;
+    position: relative;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 10px;
+  }
+
+  .workButton ul.nav {
+    flex-direction: row !important;
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+
+  .workButton ul.nav li,
+  .workButton .collapse {
+    flex: 1 0 auto;
+    width: auto;
+  }
+
+  .collapse {
+    display: none !important; /* você pode esconder submenus ou usar JS para abrir tipo dropdown */
+  }
+}
+#btnStartRegister{
+  background-color: rgb(100, 137, 189);
+}
+#btnStartRegister:hover{
+background-color: white;
+}
+@media (max-width: 768px) {
+    .workButton {
+      padding: 1rem;
+      font-size: 0.95rem;
+    }
+  
+    .btn-submenu {
+      font-size: 0.9rem;
+    }
+  }
+  
+ul{
+    width: 100%;
+    list-style-type: none;
+}
+
+button{
+    border-radius: 10px;
+}
+
+/* MENSSAGEM DE ERRO */
+.error-text{
+    color: red;
+    display: block;
+    margin-top: 0.5%;
+    font-size: 13px;
+}
+.error-field{
+    border-color: red;
+}
+/* CONNFIG TABELA GLOBAL */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;  
+    border: 2px solid white;
+  }
+  
+  th, td {
+    padding: 15px; 
+    text-align: left;
+    border: 1.5px solid #ddd; 
+    width: 150px;
+  }
+  
+  
+  tr:nth-child(even) {
+    background-color: #f2f2f2; 
+  }
+  
+  th {
+    background-color:rgb(29, 29, 29);
+    color: white;
+  }
+  
+/* .welcome-container {
+  background: linear-gradient(145deg, #c1baba, #2d2d2d);
+  border-radius: 16px;
+  margin-left: 30%;
+  padding: 60px 20px;
+  max-width: 800px;
+  text-align: center;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  
+}; */
+
+.welcome-container.hidden {
+  opacity: 0;
+  visibility: hidden;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* Efeito de máquina de escrever */
+.typewriter {
+  display: inline-block;
+  border-right: 2px solid #00d1ff;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: typing 2.5s steps(30, end), blink-caret 0.7s step-end infinite;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #00d1ff;
+  }
+}
+

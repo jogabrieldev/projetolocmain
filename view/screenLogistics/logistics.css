@@ -1,0 +1,272 @@
+
+.btnLogistic{
+  width: 90%;
+  height: 35px;
+  border: 1px solid white;
+  background-color: rgb(100, 137, 189);
+  cursor: pointer;
+  margin-right: 2.5%;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 0.2s, transform 0.4s;
+}
+  .btnLogistic:active{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transform: translateY(6px);
+  }
+
+.logisticsMainTop{
+    display: flex;
+    gap: 0.5%;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 65px;
+}
+/* TODAS LOCAÇÕES  */
+.orders {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  overflow: auto;
+  border: 2px solid white;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+/* Estilo da tabela */
+#tableWithAllLocation {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px; /* mais compacto */
+  table-layout: fixed;
+  min-width: 800px; /* garante boa leitura */
+  height: auto;
+}
+
+/* Cabeçalho da tabela */
+#tableWithAllLocation thead th {
+  background-color:black;
+  color: white;
+  font-weight: bold;
+  text-align: left;
+  border-bottom: 1px solid white;
+}
+
+/* Células da tabela */
+#tableWithAllLocation td {
+  background-color: darkgray;
+  color: black;
+  border-bottom: 1px solid #999;
+  overflow: hidden;
+}
+
+/* Responsividade horizontal */
+.orders::-webkit-scrollbar {
+  height: 8px;
+}
+.orders::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+.orders::-webkit-scrollbar-track {
+  background: #ccc;
+}
+
+ #tableGoodsVsRequestPending td{
+  background-color: darkgray;
+} 
+
+/* COMPARAÇÃO DE BENS DISPONIVEIS E QUANTOS PEDIDOS */
+.need {
+  width: 100%;
+  overflow-x: auto; 
+}
+
+.need table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.need th, .need td {
+  text-align: center;
+  word-wrap: break-word;
+  white-space: normal; 
+  font-size: 0.9rem; /* reduz levemente a fonte */
+  padding: 0.25rem;  
+}
+.need th{
+  background-color: black;
+  color: white;
+}
+
+.need th:nth-child(1),
+.need th:nth-child(2){
+  width: 25%;
+}
+.need td:nth-child(1),
+.need td:nth-child(2){
+  width: 10%;
+}
+
+.need th:nth-child(3),
+.need td:nth-child(3) {
+  width: 20%;
+}
+
+.need th:nth-child(4),
+.need td:nth-child(4),
+.need th:nth-child(5),
+.need td:nth-child(5) {
+  width: 18.5%;
+}
+
+@media (max-width: 600px) {
+  .need th, .need td {
+    font-size: 0.75rem;
+    padding: 4px;
+  }
+
+  .need table {
+    font-size: 0.75rem;
+  }
+}
+
+.logisticsMainBottom{
+  display: flex;
+  gap: 0.5%;
+  flex-direction: row;
+  justify-content: space-between;
+}
+/* ANALISAR  */
+.validadeFamily {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  overflow-x: hidden; /* evita scroll lateral */
+  border: 2px solid white;
+  box-sizing: border-box;
+}
+
+#tableGoodsVsRequestPendingall {
+  width: 100%;
+  border-collapse: collapse;
+  color: black;
+  font-size: 14px;
+  table-layout: fixed; /* força largura uniforme */
+}
+#tableGoodsVsRequestPendingall th{
+  background-color: black;
+  color: white;
+}
+#tableGoodsVsRequestPendingall td{
+  background-color: darkgray;
+}
+
+#tableGoodsVsRequestPendingall th,
+#tableGoodsVsRequestPendingall td {
+  padding: 8px;
+  text-align: center;
+  word-wrap: break-word;
+  border: 1px solid #fff;
+}
+
+#tableGoodsVsRequestPendingall th:nth-child(1),
+#tableGoodsVsRequestPendingall td:nth-child(1) {
+  width: 20%;
+}
+#tableGoodsVsRequestPendingall th:nth-child(2),
+#tableGoodsVsRequestPendingall td:nth-child(2) {
+  width: 35%;
+}
+#tableGoodsVsRequestPendingall th:nth-child(3),
+#tableGoodsVsRequestPendingall td:nth-child(3) {
+  width: 22.5%;
+}
+#tableGoodsVsRequestPendingall th:nth-child(4),
+#tableGoodsVsRequestPendingall td:nth-child(4) {
+  width: 22.5%;
+}
+
+@media (max-width: 768px) {
+  #tableGoodsVsRequestPendingall {
+    font-size: 12px;
+  }
+
+  #tableGoodsVsRequestPendingall th,
+  #tableGoodsVsRequestPendingall td {
+    padding: 6px;
+  }
+}
+
+/* TABELA MOTORISTA */
+.linkDrive {
+  overflow: auto;
+  width: 100%;
+  max-width: 100%;
+  height: 270px;
+  border: 2px solid white;
+  box-sizing: border-box;
+}
+
+
+.tableDriver th{
+  background-color: black;
+  color: white;
+}
+.tableDriver td{
+  background-color: darkgray;
+}
+
+.tableDriver tbody tr:hover {
+  background-color: #dee2e6;
+}
+
+/* modal para vincular o bem a locação */
+.modal{
+  background-color: darkgray;
+  box-shadow: 4px 5px 8px rgba(0, 0, 0, 0.929);
+  width: 76%;
+  height: 550px;
+  margin-left: 22%;
+  margin-top: 1.2%;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 2px solid white;
+  padding: 7px;
+  border-radius: 10px;
+}
+.modal-content{
+  background-color: darkgray;
+  height: 500px;
+  padding: 7px;
+  border: 1px solid white;
+}
+#bensDisponiveis{
+  overflow: auto;
+}
+#bensDisponiveis td{
+  width: 50%;
+}
+.OutScreenLinkGoods{
+  margin-top: 1%;
+  cursor: pointer;
+  width: 100px;
+  background-color: lightslategray;
+  border: none;
+  height: 27px;
+}
+.btn-filter {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px; /* tamanho do ícone */
+  color: #333;
+  padding: 3px;
+  transition: color 0.3s, transform 0.2s;
+  vertical-align: middle;
+}
+
+.btn-filter:hover {
+  color: #007bff;
+  transform: scale(1.1);
+}

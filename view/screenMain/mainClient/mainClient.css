@@ -1,0 +1,62 @@
+
+/* .containerAppClient{
+    display: none;
+    background-color: darkgray;
+    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
+    width: 76%;
+    height: 550px;
+    margin-left: 22%;
+    margin-top:1% ;
+    flex-direction: column;
+    justify-content: space-between;
+    border: solid , 2px , white;
+    padding: 7px;
+    border-radius: 10px;
+} */
+
+.listClient{
+    overflow: auto;
+}
+.tableClient{
+    width: 100%;
+    border-collapse: collapse;
+    color: black;
+    font-size: 14px;
+}
+
+.tableClient td{
+    background-color:darkgray;
+}
+.containerOfForm{
+    overflow: auto;
+}
+/* Visualização */
+
+.hidden {
+    display: none !important;
+  }
+
+  .flex {
+    display: flex !important;
+  }
+
+.buttonsMainPage {
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 3%;
+  }
+
+
+.btnbtn{
+    gap: 15px;
+    justify-content: center;
+    display: flex;
+    margin-top: 10%;
+    width: 65%;
+}
+
+
+

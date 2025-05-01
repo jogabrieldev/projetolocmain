@@ -1,0 +1,162 @@
+body{
+    padding: 0px;
+    margin:0px;
+    background-color: cornflowerblue;
+    font-size: 16px;
+    font-family: sans-serif;
+}
+h3{
+    text-align: center;
+}
+.logo{
+    width: 100%;
+    background-color: rgba(79, 79, 90, 0.735);
+    height: 150px;
+}
+#logo{
+    width: 140px;
+    margin-top: 0.5%;
+    margin-left: 2.5%;
+    border-radius: 100%;
+}
+.container{
+    max-width: 100%;
+    height: 655px;
+
+}
+#form{
+    margin-top: 6%;
+    margin-left: 14%;
+    width: 72%;
+    background-color: cornflowerblue;
+    height:53%;
+    box-shadow:0px 0px 8px rgba(0, 0, 0, 0.929) ;
+    border-radius: 5%;
+}
+.moveNome{
+    display: flex;
+    justify-content:flex-start;  
+}
+#name{
+ margin-top: 4.5%;
+ border: none;
+ width: 60%; 
+ height: 22px; 
+ margin-left: 8%;
+}
+#nameFan{
+ margin-top: 4.5%;
+ margin-left: 2%;
+ border: none;
+ width:27%; 
+ height: 21px;
+}
+.moveCnpjCep{
+    display: flex;
+    justify-content:flex-start;
+    margin-top: 2.5%;
+}
+#cnpj{
+ border: none;
+ width:32%; 
+ height: 21px;
+ margin-left: 8%;
+}
+#cep{
+ margin-left: 5%;
+ border: none;
+ width:32%; 
+ height: 21px; 
+}
+.moveRuaCida{
+    display: flex;
+    margin-top: 2.5%;
+    justify-content: flex-start;
+}
+#city{
+    margin-left: 5%;
+    border: none;
+    width:32%; 
+    height: 21px;
+ }
+#road{
+ margin-left: 8%;
+ border: none;
+ width:32%;
+ height: 21px;
+}
+.moveEstadoTele{
+    display: flex;
+    margin-top: 2.5%;
+    justify-content: flex-start;
+}
+#state{
+ margin-left: 8%;
+ border: none;
+ width:32%;
+ height: 21px;
+}
+#phone{
+ margin-left: 5%;
+ border: none;
+ width:32%; 
+ height: 21px;
+}
+.moveMailBanco{
+    display: flex;
+    margin-top: 2.5%;
+    justify-content: flex-start;
+}
+#mail{
+ margin-left:8%;
+ border: none;
+ width:32%; 
+ height: 21px;
+}
+#bank{
+ margin-left: 5%;
+ border: none;
+ width:32%; 
+ height: 21px;
+}
+.moveContAgencia{
+    display: flex;
+    margin-top: 2.5%;
+    justify-content:flex-start;
+}
+#cont{
+ margin-left: 8%;
+ border: none;
+ width:32%; 
+ height: 21px;
+}
+#agency{
+ margin-left: 5%;
+ border: none;
+ width:32%; 
+ height: 21px;
+}
+.movePix{
+    display: flex;
+    margin-top: 2.5%;
+    justify-content: flex-start;
+}
+#pix{
+ margin-left: 8%;
+ border: none;
+ width:32%; 
+ height: 21px;
+}
+#buttonRegister{
+    margin-left: 5%;
+    width:33%;
+    height: 30px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background-color: darkgray;
+    margin-top: 2.5%;
+   
+}
+
+

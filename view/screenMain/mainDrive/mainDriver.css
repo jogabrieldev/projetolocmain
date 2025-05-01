@@ -1,0 +1,40 @@
+.containerAppDriver{
+    display: none;
+    background-color: darkgray;
+    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
+    width: 76%;
+    height: 550px;
+    margin-left: 22%;
+    margin-top:1% ;
+    flex-direction: column;
+    justify-content: space-between;
+    border: solid , 2px , white;
+    padding: 7px;
+    border-radius: 10px;
+}
+
+.hidden {
+    display: none !important;
+  }
+
+  .flex {
+    display: flex !important;
+  }
+
+.listingDriver{
+    overflow: auto;
+}
+
+
+.tableDriver{
+    width: 100%;
+    border-collapse: collapse;
+    color: black;
+    font-size: 14px;
+}
+.tableDriver td{
+    background-color: darkgray;
+}
+.RegisterDriver{
+    overflow: auto;
+}
