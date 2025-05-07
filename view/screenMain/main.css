@@ -169,18 +169,6 @@ table {
     color: white;
   }
   
-/* .welcome-container {
-  background: linear-gradient(145deg, #c1baba, #2d2d2d);
-  border-radius: 16px;
-  margin-left: 30%;
-  padding: 60px 20px;
-  max-width: 800px;
-  text-align: center;
-  transition: opacity 0.5s ease, visibility 0.5s ease;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-  
-}; */
-
 .welcome-container.hidden {
   opacity: 0;
   visibility: hidden;
@@ -189,8 +177,14 @@ table {
   margin: 0;
   overflow: hidden;
 }
+.welcome-container {
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+ 
+}
 
-/* Efeito de máquina de escrever */
 .typewriter {
   display: inline-block;
   border-right: 2px solid #00d1ff;

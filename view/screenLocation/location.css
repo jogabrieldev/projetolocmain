@@ -305,5 +305,8 @@
   flex-direction: column;
 }
 
+.modal-content{
+  overflow: auto;
+}
 
 

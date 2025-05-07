@@ -805,8 +805,31 @@ function editDriver(){
             // Formata a data para YYYY-MM-DD, caso seja necessário
             const dataFormatada = new Date(valor).toISOString().split('T')[0];
             elemento.value = dataFormatada;
+            
           } else {
             elemento.value = valor || ""; 
+          }
+          let valorFormatado = (valor || "").trim();
+      
+          if (elemento.tagName === "SELECT") {
+            const option = [...elemento.options].find(opt => opt.value === valorFormatado);
+            if (option) {
+              elemento.value = valorFormatado;
+  
+              if (id === "statusEdit") {
+                const hiddenInput = document.getElementById("statusEditHidden");
+                if (hiddenInput) {
+                  hiddenInput.value = valorFormatado;
+                }
+              }
+            }
+          }
+
+          if (id === "editMotoStat") {
+            const hiddenInput = document.getElementById("editMotoStatHidden");
+            if (hiddenInput) {
+              hiddenInput.value = valorFormatado;
+            }
           }
           
         } else {
@@ -838,6 +861,75 @@ function editDriver(){
       console.error("Erro ao fazer parse de data-bem:", error);
     }
   });
+
+  const cepInput = document.getElementById("editMotoCep");
+const ruaField = document.getElementById("editMotoRua");
+const cityField = document.getElementById("editMotoCity");
+const stateField = document.getElementById("editMotoEstd");
+
+if (cepInput) {
+  cepInput.addEventListener("input", async () => {
+    const motoCep = cepInput.value.replace(/\D/g, "");
+
+  
+    if (motoCep.length === 8) {
+      try {
+        const response = await fetch(`https://viacep.com.br/ws/${motoCep}/json/`);
+
+        if (!response.ok) throw new Error("Erro ao buscar o CEP");
+
+        const data = await response.json();
+
+        if (data.erro) {
+          Toastify({
+            text: "CEP inválido ou não encontrado.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
+
+          if (ruaField) ruaField.value = "";
+          if (cityField) cityField.value = "";
+          if (stateField) stateField.value = "";
+          return;
+        }
+
+        if (ruaField) {
+          ruaField.value = `${data.logradouro} - ${data.bairro}` || "";
+          ruaField.readOnly = true;
+        }
+
+        if (cityField) {
+          cityField.value = data.localidade || "";
+          cityField.readOnly = true;
+        }
+
+        if (stateField) {
+          stateField.value = data.uf || "";
+          stateField.readOnly = true;
+        }
+
+      } catch (error) {
+        console.error("Erro ao buscar o CEP:", error);
+        Toastify({
+          text: "Erro ao buscar o CEP.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+      }
+    } else {
+     
+      if (ruaField) ruaField.value = "";
+      if (cityField) cityField.value = "";
+      if (stateField) stateField.value = "";
+    }
+  });
+}
   
   async function editAndUpdateOfDriver() {
     const formEditDrive = document.querySelector(".formEditDriver");

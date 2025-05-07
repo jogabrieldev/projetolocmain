@@ -33,11 +33,12 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       
             <div class="col-md-6">
               <label for="cofaEdit" class="form-label">Família de bem</label>
-              <select class="form-select" id="cofaEdit" name="cofaEdit" >
+              <select class="form-select" id="cofaEdit" name="cofaEdit" disabled >
                   
               </select>
+              <input type="hidden" name="cofaEdit" id="cofaEditHidden" />
             </div>
-      
+
             <div class="col-md-6">
               <label for="modelEdit" class="form-label">Modelo</label>
               <input type="text" class="form-control" id="modelEdit" name="modelEdit" placeholder="bensMode" maxlength="20">
@@ -75,7 +76,8 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       
             <div class="col-md-6">
               <label for="cofoEdit" class="form-label">Código Fornecedor</label>
-              <select class="form-select" id="cofoEdit" name="cofoEdit"></select>
+              <select class="form-select" id="cofoEdit" name="cofoEdit" disabled></select>
+              <input type="hidden" name="cofoEdit" id="cofoEditHidden" />
             </div>
       
             <div class="col-md-6">
@@ -90,8 +92,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       
             <div class="col-md-6">
               <label for="statusEdit" class="form-label">Status</label>
-              <select class="form-select" id="statusEdit" name="statusEdit">
-                <!-- <option value="">Selecione...</option> -->
+              <select class="form-select" id="statusEdit" name="statusEdit" disabled>
                 <option value="Disponivel">Disponivel</option>
                 <option value="Em Locação">Em Locação</option>
                 <option value="Saida do cliente">Saída do Cliente</option>
@@ -100,16 +101,17 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
                 <option value="Transito para o cliente">Trânsito para o cliente</option>
                 <option value="Cliente para o aterro">Cliente para o aterro</option>
               </select>
+              <input type="hidden" name="statusEdit" id="statusEditHidden" />
             </div>
       
             <div class="col-md-6">
               <label for="dtStatusEdit" class="form-label">Data do Status</label>
-              <input type="date" class="form-control" id="dtStatusEdit" name="dtStatusEdit">
+              <input type="date" class="form-control" id="dtStatusEdit" name="dtStatusEdit" readonly>
             </div>
       
             <div class="col-md-6">
               <label for="hrStatusEdit" class="form-label">Hora do Status</label>
-              <input type="time" class="form-control" id="hrStatusEdit" name="hrStatusEdit" placeholder="bensHrus">
+              <input type="time" class="form-control" id="hrStatusEdit" name="hrStatusEdit" placeholder="bensHrus" readonly>
             </div>
       
             <div class="col-md-6">
@@ -234,7 +236,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
             </div>
             <div class="col-md-6">
               <label for="kmAtual" class="form-label">KM Atual</label>
-              <input type="number" class="form-control" id="kmAtual" name="kmAtual" maxlength="7" placeholder="Km Atual">
+              <input type="number" class="form-control" id="kmAtual" name="kmAtual" maxlength="7" placeholder="Km">
             </div>
       
             <div class="col-md-6">

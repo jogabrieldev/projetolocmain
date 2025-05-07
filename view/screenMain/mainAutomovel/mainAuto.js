@@ -1,6 +1,3 @@
-
-
-
 const loadDrivers = async () => {
   const token = localStorage.getItem("token");
 
@@ -62,67 +59,71 @@ function isTokenExpired(token) {
 }
 
 const socketAutomovel = io();
-document.addEventListener('DOMContentLoaded' ,()=>{
-     
-  const btnLoadVehicles = document.querySelector('.btnCadAutomo')
-  if(btnLoadVehicles){
-    btnLoadVehicles.addEventListener('click', async(event)=>{
-          event.preventDefault()
-          try { 
-               
-            const responseVehicles = await fetch('/veiculos' ,{
-              method: 'GET'
-            });
-            if (!responseVehicles.ok) throw new Error(`Erro HTTP: ${responseVehicles.status}`);
-            const html = await responseVehicles.text();
-            const mainContent = document.querySelector('#mainContent');
-            if (mainContent) {
-              mainContent.innerHTML = html;
-                  loadDrivers()
-                  interationSystemVehicles()
-                  registerNewVehicles()
-                  deleteVehicles()
-                  editVehicles()
-              }else{
-                console.error('#mainContent não encontrado no DOM');
-              }
-            
+document.addEventListener("DOMContentLoaded", () => {
+  const btnLoadVehicles = document.querySelector(".btnCadAutomo");
+  if (btnLoadVehicles) {
+    btnLoadVehicles.addEventListener("click", async (event) => {
+      event.preventDefault();
+      try {
+        const responseVehicles = await fetch("/veiculos", {
+          method: "GET",
+        });
+        if (!responseVehicles.ok)
+          throw new Error(`Erro HTTP: ${responseVehicles.status}`);
+        const html = await responseVehicles.text();
+        const mainContent = document.querySelector("#mainContent");
+        if (mainContent) {
+          mainContent.innerHTML = html;
+          loadDrivers();
+          interationSystemVehicles();
+          registerNewVehicles();
+          deleteVehicles();
+          editVehicles();
+        } else {
+          console.error("#mainContent não encontrado no DOM");
+        }
 
-              
-          const containerAppVehicles = document.querySelector('.containerAppAutomo');
-          if (containerAppVehicles)containerAppVehicles.classList.add('flex') ;
-    
-          const sectionsToHide = [
-            '.containerAppProd', '.containerAppFabri', '.containerAppTipoProd',
-            '.containerAppDriver', '.containerAppClient', '.containerAppBens',
-            '.containerAppForn'
-          ];
-          sectionsToHide.forEach((selector) => {
-            const element = document.querySelector(selector);
-            if (element) element.style.display = 'none';
-          });
-    
-          const containerRegisterVehicles = document.querySelector('.formCadAuto');
-          const btnMainPageVehicles = document.querySelector('.btnInitAutoPageMain');
-          const listingVehicles = document.querySelector('.listingAutomo');
-          const editFormVehicles = document.querySelector('.formEditClient');
-          const informative = document.querySelector('.information');
-    
-          if (containerRegisterVehicles) containerRegisterVehicles.style.display = 'none';
-          if (btnMainPageVehicles) btnMainPageVehicles.style.display = 'flex';
-          if (listingVehicles) listingVehicles.style.display = 'flex';
-          if (editFormVehicles) editFormVehicles.style.display = 'none';
-          if (informative) {
-            informative.style.display = 'block';
-            informative.textContent = 'SEÇÃO VEÍCULOS';
-          }
-          
-          await listarVeiculos()
+        const containerAppVehicles = document.querySelector(
+          ".containerAppAutomo"
+        );
+        if (containerAppVehicles) containerAppVehicles.classList.add("flex");
 
-          } catch (error) {
-            
-          }
-    })
+        const sectionsToHide = [
+          ".containerAppProd",
+          ".containerAppFabri",
+          ".containerAppTipoProd",
+          ".containerAppDriver",
+          ".containerAppClient",
+          ".containerAppBens",
+          ".containerAppForn",
+        ];
+        sectionsToHide.forEach((selector) => {
+          const element = document.querySelector(selector);
+          if (element) element.style.display = "none";
+        });
+
+        const containerRegisterVehicles =
+          document.querySelector(".formCadAuto");
+        const btnMainPageVehicles = document.querySelector(
+          ".btnInitAutoPageMain"
+        );
+        const listingVehicles = document.querySelector(".listingAutomo");
+        const editFormVehicles = document.querySelector(".formEditClient");
+        const informative = document.querySelector(".information");
+
+        if (containerRegisterVehicles)
+          containerRegisterVehicles.style.display = "none";
+        if (btnMainPageVehicles) btnMainPageVehicles.style.display = "flex";
+        if (listingVehicles) listingVehicles.style.display = "flex";
+        if (editFormVehicles) editFormVehicles.style.display = "none";
+        if (informative) {
+          informative.style.display = "block";
+          informative.textContent = "SEÇÃO VEÍCULOS";
+        }
+
+        await listarVeiculos();
+      } catch (error) {}
+    });
   }
 
   socketAutomovel.on("updateRunTimeAutomovel", (veiculos) => {
@@ -132,116 +133,124 @@ document.addEventListener('DOMContentLoaded' ,()=>{
   socketAutomovel.on("updateTableAutomovel", (updatedVeiculo) => {
     updateVeiculoInTableRunTime(updatedVeiculo);
   });
-})
+});
 
+function interationSystemVehicles() {
+  const btnRegisterAutomo = document.querySelector(".registerAuto");
+  if (btnRegisterAutomo) {
+    btnRegisterAutomo.addEventListener("click", () => {
+      const formCadAuto = document.querySelector(".formCadAuto");
+      if (formCadAuto) {
+        formCadAuto.classList.remove("hidden");
+        formCadAuto.classList.add("flex");
+      }
 
-function interationSystemVehicles(){
-          
- 
-const btnRegisterAutomo = document.querySelector(".registerAuto");
-if(btnRegisterAutomo){
-  btnRegisterAutomo.addEventListener("click", () => {
+      const btnInitAutoPageMain = document.querySelector(
+        ".btnInitAutoPageMain"
+      );
+      if (btnInitAutoPageMain) {
+        btnInitAutoPageMain.classList.remove("flex");
+        btnInitAutoPageMain.classList.add("hidden");
+      }
 
-    const formCadAuto = document.querySelector(".formCadAuto");
-    if(formCadAuto){
-       formCadAuto.classList.remove('hidden')
-       formCadAuto.classList.add('flex')
-    }
-   
-    const btnInitAutoPageMain = document.querySelector(".btnInitAutoPageMain");
-    if(btnInitAutoPageMain){
-      btnInitAutoPageMain.classList.remove('flex')
-      btnInitAutoPageMain.classList.add('hidden')
-    }
-   
-    const listingAutomo = document.querySelector(".listingAutomo");
-    if(listingAutomo){
-      listingAutomo.classList.remove('flex')
-      listingAutomo.classList.add('hidden')
-    }
-    
+      const listingAutomo = document.querySelector(".listingAutomo");
+      if (listingAutomo) {
+        listingAutomo.classList.remove("flex");
+        listingAutomo.classList.add("hidden");
+      }
+    });
+  }
+
+  const btnOutCadAuto = document.querySelector(".btnOutCadAuto");
+  if (btnOutCadAuto) {
+    btnOutCadAuto.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      const formCadAuto = document.querySelector(".formCadAuto");
+      if (formCadAuto) {
+        formCadAuto.classList.remove("flex");
+        formCadAuto.classList.add("hidden");
+      }
+
+      const btnInitAutoPageMain = document.querySelector(
+        ".btnInitAutoPageMain"
+      );
+      if (btnInitAutoPageMain) {
+        btnInitAutoPageMain.classList.remove("hidden");
+        btnInitAutoPageMain.classList.add("flex");
+      }
+
+      const listingAutomo = document.querySelector(".listingAutomo");
+      if (listingAutomo) {
+        listingAutomo.classList.remove("hidden");
+        listingAutomo.classList.add("flex");
+      }
+    });
+  }
+
+  const btnOutCadAutoEdit = document.querySelector(".btnOutCadAutoEdit");
+  if (btnOutCadAutoEdit) {
+    btnOutCadAutoEdit.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      const btnInitAutoPageMain = document.querySelector(
+        ".btnInitAutoPageMain"
+      );
+      if (btnInitAutoPageMain) {
+        btnInitAutoPageMain.classList.remove("hidden");
+        btnInitAutoPageMain.classList.add("flex");
+      }
+
+      const editFormAuto = document.querySelector(".editFormAuto");
+      if (editFormAuto) {
+        editFormAuto.classList.remove("flex");
+        editFormAuto.classList.add("hidden");
+      }
+
+      const listingAutomo = document.querySelector(".listingAutomo");
+      if (listingAutomo) {
+        listingAutomo.classList.remove("hidden");
+        listingAutomo.classList.add("flex");
+      }
+    });
+  }
+
+  const buttonExitAuto = document.querySelector(".buttonExitAuto");
+  if (buttonExitAuto) {
+    buttonExitAuto.addEventListener("click", () => {
+      const containerAppAutomo = document.querySelector(".containerAppAutomo");
+      if (containerAppAutomo) {
+        containerAppAutomo.classList.remove("flex");
+        containerAppAutomo.classList.add("hidden");
+      }
+
+      const informative = document.querySelector(".information");
+      if (informative) {
+        informative.style.display = "block";
+        informative.textContent = "Sessão ativa";
+      }
+    });
+  }
+}
+
+async function registerNewVehicles() {
+  const token = localStorage.getItem("token");
+
+  const resunt = await fetch("/api/listauto", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   });
-  
-}
 
-const btnOutCadAuto = document.querySelector(".btnOutCadAuto");
-if(btnOutCadAuto){
-     
-  btnOutCadAuto.addEventListener("click", (event) => {
-    event.preventDefault();
+  const res = await resunt.json();
 
-    const formCadAuto = document.querySelector(".formCadAuto");
-    if(formCadAuto){
-      formCadAuto.classList.remove('flex')
-      formCadAuto.classList.add('hidden')
-    }
-  
-    const btnInitAutoPageMain = document.querySelector(".btnInitAutoPageMain");
-     if(btnInitAutoPageMain){
-      btnInitAutoPageMain.classList.remove('hidden')
-      btnInitAutoPageMain.classList.add('flex')
-     }
-   
-    const listingAutomo = document.querySelector(".listingAutomo");
-    if(listingAutomo){
-      listingAutomo.classList.remove('hidden')
-      listingAutomo.classList.add('flex')
-    }
-   
-  });
-}
+  console.log("resposta", res);
 
-
-const btnOutCadAutoEdit = document.querySelector(".btnOutCadAutoEdit");
-if(btnOutCadAutoEdit){
-
-  btnOutCadAutoEdit.addEventListener("click", (event) => {
-    event.preventDefault();
-  
-    const btnInitAutoPageMain = document.querySelector(".btnInitAutoPageMain");
-    if(btnInitAutoPageMain){
-      btnInitAutoPageMain.classList.remove('hidden')
-      btnInitAutoPageMain.classList.add('flex')
-    }
-  
-    const editFormAuto = document.querySelector(".editFormAuto");
-    if(editFormAuto){
-       editFormAuto.classList.remove('flex')
-       editFormAuto.classList.add('hidden')
-    }
-  
-    const listingAutomo = document.querySelector(".listingAutomo");
-    if(listingAutomo){
-      listingAutomo.classList.remove('hidden')
-      listingAutomo.classList.add('flex')
-    }
-   
-  });
-}
-
-const buttonExitAuto = document.querySelector(".buttonExitAuto");
-if(buttonExitAuto){
-  buttonExitAuto.addEventListener("click", () => {
-    const containerAppAutomo = document.querySelector(".containerAppAutomo");
-    if(containerAppAutomo){
-      containerAppAutomo.classList.remove('flex')
-      containerAppAutomo.classList.add('hidden')
-    } 
-
-    const informative = document.querySelector('.information')
-    if (informative) {
-      informative.style.display = 'block';
-      informative.textContent = 'Sessão ativa';
-    }
-
-  });
-}
-
-}
-
- async function registerNewVehicles(){
-    
-  document.querySelector(".cadAutomo").addEventListener("click", async (event) => {
+  document
+    .querySelector(".cadAutomo")
+    .addEventListener("click", async (event) => {
       event.preventDefault();
 
       const token = localStorage.getItem("token");
@@ -293,13 +302,17 @@ if(buttonExitAuto){
         }).showToast();
         return;
       }
-    
+
       //  Converte “YYYY-MM-DD” para Date local e zera horas
-      const [y, m, d] = formData.caaudtca.split('-').map(Number);
-      const dtCd       = new Date(y, m - 1, d);
-      const hoje       = new Date();
-      const hoje0      = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
-    
+      const [y, m, d] = formData.caaudtca.split("-").map(Number);
+      const dtCd = new Date(y, m - 1, d);
+      const hoje = new Date();
+      const hoje0 = new Date(
+        hoje.getFullYear(),
+        hoje.getMonth(),
+        hoje.getDate()
+      );
+
       //  Regra: não pode ser futura
       if (dtCd.getTime() !== hoje0.getTime()) {
         Toastify({
@@ -309,6 +322,21 @@ if(buttonExitAuto){
           gravity: "top",
           position: "center",
           backgroundColor: "orange",
+        }).showToast();
+        return;
+      }
+
+      const motoristaJaExiste = res.some(
+        (veiculo) => veiculo.caaumoto === formData.caaumoto
+      );
+      if (motoristaJaExiste) {
+        Toastify({
+          text: "Motorista já cadastrado em outro veiculo!",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
         }).showToast();
         return;
       }
@@ -335,17 +363,16 @@ if(buttonExitAuto){
             backgroundColor: "green",
           }).showToast();
           document.querySelector(".foorm").reset();
-
-        }else if(response.status === 409) {
+        } else if (response.status === 409) {
           Toastify({
-            text: result.message || "Codigo ja cadastrado" , 
+            text: result.message || "Codigo ja cadastrado",
             duration: 3000,
             close: true,
             gravity: "top",
             position: "center",
             backgroundColor: "orange",
           }).showToast();
-        }else{   
+        } else {
           Toastify({
             text: "Erro para cadastrar veiculo",
             duration: 3000,
@@ -355,7 +382,6 @@ if(buttonExitAuto){
             backgroundColor: "red",
           }).showToast();
         }
-
       } catch (error) {
         console.error("Erro ao enviar formulário:", error);
         alert("Erro ao enviar os dados para server.");
@@ -364,17 +390,14 @@ if(buttonExitAuto){
   validationFormAutomovel();
 }
 
-
-
-
 // inserindo os dados na tabela em runtime
 function insertVehicleTableRunTime(veiculos) {
   const veiculosListDiv = document.querySelector(".listingAutomo");
-  veiculosListDiv.innerHTML = ""; 
+  veiculosListDiv.innerHTML = "";
 
   if (veiculos.length > 0) {
     const tabela = document.createElement("table");
-   tabela.classList.add('tableVehicles')
+    tabela.classList.add("tableVehicles");
 
     // Cabeçalho da tabela
     const cabecalho = tabela.createTHead();
@@ -436,7 +459,7 @@ function insertVehicleTableRunTime(veiculos) {
 
 //listagem de veiculos
 async function listarVeiculos() {
-  const token = localStorage.getItem("token"); 
+  const token = localStorage.getItem("token");
 
   if (!token || isTokenExpired(token)) {
     Toastify({
@@ -459,7 +482,7 @@ async function listarVeiculos() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     const veiculos = await response.json();
@@ -469,7 +492,7 @@ async function listarVeiculos() {
 
     if (veiculos.length > 0) {
       const tabela = document.createElement("table");
-      tabela.classList.add('tableVehicles')
+      tabela.classList.add("tableVehicles");
 
       // Cabeçalho
       const cabecalho = tabela.createTHead();
@@ -546,241 +569,39 @@ async function listarVeiculos() {
 }
 
 // DELETAR VEICULOS
-function deleteVehicles(){
-      
-   const buttonDeleteAuto = document.querySelector(".buttonDeleteAuto");
-buttonDeleteAuto.addEventListener("click", async () => {
-  const selectedCheckbox = document.querySelector(
-    'input[name="selectVeiculo"]:checked'
-  );
-  if (!selectedCheckbox) {
-    Toastify({
-      text: "Selecione um veículo para excluir",
-      duration: 2000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
-  }
-
-  const veiculoSelecionado = JSON.parse(selectedCheckbox.dataset.veiculo);
-  const veiculoId = veiculoSelecionado.caaucode;
-
-  const confirmacao = confirm(
-    `Tem certeza de que deseja excluir o veículo com código ${veiculoId}?`
-  );
-  if (!confirmacao) {
-    return;
-  }
-
-  await deleteAuto(veiculoId, selectedCheckbox.closest("tr"));
-});
-
-async function deleteAuto(id, autoRow) {
-  const token = localStorage.getItem("token"); 
-
-  if (!token || isTokenExpired(token)) {
-    Toastify({
-      text: "Sessão expirada. Faça login novamente.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-
-    localStorage.removeItem("token");
-    setTimeout(() => {
-      window.location.href = "/index.html";
-    }, 2000);
-    return;
-  }
-  try {
-    const response = await fetch(`/api/cadauto/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await response.json();
-
-    if (response.ok) {
+function deleteVehicles() {
+  const buttonDeleteAuto = document.querySelector(".buttonDeleteAuto");
+  buttonDeleteAuto.addEventListener("click", async () => {
+    const selectedCheckbox = document.querySelector(
+      'input[name="selectVeiculo"]:checked'
+    );
+    if (!selectedCheckbox) {
       Toastify({
-        text: "O veículo foi excluído com sucesso!",
-        duration: 2000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "green",
-      }).showToast();
-
-      autoRow.remove();
-    } else {
-      Toastify({
-        text: "Erro na exclusão do veículo",
+        text: "Selecione um veículo para excluir",
         duration: 2000,
         close: true,
         gravity: "top",
         position: "center",
         backgroundColor: "red",
       }).showToast();
+      return;
     }
-  } catch (error) {
-    console.error("Erro ao excluir veículo:", error);
-    Toastify({
-      text: "Erro ao excluir veículo. Tente novamente.",
-      duration: 2000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-  }
-}
 
-}
+    const veiculoSelecionado = JSON.parse(selectedCheckbox.dataset.veiculo);
+    const veiculoId = veiculoSelecionado.caaucode;
 
-  // EDITAR AUTOMOVEL
-function editVehicles(){
-       
-const editButtonAuto = document.querySelector(".buttonEditAuto");
-editButtonAuto.addEventListener("click", () => {
-  const selectedCheckbox = document.querySelector(
-    'input[name="selectVeiculo"]:checked'
-  );
-
-  if (!selectedCheckbox) {
-    Toastify({
-      text: "Selecione um veículo para editar",
-      duration: 2000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
-  }
-
-  const btnMainPageVehicles = document.querySelector(".btnInitAutoPageMain");
-  if(btnMainPageVehicles){
-    btnMainPageVehicles.classList.remove('flex')
-    btnMainPageVehicles.classList.add('hidden')
-  }
-
-  const listVehicles = document.querySelector(".listingAutomo ");
-  if(listVehicles){
-    listVehicles.classList.remove('flex')
-    listVehicles.classList.add('hidden')
-  }
-
-const containerEditForm = document.querySelector('.editFormAuto')
-   if(containerEditForm){
-      containerEditForm.classList.remove('hidden')
-      containerEditForm.classList.add('flex')
-   }
-
-  // Exibir o formulário de edição e ocultar a listagem
-  document.querySelector(".editFormAuto").style.display = "flex";
-  document.querySelector(".btnInitAutoPageMain").style.display = "none";
-  document.querySelector(".listingAutomo").style.display = "none";
-
-  // Pegar os dados do veículo selecionado
-  const autoData = selectedCheckbox.dataset.veiculo;
-
-  if (!autoData) {
-    console.error("O atributo data-veiculo está vazio ou indefinido.");
-    return;
-  }
-
-  try {
-    const autoSelecionado = JSON.parse(autoData);
-
-    const campos = [
-      { id: "codeAutoEdit", valor: autoSelecionado.caaucode },
-      { id: "placAutoEdit", valor: autoSelecionado.caauplac },
-      { id: "chassAutoEdit", valor: autoSelecionado.caauchss },
-      { id: "renaAutoEdit", valor: autoSelecionado.caaurena },
-      { id: "macaAutoEdit", valor: autoSelecionado.caaumaca },
-      { id: "modeAutoEdit", valor: autoSelecionado.caaumode },
-      { id: "corAutoEdit", valor: autoSelecionado.caaucor },
-      { id: "tpCombusAutoEdit", valor: autoSelecionado.caautico },
-      { id: "kmAtAutoEdit", valor: autoSelecionado.caaukmat },
-      { id: "motoAutoEdit", valor: autoSelecionado.caaumoto },
-      { id: "statAutoEdit", valor: autoSelecionado.caaustat },
-      { id: "dtCadAutoEdit", valor: (autoSelecionado.caaudtca) },
-    ];
-
-
-  
-    campos.forEach(({ id, valor }) => {
-      const elemento = document.getElementById(id);
-      if (elemento) {
-        if (elemento.type === "date" && valor) {
-          elemento.value = formatDateInput(valor);
-
-        } else {
-          elemento.value = valor || "";
-        }
-      } else {
-        console.warn(`Elemento com ID '${id}' não encontrado.`);
-      }
-    });
-  } catch (error) {
-    console.error("Erro ao processar os dados do veículo:", error);
-  }
-});
-
-async function editAndUpdateOfAuto() {
-  const formEditAuto = document.querySelector(".foormEditVeicu");
-
-  formEditAuto.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const selectedCheckbox = document.querySelector(
-      'input[name="selectVeiculo"]:checked'
+    const confirmacao = confirm(
+      `Tem certeza de que deseja excluir o veículo com código ${veiculoId}?`
     );
-
-    if (!selectedCheckbox) {
-      console.error("Nenhum veículo foi selecionado.");
+    if (!confirmacao) {
       return;
     }
 
-    const autoData = selectedCheckbox.dataset.veiculo;
+    await deleteAuto(veiculoId, selectedCheckbox.closest("tr"));
+  });
 
-    if (!autoData) {
-      console.error("O atributo data-veiculo está vazio ou inválido.");
-      return;
-    }
-
-    let autoSelecionado;
-    try {
-      autoSelecionado = JSON.parse(autoData);
-    } catch (error) {
-      console.error("Erro ao fazer parse dos dados do veículo:", error);
-      return;
-    }
-
-    const updateAuto = {
-      caaucode: document.getElementById("codeAutoEdit").value,
-      caauplac: document.getElementById("placAutoEdit").value,
-      caauchss: document.getElementById("chassAutoEdit").value,
-      caaurena: document.getElementById("renaAutoEdit").value,
-      caaumaca: document.getElementById("macaAutoEdit").value,
-      caaumode: document.getElementById("modeAutoEdit").value,
-      caaucor: document.getElementById("corAutoEdit").value,
-      caautico: document.getElementById("tpCombusAutoEdit").value,
-      caaukmat: document.getElementById("kmAtAutoEdit").value,
-      caaumoto: document.getElementById("motoAutoEdit").value,
-      caaustat: document.getElementById("statAutoEdit").value,
-      caaudtca: document.getElementById("dtCadAutoEdit").value ,
-    };
-
-    console.log("Atualização" , updateAuto.caaudtca)
-
-    const token = localStorage.getItem("token"); // Pega o token armazenado no login
+  async function deleteAuto(id, autoRow) {
+    const token = localStorage.getItem("token");
 
     if (!token || isTokenExpired(token)) {
       Toastify({
@@ -799,32 +620,30 @@ async function editAndUpdateOfAuto() {
       return;
     }
     try {
-      const response = await fetch(`/api/cadauto/${autoSelecionado.caaucode}`, {
-        method: "PUT",
+      const response = await fetch(`/api/cadauto/${id}`, {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(updateAuto),
       });
+      const data = await response.json();
 
       if (response.ok) {
-        console.log("Atualização bem-sucedida");
         Toastify({
-          text: `Veículo '${autoSelecionado.caaucode}' atualizado com sucesso!`,
-          duration: 3000,
+          text: "O veículo foi excluído com sucesso!",
+          duration: 2000,
           close: true,
           gravity: "top",
           position: "center",
           backgroundColor: "green",
         }).showToast();
 
-        formEditAuto.reset();
+        autoRow.remove();
       } else {
-        console.error("Erro ao atualizar veículo:", await response.text());
         Toastify({
-          text: "Erro ao atualizar veículo",
-          duration: 3000,
+          text: "Erro na exclusão do veículo",
+          duration: 2000,
           close: true,
           gravity: "top",
           position: "center",
@@ -832,16 +651,216 @@ async function editAndUpdateOfAuto() {
         }).showToast();
       }
     } catch (error) {
-      console.error("Erro na requisição:", error);
+      console.error("Erro ao excluir veículo:", error);
+      Toastify({
+        text: "Erro ao excluir veículo. Tente novamente.",
+        duration: 2000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+    }
+  }
+}
+
+// EDITAR AUTOMOVEL
+function editVehicles() {
+  const editButtonAuto = document.querySelector(".buttonEditAuto");
+  editButtonAuto.addEventListener("click", () => {
+    const selectedCheckbox = document.querySelector(
+      'input[name="selectVeiculo"]:checked'
+    );
+
+    if (!selectedCheckbox) {
+      Toastify({
+        text: "Selecione um veículo para editar",
+        duration: 2000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+      return;
+    }
+
+    const btnMainPageVehicles = document.querySelector(".btnInitAutoPageMain");
+    if (btnMainPageVehicles) {
+      btnMainPageVehicles.classList.remove("flex");
+      btnMainPageVehicles.classList.add("hidden");
+    }
+
+    const listVehicles = document.querySelector(".listingAutomo ");
+    if (listVehicles) {
+      listVehicles.classList.remove("flex");
+      listVehicles.classList.add("hidden");
+    }
+
+    const containerEditForm = document.querySelector(".editFormAuto");
+    if (containerEditForm) {
+      containerEditForm.classList.remove("hidden");
+      containerEditForm.classList.add("flex");
+    }
+
+    // Exibir o formulário de edição e ocultar a listagem
+    document.querySelector(".editFormAuto").style.display = "flex";
+    document.querySelector(".btnInitAutoPageMain").style.display = "none";
+    document.querySelector(".listingAutomo").style.display = "none";
+
+    // Pegar os dados do veículo selecionado
+    const autoData = selectedCheckbox.dataset.veiculo;
+
+    if (!autoData) {
+      console.error("O atributo data-veiculo está vazio ou indefinido.");
+      return;
+    }
+
+    try {
+      const autoSelecionado = JSON.parse(autoData);
+
+      const campos = [
+        { id: "codeAutoEdit", valor: autoSelecionado.caaucode },
+        { id: "placAutoEdit", valor: autoSelecionado.caauplac },
+        { id: "chassAutoEdit", valor: autoSelecionado.caauchss },
+        { id: "renaAutoEdit", valor: autoSelecionado.caaurena },
+        { id: "macaAutoEdit", valor: autoSelecionado.caaumaca },
+        { id: "modeAutoEdit", valor: autoSelecionado.caaumode },
+        { id: "corAutoEdit", valor: autoSelecionado.caaucor },
+        { id: "tpCombusAutoEdit", valor: autoSelecionado.caautico },
+        { id: "kmAtAutoEdit", valor: autoSelecionado.caaukmat },
+        { id: "motoAutoEdit", valor: autoSelecionado.caaumoto },
+        { id: "statAutoEdit", valor: autoSelecionado.caaustat },
+        { id: "dtCadAutoEdit", valor: autoSelecionado.caaudtca },
+      ];
+
+      campos.forEach(({ id, valor }) => {
+        const elemento = document.getElementById(id);
+        if (elemento) {
+          if (elemento.type === "date" && valor) {
+            elemento.value = formatDateInput(valor);
+          } else {
+            elemento.value = valor || "";
+          }
+        } else {
+          console.warn(`Elemento com ID '${id}' não encontrado.`);
+        }
+      });
+    } catch (error) {
+      console.error("Erro ao processar os dados do veículo:", error);
     }
   });
+
+  async function editAndUpdateOfAuto() {
+    const formEditAuto = document.querySelector(".foormEditVeicu");
+
+    formEditAuto.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const selectedCheckbox = document.querySelector(
+        'input[name="selectVeiculo"]:checked'
+      );
+
+      if (!selectedCheckbox) {
+        console.error("Nenhum veículo foi selecionado.");
+        return;
+      }
+
+      const autoData = selectedCheckbox.dataset.veiculo;
+
+      if (!autoData) {
+        console.error("O atributo data-veiculo está vazio ou inválido.");
+        return;
+      }
+
+      let autoSelecionado;
+      try {
+        autoSelecionado = JSON.parse(autoData);
+      } catch (error) {
+        console.error("Erro ao fazer parse dos dados do veículo:", error);
+        return;
+      }
+
+      const updateAuto = {
+        caaucode: document.getElementById("codeAutoEdit").value,
+        caauplac: document.getElementById("placAutoEdit").value,
+        caauchss: document.getElementById("chassAutoEdit").value,
+        caaurena: document.getElementById("renaAutoEdit").value,
+        caaumaca: document.getElementById("macaAutoEdit").value,
+        caaumode: document.getElementById("modeAutoEdit").value,
+        caaucor: document.getElementById("corAutoEdit").value,
+        caautico: document.getElementById("tpCombusAutoEdit").value,
+        caaukmat: document.getElementById("kmAtAutoEdit").value,
+        caaumoto: document.getElementById("motoAutoEdit").value,
+        caaustat: document.getElementById("statAutoEdit").value,
+        caaudtca: document.getElementById("dtCadAutoEdit").value,
+      };
+
+      console.log("Atualização", updateAuto.caaudtca);
+
+      const token = localStorage.getItem("token"); // Pega o token armazenado no login
+
+      if (!token || isTokenExpired(token)) {
+        Toastify({
+          text: "Sessão expirada. Faça login novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+
+        localStorage.removeItem("token");
+        setTimeout(() => {
+          window.location.href = "/index.html";
+        }, 2000);
+        return;
+      }
+      try {
+        const response = await fetch(
+          `/api/cadauto/${autoSelecionado.caaucode}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(updateAuto),
+          }
+        );
+
+        if (response.ok) {
+          console.log("Atualização bem-sucedida");
+          Toastify({
+            text: `Veículo '${autoSelecionado.caaucode}' atualizado com sucesso!`,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "green",
+          }).showToast();
+
+          formEditAuto.reset();
+        } else {
+          console.error("Erro ao atualizar veículo:", await response.text());
+          Toastify({
+            text: "Erro ao atualizar veículo",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
+        }
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+      }
+    });
+  }
+
+  editAndUpdateOfAuto();
 }
 
-editAndUpdateOfAuto();
-}
-
-
-// ATUALIZAR EM TEMPO REAL 
+// ATUALIZAR EM TEMPO REAL
 function updateVeiculoInTableRunTime(updatedVeiculo) {
   const row = document.querySelector(
     `[data-caaucode="${updatedVeiculo.caaucode}"]`

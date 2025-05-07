@@ -192,17 +192,17 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       
             <div class="col-md-4">
               <label for="editMotoRua" class="form-label">Rua</label>
-              <input type="text" class="form-control" name="editMotoRua" id="editMotoRua" placeholder="Rua" maxlength="50">
+              <input type="text" class="form-control" name="editMotoRua" id="editMotoRua" placeholder="Rua" maxlength="100" readonly>
             </div>
       
             <div class="col-md-3">
               <label for="editMotoCity" class="form-label">Cidade</label>
-              <input type="text" class="form-control" name="editMotoCity" id="editMotoCity" placeholder="Cidade" maxlength="25">
+              <input type="text" class="form-control" name="editMotoCity" id="editMotoCity" placeholder="Cidade" maxlength="25" readonly>
             </div>
       
             <div class="col-md-2">
               <label for="editMotoEstd" class="form-label">Estado</label>
-              <input type="text" class="form-control" name="editMotoEstd" id="editMotoEstd" placeholder="Estado" maxlength="20">
+              <input type="text" class="form-control" name="editMotoEstd" id="editMotoEstd" placeholder="Estado" maxlength="30" readonly>
             </div>
       
             <div class="col-md-4">
@@ -212,12 +212,12 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       
             <div class="col-md-4">
               <label for="editMotoStat" class="form-label">Status</label>
-              <select class="form-select" name="editMotoStat" id="editMotoStat">
-
+              <select class="form-select" name="editMotoStat" id="editMotoStat" disabled>
                 <option value="Disponivel">Disponivel</option>
                 <option value="Entrega destinada">Entrega destinada</option>
                 <option value="Indisponivel">Indisponivel</option>
               </select>
+              <input type="hidden" name="editMotoStat" id="editMotoStatHidden" />
             </div>
       
             <div class="col-12 d-flex justify-content-center gap-2 pt-3">

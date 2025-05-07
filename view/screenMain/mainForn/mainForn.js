@@ -337,7 +337,6 @@ function registerNewFornecedor(){
         return;
       }
     
-      //  Converte “YYYY-MM-DD” para Date local e zera horas
       const [y, m, d] = formData.fornDtcd.split('-').map(Number);
       const dtCd       = new Date(y, m - 1, d);
       const hoje       = new Date();
@@ -378,7 +377,6 @@ function registerNewFornecedor(){
             backgroundColor: "green",
           }).showToast();
 
-          // Limpar o formulário após o sucesso
           document.querySelector("#registerForn").reset();
           
         } else if(response.status === 409) {
@@ -780,6 +778,75 @@ const containerEditForm = document.querySelector('.formEditRegisterForn')
     console.error("Erro ao fazer parse de data-fornecedor:", error);
   }
 });
+
+const cepInput = document.getElementById("editFornCep");
+const ruaField = document.getElementById("editFornRua");
+const cityField = document.getElementById("editFornCity");
+const stateField = document.getElementById("editFornEstd");
+
+if (cepInput) {
+  cepInput.addEventListener("input", async () => {
+    const fornCep = cepInput.value.replace(/\D/g, "");
+
+    // Só executa a busca se tiver 8 dígitos
+    if (fornCep.length === 8) {
+      try {
+        const response = await fetch(`https://viacep.com.br/ws/${fornCep}/json/`);
+
+        if (!response.ok) throw new Error("Erro ao buscar o CEP");
+
+        const data = await response.json();
+
+        if (data.erro) {
+          Toastify({
+            text: "CEP inválido ou não encontrado.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
+
+          if (ruaField) ruaField.value = "";
+          if (cityField) cityField.value = "";
+          if (stateField) stateField.value = "";
+          return;
+        }
+
+        if (ruaField) {
+          ruaField.value = `${data.logradouro} - ${data.bairro}` || "";
+          ruaField.readOnly = true;
+        }
+
+        if (cityField) {
+          cityField.value = data.localidade || "";
+          cityField.readOnly = true;
+        }
+
+        if (stateField) {
+          stateField.value = data.uf || "";
+          stateField.readOnly = true;
+        }
+
+      } catch (error) {
+        console.error("Erro ao buscar o CEP:", error);
+        Toastify({
+          text: "Erro ao buscar o CEP.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+      }
+    } else {
+     
+      if (ruaField) ruaField.value = "";
+      if (cityField) cityField.value = "";
+      if (stateField) stateField.value = "";
+    }
+  });
+}
 
  // função ENVIA O DADO ATUALIZADO
 async function editAndUpdateOfForn() {

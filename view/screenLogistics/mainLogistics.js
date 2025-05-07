@@ -1,7 +1,7 @@
 
 const socketLogistcs = io()
 document.addEventListener('DOMContentLoaded' , ()=>{
-    
+   
    const btnLoadLogistics = document.querySelector('.btnLogistic')
    if(btnLoadLogistics){
       btnLoadLogistics.addEventListener('click' , async ()=>{
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded' , ()=>{
           if (mainContent) {
             mainContent.innerHTML = html;
             
-            locationPendente()
+            locationPendente();
             needVsAvaible();
             validateFamilyBensPending();
             loadingDriver();
@@ -131,14 +131,18 @@ async function locationPendente() {
       return;
     }
 
-    if (!response.ok) throw new Error("Erro ao buscar locações.");
+    if (!response.ok) {
+      const erroTexto = await response.text(); 
+      console.error("Erro HTTP:", response.status, erroTexto);
+      throw new Error("Erro ao buscar locações.");
+    }
 
     const data = await response.json();
     const locacoes = data.locacoes || [];
 
     const tableDiv = document.querySelector(".orders");
     if (tableDiv) {
-      tableDiv.innerHTML = ""; // Limpa a div antes de renderizar a tabela
+      tableDiv.innerHTML = ""; 
     }
 
     const listaLocacoes = locacoes.flatMap(locacao => {
@@ -497,7 +501,6 @@ async function needVsAvaible(cliente, quantidadeLocacao, familiaBem, isChecked ,
     const statusText =
       quantidadeDisponivel >= quantidadeLocacao ? "Suficiente" : "Insuficiente";
       
-   // preciso tratar essa parte para dar uma solução para o usuario  quando tiver "Insufisiente"!!!
       if(statusText === "Insuficiente" && isChecked){
         const containerNeed = document.querySelector('.need')
         containerNeed
@@ -518,10 +521,9 @@ async function needVsAvaible(cliente, quantidadeLocacao, familiaBem, isChecked ,
       divNeed.innerHTML = ''
       const table = document.createElement("table");
       table.id = "tableGoodsVsRequestPending";
-      table.classList.add("table", "table-bordered", "table-sm"); // se estiver usando Bootstrap
-      table.style.width = "100%"; // força ocupar o espaço da div
-      table.style.tableLayout = "fixed"; // garante que largura fique balanceada  
-      
+      table.classList.add("table", "table-bordered", "table-sm"); 
+      table.style.width = "100%"; 
+      table.style.tableLayout = "fixed"; 
       // Cabeçalho da tabela
       const thead = document.createElement("thead");
       const headerRow = document.createElement("tr");
@@ -880,7 +882,6 @@ async function VerifiqueSeTemVeiculo(Motorista) {
     return false;
   }
  
-
 }
 
 
@@ -1101,244 +1102,6 @@ modalWrapper.classList.add('flex')
 }
 
 // vincular o bem a locação marcada
-// async function vincularBem(bemId, familiaBem, motoId , codeLocation) {
-
-//   const token = localStorage.getItem('token'); 
-
-//   if (!token || isTokenExpired(token)) {
-//     Toastify({
-//         text: "Sessão expirada. Faça login novamente.",
-//         duration: 3000,
-//         close: true,
-//         gravity: "top",
-//         position: "center",
-//         backgroundColor: "red",
-//     }).showToast();
-
-//     localStorage.removeItem("token"); 
-//     setTimeout(() => {
-//         window.location.href = "/index.html"; 
-//     }, 2000); 
-//     return;
-// }
-//   try {
-//     const resunt = await fetch('/api/locationFinish', {
-//       method: 'GET',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         'Authorization': `Bearer ${token}`
-//       }
-//     });
-    
-//     if (!resunt.ok) {
-//       throw new Error("Erro ao obter dados da locação");
-//     }
- 
-//     const locacao = await resunt.json()
-   
-//     const locations = await locacao.locacoes || [];
-    
-    
-//     if (!Array.isArray(locations) || locations.length === 0) {
-//       throw new Error("Não foi possível localizar dados de locação.");
-//     }
-
-//     const locacaoSelecionada = document.querySelector(".select-location:checked");
-    
-//     if (!locacaoSelecionada) {
-//       Toastify({
-//         text: `Nenhuma locação selecionada`,
-//         duration: 3000,
-//         close: true,
-//         gravity: "top",
-//         position: "center",
-//         backgroundColor: "red",
-//       }).showToast();
-//       return;
-//     }
-
-//     console.log('select:' , locacaoSelecionada)
-    
-//     // Obtendo o número da locação selecionada
-//     const numeroLocacaoSelecionado = locacaoSelecionada.value;
-    
-//     // Filtrando a locação correspondente
-//     const locacaoEncontrada =  locations.find(loc => loc.cllonmlo === numeroLocacaoSelecionado);
-    
-//     if (!locacaoEncontrada) {
-//       Toastify({
-//         text: `Locação não encontrada na base de dados.`,
-//         duration: 3000,
-//         close: true,
-//         gravity: "top",
-//         position: "center",
-//         backgroundColor: "red",
-//       }).showToast();
-//       return;
-//     }
-    
-  
-//     const meioPagamento = locacaoEncontrada.cllopgmt;
-    
-//     const tr = locacaoSelecionada.closest("tr");
-
-//     const locationId = tr.querySelector("td:nth-child(2)").textContent.trim();
-
-//     const nomeCliente = tr
-//       .querySelector("td:nth-child(4)")
-//       .textContent.normalize("NFD")
-//       .replace(/[\u0300-\u036f]/g, "")
-//       .trim()
-//       .toLowerCase();
-
-//     const responseClientes = await fetch("/api/listclient" , {
-//       method: "GET",
-//       headers: {
-//         'Content-Type': 'application/json',
-//         'Authorization': `Bearer ${token}`
-//     },
-//     });
-//     if (!responseClientes.ok)
-//       throw new Error("Erro ao obter lista de clientes");
-
-//     const clientes = await responseClientes.json();
-
-//     const clienteEncontrado = clientes.find(
-//       (cliente) =>
-//         cliente.clienome
-//           .normalize("NFD")
-//           .replace(/[\u0300-\u036f]/g, "")
-//           .trim()
-//           .toLowerCase() === nomeCliente
-//     );
-
-//     if (!clienteEncontrado) {
-//       Toastify({
-//         text: `Cliente "${nomeCliente}" não encontrado na base de dados!`,
-//         duration: 4000,
-//         close: true,
-//         gravity: "top",
-//         position: "center",
-//         backgroundColor: "red",
-//       }).showToast();
-
-//       return;
-//     }
-
-//     const idClient = clienteEncontrado.cliecode;
-
-//     const confirmacao = confirm(
-//       `Deseja vincular o bem ${bemId} ao cliente ${nomeCliente} (Locação ${locationId})?`
-//     );
-
-//     if (!confirmacao) return;
-
-//     const response = await fetch("/logistics", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({
-//         bemId,
-//         familiaBem,
-//         idClient,
-//         locationId,
-//         driver: motoId,
-//         pagament: meioPagamento
-//       }),
-//     });
-
-//     if (!response.ok) throw new Error("Erro ao vincular bem.");
-
-//     if(response.ok){
-//       renderTableDelivery()
-//     }
-
-//     const statusUpdateResponse = await fetch(`/api/updatestatus/${bemId}`, {
-//       method: "PUT",
-//       headers:{ 
-//         "Content-Type": "application/json",
-//         'Authorization': `Bearer ${token}`
-//       },
-//       body: JSON.stringify({ bensstat: "Em Locação" }),
-//     });
-
-//     const statusUpdateResponseLocation = await fetch(
-//       `/api/updatestatuslocation/${codeLocation}`,
-//       {
-//         method: "PUT",
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'Authorization': `Bearer ${token}`
-//       },
-//         body: JSON.stringify({ belostat: "Em Locação" }),
-//       }
-//     );
-
-//     const statusUptadeDrive = await fetch(
-//       `/api/updatestatusMoto/${motoId}`,
-//       {
-//         method: "PUT",
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'Authorization': `Bearer ${token}`
-//       },
-//         body: JSON.stringify({ motostat: "Entrega destinada" }),
-//       }
-//     );
-//     console.log('locaçaõ' , locationId)
-//     console.log("bemId:", bemId);
-// console.log("familiaBem:", familiaBem);
-// console.log("motoId:", motoId);
-
-//     if ( !statusUpdateResponse.ok || !statusUpdateResponseLocation.ok || !statusUptadeDrive.ok) {
-//       throw new Error(
-//         "Erro ao atualizar status do bem , do motorista ou da locação."
-//       );
-//     }
-
-//     console.log('status:' ,statusUpdateResponse , statusTdLocation , statusUpdateResponseLocation)
-
-//     const bemRow = document.querySelector(`[data-benscode="${bemId}"]`);
-//     if (bemRow) {
-//       const statusBem = bemRow.querySelector(".status-bem");
-//       if (statusBem) statusBem.textContent = "Em Locação";
-//     }
-    
-//     const motoRow = document.querySelector(`[data-motocode="${motoId}"]`);
-//     if (motoRow) {
-//       const statusMoto = motoRow.querySelector(".status-moto");
-//       if (statusMoto) statusMoto.textContent = "Entrega destinada";
-//     }
-    
-//     const statusTdLocation = tr.querySelector("td:nth-child(3)");
-//     if (statusTdLocation) {
-//       statusTdLocation.textContent = "Em Locação";
-//     };
-
-    
-//     Toastify({
-//       text: "Bem vinculado com sucesso!",
-//       duration: 4000,
-//       close: true,
-//       gravity: "top",
-//       position: "center",
-//       backgroundColor: "green",
-//     }).showToast();
-
-//     return true;
-//   } catch (error) {
-//     console.error("Erro ao vincular bem", error);
-//     Toastify({
-//       text: "Erro ao vincular o bem!",
-//       duration: 4000,
-//       close: true,
-//       gravity: "top",
-//       position: "center",
-//       backgroundColor: "red",
-//     }).showToast();
-//   }
-// };
 
 async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
   const token = localStorage.getItem('token'); 

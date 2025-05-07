@@ -1,4 +1,3 @@
-// locação finalizada
 
 // TABELA COM AS LOCAÇOES
 async function frontLocation() {
@@ -62,6 +61,7 @@ async function frontLocation() {
             dataDevolucao: formatDate(locacao.cllodtdv),
             formaPagamento: locacao.cllopgmt || "Não definido",
             codigoBem: bem.bencodb || "-",
+            belocode:bem.belocode,
             produto: bem.beloben || "Nenhum bem associado",
             quantidade: bem.beloqntd || "-",
             status: bem.belostat || "Não definido",
@@ -90,7 +90,7 @@ async function frontLocation() {
           ];
         }
       })
-      .flat(); // Usamos `.flat()` para remover arrays aninhados
+      .flat(); 
 
     renderTable(listaLocacoes); // Renderiza a tabela com os dados obtidos
   } catch (error) {
@@ -177,7 +177,7 @@ function renderTable(data) {
     checkbox.value = JSON.stringify(locacao);
     checkboxTd.appendChild(checkbox);
     row.appendChild(checkboxTd);
-    // console.log('checkbox' , checkbox.value)
+  
 
     [
       "numeroLocacao",
@@ -518,7 +518,6 @@ function deletarLocation() {
     }
   }
 }
-
 // Editar Locação
 
 function editLocation() {
@@ -594,15 +593,33 @@ function editLocation() {
         });
         const result = await response.json();
 
-        const locacaoEncontrada = result.locacoes.find(
+        const locacaoSelecionada = result.locacoes.find(
           (loc) => loc.cllonmlo === locacaoId
         );
-
-        if (locacaoEncontrada) {
-          preencherFormularioDeEdicao(locacaoEncontrada);
+        
+        if (locacaoSelecionada) {
+          const existeBemEmLocacao = locacaoSelecionada.bens.some(
+            (bem) => bem.belostat === "Em Locação"
+          );
+        
+          if (existeBemEmLocacao) {
+            Toastify({
+              text: "A locação selecionada já possui um bem em locação!",
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "orange",
+            }).showToast();
+            
+            return; 
+          }
+        
+          preencherFormularioDeEdicao(locacaoSelecionada);
         } else {
           console.error("Locação não encontrada.");
         }
+        
       } catch (error) {
         console.error('ERRO NA APLICAÇÃO' , error)
       }
@@ -618,6 +635,11 @@ function preencherFormularioDeEdicao(locacao) {
   locacao.bens.forEach((bem, index) => {
     const i = index + 1;
 
+    if(bem.belodtin){
+      document.getElementById(`dataInicio${i}Edit`).readOnly = true;
+    }
+  
+
     if (i <= 5) {
       document.getElementById(`family${i}Edit`).value = bem.bencodb;
       document.getElementById(`produto${i}Edit`).value = bem.beloben;
@@ -629,6 +651,8 @@ function preencherFormularioDeEdicao(locacao) {
         bem.belodtfi.split("T")[0];
       document.getElementById(`belocode${i}Edit`).value = bem.belocode;
     }
+
+    
   });
 
   editarlocationFinish(locacao.cllonmlo);
@@ -686,8 +710,6 @@ function editarlocationFinish(id) {
         return;
       }
 
-      console.log('locação encontrada' , locacaoEncontrada)
-
       const bensEditados = [];
       const bensNovos = [];
 
@@ -704,7 +726,6 @@ function editarlocationFinish(id) {
         if (!todosCamposPreenchidos) {
           continue; 
         }
-        
 
         if (!isDataValida(dataInicioStr) || !isDataValida(dataFimStr)) {
           Toastify({
@@ -723,9 +744,20 @@ function editarlocationFinish(id) {
         const hoje = new Date();
         hoje.setHours(0, 0, 0, 0);
 
-        if (dataFim <= dataInicio) {
+        if (dataFim < hoje ) {
           Toastify({
-            text: `Item ${i}: a data de FIM deve ser maior que a de INÍCIO.`,
+            text: `Item ${i}: a data de FIM deve ser futura`,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "orange",
+          }).showToast();
+          return;
+        }
+        if (!belocode && dataInicio > hoje) {
+          Toastify({
+            text: `Item ${i}: a data de INÍCIO deve ser hoje ou futura.`,
             duration: 3000,
             close: true,
             gravity: "top",
@@ -742,6 +774,7 @@ function editarlocationFinish(id) {
           beloobsv: observacao,
           belodtin: dataInicioStr,
           belodtfi: dataFimStr,
+          belostat: "Pendente"
         };
 
         

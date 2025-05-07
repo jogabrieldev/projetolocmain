@@ -724,9 +724,16 @@ const containerEditForm = document.querySelector('.formEditProd')
       const elemento = document.getElementById(id);
       if (elemento) {
         if (elemento.type === "date" && valor) {
-          // Formata a data para YYYY-MM-DD, caso seja necessário
+          
           const dataFormatada = new Date(valor).toISOString().split("T")[0];
           elemento.value = dataFormatada;
+
+          if (id === "editProdTipo") {
+            const hiddenInput = document.getElementById("editProdTipoHidden");
+            if (hiddenInput) {
+              hiddenInput.value = valorFormatado;
+            }
+          }
         } else {
           elemento.value = valor || "";
         }

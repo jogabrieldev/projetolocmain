@@ -21,14 +21,13 @@ document.addEventListener('DOMContentLoaded' , ()=>{
               await getAllClients();
              renderTableDelivery();
              showDetails();
-             getdeliveryForDevolution();
              
            }else{
             console.error('#mainContent não encontrado no DOM');
             return;
            }
         } catch (error) {
-          
+            console.error('Erro no carregamento DELIVERY')
         }
          
         const informative = document.querySelector(".information");
@@ -470,80 +469,6 @@ function formatContentForPrint(innerHTML) {
       getdeliveryForDevolution();
     });
   }
-  
-  // async function getdeliveryForDevolution() {
-  //   try {
-  //     const result = await fetch('/api/getdelivery', {
-  //       method: 'GET'
-  //     });
-  
-  //     if (!result.ok) {
-  //       console.log('ERRO BUSCAR');
-  //       return;
-  //     }
-  
-  //     const location = await result.json();
-  //     console.log('locações:', location);
-  
-  //     // Data de hoje no formato AAAA-MM-DD
-  //     const hoje = new Date().toISOString().split('T')[0];
-  
-  //     // Filtrar locações cuja devolução é hoje
-  //     const devolucoesHoje = location.filter(loc => {
-  //       const dataDevolucao = loc.lofidtdv?.split('T')[0]; // pega só a parte da data
-  //       return dataDevolucao === hoje;
-  //     });
-  
-  //     // Referência à div onde será inserida a tabela
-  //     const container = document.querySelector('.devolutionTheDay');
-  
-  //     if (devolucoesHoje.length === 0) {
-  //       container.innerHTML = '<p>Nenhuma devolução marcada para hoje.</p>';
-  //       return;
-  //     }
-        
-  //     if(devolucoesHoje.length > 0){
-  //        container.style.display = 'flex'
-
-  //        let tabelaHTML = `
-  //        <table border="1" cellpadding="8" cellspacing="0">
-  //          <thead>
-  //            <tr>
-  //              <th>ID Locação</th>
-  //              <th>Bem</th>
-  //              <th>Cliente</th>
-  //              <th>Forma Pgto</th>
-  //              <th>Data Locação</th>
-  //              <th>Data Devolução</th>
-  //            </tr>
-  //          </thead>
-  //          <tbody>
-  //      `;
-   
-  //      devolucoesHoje.forEach(loc => {
-  //        tabelaHTML += `
-  //          <tr>
-  //            <td>${loc.loficode}</td>
-  //            <td>${loc.lofiidbe}</td>
-  //            <td>${loc.lofiidcl}</td>
-  //            <td>${loc.lofipgmt}</td>
-  //            <td>${new Date(loc.lofidtlo).toLocaleDateString()}</td>
-  //            <td>${new Date(loc.lofidtdv).toLocaleDateString()}</td>
-  //          </tr>
-  //        `;
-  //      });
-   
-  //      tabelaHTML += '</tbody></table>';
-   
-  //      // Inserir no HTML
-  //      container.innerHTML = tabelaHTML;
-  //     }
-      
-  
-  //   } catch (error) {
-  //     console.error('Erro ao buscar devoluções:', error);
-  //   }
-  // }
   
   
   

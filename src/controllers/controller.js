@@ -54,6 +54,10 @@ class Control {
   delivery(req ,res){
     res.sendFile(path.join(__dirname , '..' , '..' , 'view' , 'screenDelivery' , 'mainDelivery.html'))
   }
+
+  devolution(req , res){
+    res.sendFile(path.join(__dirname , '..' , '..' , 'view' , 'screenDevolution' , 'mainDevolution.html'))
+  }
 }
 
 export const control = new Control();

@@ -28,4 +28,6 @@ routeEscreen.get('/logistcs' , control.logistcs)
 
 routeEscreen.get('/delivery' , control.delivery)
 
+routeEscreen.get('/devolution' , control.devolution)
+
 export { routeEscreen };

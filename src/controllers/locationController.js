@@ -138,31 +138,31 @@ export const location = {
     }
 },
 
-  async DeleteLocationFinish(req, res) {
+async DeleteLocationFinish(req, res) {
 
-    const { id } = req.params;
-    try {
-       const verificar = await LocacaoModel.verificarDependenciaLocacao(id);
-      
-            if (verificar) {
-              return res.status(400).json({
-                message: "Não e possivel excluir. a locação esta vinculada a um bem ",
-              });
-            }
-      const deleteSuccess = await LocacaoModel.deleteLocation(id);
+  const { id } = req.params;
+  try {
+     const verificar = await LocacaoModel.verificarDependenciaLocacao(id);
+    
+          if (verificar) {
+            return res.status(400).json({
+              message: "Não e possivel excluir. a locação esta vinculada a um bem ",
+            });
+          }
+    const deleteSuccess = await LocacaoModel.deleteLocation(id);
 
-      if (!deleteSuccess) {
-        return res.status(404).json({ message: "Locação não encontrada" });
-      }
-
-      return res.status(200).json({
-        message: "Locação apagada com sucesso",
-      });
-    } catch (error) {
-      console.error("Erro ao apagar locação:", error);
-      return res.status(500).json({ message: "Erro no servidor" });
+    if (!deleteSuccess) {
+      return res.status(404).json({ message: "Locação não encontrada" });
     }
-  },
+
+    return res.status(200).json({
+      message: "Locação apagada com sucesso",
+    });
+  } catch (error) {
+    console.error("Erro ao apagar locação:", error);
+    return res.status(500).json({ message: "Erro no servidor" });
+  }
+},
 
   async updateStatus(req, res) {
     const { codeLocation } = req.params;

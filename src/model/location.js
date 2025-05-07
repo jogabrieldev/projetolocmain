@@ -198,54 +198,55 @@ verificarDependenciaLocacao: async (id) => {
   }
 },
 
-  async deleteLocation(numeroLocacao) {
-    try {
-      const result = await dataLocation.query(
-        "SELECT clloid FROM clieloc WHERE cllonmlo = $1",
-        [numeroLocacao]
-      );
+async deleteLocation(numeroLocacao) {
+  try {
+    const result = await dataLocation.query(
+      "SELECT clloid FROM clieloc WHERE cllonmlo = $1",
+      [numeroLocacao]
+    );
 
-      if (result.rows.length === 0) {
-        console.log("Nenhuma locação encontrada com o número fornecido.");
-        return false;
-      }
-
-      const idLocacao = result.rows[0].clloid;
-
-      await dataLocation.query("DELETE FROM bensloc WHERE beloidcl = $1", [
-        idLocacao,
-      ]);
-
-      await dataLocation.query("DELETE FROM clieloc WHERE clloid = $1", [
-        idLocacao,
-      ]);
-
-      return true;
-    } catch (error) {
-      console.error("Erro no model:", error.message);
-      throw error;
+    if (result.rows.length === 0) {
+      console.log("Nenhuma locação encontrada com o número fornecido.");
+      return false;
     }
-  },
+
+    const idLocacao = result.rows[0].clloid;
+
+    await dataLocation.query("DELETE FROM bensloc WHERE beloidcl = $1", [
+      idLocacao,
+    ]);
+
+    await dataLocation.query("DELETE FROM clieloc WHERE clloid = $1", [
+      idLocacao,
+    ]);
+
+    return true;
+  } catch (error) {
+    console.error("Erro no model:", error.message);
+    throw error;
+  }
+},
+
  
   // atualizando status de locação
   async updateBemStatus(codeLocation, beloStat) {
-    // Alterar a query para usar belocode como chave primária
+    
     const query = `UPDATE bensloc SET belostat = $1 WHERE belocode = $2 RETURNING *;`;
   
     try {
       const { rowCount, rows } = await dataLocation.query(query, [
-        beloStat, // Novo status que será atualizado
-        codeLocation, // Identificador da locação (belocode)
+        beloStat, 
+        codeLocation, 
       ]);
   
       if (rowCount === 0) {
-        return null; // Retorna null caso nenhum registro seja afetado
+        return null; 
       }
   
-      return rows[0]; // Retorna o registro atualizado
+      return rows[0]; 
     } catch (error) {
       console.error("Erro ao atualizar status locação:", error);
-      throw error; // Lança o erro para tratamento externo
+      throw error; 
     }
   },
 

@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(route);
 app.use("/" , routeEscreen);
 
-// Criar servidor HTTP
+
 const server = http.createServer(app);
 
 // Configurar Socket.IO
@@ -89,7 +89,6 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
-        // desconectar
     });
 });
 

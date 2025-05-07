@@ -77,6 +77,12 @@ if(btnStartRegister){
           btnDelivery.classList.remove('flex')
           btnDelivery.classList.add('hidden')
        }
+
+       const buttonDevolution = document.querySelector('.btnDevolution')
+       if(buttonDevolution){
+          buttonDevolution.classList.remove('flex')
+          buttonDevolution.classList.add('hidden')
+       }
     
  });
 
@@ -102,6 +108,12 @@ if(btnStartRegister){
   if(buttonDelivery){
      buttonDelivery.classList.remove('hidden')
      buttonDelivery.classList.add('flex')
+  }
+
+  const buttonDevolution = document.querySelector('.btnDevolution')
+  if(buttonDevolution){
+     buttonDevolution.classList.remove('hidden')
+     buttonDevolution.classList.add('flex')
   }
  
 });
@@ -140,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
    // Oculta ao clicar em qualquer botão de navegação
    const buttons = document.querySelectorAll(
-     "#btnLoadBens, .btnCadClie, .btnCadForn, .btnCadProd, .btnCadFabri, .btnCadTypeProd, .btnCadMotorista, .btnCadAutomo, .btnRegisterLocation, .btnLogistic, .delivery"
+     "#btnLoadBens, .btnCadClie, .btnCadForn, .btnCadProd, .btnCadFabri, .btnCadTypeProd, .btnCadMotorista, .btnCadAutomo, .btnRegisterLocation, .btnLogistic, .delivery , .btnDevolution"
    );
 
    buttons.forEach((btn) => {

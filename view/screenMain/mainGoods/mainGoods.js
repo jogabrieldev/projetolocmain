@@ -27,8 +27,7 @@ const formatDate = (isoDate) => {
 
 const  socketUpdateBens = io()
 document.addEventListener("DOMContentLoaded", () => {
-  // Listener para #btnLoadBens
- 
+
   const btnLoadBens = document.querySelector('#btnLoadBens');
   if (btnLoadBens) {
     btnLoadBens.addEventListener('click', async (event) => {
@@ -846,7 +845,6 @@ async function updateGoodsSystem() {
         { id: "fabriEdit", valor: bemSelecionado.bensfabr },
       ];
         
-       console.log("campos:" , campos[13])
        campos.forEach(({ id, valor }) => {
         const elemento = document.getElementById(id);
       
@@ -861,9 +859,30 @@ async function updateGoodsSystem() {
           const option = [...elemento.options].find(opt => opt.value === valorFormatado);
           if (option) {
             elemento.value = valorFormatado;
+
+            if (id === "statusEdit") {
+              const hiddenInput = document.getElementById("statusEditHidden");
+              if (hiddenInput) {
+                hiddenInput.value = valorFormatado;
+              }
+            }
+
+            if(id === "cofoEdit"){
+              const hiddenInput = document.getElementById("cofoEditHidden");
+              if (hiddenInput) {
+                hiddenInput.value = valorFormatado;
+              }
+            }
+
+            if(id === "cofaEdit"){
+              const hiddenInput = document.getElementById("cofaEditHidden");
+              if (hiddenInput) {
+                hiddenInput.value = valorFormatado;
+              }
+            }
           } else {
             console.warn(`Valor '${valorFormatado}' não encontrado em <select id="${id}">`);
-            elemento.selectedIndex = 0; // opcional: define a primeira opção como fallback
+            elemento.selectedIndex = 0;
           }
         } else if (elemento.type === "date" && valorFormatado) {
           elemento.value = formatDateInput(valorFormatado);
