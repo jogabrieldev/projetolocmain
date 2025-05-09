@@ -1,5 +1,3 @@
-
-
 function isTokenExpired(token) {
   try {
     const payload = JSON.parse(atob(token.split(".")[1]));
@@ -10,225 +8,216 @@ function isTokenExpired(token) {
   }
 }
 
-function masksFieldForne(){
-  $("#fornCnpj").mask('00.000.000/0000-00')
-   
+function masksFieldForne() {
+  $("#fornCnpj").mask("00.000.000/0000-00");
+
   $("#fornCelu").mask("(00) 00000-0000");
 
   $("#fornCep").mask("00000-000");
 
-  $("#editFornCnpj").mask('00.000.000/0000-00')
- 
+  $("#editFornCnpj").mask("00.000.000/0000-00");
+
   $("#editFornCelu").mask("(00) 00000-0000");
 
   $("#editFornCep").mask("00000-000");
 }
 
-const socketForn = io()
-document.addEventListener('DOMContentLoaded', ()=>{
-     
-  const btnLoadForn = document.querySelector('.btnCadForn')
-  if(btnLoadForn){
-      btnLoadForn.addEventListener('click' , async()=>{
-          
-        try { 
+const socketForn = io();
+document.addEventListener("DOMContentLoaded", () => {
+  const btnLoadForn = document.querySelector(".btnCadForn");
+  if (btnLoadForn) {
+    btnLoadForn.addEventListener("click", async () => {
+      try {
+        const responseForn = await fetch("/fornecedor", {
+          method: "GET",
+        });
 
-          const responseForn = await fetch('/fornecedor' , {
-            method: 'GET'
-           })
-  
-           if (!responseForn.ok) throw new Error(`Erro HTTP: ${responseForn.status}`);
-            const html = await responseForn.text();
-            const mainContent = document.querySelector('#mainContent');
-            if (mainContent) {
-              mainContent.innerHTML = html;
-              masksFieldForne()
-              interationSystemForne()
-              registerNewFornecedor()
-              deleteFornecedor()
-              editFornecedor()
-            }else{
-              console.error('#mainContent não encontrado no DOM')
-            }
-  
-
-            const containerAppForne = document.querySelector('.containerAppForn');
-            if (containerAppForne) containerAppForne.classList.add('flex') ;
-      
-            const sectionsToHide = [
-              '.containerAppProd', '.containerAppFabri', '.containerAppTipoProd',
-              '.containerAppDriver', '.containerAppAutomo', '.containerAppBens',
-              '.containerAppClient'
-            ];
-            sectionsToHide.forEach((selector) => {
-              const element = document.querySelector(selector);
-              if (element) element.style.display = 'none';
-            });
-      
-            const  containerRegisterForne = document.querySelector('.formRegisterForn');
-            const btnMainPageForn = document.querySelector('.btnMainPageForn');
-            const listingForn = document.querySelector('.listingForn');
-            const editFormforn = document.querySelector('.formEditRegisterForn');
-            const informative = document.querySelector('.information');
-      
-            if (containerRegisterForne) containerRegisterForne.style.display = 'none';
-            if ( btnMainPageForn)  btnMainPageForn.style.display = 'flex';
-            if (listingForn )listingForn .style.display = 'flex';
-            if (editFormforn) editFormforn.style.display = 'none';
-            if (informative) {
-              informative.style.display = 'block';
-              informative.textContent = 'SEÇÃO FORNECEDOR';
-            }
-            
-            await fetchListFornecedores() 
-          
-        } catch (error) {
-          console.warn('#btnLoadForn não encontrado no DOM')
-          Toastify({
-            text: "Erro na pagina",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "red",
-          }).showToast();
-          
+        if (!responseForn.ok)
+          throw new Error(`Erro HTTP: ${responseForn.status}`);
+        const html = await responseForn.text();
+        const mainContent = document.querySelector("#mainContent");
+        if (mainContent) {
+          mainContent.innerHTML = html;
+          masksFieldForne();
+          interationSystemForne();
+          registerNewFornecedor();
+          deleteFornecedor();
+          editFornecedor();
+        } else {
+          console.error("#mainContent não encontrado no DOM");
         }
-         
-      })
+
+        const containerAppForne = document.querySelector(".containerAppForn");
+        if (containerAppForne) containerAppForne.classList.add("flex");
+
+        const sectionsToHide = [
+          ".containerAppProd",
+          ".containerAppFabri",
+          ".containerAppTipoProd",
+          ".containerAppDriver",
+          ".containerAppAutomo",
+          ".containerAppBens",
+          ".containerAppClient",
+        ];
+        sectionsToHide.forEach((selector) => {
+          const element = document.querySelector(selector);
+          if (element) element.style.display = "none";
+        });
+
+        const containerRegisterForne =
+          document.querySelector(".formRegisterForn");
+        const btnMainPageForn = document.querySelector(".btnMainPageForn");
+        const listingForn = document.querySelector(".listingForn");
+        const editFormforn = document.querySelector(".formEditRegisterForn");
+        const informative = document.querySelector(".information");
+
+        if (containerRegisterForne)
+          containerRegisterForne.style.display = "none";
+        if (btnMainPageForn) btnMainPageForn.style.display = "flex";
+        if (listingForn) listingForn.style.display = "flex";
+        if (editFormforn) editFormforn.style.display = "none";
+        if (informative) {
+          informative.style.display = "block";
+          informative.textContent = "SEÇÃO FORNECEDOR";
+        }
+
+        await fetchListFornecedores();
+      } catch (error) {
+        console.warn("#btnLoadForn não encontrado no DOM");
+        Toastify({
+          text: "Erro na pagina",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+      }
+    });
   }
 
   socketForn.on("updateRunTimeForne", (fornecedor) => {
     insertFornecedoresInTableRunTime(fornecedor);
-     
   });
   socketForn.on("updateFornTable", (updateFornecedor) => {
-    updateFornecedorInTableRunTime(updateFornecedor) 
-     
+    updateFornecedorInTableRunTime(updateFornecedor);
   });
-})
+});
 
-
-
-function interationSystemForne(){
-
+function interationSystemForne() {
   const btnRegisterForn = document.querySelector(".registerForn");
-  if(btnRegisterForn){
+  if (btnRegisterForn) {
     btnRegisterForn.addEventListener("click", () => {
-
       const formRegisterForn = document.querySelector(".formRegisterForn");
-      if(formRegisterForn){
-        formRegisterForn.classList.remove('hidden')
-        formRegisterForn.classList.add('flex')
+      if (formRegisterForn) {
+        formRegisterForn.classList.remove("hidden");
+        formRegisterForn.classList.add("flex");
       }
       const listingForn = document.querySelector(".listingForn");
-      if(listingForn){
-         listingForn.classList.remove('flex')
-         listingForn.classList.add('hidden')
+      if (listingForn) {
+        listingForn.classList.remove("flex");
+        listingForn.classList.add("hidden");
       }
       const btnMainPageForm = document.querySelector(".btnMainPageForn");
-      if(btnMainPageForm){
-        btnMainPageForm.classList.remove("flex")
-        btnMainPageForm.classList.add("hidden")
+      if (btnMainPageForm) {
+        btnMainPageForm.classList.remove("flex");
+        btnMainPageForm.classList.add("hidden");
       }
-    
-  })
-};
+    });
+  }
 
-const btnOutInitForn = document.querySelector(".btnOutInitForn");
-if(btnOutInitForn){
-  btnOutInitForn.addEventListener("click", (event) => {
-    event.preventDefault();
-  
-    const caixaForn = document.querySelector(".formRegisterForn");
-    if(caixaForn){
-      caixaForn.classList.remove('flex')
-      caixaForn.classList.add("hidden")
-    }
-    
-  
+  const btnOutInitForn = document.querySelector(".btnOutInitForn");
+  if (btnOutInitForn) {
+    btnOutInitForn.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      const caixaForn = document.querySelector(".formRegisterForn");
+      if (caixaForn) {
+        caixaForn.classList.remove("flex");
+        caixaForn.classList.add("hidden");
+      }
+
+      const listingForn = document.querySelector(".listingForn");
+      if (listingForn) {
+        listingForn.classList.remove("hidden");
+        listingForn.classList.add("flex");
+      }
+
+      const btnMainPageForm = document.querySelector(".btnMainPageForn");
+      if (btnMainPageForm) {
+        btnMainPageForm.classList.remove("hidden");
+        btnMainPageForm.classList.add("flex");
+      }
+
+      return;
+    });
+  }
+
+  const btnOutPageEdit = document.querySelector(".btnOutInitFornEdit");
+  if (btnOutPageEdit) {
+    btnOutPageEdit.addEventListener("click", () => {
+      const listingForn = document.querySelector(".listingForn");
+      if (listingForn) {
+        listingForn.classList.remove("hidden");
+        listingForn.classList.add("flex");
+      }
+      const btnMainPageForm = document.querySelector(".btnMainPageForn");
+      if (btnMainPageForm) {
+        btnMainPageForm.classList.remove("hidden");
+        btnMainPageForm.classList.add("flex");
+      }
+
+      const formEditRegisterForn = document.querySelector(
+        ".formEditRegisterForn"
+      );
+      if (formEditRegisterForn) {
+        formEditRegisterForn.classList.remove("flex");
+        formEditRegisterForn.classList.add("hidden");
+      }
+    });
+  }
+
+  const btnOutSectionForn = document.querySelector(".buttonExitForn");
+  if (btnOutSectionForn) {
+    btnOutSectionForn.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      const containerAppForn = document.querySelector(".containerAppForn");
+      if (containerAppForn) {
+        containerAppForn.classList.remove("flex");
+        containerAppForn.classList.add("hidden");
+      }
+
+      const informative = document.querySelector(".information");
+      if (informative) {
+        informative.style.display = "block";
+        informative.textContent = "Sessão ativa";
+      }
+    });
+  }
+
+  const btnOutPage = document.querySelector(".btnOutInitForn");
+  btnOutPage.addEventListener("click", (e) => {
+    e.preventDefault();
+
     const listingForn = document.querySelector(".listingForn");
-    if(listingForn){
-      listingForn.classList.remove("hidden")
-      listingForn.classList.add("flex")
-    }
-    
-  
+    listingForn.style.display = "flex";
+
     const btnMainPageForm = document.querySelector(".btnMainPageForn");
-    if(btnMainPageForm){
-       btnMainPageForm.classList.remove('hidden')
-       btnMainPageForm.classList.add('flex')
-    }
+    btnMainPageForm.style.display = "flex";
 
-    return;
+    const containerFormForn = document.querySelector(".formRegisterForn");
+    containerFormForn.style.display = "none";
   });
 }
 
-const btnOutPageEdit = document.querySelector('.btnOutInitFornEdit')
-if(btnOutPageEdit){
-  btnOutPageEdit.addEventListener('click' , ()=>{
-      
-    const listingForn = document.querySelector(".listingForn");
-      if(listingForn){
-         listingForn.classList.remove('hidden')
-         listingForn.classList.add('flex')
-      }
-      const btnMainPageForm = document.querySelector(".btnMainPageForn");
-      if(btnMainPageForm){
-        btnMainPageForm.classList.remove("hidden")
-        btnMainPageForm.classList.add("flex")
-      }
+function registerNewFornecedor() {
+  document
+    .querySelector(".btnRegisterforn")
+    .addEventListener("click", async (event) => {
+      event.preventDefault();
 
-      const formEditRegisterForn = document.querySelector('.formEditRegisterForn')
-      if(formEditRegisterForn){
-        formEditRegisterForn.classList.remove('flex')
-        formEditRegisterForn.classList.add('hidden')
-      }
-  })
-}
-
-
-const btnOutSectionForn = document.querySelector(".buttonExitForn");
-if(btnOutSectionForn){
-  btnOutSectionForn.addEventListener("click", (event) => {
-    event.preventDefault();
-  
-    const containerAppForn = document.querySelector(".containerAppForn");
-      if(containerAppForn){
-         containerAppForn.classList.remove('flex')
-         containerAppForn.classList.add('hidden')
-      }
-     
-      const informative = document.querySelector('.information')
-            if (informative) {
-              informative.style.display = 'block';
-              informative.textContent = 'Sessão ativa';
-            }
-    
-  });
-}
-
-const btnOutPage = document.querySelector(".btnOutInitForn");
-btnOutPage.addEventListener("click", (e) => {
-  e.preventDefault();
-
-  const listingForn = document.querySelector(".listingForn");
-  listingForn.style.display = "flex";
-
-  const btnMainPageForm = document.querySelector(".btnMainPageForn");
-  btnMainPageForm.style.display = "flex";
-
-  const containerFormForn = document.querySelector(".formRegisterForn");
-  containerFormForn.style.display = "none";
- });
-};
-
-function registerNewFornecedor(){
-
-        document .querySelector(".btnRegisterforn").addEventListener("click", async (event) => {
-      event.preventDefault(); 
-
-      const token = localStorage.getItem("token"); 
+      const token = localStorage.getItem("token");
 
       if (!token || isTokenExpired(token)) {
         Toastify({
@@ -251,16 +240,20 @@ function registerNewFornecedor(){
         return;
       }
 
-      const cepforne = document.querySelector("#fornCep").value.replace(/\D/g, '');
+      const cepforne = document
+        .querySelector("#fornCep")
+        .value.replace(/\D/g, "");
       try {
-        const response = await fetch(`https://viacep.com.br/ws/${cepforne}/json/`);
-    
+        const response = await fetch(
+          `https://viacep.com.br/ws/${cepforne}/json/`
+        );
+
         if (!response.ok) {
           throw new Error("Erro ao buscar o CEP.");
         }
-    
+
         const data = await response.json();
-    
+
         if (data.erro) {
           Toastify({
             text: "CEP inválido.",
@@ -272,17 +265,17 @@ function registerNewFornecedor(){
           }).showToast();
           return;
         }
-    
+
         console.log("Dados da ViaCEP:", data);
-    
+
         // Preenchendo os campos do formulário
-        const ruaField = document.getElementById('fornRua');
-        const cityField = document.getElementById('fornCity');
-        const stateField = document.getElementById('fornEstd');
-    
+        const ruaField = document.getElementById("fornRua");
+        const cityField = document.getElementById("fornCity");
+        const stateField = document.getElementById("fornEstd");
+
         if (ruaField) {
           ruaField.value = `${data.logradouro} - ${data.bairro}` || "";
-          ruaField.readOnly = true; 
+          ruaField.readOnly = true;
         }
         if (cityField) {
           cityField.value = data.localidade || "";
@@ -292,7 +285,6 @@ function registerNewFornecedor(){
           stateField.value = data.uf || "";
           stateField.readOnly = true;
         }
-    
       } catch (error) {
         console.error("Erro ao buscar o CEP:", error);
         Toastify({
@@ -316,7 +308,7 @@ function registerNewFornecedor(){
         fornCity: document.querySelector("#fornCity").value, // Cidade
         fornEstd: document.querySelector("#fornEstd").value, // Estado
         fornCelu: document.querySelector("#fornCelu").value, // Celular
-        fornMail: document.querySelector("#fornMail").value, // E-mail
+        fornMail: document.querySelector("#fornMail").value.trim(), // E-mail
         fornBank: document.querySelector("#fornBank").value, // Banco
         fornAge: document.querySelector("#fornAge").value, // Agência
         fornCont: document.querySelector("#fornCont").value, // Conta
@@ -324,6 +316,20 @@ function registerNewFornecedor(){
         fornDtcd: document.querySelector("#fornDtcd").value, // Data do Cadastro
         fornDisPro: document.querySelector("#fornDisPro").value, // Descrição do Produto
       };
+
+      const fornMail = formData.fornMail
+      const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailValido.test(fornMail)) {
+        Toastify({
+          text: "E-mail inválido. Verifique o formato (ex: nome@dominio.com).",
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
 
       if (!isDataValida(formData.fornDtcd)) {
         Toastify({
@@ -336,12 +342,16 @@ function registerNewFornecedor(){
         }).showToast();
         return;
       }
-    
-      const [y, m, d] = formData.fornDtcd.split('-').map(Number);
-      const dtCd       = new Date(y, m - 1, d);
-      const hoje       = new Date();
-      const hoje0      = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
-    
+
+      const [y, m, d] = formData.fornDtcd.split("-").map(Number);
+      const dtCd = new Date(y, m - 1, d);
+      const hoje = new Date();
+      const hoje0 = new Date(
+        hoje.getFullYear(),
+        hoje.getMonth(),
+        hoje.getDate()
+      );
+
       //  Regra: não pode ser futura
       if (dtCd.getTime() !== hoje0.getTime()) {
         Toastify({
@@ -378,26 +388,14 @@ function registerNewFornecedor(){
           }).showToast();
 
           document.querySelector("#registerForn").reset();
-          
-        } else if(response.status === 409) {
+        } else {
           Toastify({
-            text: result.message,
+            text: result?.message || "Erro ao cadastrar Cliente.",
             duration: 3000,
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "orange",
-          }).showToast();
-        
-        }else{
-            
-          Toastify({
-            text: `Erro para Cadastrar fornecedor`,
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "red",
+            backgroundColor: response.status === 409 ? "orange" : "red",
           }).showToast();
         }
       } catch (error) {
@@ -405,9 +403,8 @@ function registerNewFornecedor(){
         alert("Erro ao enviar os dados para o server.");
       }
     });
-    validationFormForne();
+  validationFormForne();
 }
-
 
 // // ATUALIZA A TABELA E RUNTIME QUANDO INSERIR
 function insertFornecedoresInTableRunTime(fornecedores) {
@@ -416,14 +413,28 @@ function insertFornecedoresInTableRunTime(fornecedores) {
 
   if (fornecedores.length > 0) {
     const tabela = document.createElement("table");
-    tabela.classList.add('tableFornecedor')
+    tabela.classList.add("tableFornecedor");
 
     const cabecalho = tabela.createTHead();
     const linhaCabecalho = cabecalho.insertRow();
     const colunas = [
-      "Selecionar", "Código", "Nome", "Nome Fantasia", "CNPJ", "CEP", "Rua",
-      "Cidade", "Estado", "Celular", "E-mail", "Banco", "Agência", "Conta",
-      "Pix", "Data do cadastro", "Descrição"
+      "Selecionar",
+      "Código",
+      "Nome",
+      "Nome Fantasia",
+      "CNPJ",
+      "CEP",
+      "Rua",
+      "Cidade",
+      "Estado",
+      "Celular",
+      "E-mail",
+      "Banco",
+      "Agência",
+      "Conta",
+      "Pix",
+      "Data do cadastro",
+      "Descrição",
     ];
 
     colunas.forEach((coluna) => {
@@ -469,41 +480,55 @@ function insertFornecedoresInTableRunTime(fornecedores) {
 
 // lista de fornecedor
 async function fetchListFornecedores() {
-
-  const token = localStorage.getItem('token'); 
+  const token = localStorage.getItem("token");
 
   if (!token || isTokenExpired(token)) {
     Toastify({
-        text: "Sessão expirada. Faça login novamente.",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
+      text: "Sessão expirada. Faça login novamente.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
     }).showToast();
 
-    localStorage.removeItem("token"); 
+    localStorage.removeItem("token");
     setTimeout(() => {
-        window.location.href = "/index.html"; 
-    }, 2000); 
+      window.location.href = "/index.html";
+    }, 2000);
     return;
-}
+  }
   try {
-    const response = await fetch("/api/listForn" , {
+    const response = await fetch("/api/listForn", {
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    },
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
-    const fornecedores = await response.json();
+    const result = await response.json();
 
+    if(!response.ok){
+      Toastify({
+      text: result?.message || "Erro ao carregar clientes.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+
+    document.querySelector(".listClient").innerHTML =
+      "<p>Erro ao carregar clientes.</p>";
+    return;
+    }
+    const fornecedores = result;
 
     const fornecedoresListDiv = document.querySelector(".listingForn");
     fornecedoresListDiv.innerHTML = "";
 
     if (fornecedores.length > 0) {
       const tabela = document.createElement("table");
-      tabela.classList.add('tableFornecedor')
+      tabela.classList.add("tableFornecedor");
 
       const cabecalho = tabela.createTHead();
       const linhaCabecalho = cabecalho.insertRow();
@@ -577,332 +602,42 @@ async function fetchListFornecedores() {
   }
 }
 
- // deletar fornecedor
-function deleteFornecedor(){
-    
-const btnDeleteForn = document.querySelector(".buttonDeleteForn");
-btnDeleteForn.addEventListener("click", async () => {
-  const selectedCheckbox = document.querySelector(
-    'input[name="selectFornecedor"]:checked'
-  );
-  if (!selectedCheckbox) {
-    Toastify({
-      text: "Selecione um Fornecedor para excluir",
-      duration: 2000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
-  }
-
-  const fornecedorSelecionado = JSON.parse(selectedCheckbox.dataset.fornecedor);
-  const fornecedorId = fornecedorSelecionado.forncode;
-
-  const confirmacao = confirm(
-    `Tem certeza de que deseja excluir o Fornecedor com código ${fornecedorId}?`
-  );
-  if (!confirmacao) {
-    return;
-  }
-
-  await deleteForne(fornecedorId, selectedCheckbox.closest("tr"));
-});
-
-async function deleteForne(id, fornRow) {
-  const token = localStorage.getItem("token"); 
-
-  if (!token || isTokenExpired(token)) {
-    Toastify({
-      text: "Sessão expirada. Faça login novamente.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-
-    localStorage.removeItem("token");
-    setTimeout(() => {
-      window.location.href = "/index.html";
-    }, 2000);
-    return;
-  }
-  try {
-    const response = await fetch(`/api/deleteForn/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await response.json();
-  
-    if (response.ok) {
+// deletar fornecedor
+function deleteFornecedor() {
+  const btnDeleteForn = document.querySelector(".buttonDeleteForn");
+  btnDeleteForn.addEventListener("click", async () => {
+    const selectedCheckbox = document.querySelector(
+      'input[name="selectFornecedor"]:checked'
+    );
+    if (!selectedCheckbox) {
       Toastify({
-        text: "O Fornecedor foi excluído com sucesso!",
+        text: "Selecione um Fornecedor para excluir",
         duration: 2000,
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "green",
+        backgroundColor: "red",
       }).showToast();
-
-      fornRow.remove();
-    } else {
-      if (response.status === 400) {
-        Toastify({
-          text: data.message,
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "orange",
-        }).showToast();
-      } else {
-        Toastify({
-          text: "Erro na exclusão do Fornecedor",
-          duration: 2000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-      }
+      return;
     }
-  } catch (error) {
-    Toastify({
-      text: "Erro ao excluir Fornecedor. Tente novamente.",
-      duration: 2000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-  }
-}
-}
 
-
-function editFornecedor(){
-
-    // atualização
-const editButtonForn = document.querySelector(".buttonEditForn");
-
-editButtonForn.addEventListener("click", (e) => {
-  e.preventDefault();
-  const selectedCheckbox = document.querySelector(
-    'input[name="selectFornecedor"]:checked'
-  );
-
-  if (!selectedCheckbox) {
-    Toastify({
-      text: "Selecione um Fornecedor para editar",
-      duration: 2000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
-  }
-
-  const btnMainPageForne = document.querySelector(".btnMainPageForn");
-  if(btnMainPageForne){
-    btnMainPageForne.classList.remove('flex')
-    btnMainPageForne.classList.add('hidden')
-  }
-
-  const listForn = document.querySelector(".listingForn ");
-  if(listForn ){
-    listForn.classList.remove('flex')
-    listForn.classList.add('hidden')
-  }
-
-const containerEditForm = document.querySelector('.formEditRegisterForn')
-   if(containerEditForm){
-      containerEditForm.classList.remove('hidden')
-      containerEditForm.classList.add('flex')
-   }
-
-
-  const fornData = selectedCheckbox.dataset.fornecedor;
-
-  if (!fornData) {
-    console.error("O atributo data-fornecedor está vazio ou indefinido.");
-    return;
-  }
-
-  try {
-    const fornecedorSelecionado = JSON.parse(fornData);
-
-    const campos = [
-      { id: "editFornCode", valor: fornecedorSelecionado.forncode },
-      { id: "editFornName", valor: fornecedorSelecionado.fornnome },
-      { id: "editNomeFan", valor: fornecedorSelecionado.fornnoft },
-      { id: "editFornCnpj", valor: fornecedorSelecionado.forncnpj },
-      { id: "editFornCep", valor: fornecedorSelecionado.forncep },
-      { id: "editFornRua", valor: fornecedorSelecionado.fornrua },
-      { id: "editFornCity", valor: fornecedorSelecionado.forncity },
-      { id: "editFornEstd", valor: fornecedorSelecionado.fornestd },
-      { id: "editFornCelu", valor: fornecedorSelecionado.forncelu },
-      { id: "editFornMail", valor: fornecedorSelecionado.fornmail },
-      { id: "editFornBank", valor: fornecedorSelecionado.fornbanc },
-      { id: "editFornAge", valor: fornecedorSelecionado.fornagen },
-      { id: "editFornCont", valor: fornecedorSelecionado.forncont },
-      { id: "editFornPix", valor: fornecedorSelecionado.fornpix },
-      { id: "editFornDtcd", valor: fornecedorSelecionado.forndtcd },
-      { id: "editFornDisPro", valor: fornecedorSelecionado.fornptsv },
-    ];
-
-    campos.forEach(({ id, valor }) => {
-      const elemento = document.getElementById(id);
-      if (elemento) {
-        if (elemento.type === "date" && valor) {
-          // Formata a data para YYYY-MM-DD, caso seja necessário
-          const dataFormatada = new Date(valor).toISOString().split("T")[0];
-          elemento.value = dataFormatada;
-        } else {
-          elemento.value = valor || "";
-        }
-        // elemento.value = valor || "";
-      } else {
-        console.warn(`Elemento com ID '${id}' não encontrado.`);
-      }
-    });
-
-    document.querySelector(".formEditRegisterForn").style.display = "flex";
-    document.querySelector(".listingForn").style.display = "none";
-  } catch (error) {
-    console.error("Erro ao fazer parse de data-fornecedor:", error);
-  }
-});
-
-const cepInput = document.getElementById("editFornCep");
-const ruaField = document.getElementById("editFornRua");
-const cityField = document.getElementById("editFornCity");
-const stateField = document.getElementById("editFornEstd");
-
-if (cepInput) {
-  cepInput.addEventListener("input", async () => {
-    const fornCep = cepInput.value.replace(/\D/g, "");
-
-    // Só executa a busca se tiver 8 dígitos
-    if (fornCep.length === 8) {
-      try {
-        const response = await fetch(`https://viacep.com.br/ws/${fornCep}/json/`);
-
-        if (!response.ok) throw new Error("Erro ao buscar o CEP");
-
-        const data = await response.json();
-
-        if (data.erro) {
-          Toastify({
-            text: "CEP inválido ou não encontrado.",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "red",
-          }).showToast();
-
-          if (ruaField) ruaField.value = "";
-          if (cityField) cityField.value = "";
-          if (stateField) stateField.value = "";
-          return;
-        }
-
-        if (ruaField) {
-          ruaField.value = `${data.logradouro} - ${data.bairro}` || "";
-          ruaField.readOnly = true;
-        }
-
-        if (cityField) {
-          cityField.value = data.localidade || "";
-          cityField.readOnly = true;
-        }
-
-        if (stateField) {
-          stateField.value = data.uf || "";
-          stateField.readOnly = true;
-        }
-
-      } catch (error) {
-        console.error("Erro ao buscar o CEP:", error);
-        Toastify({
-          text: "Erro ao buscar o CEP.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-      }
-    } else {
-     
-      if (ruaField) ruaField.value = "";
-      if (cityField) cityField.value = "";
-      if (stateField) stateField.value = "";
-    }
-  });
-}
-
- // função ENVIA O DADO ATUALIZADO
-async function editAndUpdateOfForn() {
-  const formEditForn = document.querySelector(".formEditForn");
-
-  formEditForn.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData.entries());
-
-
-    const selectedCheckbox = document.querySelector(
-      'input[name="selectFornecedor"]:checked'
+    const fornecedorSelecionado = JSON.parse(
+      selectedCheckbox.dataset.fornecedor
     );
+    const fornecedorId = fornecedorSelecionado.forncode;
 
-    if (!selectedCheckbox) {
-      console.error("Nenhum checkbox foi selecionado.");
+    const confirmacao = confirm(
+      `Tem certeza de que deseja excluir o Fornecedor com código ${fornecedorId}?`
+    );
+    if (!confirmacao) {
       return;
     }
 
-    const fornecedorId = selectedCheckbox.dataset.fornecedor;
+    await deleteForne(fornecedorId, selectedCheckbox.closest("tr"));
+  });
 
-    if (!fornecedorId) {
-      console.error("O atributo data-fornecedor está vazio ou inválido.");
-      return;
-    }
-
-    let fornIdParsed;
-    try {
-      fornIdParsed = JSON.parse(fornecedorId).forncode;
-    } catch (error) {
-      console.error("Erro ao fazer parse de bemId:", error);
-      return;
-    }
-
-    const updateForn = {
-      forncode: document.getElementById("editFornCode").value,
-      fornnome: document.getElementById("editFornName").value,
-      fornnoft: document.getElementById("editNomeFan").value,
-      forncnpj: document.getElementById("editFornCnpj").value,
-      forncep: document.getElementById("editFornCep").value,
-      fornrua: document.getElementById("editFornRua").value,
-      forncity: document.getElementById("editFornCity").value,
-      fornestd: document.getElementById("editFornEstd").value,
-      forncelu: document.getElementById("editFornCelu").value,
-      fornmail: document.getElementById("editFornMail").value,
-      fornbanc: document.getElementById("editFornBank").value,
-      fornagen: document.getElementById("editFornAge").value,
-      forncont: document.getElementById("editFornCont").value,
-      fornpix: document.getElementById("editFornPix").value,
-      forndtcd: document.getElementById("editFornDtcd").value || null,
-      fornptsv: document.getElementById("editFornDisPro").value,
-    };
-
-    const token = localStorage.getItem("token"); // Pega o token armazenado no login
+  async function deleteForne(id, fornRow) {
+    const token = localStorage.getItem("token");
 
     if (!token || isTokenExpired(token)) {
       Toastify({
@@ -920,45 +655,328 @@ async function editAndUpdateOfForn() {
       }, 2000);
       return;
     }
-
     try {
-      const response = await fetch(`/api/updateforn/${fornIdParsed}`, {
-        method: "PUT",
+      const response = await fetch(`/api/deleteForn/${id}`, {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(updateForn),
       });
-
+      const data = await response.json();
 
       if (response.ok) {
-
         Toastify({
-          text: `Fonecedor '${fornIdParsed}' Atualizado com sucesso!!`,
-          duration: 3000,
+          text: "O Fornecedor foi excluído com sucesso!",
+          duration: 2000,
           close: true,
           gravity: "top",
           position: "center",
           backgroundColor: "green",
         }).showToast();
 
-        formEditForn.reset();
+        fornRow.remove();
       } else {
-        console.error("Erro ao atualizar fornecedor:", await response.text());
+        if (response.status === 400) {
+          Toastify({
+            text: data.message,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "orange",
+          }).showToast();
+        } else {
+          Toastify({
+            text: "Erro na exclusão do Fornecedor",
+            duration: 2000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
+        }
       }
     } catch (error) {
-      console.error("Erro na requisição:", error);
+      Toastify({
+        text: "Erro ao excluir Fornecedor. Tente novamente.",
+        duration: 2000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+    }
+  }
+}
+
+function editFornecedor() {
+  // atualização
+  const editButtonForn = document.querySelector(".buttonEditForn");
+
+  editButtonForn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const selectedCheckbox = document.querySelector(
+      'input[name="selectFornecedor"]:checked'
+    );
+
+    if (!selectedCheckbox) {
+      Toastify({
+        text: "Selecione um Fornecedor para editar",
+        duration: 2000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+      return;
+    }
+
+    const btnMainPageForne = document.querySelector(".btnMainPageForn");
+    if (btnMainPageForne) {
+      btnMainPageForne.classList.remove("flex");
+      btnMainPageForne.classList.add("hidden");
+    }
+
+    const listForn = document.querySelector(".listingForn ");
+    if (listForn) {
+      listForn.classList.remove("flex");
+      listForn.classList.add("hidden");
+    }
+
+    const containerEditForm = document.querySelector(".formEditRegisterForn");
+    if (containerEditForm) {
+      containerEditForm.classList.remove("hidden");
+      containerEditForm.classList.add("flex");
+    }
+
+    const fornData = selectedCheckbox.dataset.fornecedor;
+
+    if (!fornData) {
+      console.error("O atributo data-fornecedor está vazio ou indefinido.");
+      return;
+    }
+
+    try {
+      const fornecedorSelecionado = JSON.parse(fornData);
+
+      const campos = [
+        { id: "editFornCode", valor: fornecedorSelecionado.forncode },
+        { id: "editFornName", valor: fornecedorSelecionado.fornnome },
+        { id: "editNomeFan", valor: fornecedorSelecionado.fornnoft },
+        { id: "editFornCnpj", valor: fornecedorSelecionado.forncnpj },
+        { id: "editFornCep", valor: fornecedorSelecionado.forncep },
+        { id: "editFornRua", valor: fornecedorSelecionado.fornrua },
+        { id: "editFornCity", valor: fornecedorSelecionado.forncity },
+        { id: "editFornEstd", valor: fornecedorSelecionado.fornestd },
+        { id: "editFornCelu", valor: fornecedorSelecionado.forncelu },
+        { id: "editFornMail", valor: fornecedorSelecionado.fornmail },
+        { id: "editFornBank", valor: fornecedorSelecionado.fornbanc },
+        { id: "editFornAge", valor: fornecedorSelecionado.fornagen },
+        { id: "editFornCont", valor: fornecedorSelecionado.forncont },
+        { id: "editFornPix", valor: fornecedorSelecionado.fornpix },
+        { id: "editFornDtcd", valor: fornecedorSelecionado.forndtcd },
+        { id: "editFornDisPro", valor: fornecedorSelecionado.fornptsv },
+      ];
+
+      campos.forEach(({ id, valor }) => {
+        const elemento = document.getElementById(id);
+        if (elemento) {
+          if (elemento.type === "date" && valor) {
+            // Formata a data para YYYY-MM-DD, caso seja necessário
+            const dataFormatada = new Date(valor).toISOString().split("T")[0];
+            elemento.value = dataFormatada;
+          } else {
+            elemento.value = valor || "";
+          }
+          // elemento.value = valor || "";
+        } else {
+          console.warn(`Elemento com ID '${id}' não encontrado.`);
+        }
+      });
+
+      document.querySelector(".formEditRegisterForn").style.display = "flex";
+      document.querySelector(".listingForn").style.display = "none";
+    } catch (error) {
+      console.error("Erro ao fazer parse de data-fornecedor:", error);
     }
   });
-}
-editAndUpdateOfForn();
 
+  const cepInput = document.getElementById("editFornCep");
+  const ruaField = document.getElementById("editFornRua");
+  const cityField = document.getElementById("editFornCity");
+  const stateField = document.getElementById("editFornEstd");
+
+  if (cepInput) {
+    cepInput.addEventListener("input", async () => {
+      const fornCep = cepInput.value.replace(/\D/g, "");
+
+      // Só executa a busca se tiver 8 dígitos
+      if (fornCep.length === 8) {
+        try {
+          const response = await fetch(
+            `https://viacep.com.br/ws/${fornCep}/json/`
+          );
+
+          if (!response.ok) throw new Error("Erro ao buscar o CEP");
+
+          const data = await response.json();
+
+          if (data.erro) {
+            Toastify({
+              text: "CEP inválido ou não encontrado.",
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "red",
+            }).showToast();
+
+            if (ruaField) ruaField.value = "";
+            if (cityField) cityField.value = "";
+            if (stateField) stateField.value = "";
+            return;
+          }
+
+          if (ruaField) {
+            ruaField.value = `${data.logradouro} - ${data.bairro}` || "";
+            ruaField.readOnly = true;
+          }
+
+          if (cityField) {
+            cityField.value = data.localidade || "";
+            cityField.readOnly = true;
+          }
+
+          if (stateField) {
+            stateField.value = data.uf || "";
+            stateField.readOnly = true;
+          }
+        } catch (error) {
+          console.error("Erro ao buscar o CEP:", error);
+          Toastify({
+            text: "Erro ao buscar o CEP.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
+        }
+      } else {
+        if (ruaField) ruaField.value = "";
+        if (cityField) cityField.value = "";
+        if (stateField) stateField.value = "";
+      }
+    });
+  }
+
+  // função ENVIA O DADO ATUALIZADO
+  async function editAndUpdateOfForn() {
+    const formEditForn = document.querySelector(".formEditForn");
+
+    formEditForn.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+      const data = Object.fromEntries(formData.entries());
+
+      const selectedCheckbox = document.querySelector(
+        'input[name="selectFornecedor"]:checked'
+      );
+
+      if (!selectedCheckbox) {
+        console.error("Nenhum checkbox foi selecionado.");
+        return;
+      }
+
+      const fornecedorId = selectedCheckbox.dataset.fornecedor;
+
+      if (!fornecedorId) {
+        console.error("O atributo data-fornecedor está vazio ou inválido.");
+        return;
+      }
+
+      let fornIdParsed;
+      try {
+        fornIdParsed = JSON.parse(fornecedorId).forncode;
+      } catch (error) {
+        console.error("Erro ao fazer parse de bemId:", error);
+        return;
+      }
+
+      const updateForn = {
+        forncode: document.getElementById("editFornCode").value,
+        fornnome: document.getElementById("editFornName").value,
+        fornnoft: document.getElementById("editNomeFan").value,
+        forncnpj: document.getElementById("editFornCnpj").value,
+        forncep: document.getElementById("editFornCep").value,
+        fornrua: document.getElementById("editFornRua").value,
+        forncity: document.getElementById("editFornCity").value,
+        fornestd: document.getElementById("editFornEstd").value,
+        forncelu: document.getElementById("editFornCelu").value,
+        fornmail: document.getElementById("editFornMail").value,
+        fornbanc: document.getElementById("editFornBank").value,
+        fornagen: document.getElementById("editFornAge").value,
+        forncont: document.getElementById("editFornCont").value,
+        fornpix: document.getElementById("editFornPix").value,
+        forndtcd: document.getElementById("editFornDtcd").value || null,
+        fornptsv: document.getElementById("editFornDisPro").value,
+      };
+
+      const token = localStorage.getItem("token"); // Pega o token armazenado no login
+
+      if (!token || isTokenExpired(token)) {
+        Toastify({
+          text: "Sessão expirada. Faça login novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+
+        localStorage.removeItem("token");
+        setTimeout(() => {
+          window.location.href = "/index.html";
+        }, 2000);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/updateforn/${fornIdParsed}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(updateForn),
+        });
+
+        if (response.ok) {
+          Toastify({
+            text: `Fonecedor '${fornIdParsed}' Atualizado com sucesso!!`,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "green",
+          }).showToast();
+
+          formEditForn.reset();
+        } else {
+          console.error("Erro ao atualizar fornecedor:", await response.text());
+        }
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+      }
+    });
+  }
+  editAndUpdateOfForn();
 }
 
 // // ATUALIZAR EM RUNTIME A EDIÇÃO
 function updateFornecedorInTableRunTime(updatedFornecedor) {
-  
   const row = document.querySelector(
     `[data-forncode="${updatedFornecedor.forncode}"]`
   );
@@ -983,4 +1001,3 @@ function updateFornecedorInTableRunTime(updatedFornecedor) {
     row.cells[16].textContent = updatedFornecedor.fornptsv || "-"; // Descrição
   }
 }
-

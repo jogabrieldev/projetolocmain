@@ -39,16 +39,14 @@ async function obterNumeroLocacao() {
   }
 }
 
-function atualizarDataHora() {
+function atualizarData() {
   const agora = new Date();
 
   const ano = agora.getFullYear();
   const mes = String(agora.getMonth() + 1).padStart(2, "0");
   const dia = String(agora.getDate()).padStart(2, "0");
-  const horas = String(agora.getHours()).padStart(2, "0");
-  const minutos = String(agora.getMinutes()).padStart(2, "0");
 
-  const dataHoraFormatada = `${ano}-${mes}-${dia}T${horas}:${minutos}`;
+  const dataHoraFormatada = `${ano}-${mes}-${dia}`;
 
   document.getElementById("dataLoc").value = dataHoraFormatada;
 }
@@ -110,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 deletarLocation();
-                atualizarDataHora();
+                atualizarData() ;
                 esconderElemento();
                 mostrarElemento();
               } else {
@@ -757,8 +755,8 @@ async function handleSubmit() {
     if (isParcial) {
       if (!codeBen || !dataInicioStr || !dataFimStr || !quantidade) {
         Toastify({
-          text: `Grupo ${i}: Preencha código, data de início e data fim.`,
-          duration: 4000,
+          text: `Grupo ${i}: Preencha código, quantidade, data de início e data fim.`,
+          duration: 3000,
           close: true,
           gravity: "top",
           position: "center",
@@ -781,6 +779,21 @@ async function handleSubmit() {
 
       const dataInicio = parseDataLocal(dataInicioStr);
       const dataFim = parseDataLocal(dataFimStr);
+      const dataDevoValid = document.getElementById("DataDevo")?.value || null;
+
+      const dataDevo = parseDataLocal(dataDevoValid);
+
+      if (dataFim.getTime() !== dataDevo.getTime()) {
+        Toastify({
+          text: `Grupo ${i}: A data FIM do bem deve ser igual à data de DEVOLUÇÃO da locação.`,
+          duration: 4000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "orange",
+        }).showToast();
+        return;
+      }
 
       if (isFeriado(dataFim)) {
         Toastify({
@@ -858,6 +871,8 @@ async function handleSubmit() {
     const dataDevoStr = document.getElementById("DataDevo")?.value || null;
     const pagament = document.getElementById("pagament")?.value || null;
 
+    console.log('locacao' , dataLocStr)
+
     if (!dataDevoStr || !pagament) {
       Toastify({
         text: "Insira a data de devolução e a Forma de pagamento",
@@ -883,7 +898,7 @@ async function handleSubmit() {
       return;
     }
 
-    const dataLoc = new Date(dataLocStr);
+    // const dataLoc = new Date(dataLocStr);
     const dataDevo = parseDataLocal(dataDevoStr);
 
     if (isFeriado(dataDevo)) {
@@ -901,8 +916,17 @@ async function handleSubmit() {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
 
-    const dataLocDia = new Date(dataLoc);
-    dataLocDia.setHours(0, 0, 0, 0);
+    const partes = dataLocStr.split('-');
+    const dataLocDia = new Date(
+    Number(partes[0]), // ano
+    Number(partes[1]) - 1, // mês (0-indexado)
+    Number(partes[2]) // dia
+  );
+  dataLocDia.setHours(0, 0, 0, 0);
+
+    console.log('hoje' , hoje)
+    console.log('data' , dataLocDia)
+    // console.log('lco' , dataLoc)
 
     if (dataLocDia.getTime() !== hoje.getTime()) {
       Toastify({
@@ -920,8 +944,14 @@ async function handleSubmit() {
       return new Date(data.getFullYear(), data.getMonth(), data.getDate());
     };
 
-    const dataLocNormalizada = normalizarData(dataLoc);
-    const dataDevoNormalizada = normalizarData(dataDevo);
+    const dateLocation = new Date(dataLocStr)
+    const dateDevolution = new Date(dataDevoStr)
+
+    const dataLocNormalizada = normalizarData(dateLocation);
+    const dataDevoNormalizada = normalizarData(dateDevolution);
+
+    console.log('devolu' , dataDevoNormalizada)
+    console.log('loc' , dataLocNormalizada )
 
     if (dataLocNormalizada > dataDevoNormalizada) {
       Toastify({
@@ -939,7 +969,7 @@ async function handleSubmit() {
       numericLocation,
       userClientValidade,
       dataLoc: dataLocStr,
-      dataDevo: dataDevoStr,
+      dataDevo: dataDevo.toISOString().split("T")[0],
       pagament,
       bens,
     };

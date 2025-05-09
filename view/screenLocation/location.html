@@ -22,7 +22,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
         <!-- Formulário do cliente -->
         <form id="formClient" class="p-3 rounded shadow-sm mb-4">
             <div class="row g-3 align-items-end">
-              <div class="col-md-6">
+              <div class="col-md-5">
                 <label for="client" class="form-label fw-bold">Pesquise o Cliente</label>
                 <div class="d-flex flex-wrap gap-2 align-items-center">
                   <input
@@ -49,14 +49,15 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
                 />
               </div>
 
-              <div class="col-md-4">
+              <div class="col-md-2">
                 <label for="dataLoc" class="form-label fw-bold">Data da locação</label>
                 <input
-                  type="datetime-local"
+                  type="date"
                   name="dataLoc"
                   id="dataLoc"
                   class="form-control"
                   required
+                  readonly
                 />
               </div>
            
@@ -216,15 +217,11 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
               <input type="text" name="clientList" id="clientList" readonly class="form-control" placeholder="Cliente">
           </div>
   
-          <!-- Campo Status -->
-          <!-- <div class="col-md-4">
-              <label for="statEdit" class="form-label fw-bold">Status</label>
-              <select name="statEdit" id="statEdit">
-                 
-                  <option value="Em Locação">Em Locação</option>
-                  <option value="Pendente">Pendente</option>
-              </select>
-          </div> -->
+          <!-- Campo Data devolução -->
+          <div class="col-md-4">
+              <label for="dateDev" class="form-label fw-bold">Data devolução</label>
+               <input type="date" name="dateDev" id="dateDev">
+          </div>
       </div>
 
 

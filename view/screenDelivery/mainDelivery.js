@@ -153,7 +153,6 @@ async function getAllClients() {
            
         renderTableDelivery(); 
 
-      
     } catch (error) {
         console.error("Erro ao buscar os clientes:", error);
     }
@@ -174,7 +173,7 @@ function renderTableDelivery() {
     tbody.innerHTML = ""; 
 
     if (deliveryData.length > 0 && clientData.length > 0) {
-        thead.style.display = "table-header-group"; // Exibe o thead
+        thead.style.display = "table-header-group"; 
         table.style.display = "table"; 
 
         if (messageContainer) {
@@ -245,8 +244,6 @@ let motoris = []
       return;
   }
 
- 
-     
       try {
         const response  = await fetch ("/api/listingdriver" , {
             method: "GET",
@@ -261,11 +258,14 @@ let motoris = []
 
          const item = deliveryData.find(d => d.loficode === codigo);
          if (!item) return;
-   
+
          const cliente = clientData.find(c => c.cliecode === item.lofiidcl);
    
          const motorista = motoris.find(m => m.motocode === item.lofiidmt); 
-        
+
+         const dateD = new Date(item.lofidtdv); 
+         const dataFormat = dateD.toLocaleDateString('pt-BR');
+
          const container = document.querySelector(".containerDelivery");
    
          // Criando os elementos
@@ -288,7 +288,8 @@ let motoris = []
              <p><strong>ID do Bem:</strong> ${item.lofiidbe}</p>
              <p><strong>ID locação:</strong> ${item.lofiidlo}</p>
              <p><strong>Motorista:</strong> ${motorista ? motorista.motoname : "Nenhum"}</p>
-             <p><strong>Data e Hora:</strong> ${new Date(item.lofidtlo).toLocaleString()}</p>
+             <p><strong>Data e Hora da locação:</strong> ${new Date(item.lofidtlo).toLocaleString()}</p>
+             <p><strong>Data de devolução:</strong> ${dataFormat}</p>
              <p><strong>Forma de Pagamento:</strong> ${item.lofipgmt}</p>
          `;
          
@@ -311,14 +312,12 @@ let motoris = []
              `
              : `<p><strong>Cliente não encontrado.</strong></p>`;
           
-
             const containerBtnpage = document.createElement("div");
              containerBtnpage.style.display = "flex";
              containerBtnpage.style.padding = "8px";
              containerBtnpage.style.gap = '20px';
              containerBtnpage.style.justifyContent = 'start'
 
-    
          const voltarBtn = document.createElement("button");
          voltarBtn.textContent = "Voltar";
          voltarBtn.style.marginTop = "10px";
@@ -353,7 +352,7 @@ let motoris = []
          container.style.display = "block";
        
       } catch (error) {
-          console.error('ERRO A MOSTRAR A TELA:', error)
+          console.error('ERRO A MOSTRAR A TELA DE DETALHES DE ENTREGA:', error)
       }
       
   };

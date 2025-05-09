@@ -282,7 +282,8 @@ if (buttonOutGoods) {
       valorAlug: document.querySelector("#valorAlugMain").value.trim(),
       fabri: document.querySelector("#fabri").value.trim(),
     };
-      
+
+
     const now = new Date();
     const currentHours = String(now.getHours()).padStart(2, '0');
     const currentMinutes = String(now.getMinutes()).padStart(2, '0');
@@ -311,93 +312,80 @@ if (buttonOutGoods) {
       }).showToast();
       return;
     }
-    const anoCompra = new Date(formData.dtCompra).getFullYear();
-      
-    const datas = [
-      { key: 'dtCompra', label: 'Data de Compra' },
-      { key: 'dtStatus', label: 'Data de Status' },
-      { key: 'bensAnmo', label: 'Ano do modelo' }
-    ];
-     
-  
-    for (const { key, label } of datas) {
-      const str = formData[key];
     
-      if (!isDataValida(str)) {
-        Toastify({
-          text: `${label} inválida adicione uma data valida`,
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-        return;
-      }
-    
-      // 2) Regra extra: se for dtStatus, não pode ser futura
-      if (key === 'dtStatus') {
-        // parse “YYYY-MM-DD” manualmente
-        const [ano, mes, dia] = str.split('-').map(Number);
-        const statusDate = new Date(ano, mes - 1, dia);
-        const hoje       = new Date();
-        const hojeDate   = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
-  
-        if (statusDate.getTime() !== hojeDate.getTime()) {
-          Toastify({
-            text: "Data de Status deve ser igual à data de hoje.",
-            duration: 3000, close: true,
-            gravity: "top", position: "center",
-            backgroundColor: "orange"
-          }).showToast();
-          return;
-        }
-      }
-      // 2) Regra extra: se for dtStatus, não pode ser futura
-      if (key === 'dtCompra') {
-        // parse “YYYY-MM-DD” manualmente
-        const [ano, mes, dia] = str.split('-').map(Number);
-        const statusDate = new Date(ano, mes - 1, dia);
-        const hoje       = new Date();
-        const hojeDate   = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
-  
-        if (statusDate.getTime() > hojeDate.getTime()) {
-          Toastify({
-            text: "A data da compra tem que ser menor ou igual a data de hoje.",
-            duration: 3000, close: true,
-            gravity: "top", position: "center",
-            backgroundColor: "orange"
-          }).showToast();
-          return;
-        }
-      }
+   const datas = [
+  { key: 'dtCompra', label: 'Data de Compra' },
+  { key: 'dtStatus', label: 'Data de Status' },
+  { key: 'bensAnmo', label: 'Data do Modelo' }
+];
 
-      if (key === 'bensAnmo') {
-        const anoModelo = Number(str.split('-')[0]);
-        if (isNaN(anoModelo)) {
-          Toastify({
-            text: "Ano do Modelo inválido.",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "red",
-          }).showToast();
-          return;
-        }
-        // se modelo > compra, bloqueia
-        if (anoModelo > anoCompra) {
-          Toastify({
-            text: "O ano da compra não pode ser menor que o ano do modelo.",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "orange",
-          }).showToast();
-          return;
-        }
-      }
+const hoje = new Date();
+const hojeDate = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+
+for (const { key, label } of datas) {
+  const str = formData[key];
+
+  if (!isDataValida(str)) {
+    Toastify({
+      text: `${label} inválida. Adicione uma data válida.`,
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+    return;
+  }
+
+  // Converter para data sem horário
+  const [ano, mes, dia] = str.split('-').map(Number);
+  const dataCampo = new Date(ano, mes - 1, dia);
+
+  if (key === 'dtStatus') {
+    if (dataCampo.getTime() !== hojeDate.getTime()) {
+      Toastify({
+        text: "Data de Status deve ser igual à data de hoje.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "orange"
+      }).showToast();
+      return;
+    }
+  }
+
+  if (key === 'dtCompra') {
+    if (dataCampo.getTime() > hojeDate.getTime()) {
+      Toastify({
+        text: "A data da compra deve ser menor ou igual à data de hoje.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "orange"
+      }).showToast();
+      return;
+    }
+  }
+
+  if (key === 'bensAnmo') {
+    const [aC, mC, dC] = formData.dtCompra.split('-').map(Number);
+    const dataCompra = new Date(aC, mC - 1, dC);
+
+    if (dataCampo.getTime() > dataCompra.getTime()) {
+      Toastify({
+        text: "A data do modelo não pode ser maior que a data da compra.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "orange"
+      }).showToast();
+      return;
+    }
+  }
+
     }
     const cleanedData = Object.fromEntries(
       Object.entries(formData).filter(([_, value]) => value !== "")
@@ -437,7 +425,7 @@ if (buttonOutGoods) {
         }).showToast();
       } else {
         Toastify({
-          text: "Erro ao cadastrar o bem",
+          text: result.message || "Erro ao cadastrar o Bem",
           duration: 3000,
           close: true,
           gravity: "top",
@@ -447,7 +435,15 @@ if (buttonOutGoods) {
       }
     } catch (error) {
       console.error("Erro ao enviar formulário:", error);
-      alert("Erro ao enviar os dados.");
+      Toastify({
+          text: "Erro ao enviar os dados.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+      
     }
   });
   validationFormGoods()
@@ -546,121 +542,118 @@ async function fetchBens() {
     }, 2000);
     return;
   }
-  try {
-    const response = await fetch("/api/listbens", {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const bens = await response.json();
+ try {
+  const response = await fetch("/api/listbens", {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
-    const bensListDiv = document.querySelector("#listingBens");
-    bensListDiv.innerHTML = "";
+  const result = await response.json();
 
-    if (bens.length > 0) {
-      const tabela = document.createElement("table");
-      tabela.classList.add('dark-table')
-
-      // Cabeçalho
-      const cabecalho = tabela.createTHead();
-      const linhaCabecalho = cabecalho.insertRow();
-      const colunas = [
-        "Selecionar",
-        "Código",
-        "Nome",
-        "Familida do Bem",
-        "Status",
-        "Número de Série",
-        "Placa",
-        "Ano do Modelo",
-        "Data da Compra",
-        "valor de Compra",
-        "Nota Fiscal",
-        "Código Fornecedor",
-        "Km Atual",
-        "Data do Km",
-        "Modelo",
-        "Data do Status",
-        "Hora Status",
-        "Chassi",
-        "Cor",
-        "Número",
-        "Renavam",
-        "Ctep",
-        "Ativo",
-        "Alugado",
-        "Valor Alugado",
-        "Fabricante",
-      ];
-
-      // Preenche o cabeçalho
-      colunas.forEach((coluna) => {
-        const th = document.createElement("th");
-        th.textContent = coluna;
-        linhaCabecalho.appendChild(th);
-      });
-
-      // Corpo da tabela
-      const corpo = tabela.createTBody();
-      bens.forEach((bem) => {
-        const linha = corpo.insertRow();
-
-        linha.setAttribute("data-benscode", bem.benscode);
-
-        const checkboxCell = linha.insertCell();
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.name = "selectBem";
-        checkbox.value = bem.benscode;
-
-        const bemData = JSON.stringify(bem, bem.bensstat);
-        if (bemData) {
-          checkbox.dataset.bem = bemData;
-        } else {
-          console.warn(`Bem inválido encontrado:`, bem);
-        }
-
-        checkboxCell.appendChild(checkbox);
-
-        linha.insertCell().textContent = bem.benscode;
-        linha.insertCell().textContent = bem.bensnome;
-        linha.insertCell().textContent = bem.benscofa;
-        const statusCell = linha.insertCell();
-        statusCell.textContent = bem.bensstat;
-        statusCell.classList.add("status-bem");
-        linha.insertCell().textContent = bem.bensnuse;
-        linha.insertCell().textContent = bem.bensplac;
-        linha.insertCell().textContent = formatDate(bem.bensanmo);
-        linha.insertCell().textContent = formatDate(bem.bensdtcp);
-        linha.insertCell().textContent = bem.bensvacp;
-        linha.insertCell().textContent = bem.bensnunf;
-        linha.insertCell().textContent = bem.benscofo;
-        linha.insertCell().textContent = bem.benskmat;
-        linha.insertCell().textContent = formatDate(bem.bensdtkm);
-        linha.insertCell().textContent = bem.bensmode;
-        linha.insertCell().textContent = formatDate(bem.bensdtus);
-        linha.insertCell().textContent = bem.benshrus;
-        linha.insertCell().textContent = bem.bensnuch;
-        linha.insertCell().textContent = bem.benscore;
-        linha.insertCell().textContent = bem.bensnumo;
-        linha.insertCell().textContent = bem.bensrena;
-        linha.insertCell().textContent = bem.bensctep;
-        linha.insertCell().textContent = bem.bensativ;
-        linha.insertCell().textContent = bem.bensalug;
-        linha.insertCell().textContent = bem.bensvaal;
-        linha.insertCell().textContent = bem.bensfabr;
-      });
-
-      bensListDiv.appendChild(tabela);
-    } else {
-      bensListDiv.innerHTML = "<p>Nenhum bem cadastrado.</p>";
-    }
-  } catch (error) {
-    console.error("Erro ao carregar bens:", error);
-    document.getElementById("bensList").innerHTML =
-      "<p>Erro ao carregar bens.</p>";
+  if (!response.ok) {
+    Toastify({
+      text: result?.message || "Erro ao carregar clientes.",
+      duration: 4000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+    return;
   }
+
+  const bens = result;
+  const bensListDiv = document.querySelector("#listingBens");
+  bensListDiv.innerHTML = "";
+
+  if (bens.length > 0) {
+    const tabela = document.createElement("table");
+    tabela.classList.add('dark-table');
+
+    // Cabeçalho
+    const cabecalho = tabela.createTHead();
+    const linhaCabecalho = cabecalho.insertRow();
+    const colunas = [
+      "Selecionar", "Código", "Nome", "Familida do Bem", "Status", "Número de Série",
+      "Placa", "Ano do Modelo", "Data da Compra", "valor de Compra", "Nota Fiscal",
+      "Código Fornecedor", "Km Atual", "Data do Km", "Modelo", "Data do Status",
+      "Hora Status", "Chassi", "Cor", "Número", "Renavam", "Ctep", "Ativo",
+      "Alugado", "Valor Alugado", "Fabricante"
+    ];
+
+    colunas.forEach((coluna) => {
+      const th = document.createElement("th");
+      th.textContent = coluna;
+      linhaCabecalho.appendChild(th);
+    });
+
+    const corpo = tabela.createTBody();
+    bens.forEach((bem) => {
+      const linha = corpo.insertRow();
+      linha.setAttribute("data-benscode", bem.benscode);
+
+      const checkboxCell = linha.insertCell();
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.name = "selectBem";
+      checkbox.value = bem.benscode;
+
+      const bemData = JSON.stringify(bem, bem.bensstat);
+      if (bemData) {
+        checkbox.dataset.bem = bemData;
+      } else {
+        console.warn(`Bem inválido encontrado:`, bem);
+      }
+      checkboxCell.appendChild(checkbox);
+
+      linha.insertCell().textContent = bem.benscode;
+      linha.insertCell().textContent = bem.bensnome;
+      linha.insertCell().textContent = bem.benscofa;
+      const statusCell = linha.insertCell();
+      statusCell.textContent = bem.bensstat;
+      statusCell.classList.add("status-bem");
+      linha.insertCell().textContent = bem.bensnuse;
+      linha.insertCell().textContent = bem.bensplac;
+      linha.insertCell().textContent = formatDate(bem.bensanmo);
+      linha.insertCell().textContent = formatDate(bem.bensdtcp);
+      linha.insertCell().textContent = bem.bensvacp;
+      linha.insertCell().textContent = bem.bensnunf;
+      linha.insertCell().textContent = bem.benscofo;
+      linha.insertCell().textContent = bem.benskmat;
+      linha.insertCell().textContent = formatDate(bem.bensdtkm);
+      linha.insertCell().textContent = bem.bensmode;
+      linha.insertCell().textContent = formatDate(bem.bensdtus);
+      linha.insertCell().textContent = bem.benshrus;
+      linha.insertCell().textContent = bem.bensnuch;
+      linha.insertCell().textContent = bem.benscore;
+      linha.insertCell().textContent = bem.bensnumo;
+      linha.insertCell().textContent = bem.bensrena;
+      linha.insertCell().textContent = bem.bensctep;
+      linha.insertCell().textContent = bem.bensativ;
+      linha.insertCell().textContent = bem.bensalug;
+      linha.insertCell().textContent = bem.bensvaal;
+      linha.insertCell().textContent = bem.bensfabr;
+    });
+
+    bensListDiv.appendChild(tabela);
+  } else {
+    bensListDiv.innerHTML = "<p>Nenhum bem cadastrado.</p>";
+  }
+
+} catch (error) {
+  console.error("Erro na requisição:", error);
+  Toastify({
+    text: "Erro na comunicação com o servidor.",
+    duration: 3000,
+    close: true,
+    gravity: "top",
+    position: "center",
+    backgroundColor: "red",
+  }).showToast();
+}
+
 }
 
 // DELETAR BEM
@@ -981,37 +974,7 @@ async function editAndUpdateOfBens() {
       bensfabr: document.getElementById("fabriEdit").value,
     };
        
-    // const originalData = {
-    //   bensstat: document.getElementById("statusEdit").value,
-    //   bensdtus: document.getElementById("dtStatusEdit").value,
-    //   benshrus: document.getElementById("hrStatusEdit").value,
-    //   // você pode salvar outros campos também se quiser
-    // };
     
-    // // Quando o usuário clicar em salvar:
-    // const currentData = {
-    //   bensstat: document.getElementById("statusEdit").value,
-    //   bensdtus: document.getElementById("dtStatusEdit").value,
-    //   benshrus: document.getElementById("hrStatusEdit").value,
-    // };
-    
-    // const statusChanged = originalData.bensstat !== currentData.bensstat;
-    // const dtStatus = currentData.bensdtus?.trim();
-    // const hrStatus = currentData.benshrus?.trim();
-    
-    // if (statusChanged) {
-    //   if (!dtStatus || !hrStatus) {
-    //     Toastify({
-    //       text: "Para atualizar o STATUS é obrigatório informar a DATA e HORA do Status.",
-    //       duration: 3000,
-    //       close: true,
-    //       gravity: "top",
-    //       position: "center",
-    //       backgroundColor: "red",
-    //     }).showToast();
-    //     return;
-    //   }
-    // }
    
     try {
       const response = await fetch(`/api/update/${bemIdParsed}`, {

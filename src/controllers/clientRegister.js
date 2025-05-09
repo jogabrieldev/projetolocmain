@@ -1,4 +1,5 @@
 import { clientRegister } from "../model/dataClient.js";
+import fetch from "node-fetch";
 
 export const movementClient = {
   async registerClient(req, res) {
@@ -8,20 +9,98 @@ export const movementClient = {
       if (!dataClientSubmit) {
         return res
           .status(400)
-          .json({ message: "campos obrigatorios não preenchidos" });
+          .json({ message: "Campos obrigatórios não preenchidos." });
+      }
+
+      const { dtCad, dtNasc } = dataClientSubmit;
+
+      // Função auxiliar para validar se a data é válida
+      const isDataValida = (str) => {
+        return (
+          /^\d{4}-\d{2}-\d{2}$/.test(str) && !isNaN(new Date(str).getTime())
+        );
+      };
+
+      if (!isDataValida(dtCad)) {
+        return res.status(400).json({ message: "Data de Cadastro inválida." });
+      }
+
+      if (!isDataValida(dtNasc)) {
+        return res
+          .status(400)
+          .json({ message: "Data de Nascimento inválida." });
+      }
+
+      const [yCad, mCad, dCad] = dtCad.split("-").map(Number);
+      const [yNasc, mNasc, dNasc] = dtNasc.split("-").map(Number);
+
+      const dataCadastro = new Date(yCad, mCad - 1, dCad);
+      const dataNascimento = new Date(yNasc, mNasc - 1, dNasc);
+      const hoje = new Date();
+      const hoje0 = new Date(
+        hoje.getFullYear(),
+        hoje.getMonth(),
+        hoje.getDate()
+      );
+
+      // dtCad deve ser igual à data de hoje
+      if (dataCadastro.getTime() !== hoje0.getTime()) {
+        return res.status(400).json({
+          message: "Data de Cadastro deve ser igual à data de hoje.",
+        });
+      }
+
+      // dtNasc não pode ser no futuro
+      if (dataNascimento.getTime() >= hoje0.getTime()) {
+        return res.status(400).json({
+          message:
+            "Data de Nascimento não pode ser maior ou igual à data de hoje.",
+        });
+      }
+
+      // dtNasc deve ser anterior ou igual à dtCad
+      if (dataNascimento.getTime() > dataCadastro.getTime()) {
+        return res.status(400).json({
+          message:
+            "Data de Nascimento não pode ser posterior à Data de Cadastro.",
+        });
+      }
+
+      const { clieName } = dataClientSubmit
+    if (!clieName || clieName.trim().length < 3) {
+    return res.status(400).json({
+    success: false,
+    message: "O nome do fornecedor é obrigatório e deve conter pelo menos 3 letras.",
+  });
+}
+
+      const cepClie = dataClientSubmit.clieCep;
+
+      if (!cepClie || !/^\d{5}-?\d{3}$/.test(cepClie)) {
+        return res.status(400).json({ message: "CEP inválido." });
+      }
+
+      const response = await fetch(`https://viacep.com.br/ws/${cepClie}/json/`);
+      const cepData = await response.json();
+
+      if (cepData.erro) {
+        return res.status(400).json({ message: "CEP não encontrado." });
       }
 
       const newClient = await clientRegister.registerOfClient(dataClientSubmit);
+      if (!newClient) {
+        return res.status(400).json({ message: "Erro ao inserir cliente" });
+      }
 
       const io = req.app.get("socketio");
       if (io) {
-        const clients = await clientRegister.listingClient(); 
-        io.emit("clienteAtualizado", clients); 
+        const clients = await clientRegister.listingClient();
+        io.emit("clienteAtualizado", clients);
       }
+
       res.status(201).json({ success: true, user: newClient });
     } catch (error) {
-      
-      console.error("erro no controller");
+      console.error("erro no controller client");
 
       if (error.message.includes("Código de cliente já cadastrado")) {
         return res.status(409).json({ success: false, message: error.message });
@@ -34,7 +113,12 @@ export const movementClient = {
   async listingOfClient(req, res) {
     try {
       const client = await clientRegister.listingClient();
-      res.json(client).status(200);
+      if (!client) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Erro na listagem de client" });
+      }
+      res.status(200).json(client);
     } catch (error) {
       console.error("erro no controller", error.message);
       res.status(500).json({
@@ -83,14 +167,27 @@ export const movementClient = {
       }
     });
 
+    if (!clientId) {
+      return res.status(400).json({ message: "ID client não fornecido" });
+    }
+
+    const idClient = await clientRegister.getAllClientId();
+    const codeValid = idClient.map((item) => item.cliecode);
+
+    if (!codeValid.includes(clientId)) {
+      return res.status(400).json({ message: "Código do client e inválido." });
+    }
+
     try {
       const io = req.app.get("socketio");
       const clientUpdate = await clientRegister.updateClient(
         clientId,
         updateClient
       );
-      if(!clientUpdate){
-        return res.status(404).json({ message: "cliente não encontrado para atualização." });
+      if (!clientUpdate) {
+        return res
+          .status(404)
+          .json({ message: "cliente não encontrado para atualização." });
       }
       if (io) {
         io.emit("updateClients", clientUpdate);

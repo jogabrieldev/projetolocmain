@@ -4,7 +4,7 @@ export const location = {
 
   async gerarNumeroLocacao(req, res) {
     try {
-      const numero = await LocacaoModel.gerarNumeroLocacao(); // Gera o número único
+      const numero = await LocacaoModel.gerarNumeroLocacao(); 
 
       if(!numero){
          return res.status(404).json({message: "Numero de locação não foi gerado"})
@@ -23,19 +23,76 @@ export const location = {
       if (!bens || bens.length === 0) {
         return res.status(400).json({ error: "Nenhum dado de bens enviado." });
       }
-
+  
       if (!userClientValidade || userClientValidade.length < 2) {
-        return res.status(400).json({ error: "CPF do cliente é obrigatório" });
+        return res.status(400).json({ error: "CPF do cliente é obrigatório." });
       }
-
+  
       const cpfClient = userClientValidade[1];
       const cliente = await LocacaoModel.buscarClientePorCPF(cpfClient);
-
+  
       if (!cliente) {
         return res.status(404).json({ error: "Cliente não encontrado." });
       }
+  
+      // Verificações de data
+      if (!dataLoc || !dataDevo) {
+        return res.status(400).json({ error: "Data de locação e devolução são obrigatórias." });
+      }
+  
+      const dataLocDate = new Date(dataLoc);
+      const dataDevoDate = new Date(dataDevo);
+  
+      if (isNaN(dataLocDate) || isNaN(dataDevoDate)) {
+        return res.status(400).json({ error: "Formato de data inválido." });
+      }
+  
+      // Normalizar datas para comparar apenas a parte da data (sem hora)
+      const normalizar = (data) => new Date(data.getFullYear(), data.getMonth(), data.getDate());
+  
+      const dataLocNormalizada = normalizar(dataLocDate);
+      const dataDevoNormalizada = normalizar(dataDevoDate);
 
+      if (dataDevoNormalizada <= dataLocNormalizada) {
+        return res.status(400).json({ error: "A data de devolução deve ser posterior à data da locação." });
+      }
+       
+      const feriados = [
+        "2025-01-01", // Confraternização Universal
+        "2025-04-18", // Sexta-feira Santa
+        "2025-04-21", // Tiradentes
+        "2025-05-01", // Dia do Trabalho
+        "2025-09-07", // Independência do Brasil
+        "2025-10-12", // Nossa Senhora Aparecida
+        "2025-11-02", // Finados
+        "2025-11-15", // Proclamação da República
+        "2025-12-25"  // Natal
+      ];
 
+      const dataDevoStr = dataDevoNormalizada.toISOString().split("T")[0];
+      if (feriados.includes(dataDevoStr)) {
+        return res.status(400).json({ error: `A data de devolução (${dataDevoStr}) cai em um feriado. Escolha outra data.` });
+      }
+  
+      for (const [index, bem] of bens.entries()) {
+        if (!bem.dataFim) {
+          return res.status(400).json({ error: `Grupo ${index + 1}: Data FIM do bem é obrigatória.` });
+        }
+  
+        const dataFimBem = new Date(bem.dataFim);
+        if (isNaN(dataFimBem)) {
+          return res.status(400).json({ error: `Grupo ${index + 1}: Data FIM inválida.` });
+        }
+  
+        const dataFimNormalizada = normalizar(dataFimBem);
+  
+        if (dataFimNormalizada.getTime() !== dataDevoNormalizada.getTime()) {
+          return res.status(400).json({
+            error: `Grupo ${index + 1}: A data FIM (${bem.dataFim}) deve ser igual à data de devolução da locação (${dataDevo}).`
+          });
+        }
+      }
+  
       const locationClient = await LocacaoModel.criarLocacao({
         cllonmlo: numericLocation,
         clloidcl: cliente.cliecode,
@@ -45,22 +102,23 @@ export const location = {
         clloclno: cliente.clienome,
         cllocpf: cpfClient,
       });
-
+  
       await LocacaoModel.inserirBens(bens, locationClient);
-
+  
       const listAllLocation = await LocacaoModel.buscarTodasLocacoes();
-
+  
       const io = req.app.get("socketio");
       if (io) {
         io.emit("updateRunTimeRegisterLocation", listAllLocation);
       }
-
+  
       return res.status(201).json({ message: "Locação criada com sucesso." });
     } catch (error) {
       console.error("Erro ao criar locação:", error);
       return res.status(500).json({ error: "Erro interno do servidor." });
     }
   },
+  
   async getClientByCPF(req, res) {
     try {
       const { cpf } = req.query;
@@ -96,6 +154,9 @@ export const location = {
   async listarFamilias(req, res) {
     try {
       const familias = await LocacaoModel.buscarCodigosBens();
+      if(!familias){
+        res.status(400).json({success:false , message:'Erro ao buscar dados'})
+      }
       res.status(200).json(familias); // Retorna os dados como JSON
     } catch (error) {
       console.error("Erro ao listar famílias de bens:", error);
@@ -113,7 +174,7 @@ export const location = {
   
       return res.status(200).json({ locacoes: locacaoFinish }); 
     } catch (error) {
-      res.status(500).json({ error: "Erro ao buscar os dados" });
+      res.status(500).json({ error: "Erro ao buscar os dados de locação" });
     }
   },
   
@@ -125,7 +186,7 @@ export const location = {
             return res.status(400).json({ error: "ID da locação não foi informado." });
         }
 
-        const locacao = await LocacaoModel.buscarLocationPorId(id); // Chama o model específico
+        const locacao = await LocacaoModel.buscarLocationPorId(id); 
 
         if (!locacao) {
             return res.status(404).json({ error: "Essa Locação não foi encontrada." });
@@ -243,7 +304,7 @@ async DeleteLocationFinish(req, res) {
       
        const novosbensInseridosLocacao = await LocacaoModel.inserirNovosBens(newGoods)
        if(!novosbensInseridosLocacao){
-        res.status(400).json({error: "Bens não inserirdod"})
+        res.status(400).json({error: "Bens não inserido"})
        }
 
        const io = req.app.get("socketio");

@@ -21,7 +21,7 @@ Cada modulo do css esta configurado com seu conteudo , pela a mesma pasta e o no
 * Estou usando CSS puro para estilizar 
 
 ## HTML  
-meu html princpal e o main.html , nele esta todas as seções de cadastro e cada seçaõ eu gerei seu proprio arquivo javascript e o proprio arquivo css , dentro do main.html também contem a estrutra do restante da aplicação ( locação , logistica , entrega).
+meu html princpal e o main.html , nele esta todas as seções de cadastro e cada seçaõ eu gerei seu proprio arquivo javascript e o proprio arquivo css , dentro do main.html também contem a estrutra do restante da aplicação ( locação , logistica , entrega , devolução).
 
 *Meu index.html renderiza a pagina de login ou seja a pagina inicial para acessar a tela Main.html
  

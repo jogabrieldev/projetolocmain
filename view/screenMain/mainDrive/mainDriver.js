@@ -262,8 +262,6 @@ function registerNewDriver(){
         return;
       }
   
-      console.log("Dados da ViaCEP:", data);
-  
       // Preenchendo os campos do formulário
       const ruaField = document.getElementById('motoRua');
       const cityField = document.getElementById('motoCity');
@@ -341,7 +339,6 @@ function registerNewDriver(){
       const hoje   = new Date();
       const hoje0  = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
       
-      console.log('hoje' , hoje0)
     
       // 5) Regras de negócio:
       // 5.1) dtCad não pode ser futura
@@ -370,7 +367,6 @@ function registerNewDriver(){
         return;
       }
     
-      
       try {
           const response = await fetch('http://localhost:3000/api/drive/submit', {
               method: 'POST',

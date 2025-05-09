@@ -1,23 +1,56 @@
 import logistcsModel from "../model/logisticsModel.js";
 import{mecanismDelivey} from "../model/deliveryModel.js"
+import { crudRegisterDriver } from "../model/dataDriver.js";
+import { goodsRegister } from "../model/dataGoods.js";
+import { clientRegister } from "../model/dataClient.js";
+const authClient = clientRegister
+const authGoods = goodsRegister
+const authDriver = crudRegisterDriver
 
 class logistcgController {
 
   async postData(req, res) {
     try {
       const data = req.body;
-      const motorista = req.body.driver
-
-      if(!data || !motorista){
-        res.status(404).json({message:"Não foi passado os dados"})
+  
+      if(!data){
+        res.status(404).json({message:"Não foi passado nenhum dado"})
       }
 
-      const result = await logistcsModel.post(data , motorista);
+      if(!data.bemId || !data.idClient || !data.driver || !data.devolution || !data.locationId ){
+          return res.status(400).json({ message: "Falta informações para conclusão" });
+      }
+
+      const drive = await authDriver.getAllDriverId();
+      const codeValid = drive.map(item => item.motocode);
+      
+      if (!codeValid.includes(data.driver)) {
+        return res.status(400).json({ message: "Código do motorista inválido." });
+      }
+      
+      const goods = await authGoods.getAllBemId()
+      const codeValidGoods = goods.map(item => item.benscode); 
+
+      if (!codeValidGoods.includes(data.bemId)) {
+        return res.status(400).json({ message: "Código do Bem inválido." });
+        }
+      
+      const client = await authClient.getAllClientId()
+      const codeValidClient = client.map(item=> item.cliecode)
+
+      if(!codeValidClient.includes(data.idClient)){
+         return res.status(400).json({message:'Codigo do cliente e invalido'})
+      }
+    
+      const result = await logistcsModel.post(data);
       if(result){
         res.status(200).json({ message: result });
       }  
 
       const listDelivery = await mecanismDelivey.getDateLocationFinish()
+      if(!listDelivery){
+         return res.status(400).json({message: 'Erro ao listar entrega'})
+      }
 
       const io = req.app.get("socketio");
       if (io) {

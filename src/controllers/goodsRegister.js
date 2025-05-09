@@ -1,32 +1,106 @@
 import { goodsRegister } from "../model/dataGoods.js";
+import { crudRegisterForn } from "../model/dataForn.js";
+const infoForn = crudRegisterForn
 
 export const movementGoods = {
-  async  registerBens(req, res) {
-    try {
-      const data = req.body;
-      if (!data) {
-        return res.status(400).json({ message: "Nenhum dado enviado" }); 
-      }
-  
-      const newUser = await goodsRegister.registerOfBens(data);
-      const bens = await goodsRegister.listingBens(); 
-  
-      const io = req.app.get("socketio");
-      if (io) {
-        io.emit("updateRunTimeGoods", bens); 
-      }
-  
-      return res.status(201).json({ success: true, user: newUser }); 
-  
-    } catch (error) {
 
-      if (error.message.includes("Código do Bem ja cadastrado. Tente outro.")) {
-        return res.status(409).json({ success: false, message: error.message });
-      }
-      return res.status(500).json({ success: false, message: error.message }); // Corrigido: adicionando return
+  async registerBens(req, res) {
+  try {
+    const data = req.body;
+
+    if (!data) {
+      return res.status(400).json({ message: "Nenhum dado enviado" });
     }
-  },
+
+    //  Validação da hora atual
+    const now = new Date();
+    const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    if (data.hrStatus !== currentTime) {
+      return res.status(400).json({ message: "Horário de status deve ser igual ao horário atual." });
+    }
+
+    //  Validação de datas
+    const hoje = new Date();
+    const hojeFormatada = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+
+    const isDataValida = (str) => {
+      const date = new Date(str);
+      return str && !isNaN(date.getTime());
+    };
+    const formatDate = (date) => {
+      return date.toISOString().split("T")[0]; 
+    };
+
+    // 1) Validação de dtCompra
+    if (!isDataValida(data.dtCompra)) {
+      return res.status(400).json({ message: "Data de compra inválida." });
+    }
+
+    const hojeFormatadaStr = formatDate(new Date());
+    const dtStatusStr = formatDate(new Date(data.dtStatus));
+
+    if (dtStatusStr !== hojeFormatadaStr) {
+      return res.status(400).json({ message: "A data de status deve ser igual à data atual." });
+    }
+
+    const dtCompra = new Date(data.dtCompra);
+    const dtCompraFormatada = new Date(dtCompra.getFullYear(), dtCompra.getMonth(), dtCompra.getDate());
+    if (dtCompraFormatada > hojeFormatada) {
+      return res.status(400).json({ message: "A data da compra deve ser menor ou igual à data atual." });
+    }
+
+    // 2) Validação de dtStatus
+    if (!isDataValida(data.dtStatus)) {
+      return res.status(400).json({ message: "Data de status inválida." });
+    }
+   
+    // 3) Validação do ano do modelo vs ano de compra
+    if (data.bensAnmo) {
+    const dataModelo = new Date(data.bensAnmo);
+    const dtCompra = new Date(data.dtCompra);
+
+  if (isNaN(dataModelo.getTime())) {
+    return res.status(400).json({ message: "Data do modelo inválida." });
+  }
+
+  if (dataModelo > dtCompra) {
+    return res.status(400).json({ message: "A data do modelo não pode ser maior que a data da compra." });
+  }
+}
+
+    const codigosFamilia = await goodsRegister.buscarIdFamiliaBens(); 
+    const codigosValidos = codigosFamilia.map(item => item.fabecode); 
+
+    if (!codigosValidos.includes(data.cofa)) {
+      return res.status(400).json({ message: "Código da família de bens inválido." });
+      }
   
+
+    const codigosFornecedor = await infoForn.buscarIdForn(); 
+    const codeValid = codigosFornecedor.map(item => item.forncode);
+
+    if (!codeValid.includes(data.cofo)) {
+      return res.status(400).json({ message: "Código do fornecedor de bens inválido." });
+      }
+    
+   
+    const newBens = await goodsRegister.registerOfBens(data);
+    const bens = await goodsRegister.listingBens();
+
+    const io = req.app.get("socketio");
+    if (io) {
+      io.emit("updateRunTimeGoods", bens);
+    }
+
+    return res.status(201).json({ success: true, Bem: newBens });
+
+  } catch (error) {
+    if (error.message.includes("Código do Bem ja cadastrado. Tente outro.")) {
+      return res.status(409).json({ success: false, message: error.message });
+    }
+    return res.status(500).json({ success: false, message: error.message });
+  }
+},
 
   async codeFamilyBens(req, res) {
     try {
@@ -43,10 +117,12 @@ export const movementGoods = {
     }
   },
   
-
   async listBens(req, res) {
     try {
       const bens = await goodsRegister.listingBens();
+      if(!bens){
+         return res.status(400).json({ error: "Erro na listagem de bens" });
+      }
       res.json(bens).status(200);
     } catch (error) {
       console.error("Erro no controller:", error.message);
@@ -67,6 +143,17 @@ export const movementGoods = {
         updatedData[key] = null;
       }
     });
+
+    if(!bemId){
+       return res.status(400).json({ message: "Código do bem não fornecido." });
+    }
+
+    const idBem = await goodsRegister.getAllBemId()
+    const codeValid = idBem.map(item => item.benscode);
+
+    if (!codeValid.includes(bemId)) {
+      return res.status(400).json({ message: "Código do bem e inválido." });
+      }
 
     try {
      

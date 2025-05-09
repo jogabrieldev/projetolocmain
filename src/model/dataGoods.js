@@ -86,6 +86,18 @@ export const goodsRegister = {
     }
   },
 
+  getAllBemId:async ()=>{
+    try {
+      const query = "SELECT benscode FROM cadbens";
+      const result = await dbGoods.query(query);
+
+      return result.rows;
+    } catch (error) {
+      console.error("Erro ao listar ID de bens:", error.message);
+      throw error;
+    }
+  },
+
   listingBens: async () => {
     try {
       const query = "SELECT * FROM cadbens";

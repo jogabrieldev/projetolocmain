@@ -22,13 +22,10 @@ function validarPrecoLiquidoMenorOuIgual(precoLiquido, precoBruto) {
   const valorLiquido = parseFloat(precoLiquido);
   const valorBruto = parseFloat(precoBruto);
 
-  // Verifica se os valores são válidos
   if (isNaN(valorLiquido) || isNaN(valorBruto)) {
     console.warn("Valores inválidos informados para validação de preços.");
     return false;
   }
-
-  // Retorna true se o líquido for menor ou igual ao bruto
   return valorLiquido <= valorBruto;
 }
 
@@ -36,14 +33,16 @@ function formatDateInput(dataISO) {
   if (!dataISO) return "";
   const data = new Date(dataISO);
   const offset = data.getTimezoneOffset();
-  data.setMinutes(data.getMinutes() - offset); // corrige o fuso horário
+  data.setMinutes(data.getMinutes() - offset); 
   return data.toISOString().split("T")[0];
 }
 
-function parseDataLocal(dateStr) {
-  const [ano, mes, dia] = dateStr.split('-').map(Number);
-  return new Date(ano, mes - 1, dia); // Mês começa do zero
+function parseDataLocal(dataStr) {
+  const [ano, mes, dia] = dataStr.split("-").map(Number);
+  return new Date(ano, mes - 1, dia); // mês é zero-based
 }
+
+
 
 const buttonOutStart = document.querySelector(".material-symbols-outlined");
 buttonOutStart.addEventListener("click", () => {
