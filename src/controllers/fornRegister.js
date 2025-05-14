@@ -6,8 +6,6 @@ export const movementForne = {
     try {
       const dataForn = req.body;
 
-      console.log("forne", dataForn);
-
       if (!dataForn) {
         return res
           .status(400)
@@ -79,7 +77,9 @@ export const movementForne = {
         return res.status(400).json({ message: "CEP inválido." });
       }
 
-      const response = await fetch(`https://viacep.com.br/ws/${cepForn}/json/`);
+      const response = await fetch(`https://viacep.com.br/ws/${cepForn}/json/` , {
+        method:'GET'
+      });
       const cepData = await response.json();
 
       if (cepData.erro) {
@@ -191,6 +191,33 @@ export const movementForne = {
         if (!codeValid.includes(fornId)) {
           return res.status(400).json({ message: "Código do fornecedor e inválido." });
         }
+
+
+      const  fornMail  = updateForn.fornmail?.trim();
+
+      const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if ( !fornMail || !emailValido.test(fornMail)) {
+        return res.status(400).json({
+          success: false,
+          message: "E-mail inválido. Insira um e-mail no formato correto.",
+        });
+      }
+
+      const cepForn =  updateForn.forncep;
+
+      if (!cepForn || !/^\d{5}-?\d{3}$/.test(cepForn)) {
+        return res.status(400).json({ message: "CEP inválido." });
+      }
+
+      const response = await fetch(`https://viacep.com.br/ws/${cepForn}/json/` , {
+        method:'GET'
+      });
+      const cepData = await response.json();
+
+      if (cepData.erro) {
+        return res.status(400).json({ message: "CEP não encontrado." });
+      }
 
     try {
       const io = req.app.get("socketio");

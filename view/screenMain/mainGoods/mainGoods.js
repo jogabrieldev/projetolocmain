@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "Red",
         }).showToast();
         console.error('Erro ao carregar bens:', err);
       }
@@ -544,6 +544,7 @@ async function fetchBens() {
   }
  try {
   const response = await fetch("/api/listbens", {
+    method:'GET',
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -554,7 +555,7 @@ async function fetchBens() {
 
   if (!response.ok) {
     Toastify({
-      text: result?.message || "Erro ao carregar clientes.",
+      text: result?.message || "Erro ao carregar Bens.",
       duration: 4000,
       close: true,
       gravity: "top",
@@ -1000,6 +1001,15 @@ async function editAndUpdateOfBens() {
         formEditBens.reset();
       } else {
         console.error("Erro ao atualizar bem:", await response.text());
+
+         Toastify({
+          text: "Erro ao atualizar bem",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
       }
     } catch (error) {
       console.error("Erro na requisição:", error);

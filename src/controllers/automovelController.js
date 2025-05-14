@@ -1,40 +1,95 @@
 import { autoRegister } from "../model/dataAutomo.js";
+import { crudRegisterDriver } from "../model/dataDriver.js";
+
+const driver = crudRegisterDriver
 
 export const movementAuto = {
 
-  async registerAuto (req, res) {
-    try {
-      const dataAuto = req.body;
+  async registerAuto(req, res) {
+  try {
+    const dataAuto = req.body;
 
-      if (!dataAuto) {
-        return res
-          .status(400)
-          .json({ message: "Campos obrigatórios não preenchidos" });
-      }
-
-      const newAuto = await autoRegister.registerAuto(dataAuto);
-
-      const io = req.app.get("socketio");
-            if (io) {
-              const automovel = await autoRegister.listAutos(); // Pega todos os clientes após o cadastro
-              io.emit("updateRunTimeAutomovel", automovel); // Emite a lista completa de clientes
-            }
-      res.status(201).json({ success: true, auto: newAuto });
-    } catch (error) {
-      console.error("Erro no controller");
-
-      if (error.message.includes("Código do veiculo já cadastrado. Tente outro.")) {
-        return res.status(409).json({ success: false, message: error.message });
-      }
-
-
-      res.status(500).json({ success: false, message: error.message });
+    if (!dataAuto) {
+      return res
+        .status(400)
+        .json({ message: "Campos obrigatórios não preenchidos." });
     }
-  },
+
+    // === Validação: data de cadastro ===
+    const isDataValida = (dataStr) => {
+      return /^\d{4}-\d{2}-\d{2}$/.test(dataStr);
+    };
+
+    if (!isDataValida(dataAuto.caaudtca)) {
+      return res.status(400).json({
+        success: false,
+        message: "Data de Cadastro inválida.",
+      });
+    }
+
+    const [y, m, d] = dataAuto.caaudtca.split("-").map(Number);
+    const dtCd = new Date(y, m - 1, d);
+    const hoje = new Date();
+    const hojeZerado = new Date(
+      hoje.getFullYear(),
+      hoje.getMonth(),
+      hoje.getDate()
+    );
+
+    if (dtCd.getTime() !== hojeZerado.getTime()) {
+      return res.status(400).json({
+        success: false,
+        message: "Data de cadastro deve ser a data de hoje.",
+      });
+    }
+
+    // === Validação: motorista já cadastrado ===
+    const veiculos = await autoRegister.listAutos(); 
+
+    const motoristaJaExiste = veiculos.some(
+      (v) => v.caaumoto === dataAuto.caaumoto
+    ); 
+
+    
+    if (motoristaJaExiste) {
+      return res.status(409).json({
+        success: false,
+        message: "Motorista já cadastrado em outro veículo!",
+      });
+    }
+
+    // === Cadastro ===
+    const newAuto = await autoRegister.registerAuto(dataAuto);
+    if(!newAuto){
+      return res.status(400).json({message: 'Erro ao gerar cadastro de um automovel'})
+    }
+
+    const io = req.app.get("socketio");
+    if (io) {
+      const automovel = await autoRegister.listAutos();
+      io.emit("updateRunTimeAutomovel", automovel);
+    }
+
+    res.status(201).json({ success: true, auto: newAuto });
+
+  } catch (error) {
+    console.error("Erro no controller:", error);
+
+    if (error.message.includes("Código do veiculo já cadastrado. Tente outro.")) {
+      return res.status(409).json({ success: false, message: error.message });
+    }
+
+    res.status(500).json({ success: false, message: "Erro interno no servidor." });
+  }
+},
+
 
   async listingOfAuto(req, res) {
     try {
       const autos = await autoRegister.listAutos();
+      if(!autos){
+        return res.status(400).json({message:'Erro na listagem de veiculos'})
+      }
       res.status(200).json(autos);
     } catch (error) {
       console.error("Erro no controller", error.message);
@@ -74,6 +129,7 @@ export const movementAuto = {
       }
     });
 
+     
     try {
        
       const io = req.app.get("socketio");

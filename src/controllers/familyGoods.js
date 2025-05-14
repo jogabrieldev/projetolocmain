@@ -13,7 +13,14 @@ export const movementOfFamilyGoods = {
       }
 
       const newFabri = await fabriRegister.registerOfFabri(dataFabri);
+      if(!newFabri){
+        return res.status(400).json({message: 'Erro ao inserir nova familia de bens'})
+      }
       const listFamilyBens = await fabriRegister.listingFabri();
+      if(!listFamilyBens){
+         return res.status(400).json({message:"Erro ao listar familias para o socket"})
+      }
+
 
       const io = req.app.get("socketio");
       if (io) {
@@ -34,6 +41,9 @@ export const movementOfFamilyGoods = {
   async listingOfFabri(req, res) {
     try {
       const fabricante = await fabriRegister.listingFabri();
+      if(!fabricante){
+        return res.status(400).json({message:'Erro ao listar familias de bens'})
+      }
       res.json(fabricante).status(200);
     } catch (error) {
       console.error("erro no controller", error.message);
@@ -90,12 +100,24 @@ export const movementOfFamilyGoods = {
       }
     });
 
+    if(!fabeId){
+      return res.status(400).json({message:"Codigo da familia de bens invalido"})
+    }
+
+     const idFamilyBens = await fabriRegister.getCodeIdFamilyBens()
+      const codeValid = idFamilyBens.map(item => item.fabecode);
+
+        if (!codeValid.includes(fabeId)) {
+          return res.status(400).json({ message: "Código da familia de bens inválido." });
+          }
+
+
     try {
       const io = req.app.get("socketio");
       const updateProd = await fabriRegister.updateFabri(fabeId, updateData);
        
       if(!updateProd){
-        return res.status(404).json({ message: "familia de bem não encontrado para atualização." });
+        return res.status(404).json({ message: "familia de bem não encontrado para atualização."});
       }
       
       if (io) {

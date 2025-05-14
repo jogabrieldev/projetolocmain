@@ -46,6 +46,8 @@ document.addEventListener('DOMContentLoaded' , ()=>{
                 registerNewDriver()
                 deleteMotista()
                 editDriver()
+                editAndUpdateOfDriver();
+
               }else{
                 console.error('#mainContent não encontrado no DOM');
                 return;
@@ -402,13 +404,13 @@ function registerNewDriver(){
             }).showToast();
           }else{
             Toastify({
-              text: "Erro no cadastro do motorista",
-              duration: 3000,
-              close: true,
-              gravity: "top",
-              position: "center",
-              backgroundColor: "red",
-            }).showToast();
+            text: result?.message || "Erro ao cadastrar Cliente.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: response.status === 409 ? "orange" : "red",
+          }).showToast();
           }
       } catch (error) {
           console.error('Erro ao enviar formulário:', error);
@@ -529,7 +531,21 @@ async function fetchListMotorista() {
         'Authorization': `Bearer ${token}`
     },
     });
-    const motorista = await response.json();
+
+     const result = await response.json();
+
+  if (!response.ok) {
+    Toastify({
+      text: result?.message || "Erro ao carregar Bens.",
+      duration: 4000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+    return;
+  }
+    const motorista = result;
 
     const motoristaListDiv = document.querySelector(".listingDriver");
     motoristaListDiv.innerHTML = "";
@@ -790,7 +806,7 @@ function editDriver(){
         { id: "editMotoCity", valor: motoristaSelecionado.motorua },
         { id: "editMotoEstd", valor: motoristaSelecionado.motoestd },
         { id: "editMotoMail", valor: motoristaSelecionado.motomail },
-        {id:"editMotoStat" , valor: motoristaSelecionado.motostat}
+        { id: "editMotoStat" , valor: motoristaSelecionado.motostat}
       ];
   
       // Atualizar valores no formulário
@@ -858,7 +874,7 @@ function editDriver(){
     }
   });
 
-  const cepInput = document.getElementById("editMotoCep");
+    const cepInput = document.getElementById("editMotoCep");
 const ruaField = document.getElementById("editMotoRua");
 const cityField = document.getElementById("editMotoCity");
 const stateField = document.getElementById("editMotoEstd");
@@ -925,8 +941,10 @@ if (cepInput) {
       if (stateField) stateField.value = "";
     }
   });
+ }
 }
-  
+
+
   async function editAndUpdateOfDriver() {
     const formEditDrive = document.querySelector(".formEditDriver");
   
@@ -959,8 +977,6 @@ if (cepInput) {
         console.error("Erro ao fazer parse de bemId:", error);
         return;
       }
-  
-    
   
       const updateDriver = {
         motocode: document.getElementById("editMotoCode").value,
@@ -1024,15 +1040,30 @@ if (cepInput) {
           
           formEditDrive.reset();
         } else {
-          console.error("Erro ao atualizar produto:", await response.text());
+         const errorResponse = await response.json();
+          Toastify({
+            text: errorResponse.message || "Erro ao atualizar Motorista.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
+
         }
       } catch (error) {
-        console.error("Erro na requisição:", error);
+         Toastify({
+          text: "Erro interno na requisição. Tente novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
       }
     });
   }
-  editAndUpdateOfDriver();
-}
+ 
 // botão de editar
 
 

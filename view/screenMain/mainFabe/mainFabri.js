@@ -387,7 +387,21 @@ async function fetchListFabricante() {
         Authorization: `Bearer ${token}`,
       },
     });
-    const familyGoods = await response.json();
+    const result = await response.json()
+     
+     if (!response.ok) {
+    Toastify({
+      text: result?.message || "Erro ao carregar Familia de bens.",
+      duration: 4000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+    return;
+  }
+
+    const familyGoods = result;
 
     const familyGoodsListDiv = document.querySelector(".listingFabri");
     familyGoodsListDiv.innerHTML = "";

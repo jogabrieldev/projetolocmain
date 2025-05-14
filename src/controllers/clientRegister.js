@@ -73,6 +73,16 @@ export const movementClient = {
     message: "O nome do fornecedor é obrigatório e deve conter pelo menos 3 letras.",
   });
 }
+  const { clieMail} = dataClientSubmit;
+
+      const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailValido.test(clieMail)) {
+        return res.status(400).json({
+          success: false,
+          message: "E-mail inválido. Insira um e-mail no formato correto.",
+        });
+      }
 
       const cepClie = dataClientSubmit.clieCep;
 
@@ -177,6 +187,30 @@ export const movementClient = {
     if (!codeValid.includes(clientId)) {
       return res.status(400).json({ message: "Código do client e inválido." });
     }
+
+    const { cliemail} = updateClient;
+
+      const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailValido.test(cliemail)) {
+        return res.status(400).json({
+          success: false,
+          message: "E-mail inválido. Insira um e-mail no formato correto.",
+        });
+      }
+
+      const cepClie = updateClient.cliecep;
+
+      if (!cepClie || !/^\d{5}-?\d{3}$/.test(cepClie)) {
+        return res.status(400).json({ message: "CEP inválido." });
+      }
+
+      const response = await fetch(`https://viacep.com.br/ws/${cepClie}/json/`);
+      const cepData = await response.json();
+
+      if (cepData.erro) {
+        return res.status(400).json({ message: "CEP não encontrado." });
+      }
 
     try {
       const io = req.app.get("socketio");

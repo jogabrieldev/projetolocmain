@@ -40,6 +40,19 @@ const userDbTypeProd = client
     } 
  },
 
+   getCodeIdtypeP: async()=>{
+           try {
+            const query = 'SELECT tiprcode FROM cadtipr';
+   
+            const result = await userDbTypeProd.query(query)
+            return result.rows;
+   
+           } catch (error) {
+           console.error('Erro em listar Tipo do produto:' , error.message)
+           throw error;
+         }
+   },
+
      listTypeProd: async ()=>{
            
         try {

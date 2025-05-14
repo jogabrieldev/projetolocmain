@@ -43,6 +43,18 @@ export const crudRegisterProd = {
     }
   },
 
+  getCodeProd: async()=>{
+     try {
+      const query = "SELECT prodcode FROM cadprod";
+
+      const result = await userDbProd.query(query);
+      return result.rows;
+    } catch (error) {
+      console.error("Erro em listar code do produto:", error.message);
+      throw error;
+    }
+  },
+
   listingOfProd: async (data) => {
     try {
       const query = "SELECT * FROM cadprod";

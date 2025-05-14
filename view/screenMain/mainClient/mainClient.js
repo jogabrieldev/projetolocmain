@@ -314,6 +314,20 @@ async function registerNewClient() {
         clieMail: document.querySelector("#clieMail").value,
       };
 
+       const clieMail = formData.clieMail
+      const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailValido.test(clieMail)) {
+        Toastify({
+          text: "E-mail inválido. Verifique o formato (ex: nome@dominio.com).",
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
+
       const datas = [
         { key: "dtCad", label: "Data de Cadastro" },
         { key: "dtNasc", label: "Data de Nascimento" },
@@ -523,6 +537,7 @@ async function fetchListClientes() {
   }
   try {
     const response = await fetch("/api/listclient", {
+      method:'GET',
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -980,18 +995,28 @@ function editarCliente() {
 
           formEditClient.reset();
         } else {
-          console.error("Erro ao atualizar cliente:", await response.text());
+  
+           const errorResponse = await response.json();
           Toastify({
-            text: "Erro ao atualizar cliente",
+            text: errorResponse.message || "Erro ao atualizar Cliente.",
             duration: 3000,
             close: true,
             gravity: "top",
             position: "center",
             backgroundColor: "red",
           }).showToast();
-        }
-      } catch (error) {
+
+      }
+     } catch (error) {
         console.error("Erro na requisição:", error);
+         Toastify({
+          text: "Erro interno na requisição. Tente novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
       }
     });
   }

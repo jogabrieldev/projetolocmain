@@ -321,19 +321,26 @@ function registerNewProduto(){
             backgroundColor: "orange",
           }).showToast();
 
-        }else{
-          Toastify({
-            text: `Erro ao cadastrar produto`,
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "red",
-          }).showToast();
-        }
+        }else {
+        Toastify({
+          text: result.message || "Erro ao cadastrar o Produto",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+      }
       } catch (error) {
         console.error("Erro ao enviar formulário:", error);
-        alert("Erro ao enviar os dados para o server.");
+        Toastify({
+          text: "Erro ao enviar os dados para server.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
       }
     });
   validationFormProd();
@@ -481,12 +488,26 @@ async function fetchListProdutos() {
   }
   try {
     const response = await fetch("/api/listProd", {
+      method:'GET',
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
-    const produtos = await response.json();
+    const result = await response.json();
+
+    if (!response.ok) {
+    Toastify({
+      text: result?.message || "Erro ao carregar Produtos.",
+      duration: 4000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+    return;
+  }
+    const produtos = result;
 
     const produtosListDiv = document.querySelector(".listingProd");
     produtosListDiv.innerHTML = "";
@@ -540,8 +561,7 @@ async function fetchListProdutos() {
         linha.insertCell().textContent = produto.prodvluc;
         linha.insertCell().textContent = produto.prodpeli;
         linha.insertCell().textContent = produto.prodpebr;
-        linha.insertCell().textContent =
-          produto.prodativ === "S" ? "Sim" : "Não";
+        linha.insertCell().textContent = produto.prodativ;
       });
 
       produtosListDiv.appendChild(tabela);
@@ -796,7 +816,7 @@ async function editAndUpdateOfProduct() {
     try {
       prodIdParsed = JSON.parse(produtoId).prodcode;
     } catch (error) {
-      console.error("Erro ao fazer parse de bemId:", error);
+      console.error("Erro ao fazer parse de produtoId:", error);
       return;
     }
 
@@ -856,14 +876,13 @@ async function editAndUpdateOfProduct() {
         formEditProd.reset();
       } else {
         Toastify({
-          text: `Produto '${prodIdParsed}' Atualizado com sucesso!!`,
+          text: "Erro a atualizar produto",
           duration: 3000,
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "red",
         }).showToast();
-        formEditProd.reset();
         console.error("Erro ao atualizar produto:", await response.text());
       }
     } catch (error) {
@@ -889,6 +908,6 @@ function updateProductInTableRunTime(updatedProduct) {
     row.cells[6].textContent = updatedProduct.prodvluc || "-"; // Valor
     row.cells[7].textContent = updatedProduct.prodpeli || "-"; // Preço Líquido
     row.cells[8].textContent = updatedProduct.prodpebr || "-"; // Preço Bruto
-    row.cells[9].textContent = updatedProduct.prodativ === "S" ? "Sim" : "Não"; // Ativo
+    row.cells[9].textContent = updatedProduct.prodativ || "-"; // Ativo
   }
 }

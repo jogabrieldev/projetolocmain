@@ -266,8 +266,6 @@ function registerNewFornecedor() {
           return;
         }
 
-        console.log("Dados da ViaCEP:", data);
-
         // Preenchendo os campos do formulário
         const ruaField = document.getElementById("fornRua");
         const cityField = document.getElementById("fornCity");
@@ -317,7 +315,7 @@ function registerNewFornecedor() {
         fornDisPro: document.querySelector("#fornDisPro").value, // Descrição do Produto
       };
 
-      const fornMail = formData.fornMail
+      const fornMail = formData.fornMail;
       const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       if (!emailValido.test(fornMail)) {
@@ -507,19 +505,19 @@ async function fetchListFornecedores() {
     });
     const result = await response.json();
 
-    if(!response.ok){
+    if (!response.ok) {
       Toastify({
-      text: result?.message || "Erro ao carregar clientes.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
+        text: result?.message || "Erro ao carregar clientes.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
 
-    document.querySelector(".listClient").innerHTML =
-      "<p>Erro ao carregar clientes.</p>";
-    return;
+      document.querySelector(".listClient").innerHTML =
+        "<p>Erro ao carregar clientes.</p>";
+      return;
     }
     const fornecedores = result;
 
@@ -965,10 +963,28 @@ function editFornecedor() {
 
           formEditForn.reset();
         } else {
-          console.error("Erro ao atualizar fornecedor:", await response.text());
+          const errorResponse = await response.json();
+
+          Toastify({
+            text: errorResponse.message || "Erro ao atualizar fornecedor.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
+
         }
       } catch (error) {
         console.error("Erro na requisição:", error);
+        Toastify({
+          text: "Erro interno na requisição. Tente novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
       }
     });
   }

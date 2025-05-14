@@ -374,7 +374,7 @@ async function registerNewVehicles() {
           }).showToast();
         } else {
           Toastify({
-            text: "Erro para cadastrar veiculo",
+            text: result.message || "Erro ao cadastrar o Bem",
             duration: 3000,
             close: true,
             gravity: "top",
@@ -384,7 +384,14 @@ async function registerNewVehicles() {
         }
       } catch (error) {
         console.error("Erro ao enviar formulário:", error);
-        alert("Erro ao enviar os dados para server.");
+        Toastify({
+          text: "Erro ao enviar os dados.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
       }
     });
   validationFormAutomovel();
@@ -485,7 +492,20 @@ async function listarVeiculos() {
         Authorization: `Bearer ${token}`,
       },
     });
-    const veiculos = await response.json();
+    const result = await response.json()
+
+    if (!response.ok) {
+    Toastify({
+      text: result?.message || "Erro ao carregar Bens.",
+      duration: 4000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+    return;
+  }
+    const veiculos = result;
 
     const veiculosListDiv = document.querySelector(".listingAutomo");
     veiculosListDiv.innerHTML = "";

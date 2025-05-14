@@ -13,7 +13,13 @@ export const movementOfTypeProd = {
       }
 
       const newTypeProd = await typeProdRegister.registerTypeProd(dataTypeProd);
+      if(!newTypeProd){
+        return res.status(400).json({message:'Erro ao gerar um novo tipo de produto'})
+      }
       const listTypeProd = await typeProdRegister.listTypeProd();
+      if(!listTypeProd){
+        return res.status(400).json({message:'Erro ao listar tipo de produto para socket'})
+      }
 
       const io = req.app.get("socketio");
       if (io) {
@@ -33,6 +39,9 @@ export const movementOfTypeProd = {
   async listingOfTypeProd(req, res) {
     try {
       const produto = await typeProdRegister.listTypeProd(req, res);
+      if(!produto){
+         return res.status(400).json({message:'Erro ao listar tipos de produto'})
+      }
       res.json(produto).status(200);
     } catch (error) {
       console.error("Erro no controller:", error.message);
@@ -82,6 +91,17 @@ export const movementOfTypeProd = {
         updateData[key] = null;
       }
     });
+
+    if(!prodId){
+      return res.status(400).json({message:"Codigo do tipo de produto invalido"})
+    }
+
+     const idTypeProduto = await typeProdRegister.getCodeIdtypeP()
+      const codeValid = idTypeProduto.map(item => item.tiprcode);
+
+        if (!codeValid.includes(prodId)) {
+          return res.status(400).json({ message: "Código do tipo de produto inválido." });
+          }
 
     try {
       const io = req.app.get("socketio");

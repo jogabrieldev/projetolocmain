@@ -236,6 +236,10 @@ route.get('/api/codefamilybens', authenticateToken,(req , res)=>{
  route.get('/api/getdelivery' , (req ,res)=>{
   controllerDelivery.getDate(req ,res)
  })
+
+ route.get('/api/itensvinculados/:clloid' , (req ,res)=>{
+  logistics.getItensVinculados(req ,res)
+ } )
  
  export {route}
 
