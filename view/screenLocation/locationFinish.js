@@ -596,7 +596,7 @@ function editLocation() {
         const locacaoSelecionada = result.locacoes.find(
           (loc) => loc.cllonmlo === locacaoId
         );
-        
+
         if (locacaoSelecionada) {
           const existeBemEmLocacao = locacaoSelecionada.bens.some(
             (bem) => bem.belostat === "Em Locação"
@@ -632,6 +632,8 @@ function preencherFormularioDeEdicao(locacao) {
 
   document.getElementById("clientList").value = locacao.clloclno;
 
+  document.getElementById('dateDev').value = locacao.cllodtdv.split("T")[0] 
+
   locacao.bens.forEach((bem, index) => {
     const i = index + 1;
 
@@ -645,14 +647,11 @@ function preencherFormularioDeEdicao(locacao) {
       document.getElementById(`produto${i}Edit`).value = bem.beloben;
       document.getElementById(`quantidade${i}Edit`).value = bem.beloqntd;
       document.getElementById(`observacao${i}Edit`).value = bem.beloobsv;
-      document.getElementById(`dataInicio${i}Edit`).value =
-        bem.belodtin.split("T")[0];
-      document.getElementById(`dataFim${i}Edit`).value =
-        bem.belodtfi.split("T")[0];
+      document.getElementById(`dataInicio${i}Edit`).value = bem.belodtin.split("T")[0];
+      document.getElementById(`dataFim${i}Edit`).value = bem.belodtfi.split("T")[0];
       document.getElementById(`belocode${i}Edit`).value = bem.belocode;
     }
 
-    
   });
 
   editarlocationFinish(locacao.cllonmlo);

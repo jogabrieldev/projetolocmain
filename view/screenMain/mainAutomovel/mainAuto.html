@@ -1,8 +1,8 @@
 <section class="containerAppAutomo d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded"
 style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid white;">
-    <div class="mb-4">
+    
       <!-- Exibição da listagem de automóveis -->
-      <div class="listingAutomo flex-grow-1 overflow-auto mb-3">
+      <div class="listingAutomo mb-3">
         <!-- informações -->
       </div>
   
@@ -13,11 +13,11 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
         <button class="btn btn-warning text-dark fw-semibold buttonEditAuto">Editar</button>
         <button class="btn btn-light text-dark fw-semibold border buttonExitAuto">Voltar</button>
       </div>
-    </div>
+    
   
     <!-- Formulário de Cadastro -->
-    <div class="formCadAuto container py-4  rounded-3" style="display: none;">
-      <form class="foorm">
+    <div class="formCadAuto container py-4" style="display: none;">
+      <form class="foorm border border-secondary-subtle rounded-4 p-4 shadow-sm">
         <div class="row g-3">
           <div class="col-md-3">
             <label for="codeAuto" class="form-label">Código</label>
@@ -88,8 +88,8 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
   
         <!-- Botões do formulário -->
         <div class="d-flex gap-2 justify-content-center mt-4">
-          <button type="submit" class="btn btn-success w-25 cadAutomo">Cadastrar</button>
-          <button type="button" class="btn btn-secondary w-25 btnOutCadAuto">Voltar</button>
+          <button type="submit" class="btn btn-success w-25 cadAutomo"><i class="bi bi-check-circle me-2"></i>Cadastrar</button>
+          <button type="button" class="btn btn-secondary w-25 btnOutCadAuto"><i class="bi bi-arrow-left me-2"></i>Voltar</button>
         </div>
       </form>
     </div>
@@ -97,8 +97,8 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
     <!-- FORMULARIO DE EDIÇÃO -->
 
     <div class="editFormAuto container mt-4" style="display: none">
-        <form class="foormEditVeicu">
-          <div class="row g-3">
+        <form class="foormEditVeicu border border-secondary-subtle rounded-4 p-4 shadow-sm">
+          <div class="row g-3 justify-content-center">
       
             <div class="col-md-3">
               <label for="codeAutoEdit" class="form-label">Código</label>

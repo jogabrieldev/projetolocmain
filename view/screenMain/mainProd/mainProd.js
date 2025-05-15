@@ -410,65 +410,95 @@ function insertProductTableRunTime(produtos) {
   produtosListDiv.innerHTML = "";
 
   if (produtos.length > 0) {
-    const tabela = document.createElement("table");
-    tabela.classList.add('tableProd')
-   
-    // Cabeçalho
-    const cabecalho = tabela.createTHead();
-    const linhaCabecalho = cabecalho.insertRow();
-    const colunas = [
-      "Selecionar",
-      "Código",
-      "Descrição",
-      "Tipo",
-      "Unidade",
-      "Data da Compra",
-      "Valor",
-      "Preço Líquido",
-      "Preço Bruto",
-      "Ativo",
-    ];
+     const wrapper = document.createElement("div");
+      wrapper.className = "table-responsive";
 
-    colunas.forEach((coluna) => {
-      const th = document.createElement("th");
-      th.textContent = coluna;
-      linhaCabecalho.appendChild(th);
-    });
+      const tabela = document.createElement("table");
+      tabela.className = "table table-sm table-hover table-striped table-bordered tableProd";
 
-    // Corpo da tabela
-    const corpo = tabela.createTBody();
-    produtos.forEach((produto) => {
-      const linha = corpo.insertRow();
-      linha.setAttribute("data-prodcode", produto.prodCode);
+      // Cabeçalho
+      const cabecalho = tabela.createTHead();
+      const linhaCabecalho = cabecalho.insertRow();
+      const colunas = [
+        "Selecionar",
+        "Código",
+        "Descrição",
+        "Tipo",
+        "Unidade",
+        "Data da compra",
+        "Valor",
+        "Preço Líquido",
+        "Preço Bruto",
+        "Ativo",
+      ];
 
-      const checkboxCell = linha.insertCell();
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.name = "selectProduto";
-      checkbox.value = produto.prodCode;
-      checkbox.dataset.produto = JSON.stringify(produto);
-      checkboxCell.appendChild(checkbox);
+      colunas.forEach((coluna) => {
+        const th = document.createElement("th");
+        th.textContent = coluna;
 
-      
-      linha.insertCell().textContent = produto.prodcode;
-      linha.insertCell().textContent = produto.proddesc;
-      linha.insertCell().textContent = produto.prodtipo;
-      linha.insertCell().textContent = produto.produnid;
-      linha.insertCell().textContent = formatDate(produto.proddtuc);
-      linha.insertCell().textContent = produto.prodvluc;
-      linha.insertCell().textContent = produto.prodpeli;
-      linha.insertCell().textContent = produto.prodpebr;
-      linha.insertCell().textContent = produto.prodativ === "S" ? "Sim" : "Não";
-    });
-    produtosListDiv.appendChild(tabela);
+        if (["Selecionar", "Código", "Unidade", "Ativo"].includes(coluna)) {
+          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+        } else {
+          th.classList.add("px-3", "py-2", "align-middle");
+        }
+
+        linhaCabecalho.appendChild(th);
+      });
+
+      // Corpo
+      const corpo = tabela.createTBody();
+      produtos.forEach((produto) => {
+        const linha = corpo.insertRow();
+        linha.setAttribute("data-prodcode", produto.prodcode);
+
+        // Checkbox
+        const checkboxCell = linha.insertCell();
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.name = "selectProduto";
+        checkbox.value = produto.prodcode;
+        checkbox.dataset.produto = JSON.stringify(produto);
+        checkbox.className = "form-check-input m-0";
+        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
+        checkboxCell.appendChild(checkbox);
+
+        // Dados do produto
+        const dados = [
+          produto.prodcode,
+          produto.proddesc,
+          produto.prodtipo,
+          produto.produnid,
+          formatDate(produto.proddtuc),
+          produto.prodvluc,
+          produto.prodpeli,
+          produto.prodpebr,
+          produto.prodativ,
+        ];
+
+        dados.forEach((valor, index) => {
+          const td = linha.insertCell();
+          td.textContent = valor || "";
+          td.classList.add("align-middle", "text-break");
+
+          const coluna = colunas[index + 1]; // Ignorando "Selecionar"
+          if (["Código", "Unidade", "Ativo"].includes(coluna)) {
+            td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
+          } else {
+            td.classList.add("px-3", "py-2");
+          }
+        });
+      });
+
+      wrapper.appendChild(tabela);
+      produtosListDiv.appendChild(wrapper);
   } else {
     produtosListDiv.innerHTML = "<p>Nenhum produto cadastrado.</p>";
   }
 }
 
-// listagem de produtos
+// Listagens de produtos
 async function fetchListProdutos() {
-  const token = localStorage.getItem("token"); 
+  const token = localStorage.getItem("token");
 
   if (!token || isTokenExpired(token)) {
     Toastify({
@@ -486,36 +516,42 @@ async function fetchListProdutos() {
     }, 2000);
     return;
   }
+
   try {
     const response = await fetch("/api/listProd", {
-      method:'GET',
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
+
     const result = await response.json();
 
     if (!response.ok) {
-    Toastify({
-      text: result?.message || "Erro ao carregar Produtos.",
-      duration: 4000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
-  }
-    const produtos = result;
+      Toastify({
+        text: result?.message || "Erro ao carregar Produtos.",
+        duration: 4000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+      return;
+    }
 
+    const produtos = result;
     const produtosListDiv = document.querySelector(".listingProd");
     produtosListDiv.innerHTML = "";
 
     if (produtos.length > 0) {
-      const tabela = document.createElement("table");
-      tabela.classList.add('tableProd')
+      const wrapper = document.createElement("div");
+      wrapper.className = "table-responsive";
 
+      const tabela = document.createElement("table");
+      tabela.className = "table table-sm table-hover table-striped table-bordered tableProd";
+
+      // Cabeçalho
       const cabecalho = tabela.createTHead();
       const linhaCabecalho = cabecalho.insertRow();
       const colunas = [
@@ -526,7 +562,7 @@ async function fetchListProdutos() {
         "Unidade",
         "Data da compra",
         "Valor",
-        "Preço Liguido",
+        "Preço Líquido",
         "Preço Bruto",
         "Ativo",
       ];
@@ -534,49 +570,82 @@ async function fetchListProdutos() {
       colunas.forEach((coluna) => {
         const th = document.createElement("th");
         th.textContent = coluna;
+
+        if (["Selecionar", "Código", "Unidade", "Ativo"].includes(coluna)) {
+          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+        } else {
+          th.classList.add("px-3", "py-2", "align-middle");
+        }
+
         linhaCabecalho.appendChild(th);
       });
 
+      // Corpo
       const corpo = tabela.createTBody();
       produtos.forEach((produto) => {
         const linha = corpo.insertRow();
         linha.setAttribute("data-prodcode", produto.prodcode);
 
+        // Checkbox
         const checkboxCell = linha.insertCell();
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.name = "selectProduto";
-        checkbox.value = produto.prodCode;
-
+        checkbox.value = produto.prodcode;
         checkbox.dataset.produto = JSON.stringify(produto);
+        checkbox.className = "form-check-input m-0";
+        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
         checkboxCell.appendChild(checkbox);
 
-        
+        // Dados do produto
+        const dados = [
+          produto.prodcode,
+          produto.proddesc,
+          produto.prodtipo,
+          produto.produnid,
+          formatDate(produto.proddtuc),
+          produto.prodvluc,
+          produto.prodpeli,
+          produto.prodpebr,
+          produto.prodativ,
+        ];
 
-        linha.insertCell().textContent = produto.prodcode;
-        linha.insertCell().textContent = produto.proddesc;
-        linha.insertCell().textContent = produto.prodtipo;
-        linha.insertCell().textContent = produto.produnid;
-        linha.insertCell().textContent = formatDate(produto.proddtuc);
-        linha.insertCell().textContent = produto.prodvluc;
-        linha.insertCell().textContent = produto.prodpeli;
-        linha.insertCell().textContent = produto.prodpebr;
-        linha.insertCell().textContent = produto.prodativ;
+        dados.forEach((valor, index) => {
+          const td = linha.insertCell();
+          td.textContent = valor || "";
+          td.classList.add("align-middle", "text-break");
+
+          const coluna = colunas[index + 1]; // Ignorando "Selecionar"
+          if (["Código", "Unidade", "Ativo"].includes(coluna)) {
+            td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
+          } else {
+            td.classList.add("px-3", "py-2");
+          }
+        });
       });
 
-      produtosListDiv.appendChild(tabela);
+      wrapper.appendChild(tabela);
+      produtosListDiv.appendChild(wrapper);
     } else {
-      produtosListDiv.innerHTML = "<p>Nenhum produto cadastrado.</p>";
+      produtosListDiv.innerHTML = "<p class='text-light'>Nenhum produto cadastrado.</p>";
     }
   } catch (error) {
     console.error("Erro ao carregar produtos:", error);
+    Toastify({
+      text: "Erro de conexão com o servidor.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
     document.querySelector(".listingProd").innerHTML =
       "<p>Erro ao carregar produtos.</p>";
   }
 }
 
-// deletar produto
 
+// deletar produto
 function deleteProduto(){
 
   const btnDeleteProd = document.querySelector(".buttonDeleteProd");

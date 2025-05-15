@@ -1176,6 +1176,62 @@ function registerClientPageLocation() {
       if (!$("#formRegisterClientLoc").valid()) {
         return;
       }
+      const clieCep = document
+        .querySelector("#clieCepLoc")
+        .value.replace(/\D/g, "");
+      try {
+        const response = await fetch(
+          `https://viacep.com.br/ws/${clieCep}/json/`
+        );
+
+        if (!response.ok) {
+          throw new Error("Erro ao buscar o CEP.");
+        }
+
+        const data = await response.json();
+
+        if (data.erro) {
+          Toastify({
+            text: "CEP inválido.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
+          return;
+        }
+
+        // Preenchendo os campos do formulário
+        const ruaField = document.getElementById("clieRuaLoc");
+        const cityField = document.getElementById("clieCityLoc");
+        const stateField = document.getElementById("clieEstdLoc");
+
+        if (ruaField) {
+          ruaField.value = `${data.logradouro} - ${data.bairro}` || "";
+          ruaField.readOnly = true;
+        }
+        if (cityField) {
+          cityField.value = data.localidade || "";
+          cityField.readOnly = true;
+        }
+        if (stateField) {
+          stateField.value = data.uf || "";
+          stateField.readOnly = true;
+        }
+      } catch (error) {
+        console.error("Erro ao buscar o CEP:", error);
+        Toastify({
+          text: "Erro ao buscar o CEP, tente novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
+
 
       const formDataLocation = {
         clieCode: document.querySelector("#clieCodeLoc").value, // Codigo
@@ -1190,6 +1246,20 @@ function registerClientPageLocation() {
         clieCep: document.querySelector("#clieCepLoc").value, // Cep
         clieMail: document.querySelector("#clieMailLoc").value, // E-mail
       };
+
+      const clieMail = formDataLocation.clieMail
+      const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailValido.test(clieMail)) {
+        Toastify({
+          text: "E-mail inválido. Verifique o formato (ex: nome@dominio.com).",
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
 
       const datas = [
         { key: "dtCad", label: "Data de Cadastro" },
@@ -1210,11 +1280,8 @@ function registerClientPageLocation() {
         }
       }
 
-      // 4) Converte strings para Date, zerando horas
       const [yCad, mCad, dCad] = formDataLocation.dtCad.split("-").map(Number);
-      const [yNasc, mNasc, dNasc] = formDataLocation.dtNasc
-        .split("-")
-        .map(Number);
+      const [yNasc, mNasc, dNasc] = formDataLocation.dtNasc.split("-").map(Number);
       const dtCad = new Date(yCad, mCad - 1, dCad);
       const dtNasc = new Date(yNasc, mNasc - 1, dNasc);
       const hoje = new Date();
@@ -1224,11 +1291,12 @@ function registerClientPageLocation() {
         hoje.getDate()
       );
 
-      // 5) Regras de negócio:
-      // 5.1) dtCad não pode ser futura
-      if (dtCad.getTime() > hoje0.getTime()) {
+      if (
+        dtCad.getTime() > hoje0.getTime() ||
+        dtCad.getTime() < hoje0.getTime()
+      ) {
         Toastify({
-          text: "Data de Cadastro não pode ser maior que a data de hoje.",
+          text: "Data de Cadastro não pode ser maior  nem menor que a data de hoje.",
           duration: 3000,
           close: true,
           gravity: "top",
@@ -1237,6 +1305,7 @@ function registerClientPageLocation() {
         }).showToast();
         return;
       }
+
 
       // 5.2) dtNasc não pode ser futura
       if (dtNasc.getTime() > hoje0.getTime()) {

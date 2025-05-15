@@ -1,17 +1,3 @@
-.containerAppDriver{
-    display: none;
-    background-color: darkgray;
-    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
-    width: 76%;
-    height: 550px;
-    margin-left: 22%;
-    margin-top:1% ;
-    flex-direction: column;
-    justify-content: space-between;
-    border: solid , 2px , white;
-    padding: 7px;
-    border-radius: 10px;
-}
 
 .hidden {
     display: none !important;
@@ -22,19 +8,33 @@
   }
 
 .listingDriver{
-    overflow: auto;
+   max-height: 75vh;
+  overflow: auto;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
 }
-
-
 .tableDriver{
-    width: 100%;
-    border-collapse: collapse;
-    color: black;
-    font-size: 14px;
+ font-size: 0.85rem;
+  color: #000;
 }
 .tableDriver td{
-    background-color: darkgray;
+    background-color:#f8f9fa !important; 
+   color: #212529;
+   word-break: break-word;
+  white-space: normal;
 }
+
+.tableDriver thead th{
+    background-color:#1f2937 !important ;
+}
+
+.tableDriver td ,
+.tableDriver th{
+  vertical-align: middle;
+  white-space: normal;
+}
+
 .RegisterDriver{
     overflow: auto;
 }
+

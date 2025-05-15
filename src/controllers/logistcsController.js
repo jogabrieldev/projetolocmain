@@ -12,8 +12,6 @@ class logistcgController {
   async postData(req, res) {
     try {
       const data = req.body;
-      console.log('corpo envido' , data)
-  
       if(!data){
         res.status(404).json({message:"Não foi passado nenhum dado"})
       }

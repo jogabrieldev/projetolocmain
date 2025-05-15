@@ -1,19 +1,32 @@
 
-
-
 .listClient{
-    overflow: auto;
+  max-height: 75vh;
+  overflow: auto;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
 }
 .tableClient{
-    width: 100%;
-    border-collapse: collapse;
-    color: black;
-    font-size: 14px;
+   font-size: 0.85rem;
+  color: #000;
+}
+.tableClient td,
+.tableClient th{
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
 .tableClient td{
-    background-color:darkgray;
+    background-color:#f8f9fa;
+   color: #212529;
+   word-break: break-word;
+  white-space: normal;
 }
+
+/* .tableClient td{
+  background-color:#1f2937;
+  color:#ffffff;
+} */
+
 .containerOfForm{
     overflow: auto;
 }

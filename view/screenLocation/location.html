@@ -1,411 +1,1022 @@
-<section class="containerAppLocation d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded"
-style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid white">
+<section
+  class="containerAppLocation d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded"
+  style="
+    display: none;
+    width: 76%;
+    height: 550px;
+    margin-left: 22%;
+    margin-top: 1%;
+    padding: 5px;
+    border: 2px solid white;
+  "
+>
+  <div class="tableLocation d-flex flex-column flex-grow-1 overflow-auto mb-3">
+    <!-- Informações de locação -->
+  </div>
 
-    <div class="tableLocation  d-flex flex-column flex-grow-1 overflow-auto mb-3">
-      <!-- Informações de locação -->
-    </div>
-  
-    <div class="btnInitPageMainLoc d-flex flex-wrap justify-content-center align-items-center gap-3 mb-3">
-      <button class="registerLocation btn btn-primary text-dark fw-semibold">Incluir</button>
-      <button class="buttonDeleteLocation btn btn-danger text-dark fw-semibold">Excluir</button>
-      <button class="buttonEditLocation btn btn-warning text-dark fw-semibold">Editar</button>
-      <button class="buttonExitLocation btn btn-light text-dark fw-semibold border">Voltar</button>
-    </div>
-    
-     
-      <main class="container content py-3 overflow-auto" style="display: none;">
+  <div
+    class="btnInitPageMainLoc d-flex flex-wrap justify-content-center align-items-center gap-3 mb-3"
+  >
+    <button class="registerLocation btn btn-primary text-dark fw-semibold">
+      Incluir
+    </button>
+    <button class="buttonDeleteLocation btn btn-danger text-dark fw-semibold">
+      Excluir
+    </button>
+    <button class="buttonEditLocation btn btn-warning text-dark fw-semibold">
+      Editar
+    </button>
+    <button
+      class="buttonExitLocation btn btn-light text-dark fw-semibold border"
+    >
+      Voltar
+    </button>
+  </div>
 
-        <div class="searchClient mb-4" style="display: none">
-          
+  <main class="container content py-3 overflow-auto" style="display: none">
+    <div class="searchClient mb-4" style="display: none"></div>
+
+    <!-- Formulário do cliente -->
+    <form id="formClient" class="p-3 rounded shadow-sm mb-4">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-5">
+          <label for="client" class="form-label fw-bold"
+            >Pesquise o Cliente</label
+          >
+          <div class="d-flex flex-wrap gap-2 align-items-center">
+            <input
+              type="text"
+              name="client"
+              id="client"
+              class="form-control flex-grow-1"
+              placeholder="CPF ou Nome"
+              required
+            />
+            <span class="material-symbols-outlined" id="search">search</span>
+          </div>
         </div>
 
-        <!-- Formulário do cliente -->
-        <form id="formClient" class="p-3 rounded shadow-sm mb-4">
-            <div class="row g-3 align-items-end">
-              <div class="col-md-5">
-                <label for="client" class="form-label fw-bold">Pesquise o Cliente</label>
-                <div class="d-flex flex-wrap gap-2 align-items-center">
-                  <input
-                    type="text"
-                    name="client"
-                    id="client"
-                    class="form-control flex-grow-1"
-                    placeholder="CPF ou Nome"
-                    required
-                  />
-                  <span class="material-symbols-outlined" id="search">search</span>
-                
-                </div>
-              </div>
-          
-              <div class="col-md-2">
-                <label for="numeroLocation" class="form-label fw-bold">Locação</label>
-                <input
-                  type="number"
-                  name="numeroLocation"
-                  id="numeroLocation"
-                  class="form-control"
-                  readonly
-                />
-              </div>
-
-              <div class="col-md-2">
-                <label for="dataLoc" class="form-label fw-bold">Data da locação</label>
-                <input
-                  type="date"
-                  name="dataLoc"
-                  id="dataLoc"
-                  class="form-control"
-                  required
-                  readonly
-                />
-              </div>
-           
-              <div class="col-md-2">
-                <label for="DataDevo" class="form-label fw-bold">Data de devolução</label>
-                <input
-                  type="date"
-                  name="DataDevo"
-                  id="DataDevo"
-                  class="form-control"
-                  required
-                />
-              </div>
-          
-              <div class="col-md-4">
-                <label for="pagament" class="form-label fw-bold">Forma de pagamento</label>
-                <select name="pagament" id="pagament" class="form-select" required>
-                  <option value="">Selecione...</option>
-                  <option value="Pix">Pix</option>
-                  <option value="Credito">Crédito</option>
-                  <option value="Debito">Débito</option>
-                  <option value="Boleto">Boleto</option>
-                </select>
-              </div>
-
-              <button
-                    type="button"
-                    class="registerClientPageLocation btn text-white fw-semibold px-3 py-2"
-                    id="registerClientPageLocation"
-                  >
-                    Cadastrar Cliente
-                  </button>
-            </div>
-          </form>
-          
-        
-        <!-- Dados do cliente -->
-        <div class="row g-3 mb-4">
-          <div class="col-md-6">
-            <label for="nameClient" class="form-label fw-bold">Nome do Cliente</label>
-            <input type="text" id="nameClient" class="form-control" placeholder="Nome do cliente" readonly required />
-          </div>
-          <div class="col-md-6">
-            <label for="cpfClient" class="form-label fw-bold">CPF do Cliente</label>
-            <input type="text" id="cpfClient" class="form-control" placeholder="CPF do cliente" readonly required />
-          </div>
-          <div class="col-md-6">
-            <label for="ruaClient" class="form-label fw-bold">Rua do Cliente</label>
-            <input type="text" id="ruaClient" class="form-control" placeholder="Rua do cliente" readonly required />
-          </div>
-          <div class="col-md-6">
-            <label for="cityClient" class="form-label fw-bold">Cidade do Cliente</label>
-            <input type="text" id="cityClient" class="form-control" placeholder="Cidade do cliente" readonly required />
-          </div>
-          <div class="col-md-6">
-            <label for="cepClient" class="form-label fw-bold">CEP do Cliente</label>
-            <input type="text" id="cepClient" class="form-control" placeholder="CEP do cliente" readonly required />
-          </div>
-          <div class="col-md-6">
-            <label for="mailClient" class="form-label fw-bold">E-mail do Cliente</label>
-            <input type="email" id="mailClient" class="form-control" placeholder="E-mail do cliente" readonly required />
-          </div>
+        <div class="col-md-2">
+          <label for="numeroLocation" class="form-label fw-bold">Locação</label>
+          <input
+            type="number"
+            name="numeroLocation"
+            id="numeroLocation"
+            class="form-control"
+            readonly
+          />
         </div>
-      
-        <!-- Seção de Bens -->
-            <div class="p-4 rounded shadow-sm mb-4">
-            <div class="p-3 rounded shadow-sm mb-4 bg-secondary overflow-auto" style="min-width: 1000px; max-width: 100%; overflow-x: auto;">
-              <!-- Cabeçalhos -->
-              <div class="row gx-2 gy-1 mb-2 flex-nowrap align-items-center">
-                <div class="col-2"><label class="form-label small">Família</label></div>
-                <div class="col-3"><label class="form-label small">Descrição</label></div>
-                <div class="col-1"><label class="form-label small">Qtd.</label></div>
-                <div class="col-2"><label class="form-label small">Observação</label></div>
-                <div class="col-2"><label class="form-label small">Início</label></div>
-                <div class="col-2"><label class="form-label small">Fim</label></div>
-              </div>
-            
-              <!-- Grid Repetido -->
-              <div class="row gx-2 gy-2 flex-nowrap">
-                <!-- Grupo 1 -->
-                <div class="col-2"><select id="family1" class="form-select form-select-sm"><option value="">Selecione...</option></select></div>
-                <div class="col-3"><input type="text" id="produto1" class="form-control form-control-sm" placeholder="Descrição" readonly /></div>
-                <div class="col-1"><input type="number" id="quantidade1" class="form-control form-control-sm" placeholder="Qtd." required /></div>
-                <div class="col-2"><input type="text" id="observacao1" class="form-control form-control-sm" placeholder="Observação" /></div>
-                <div class="col-2"><input type="date" id="dataInicio1" class="form-control form-control-sm" required /></div>
-                <div class="col-2"><input type="date" id="dataFim1" class="form-control form-control-sm" required /></div>
-            
-                
-              </div>
-            
-              <!-- Grupo 2 -->
-              <div class="row gx-2 gy-2 flex-nowrap mt-2">
-                <div class="col-2"><select id="family2" class="form-select form-select-sm"><option value="">Selecione...</option></select></div>
-                <div class="col-3"><input type="text" id="produto2" class="form-control form-control-sm" placeholder="Descrição" readonly /></div>
-                <div class="col-1"><input type="number" id="quantidade2" class="form-control form-control-sm" placeholder="Qtd." required /></div>
-                <div class="col-2"><input type="text" id="observacao2" class="form-control form-control-sm" placeholder="Observação" /></div>
-                <div class="col-2"><input type="date" id="dataInicio2" class="form-control form-control-sm" required /></div>
-                <div class="col-2"><input type="date" id="dataFim2" class="form-control form-control-sm" required /></div>
-              </div>
-              
-              <!-- Grupo 3 -->
-              <div class="row gx-2 gy-2 flex-nowrap mt-2">
-                <div class="col-2"><select id="family3" class="form-select form-select-sm"><option value="">Selecione...</option></select></div>
-                <div class="col-3"><input type="text" id="produto3" class="form-control form-control-sm" placeholder="Descrição" readonly /></div>
-                <div class="col-1"><input type="number" id="quantidade3" class="form-control form-control-sm" placeholder="Qtd." required /></div>
-                <div class="col-2"><input type="text" id="observacao3" class="form-control form-control-sm" placeholder="Observação" /></div>
-                <div class="col-2"><input type="date" id="dataInicio3" class="form-control form-control-sm" required /></div>
-                <div class="col-2"><input type="date" id="dataFim3" class="form-control form-control-sm" required /></div>
-              </div>
-              <!-- Grupo 4 -->
-              <div class="row gx-2 gy-2 flex-nowrap mt-2">
-                <div class="col-2"><select id="family4" class="form-select form-select-sm"><option value="">Selecione...</option></select></div>
-                <div class="col-3"><input type="text" id="produto4" class="form-control form-control-sm" placeholder="Descrição" readonly /></div>
-                <div class="col-1"><input type="number" id="quantidade4" class="form-control form-control-sm" placeholder="Qtd." required /></div>
-                <div class="col-2"><input type="text" id="observacao4" class="form-control form-control-sm" placeholder="Observação" /></div>
-                <div class="col-2"><input type="date" id="dataInicio4" class="form-control form-control-sm" required /></div>
-                <div class="col-2"><input type="date" id="dataFim4" class="form-control form-control-sm" required /></div>
-              </div>
-                <!-- Grupo 5 -->
-              <div class="row gx-2 gy-2 flex-nowrap mt-2">
-                <div class="col-2"><select id="family5" class="form-select form-select-sm"><option value="">Selecione...</option></select></div>
-                <div class="col-3"><input type="text" id="produto5" class="form-control form-control-sm" placeholder="Descrição" readonly /></div>
-                <div class="col-1"><input type="number" id="quantidade5" class="form-control form-control-sm" placeholder="Qtd." required /></div>
-                <div class="col-2"><input type="text" id="observacao5" class="form-control form-control-sm" placeholder="Observação" /></div>
-                <div class="col-2"><input type="date" id="dataInicio5" class="form-control form-control-sm" required /></div>
-                <div class="col-2"><input type="date" id="dataFim5" class="form-control form-control-sm" required /></div>
-              </div>
-            
-              
-            
-              <!-- Botões -->
-              <div class="d-flex justify-content-center gap-3 mt-4">
-                <button class="btn btn-success text-dark finish">Finalizar</button>
-                <button class="btn btn-light text-dark outLocation" type="button">Voltar</button>
-              </div>
-            </div>
-            
+
+        <div class="col-md-2">
+          <label for="dataLoc" class="form-label fw-bold"
+            >Data da locação</label
+          >
+          <input
+            type="date"
+            name="dataLoc"
+            id="dataLoc"
+            class="form-control"
+            required
+            readonly
+          />
         </div>
-        
-      </main>
-       
-      <!-- EDITAR LOCATION -->
-      <div class="containerEditLocation container d-flex flex-column gap-3 d-none">
 
-        <h3 class="text-center">Editar Locação</h3>
-
-        <div class="row g-3">
-          <!-- Campo ID Locação -->
-          <div class="col-md-4">
-              <label for="idLocation" class="form-label fw-bold">Locação</label>
-              <input type="number" name="idLocation" id="idLocation" class="form-control" maxlength="6" readonly placeholder="ID locação">
-          </div>
-  
-          <!-- Campo Cliente -->
-          <div class="col-md-4">
-              <label for="clientList" class="form-label fw-bold">Cliente</label>
-              <input type="text" name="clientList" id="clientList" readonly class="form-control" placeholder="Cliente">
-          </div>
-  
-          <!-- Campo Data devolução -->
-          <div class="col-md-4">
-              <label for="dateDev" class="form-label fw-bold">Data devolução</label>
-               <input type="date" name="dateDev" id="dateDev">
-          </div>
-      </div>
-
-
-        <div class="p-4 rounded shadow-sm mb-4">
-          <div class="p-3 rounded shadow-sm mb-4 bg-secondary overflow-auto" style="min-width: 1000px; max-width: 100%; overflow-x: auto;">
-            <!-- Cabeçalhos -->
-            <div class="row gx-2 gy-1 mb-2 flex-nowrap align-items-center">
-              <div class="col-2"><label class="form-label small">Família</label></div>
-              <div class="col-3"><label class="form-label small">Descrição</label></div>
-              <div class="col-1"><label class="form-label small">Qtd.</label></div>
-              <div class="col-2"><label class="form-label small">Observação</label></div>
-              <div class="col-2"><label class="form-label small">Início</label></div>
-              <div class="col-2"><label class="form-label small">Fim</label></div>
-            </div>
-          
-            <!-- Grid Repetido -->
-            <div class="row gx-2 gy-2 flex-nowrap">
-              <!-- Grupo 1 -->
-              <div class="col-2"><select id="family1Edit" class="form-select form-select-sm"><option value="">Selecione...</option></select></div>
-              <input type="hidden" id="belocode1Edit" value="" />
-              <div class="col-3"><input type="text" id="produto1Edit" class="form-control form-control-sm" placeholder="Descrição" readonly /></div>
-              <div class="col-1"><input type="number" id="quantidade1Edit" class="form-control form-control-sm" placeholder="Qtd." required /></div>
-              <div class="col-2"><input type="text" id="observacao1Edit" class="form-control form-control-sm" placeholder="Observação" /></div>
-              <div class="col-2"><input type="date" id="dataInicio1Edit" class="form-control form-control-sm" required /></div>
-              <div class="col-2"><input type="date" id="dataFim1Edit" class="form-control form-control-sm" required /></div>
-          
-              
-            </div>
-          
-            <!-- Grupo 2 -->
-            <div class="row gx-2 gy-2 flex-nowrap mt-2">
-              <div class="col-2"><select id="family2Edit" class="form-select form-select-sm"><option value="">Selecione...</option></select></div>
-              <input type="hidden" id="belocode2Edit" value="" />
-              <div class="col-3"><input type="text" id="produto2Edit" class="form-control form-control-sm" placeholder="Descrição" readonly /></div>
-              <div class="col-1"><input type="number" id="quantidade2Edit" class="form-control form-control-sm" placeholder="Qtd." required /></div>
-              <div class="col-2"><input type="text" id="observacao2Edit" class="form-control form-control-sm" placeholder="Observação" /></div>
-              <div class="col-2"><input type="date" id="dataInicio2Edit" class="form-control form-control-sm" required /></div>
-              <div class="col-2"><input type="date" id="dataFim2Edit" class="form-control form-control-sm" required /></div>
-            </div>
-            
-            <!-- Grupo 3 -->
-            <div class="row gx-2 gy-2 flex-nowrap mt-2">
-              <div class="col-2"><select id="family3Edit" class="form-select form-select-sm"><option value="">Selecione...</option></select></div>
-              <input type="hidden" id="belocode3Edit" value="" />
-              <div class="col-3"><input type="text" id="produto3Edit" class="form-control form-control-sm" placeholder="Descrição" readonly /></div>
-              <div class="col-1"><input type="number" id="quantidade3Edit" class="form-control form-control-sm" placeholder="Qtd." required /></div>
-              <div class="col-2"><input type="text" id="observacao3Edit" class="form-control form-control-sm" placeholder="Observação" /></div>
-              <div class="col-2"><input type="date" id="dataInicio3Edit" class="form-control form-control-sm" required /></div>
-              <div class="col-2"><input type="date" id="dataFim3Edit" class="form-control form-control-sm" required /></div>
-            </div>
-            <!-- Grupo 4 -->
-            <div class="row gx-2 gy-2 flex-nowrap mt-2">
-              <div class="col-2"><select id="family4Edit" class="form-select form-select-sm"><option value="">Selecione...</option></select></div>
-              <input type="hidden" id="belocode4Edit" value="" />
-              <div class="col-3"><input type="text" id="produto4Edit" class="form-control form-control-sm" placeholder="Descrição" readonly /></div>
-              <div class="col-1"><input type="number" id="quantidade4Edit" class="form-control form-control-sm" placeholder="Qtd." required /></div>
-              <div class="col-2"><input type="text" id="observacao4Edit" class="form-control form-control-sm" placeholder="Observação" /></div>
-              <div class="col-2"><input type="date" id="dataInicio4Edit" class="form-control form-control-sm" required /></div>
-              <div class="col-2"><input type="date" id="dataFim4Edit" class="form-control form-control-sm" required /></div>
-            </div>
-              <!-- Grupo 5 -->
-            <div class="row gx-2 gy-2 flex-nowrap mt-2">
-              <div class="col-2"><select id="family5Edit" class="form-select form-select-sm"><option value="">Selecione...</option></select></div>
-              <input type="hidden" id="belocode5Edit" value="" />
-              <div class="col-3"><input type="text" id="produto5Edit" class="form-control form-control-sm" placeholder="Descrição" readonly /></div>
-              <div class="col-1"><input type="number" id="quantidade5Edit" class="form-control form-control-sm" placeholder="Qtd." required /></div>
-              <div class="col-2"><input type="text" id="observacao5Edit" class="form-control form-control-sm" placeholder="Observação" /></div>
-              <div class="col-2"><input type="date" id="dataInicio5Edit" class="form-control form-control-sm" required /></div>
-              <div class="col-2"><input type="date" id="dataFim5Edit" class="form-control form-control-sm" required /></div>
-            </div>
-          
-          
-            <!-- Botões -->
-            <div class="d-flex justify-content-center gap-3 mt-4">
-              <button class="btn btn-success text-dark save">Salvar</button>
-              <button class="btn btn-light text-dark outEditLocation" type="button">Voltar</button>
-            </div>
-          </div>
-          
-      </div>
-        
-          
-      </div>
-     
-      <!-- POP UP DE PESQUISA POR LOCAÇÃO -->
-      <div class="searchLocation position-fixed top-50 start-50 translate-middle e border rounded p-4 shadow-lg w-100" style="display: none; max-width: 500px; z-index: 1055;">
-        <h4 class="mb-4 text-center text-dark">Escolha um formato de Pesquisa:</h4>
-      
-        <div class="mb-3">
-          <label for="numberLocation" class="form-label">Número da locação</label>
-          <input type="number" name="numberLocation" id="numberLocation" class="form-control" />
+        <div class="col-md-2">
+          <label for="DataDevo" class="form-label fw-bold"
+            >Data de devolução</label
+          >
+          <input
+            type="date"
+            name="DataDevo"
+            id="DataDevo"
+            class="form-control"
+            required
+          />
         </div>
-      
-        <div class="mb-3">
-          <label for="statusLocation" class="form-label">Status:</label>
-          <select name="statusLocation" id="statusLocation" class="form-control">
+
+        <div class="col-md-4">
+          <label for="pagament" class="form-label fw-bold"
+            >Forma de pagamento</label
+          >
+          <select name="pagament" id="pagament" class="form-select" required>
             <option value="">Selecione...</option>
-            <option value="Pendente">Pendente</option>
-            <option value="Em Locação">Em Locação</option>
+            <option value="Pix">Pix</option>
+            <option value="Credito">Crédito</option>
+            <option value="Debito">Débito</option>
+            <option value="Boleto">Boleto</option>
           </select>
-          
         </div>
-     
-        <div class="mb-4">
-          <label for="nameClientSearch" class="form-label">Nome do Cliente</label>
-          <input type="text" name="nameClient" id="nameClientSearch" class="form-control" />
+
+        <button
+          type="button"
+          class="registerClientPageLocation btn text-white fw-semibold px-3 py-2"
+          id="registerClientPageLocation"
+        >
+          Cadastrar Cliente
+        </button>
+      </div>
+    </form>
+
+    <!-- Dados do cliente -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <label for="nameClient" class="form-label fw-bold"
+          >Nome do Cliente</label
+        >
+        <input
+          type="text"
+          id="nameClient"
+          class="form-control"
+          placeholder="Nome do cliente"
+          readonly
+          required
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="cpfClient" class="form-label fw-bold">CPF do Cliente</label>
+        <input
+          type="text"
+          id="cpfClient"
+          class="form-control"
+          placeholder="CPF do cliente"
+          readonly
+          required
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="ruaClient" class="form-label fw-bold">Rua do Cliente</label>
+        <input
+          type="text"
+          id="ruaClient"
+          class="form-control"
+          placeholder="Rua do cliente"
+          readonly
+          required
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="cityClient" class="form-label fw-bold"
+          >Cidade do Cliente</label
+        >
+        <input
+          type="text"
+          id="cityClient"
+          class="form-control"
+          placeholder="Cidade do cliente"
+          readonly
+          required
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="cepClient" class="form-label fw-bold">CEP do Cliente</label>
+        <input
+          type="text"
+          id="cepClient"
+          class="form-control"
+          placeholder="CEP do cliente"
+          readonly
+          required
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="mailClient" class="form-label fw-bold"
+          >E-mail do Cliente</label
+        >
+        <input
+          type="email"
+          id="mailClient"
+          class="form-control"
+          placeholder="E-mail do cliente"
+          readonly
+          required
+        />
+      </div>
+    </div>
+
+    <!-- Seção de Bens -->
+    <div class="p-4 rounded shadow-sm mb-4">
+      <div
+        class="p-3 rounded shadow-sm mb-4 bg-secondary overflow-auto"
+        style="min-width: 1000px; max-width: 100%; overflow-x: auto"
+      >
+        <!-- Cabeçalhos -->
+        <div class="row gx-2 gy-1 mb-2 flex-nowrap align-items-center">
+          <div class="col-2">
+            <label class="form-label small">Família</label>
+          </div>
+          <div class="col-3">
+            <label class="form-label small">Descrição</label>
+          </div>
+          <div class="col-1"><label class="form-label small">Qtd.</label></div>
+          <div class="col-2">
+            <label class="form-label small">Observação</label>
+          </div>
+          <div class="col-2">
+            <label class="form-label small">Início</label>
+          </div>
+          <div class="col-2"><label class="form-label small">Fim</label></div>
         </div>
-      
-        <div class="d-flex justify-content-between">
-          <button class="btn btn-primary submitSearchLocation" onclick="filterTable()">Pesquisar</button>
-          <button class="btn btn-secondary outPageSearchLocation">Voltar</button>
+
+        <!-- Grid Repetido -->
+        <div class="row gx-2 gy-2 flex-nowrap">
+          <!-- Grupo 1 -->
+          <div class="col-2">
+            <select id="family1" class="form-select form-select-sm">
+              <option value="">Selecione...</option>
+            </select>
+          </div>
+          <div class="col-3">
+            <input
+              type="text"
+              id="produto1"
+              class="form-control form-control-sm"
+              placeholder="Descrição"
+              readonly
+            />
+          </div>
+          <div class="col-1">
+            <input
+              type="number"
+              id="quantidade1"
+              class="form-control form-control-sm"
+              placeholder="Qtd."
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="text"
+              id="observacao1"
+              class="form-control form-control-sm"
+              placeholder="Observação"
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataInicio1"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataFim1"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Grupo 2 -->
+        <div class="row gx-2 gy-2 flex-nowrap mt-2">
+          <div class="col-2">
+            <select id="family2" class="form-select form-select-sm">
+              <option value="">Selecione...</option>
+            </select>
+          </div>
+          <div class="col-3">
+            <input
+              type="text"
+              id="produto2"
+              class="form-control form-control-sm"
+              placeholder="Descrição"
+              readonly
+            />
+          </div>
+          <div class="col-1">
+            <input
+              type="number"
+              id="quantidade2"
+              class="form-control form-control-sm"
+              placeholder="Qtd."
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="text"
+              id="observacao2"
+              class="form-control form-control-sm"
+              placeholder="Observação"
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataInicio2"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataFim2"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Grupo 3 -->
+        <div class="row gx-2 gy-2 flex-nowrap mt-2">
+          <div class="col-2">
+            <select id="family3" class="form-select form-select-sm">
+              <option value="">Selecione...</option>
+            </select>
+          </div>
+          <div class="col-3">
+            <input
+              type="text"
+              id="produto3"
+              class="form-control form-control-sm"
+              placeholder="Descrição"
+              readonly
+            />
+          </div>
+          <div class="col-1">
+            <input
+              type="number"
+              id="quantidade3"
+              class="form-control form-control-sm"
+              placeholder="Qtd."
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="text"
+              id="observacao3"
+              class="form-control form-control-sm"
+              placeholder="Observação"
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataInicio3"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataFim3"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+        </div>
+        <!-- Grupo 4 -->
+        <div class="row gx-2 gy-2 flex-nowrap mt-2">
+          <div class="col-2">
+            <select id="family4" class="form-select form-select-sm">
+              <option value="">Selecione...</option>
+            </select>
+          </div>
+          <div class="col-3">
+            <input
+              type="text"
+              id="produto4"
+              class="form-control form-control-sm"
+              placeholder="Descrição"
+              readonly
+            />
+          </div>
+          <div class="col-1">
+            <input
+              type="number"
+              id="quantidade4"
+              class="form-control form-control-sm"
+              placeholder="Qtd."
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="text"
+              id="observacao4"
+              class="form-control form-control-sm"
+              placeholder="Observação"
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataInicio4"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataFim4"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+        </div>
+        <!-- Grupo 5 -->
+        <div class="row gx-2 gy-2 flex-nowrap mt-2">
+          <div class="col-2">
+            <select id="family5" class="form-select form-select-sm">
+              <option value="">Selecione...</option>
+            </select>
+          </div>
+          <div class="col-3">
+            <input
+              type="text"
+              id="produto5"
+              class="form-control form-control-sm"
+              placeholder="Descrição"
+              readonly
+            />
+          </div>
+          <div class="col-1">
+            <input
+              type="number"
+              id="quantidade5"
+              class="form-control form-control-sm"
+              placeholder="Qtd."
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="text"
+              id="observacao5"
+              class="form-control form-control-sm"
+              placeholder="Observação"
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataInicio5"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataFim5"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Botões -->
+        <div class="d-flex justify-content-center gap-3 mt-4">
+          <button class="btn btn-success text-dark finish">Finalizar</button>
+          <button class="btn btn-light text-dark outLocation" type="button">
+            Voltar
+          </button>
         </div>
       </div>
-      
-      <!-- CADASTRAR CLIENTE -->
-<div class="LocRegisterClient container overflow-auto" style="display: none">
-  <form id="formRegisterClientLoc" class="row g-3">
-    <div class="col-md-4">
-      <label for="clieCodeLoc" class="form-label">Código</label>
-      <input type="text" class="form-control" id="clieCodeLoc" name="clieCodeLoc" placeholder="Código" maxlength="15" />
+    </div>
+  </main>
+
+  <!-- EDITAR LOCATION -->
+  <div class="containerEditLocation container d-flex flex-column gap-3 d-none">
+    <h3 class="text-center">Editar Locação</h3>
+
+    <div class="row g-3">
+      <!-- Campo ID Locação -->
+      <div class="col-md-4">
+        <label for="idLocation" class="form-label fw-bold">Locação</label>
+        <input
+          type="number"
+          name="idLocation"
+          id="idLocation"
+          class="form-control"
+          maxlength="6"
+          readonly
+          placeholder="ID locação"
+        />
+      </div>
+
+      <!-- Campo Cliente -->
+      <div class="col-md-4">
+        <label for="clientList" class="form-label fw-bold">Cliente</label>
+        <input
+          type="text"
+          name="clientList"
+          id="clientList"
+          readonly
+          class="form-control"
+          placeholder="Cliente"
+        />
+      </div>
+
+      <!-- Campo Data devolução -->
+      <div class="col-md-4">
+        <label for="dateDev" class="form-label fw-bold">Data devolução</label>
+        <input type="date" name="dateDev" id="dateDev" class="form-control" />
+      </div>
     </div>
 
-    <div class="col-md-8">
-      <label for="clieNameLoc" class="form-label">Nome</label>
-      <input type="text" class="form-control" id="clieNameLoc" name="clieNameLoc" placeholder="Nome" maxlength="80" />
+    <div class="p-4 rounded shadow-sm mb-4">
+      <div
+        class="p-3 rounded shadow-sm mb-4 bg-secondary overflow-auto"
+        style="min-width: 1000px; max-width: 100%; overflow-x: auto"
+      >
+        <!-- Cabeçalhos -->
+        <div class="row gx-2 gy-1 mb-2 flex-nowrap align-items-center">
+          <div class="col-2">
+            <label class="form-label small">Família</label>
+          </div>
+          <div class="col-3">
+            <label class="form-label small">Descrição</label>
+          </div>
+          <div class="col-1"><label class="form-label small">Qtd.</label></div>
+          <div class="col-2">
+            <label class="form-label small">Observação</label>
+          </div>
+          <div class="col-2">
+            <label class="form-label small">Início</label>
+          </div>
+          <div class="col-2"><label class="form-label small">Fim</label></div>
+        </div>
+
+        <!-- Grid Repetido -->
+        <div class="row gx-2 gy-2 flex-nowrap">
+          <!-- Grupo 1 -->
+          <div class="col-2">
+            <select id="family1Edit" class="form-select form-select-sm">
+              <option value="">Selecione...</option>
+            </select>
+          </div>
+          <input type="hidden" id="belocode1Edit" value="" />
+          <div class="col-3">
+            <input
+              type="text"
+              id="produto1Edit"
+              class="form-control form-control-sm"
+              placeholder="Descrição"
+              readonly
+            />
+          </div>
+          <div class="col-1">
+            <input
+              type="number"
+              id="quantidade1Edit"
+              class="form-control form-control-sm"
+              placeholder="Qtd."
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="text"
+              id="observacao1Edit"
+              class="form-control form-control-sm"
+              placeholder="Observação"
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataInicio1Edit"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataFim1Edit"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Grupo 2 -->
+        <div class="row gx-2 gy-2 flex-nowrap mt-2">
+          <div class="col-2">
+            <select id="family2Edit" class="form-select form-select-sm">
+              <option value="">Selecione...</option>
+            </select>
+          </div>
+          <input type="hidden" id="belocode2Edit" value="" />
+          <div class="col-3">
+            <input
+              type="text"
+              id="produto2Edit"
+              class="form-control form-control-sm"
+              placeholder="Descrição"
+              readonly
+            />
+          </div>
+          <div class="col-1">
+            <input
+              type="number"
+              id="quantidade2Edit"
+              class="form-control form-control-sm"
+              placeholder="Qtd."
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="text"
+              id="observacao2Edit"
+              class="form-control form-control-sm"
+              placeholder="Observação"
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataInicio2Edit"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataFim2Edit"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Grupo 3 -->
+        <div class="row gx-2 gy-2 flex-nowrap mt-2">
+          <div class="col-2">
+            <select id="family3Edit" class="form-select form-select-sm">
+              <option value="">Selecione...</option>
+            </select>
+          </div>
+          <input type="hidden" id="belocode3Edit" value="" />
+          <div class="col-3">
+            <input
+              type="text"
+              id="produto3Edit"
+              class="form-control form-control-sm"
+              placeholder="Descrição"
+              readonly
+            />
+          </div>
+          <div class="col-1">
+            <input
+              type="number"
+              id="quantidade3Edit"
+              class="form-control form-control-sm"
+              placeholder="Qtd."
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="text"
+              id="observacao3Edit"
+              class="form-control form-control-sm"
+              placeholder="Observação"
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataInicio3Edit"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataFim3Edit"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+        </div>
+        <!-- Grupo 4 -->
+        <div class="row gx-2 gy-2 flex-nowrap mt-2">
+          <div class="col-2">
+            <select id="family4Edit" class="form-select form-select-sm">
+              <option value="">Selecione...</option>
+            </select>
+          </div>
+          <input type="hidden" id="belocode4Edit" value="" />
+          <div class="col-3">
+            <input
+              type="text"
+              id="produto4Edit"
+              class="form-control form-control-sm"
+              placeholder="Descrição"
+              readonly
+            />
+          </div>
+          <div class="col-1">
+            <input
+              type="number"
+              id="quantidade4Edit"
+              class="form-control form-control-sm"
+              placeholder="Qtd."
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="text"
+              id="observacao4Edit"
+              class="form-control form-control-sm"
+              placeholder="Observação"
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataInicio4Edit"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataFim4Edit"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+        </div>
+        <!-- Grupo 5 -->
+        <div class="row gx-2 gy-2 flex-nowrap mt-2">
+          <div class="col-2">
+            <select id="family5Edit" class="form-select form-select-sm">
+              <option value="">Selecione...</option>
+            </select>
+          </div>
+          <input type="hidden" id="belocode5Edit" value="" />
+          <div class="col-3">
+            <input
+              type="text"
+              id="produto5Edit"
+              class="form-control form-control-sm"
+              placeholder="Descrição"
+              readonly
+            />
+          </div>
+          <div class="col-1">
+            <input
+              type="number"
+              id="quantidade5Edit"
+              class="form-control form-control-sm"
+              placeholder="Qtd."
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="text"
+              id="observacao5Edit"
+              class="form-control form-control-sm"
+              placeholder="Observação"
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataInicio5Edit"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+          <div class="col-2">
+            <input
+              type="date"
+              id="dataFim5Edit"
+              class="form-control form-control-sm"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Botões -->
+        <div class="d-flex justify-content-center gap-3 mt-4">
+          <button class="btn btn-success text-dark save">Salvar</button>
+          <button class="btn btn-light text-dark outEditLocation" type="button">
+            Voltar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POP UP DE PESQUISA POR LOCAÇÃO -->
+  <div
+    class="searchLocation position-fixed top-50 start-50 translate-middle bg-white border rounded-4 p-4 shadow-lg w-100"
+    style="display: none; max-width: 500px; z-index: 1055"
+  >
+    <h4 class="mb-4 text-center text-dark fw-semibold">
+      <i class="bi bi-search text-primary me-2"></i>Escolha um formato de
+      Pesquisa:
+    </h4>
+
+    <div class="form-floating mb-3">
+      <input
+        type="number"
+        name="numberLocation"
+        id="numberLocation"
+        class="form-control"
+        placeholder="Número da locação"
+      />
+      <label for="numberLocation"
+        ><i class="bi bi-hash me-1"></i>Número da Locação</label
+      >
     </div>
 
-    <div class="col-md-6">
-      <label for="cpfClientLoc" class="form-label">CPF</label>
-      <input type="text" class="form-control" id="cpfClientLoc" name="cpfClientLoc" placeholder="CPF" maxlength="14" />
+    <div class="form-floating mb-3">
+      <select name="statusLocation" id="statusLocation" class="form-select">
+        <option value="" selected>Selecione...</option>
+        <option value="Pendente">Pendente</option>
+        <option value="Em Locação">Em Locação</option>
+      </select>
+      <label for="statusLocation"
+        ><i class="bi bi-ui-checks me-1"></i>Status</label
+      >
     </div>
 
-    <div class="col-md-6">
-      <label for="clieCeluLoc" class="form-label">Celular</label>
-      <input type="text" class="form-control" id="clieCeluLoc" name="clieCeluLoc" placeholder="Celular" maxlength="11" />
+    <div class="form-floating mb-4">
+      <input
+        type="text"
+        name="nameClient"
+        id="nameClientSearch"
+        class="form-control"
+        placeholder="Nome do Cliente"
+      />
+      <label for="nameClientSearch"
+        ><i class="bi bi-person me-1"></i>Nome do Cliente</label
+      >
     </div>
 
-    <div class="col-md-6">
-      <label for="dtCadLoc" class="form-label">Data do Cadastro</label>
-      <input type="date" class="form-control" id="dtCadLoc" name="dtCadLoc" />
+    <div class="d-flex justify-content-between gap-2">
+      <button
+        class="btn btn-primary w-50 submitSearchLocation"
+        onclick="filterTable()"
+      >
+        <i class="bi bi-search"></i> Pesquisar
+      </button>
+      <button class="btn btn-outline-secondary w-50 outPageSearchLocation">
+        <i class="bi bi-arrow-left"></i> Voltar
+      </button>
     </div>
+  </div>
 
-    <div class="col-md-6">
-      <label for="dtNascLoc" class="form-label">Data de Nascimento</label>
-      <input type="date" class="form-control" id="dtNascLoc" name="dtNascLoc" />
-    </div>
+  <!-- CADASTRAR CLIENTE -->
+  <div class="LocRegisterClient container overflow-auto" style="display: none">
+    <form id="formRegisterClientLoc" class="row g-3">
+      <div class="col-md-4">
+        <label for="clieCodeLoc" class="form-label">Código</label>
+        <input
+          type="text"
+          class="form-control"
+          id="clieCodeLoc"
+          name="clieCodeLoc"
+          placeholder="Código"
+          maxlength="15"
+        />
+      </div>
 
-    <div class="col-md-6">
-      <label for="clieCityLoc" class="form-label">Cidade</label>
-      <input type="text" class="form-control" id="clieCityLoc" name="clieCityLoc" placeholder="Cidade" maxlength="25" />
-    </div>
+      <div class="col-md-8">
+        <label for="clieNameLoc" class="form-label">Nome</label>
+        <input
+          type="text"
+          class="form-control"
+          id="clieNameLoc"
+          name="clieNameLoc"
+          placeholder="Nome"
+          maxlength="80"
+        />
+      </div>
 
-    <div class="col-md-6">
-      <label for="clieEstdLoc" class="form-label">Estado</label>
-      <input type="text" class="form-control" id="clieEstdLoc" name="clieEstdLoc" placeholder="Estado" maxlength="20" />
-    </div>
+      <div class="col-md-6">
+        <label for="cpfClientLoc" class="form-label">CPF</label>
+        <input
+          type="text"
+          class="form-control"
+          id="cpfClientLoc"
+          name="cpfClientLoc"
+          placeholder="CPF"
+          maxlength="14"
+        />
+      </div>
 
-    <div class="col-md-6">
-      <label for="clieRuaLoc" class="form-label">Rua</label>
-      <input type="text" class="form-control" id="clieRuaLoc" name="clieRuaLoc" placeholder="RUA" maxlength="40" />
-    </div>
+      <div class="col-md-6">
+        <label for="clieCeluLoc" class="form-label">Celular</label>
+        <input
+          type="text"
+          class="form-control"
+          id="clieCeluLoc"
+          name="clieCeluLoc"
+          placeholder="Celular"
+          maxlength="11"
+        />
+      </div>
 
-    <div class="col-md-6">
-      <label for="clieCepLoc" class="form-label">CEP</label>
-      <input type="text" class="form-control" id="clieCepLoc" name="clieCepLoc" placeholder="CEP" maxlength="10" />
-    </div>
+      <div class="col-md-6">
+        <label for="dtCadLoc" class="form-label">Data do Cadastro</label>
+        <input type="date" class="form-control" id="dtCadLoc" name="dtCadLoc" />
+      </div>
 
-    <div class="col-12">
-      <label for="clieMailLoc" class="form-label">E-mail</label>
-      <input type="email" class="form-control" id="clieMailLoc" name="clieMailLoc" placeholder="E-mail" maxlength="35" />
-    </div>
+      <div class="col-md-6">
+        <label for="dtNascLoc" class="form-label">Data de Nascimento</label>
+        <input
+          type="date"
+          class="form-control"
+          id="dtNascLoc"
+          name="dtNascLoc"
+        />
+      </div>
 
-    <div class="col-12 d-flex justify-content-center gap-2 mt-3">
-      <button type="button" class="btn btn-success btnRegisterClientLoc">Cadastrar</button>
-      <button type="button" class="btn btn-secondary btnOutPageRegisterClientLoc">Voltar</button>
-    </div>
-  </form>
-</div>
+      <div class="col-md-6">
+        <label for="clieCityLoc" class="form-label">Cidade</label>
+        <input
+          type="text"
+          class="form-control"
+          id="clieCityLoc"
+          name="clieCityLoc"
+          placeholder="Cidade"
+          maxlength="25"
 
+        />
+      </div>
 
-<div id="contrato" style="display: none">
-  <!-- Contrato de locação front-->
-</div>
+      <div class="col-md-6">
+        <label for="clieEstdLoc" class="form-label">Estado</label>
+        <input
+          type="text"
+          class="form-control"
+          id="clieEstdLoc"
+          name="clieEstdLoc"
+          placeholder="Estado"
+          maxlength="20"
+        />
+      </div>
 
-  </section>
-  <script src="locationFinish.js"></script>
-  
+      <div class="col-md-6">
+        <label for="clieRuaLoc" class="form-label">Rua</label>
+        <input
+          type="text"
+          class="form-control"
+          id="clieRuaLoc"
+          name="clieRuaLoc"
+          placeholder="RUA"
+          maxlength="40"
+        />
+      </div>
+
+      <div class="col-md-6">
+        <label for="clieCepLoc" class="form-label">CEP</label>
+        <input
+          type="text"
+          class="form-control"
+          id="clieCepLoc"
+          name="clieCepLoc"
+          placeholder="CEP"
+          maxlength="10"
+        />
+      </div>
+
+      <div class="col-12">
+        <label for="clieMailLoc" class="form-label">E-mail</label>
+        <input
+          type="email"
+          class="form-control"
+          id="clieMailLoc"
+          name="clieMailLoc"
+          placeholder="E-mail"
+          maxlength="35"
+        />
+      </div>
+
+      <div class="col-12 d-flex justify-content-center gap-2 mt-3">
+        <button type="button" class="btn btn-success btnRegisterClientLoc px-5"><i class="bi bi-check-circle me-2"></i>
+          Cadastrar
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary btnOutPageRegisterClientLoc"
+        ><i class="bi bi-arrow-left me-2"></i>
+          Voltar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div id="contrato" style="display: none">
+    <!-- Contrato de locação front-->
+  </div>
+</section>
+<script src="locationFinish.js"></script>

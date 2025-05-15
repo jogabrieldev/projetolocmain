@@ -421,151 +421,30 @@ function registerNewDriver(){
 
 }
 
-
 // ATUALIZAR EM RUNTIME QUANDO INSERIR
 function insertDriverTableRunTime(motorista) {
   const motoristaListDiv = document.querySelector(".listingDriver");
   motoristaListDiv.innerHTML = ""; 
 
   if (motorista.length > 0) {
-    const tabela = document.createElement("table");
-    tabela.classList.add('tableDriver')
+    const wrapper = document.createElement("div");
+      wrapper.className = "table-responsive";
 
-    // Cabeçalho da tabela
-    const cabecalho = tabela.createTHead();
-    const linhaCabecalho = cabecalho.insertRow();
-    const colunas = [
-      "Selecionar",
-      "Código",
-      "Status",
-      "Nome",
-      "Data de Nascimento",
-      "CPF",
-      "Data de Emissão",
-      "Categoria da CNH",
-      "Data de Vencimento",
-      "Restrições",
-      "Órgão Emissor",
-      "Celular",
-      "CEP",
-      "Rua",
-      "Cidade",
-      "Estado",
-      "E-mail",
-    ];
-
-    colunas.forEach((coluna) => {
-      const th = document.createElement("th");
-      th.textContent = coluna;
-      linhaCabecalho.appendChild(th);
-    });
-
-    const corpo = tabela.createTBody();
-    motorista.forEach((driver) => {
-      const linha = corpo.insertRow();
-      linha.setAttribute("data-motocode", driver.motocode);
-
-      const checkboxCell = linha.insertCell();
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.name = "selectDriver";
-      checkbox.value = driver.motocode;
-      checkbox.dataset.motorista = JSON.stringify(driver);
-      checkboxCell.appendChild(checkbox);
-
-      linha.insertCell().textContent = driver.motocode;
-      
-      const statusCell = linha.insertCell();
-      statusCell.textContent = driver.motostat || "-";
-      statusCell.classList.add("status-moto");
-
-      linha.insertCell().textContent = driver.motoname || "-";
-      linha.insertCell().textContent = formatDate(driver.motodtnc);
-      linha.insertCell().textContent = driver.motocpf || "-";
-      linha.insertCell().textContent = formatDate(driver.motodtch);
-      linha.insertCell().textContent = driver.motoctch || "-";
-      linha.insertCell().textContent = formatDate(driver.motodtvc);
-      linha.insertCell().textContent = driver.motorest || "-";
-      linha.insertCell().textContent = driver.motoorem || "-";
-      linha.insertCell().textContent = driver.motocelu || "-";
-      linha.insertCell().textContent = driver.motocep || "-";
-      linha.insertCell().textContent = driver.motorua || "-";
-      linha.insertCell().textContent = driver.motocity || "-";
-      linha.insertCell().textContent = driver.motoestd || "-";
-      linha.insertCell().textContent = driver.motomail || "-";
-    });
-
-    motoristaListDiv.appendChild(tabela);
-  } else {
-    motoristaListDiv.innerHTML = "<p>Nenhum motorista cadastrado.</p>";
-  }
-};
-
-//listagem de motorista
-async function fetchListMotorista() {
-
-  const token = localStorage.getItem('token'); 
-
-  if (!token || isTokenExpired(token)) {
-    Toastify({
-        text: "Sessão expirada. Faça login novamente.",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-    }).showToast();
-
-    localStorage.removeItem("token"); 
-    setTimeout(() => {
-        window.location.href = "/index.html"; 
-    }, 2000); 
-    return;
-}
-
-  try {
-    const response = await fetch("/api/listingdriver" , {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    },
-    });
-
-     const result = await response.json();
-
-  if (!response.ok) {
-    Toastify({
-      text: result?.message || "Erro ao carregar Bens.",
-      duration: 4000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
-  }
-    const motorista = result;
-
-    const motoristaListDiv = document.querySelector(".listingDriver");
-    motoristaListDiv.innerHTML = "";
-
-    if (motorista.length > 0) {
       const tabela = document.createElement("table");
-      tabela.classList.add('tableDriver')
+      tabela.className = "table table-sm table-hover table-striped table-bordered tableDriver";
 
       const cabecalho = tabela.createTHead();
       const linhaCabecalho = cabecalho.insertRow();
       const colunas = [
         "Selecionar",
         "Código",
-        "status",
+        "Status",
         "Nome",
         "Data de Nascimento",
         "CPF",
-        "Data de Emisão",
+        "Data de Emissão",
         "Categoria da CNH",
-        "Data de vencimento",
+        "Data de Vencimento",
         "Restrições",
         "Orgão Emissor",
         "Celular",
@@ -574,71 +453,247 @@ async function fetchListMotorista() {
         "Cidade",
         "Estado",
         "E-mail",
-         
       ];
 
       colunas.forEach((coluna) => {
         const th = document.createElement("th");
         th.textContent = coluna;
+        if (["Selecionar", "Código", "Status" ].includes(coluna)) {
+          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+        } else {
+          th.classList.add("px-3", "py-2", "align-middle");
+        }
         linhaCabecalho.appendChild(th);
       });
 
       const corpo = tabela.createTBody();
-      motorista.forEach((motorista) => {
+      motorista.forEach((m) => {
         const linha = corpo.insertRow();
+        linha.setAttribute("data-motocode", m.motocode);
 
-        linha.setAttribute("data-motocode", motorista.motocode);
-
+        // Checkbox
         const checkboxCell = linha.insertCell();
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.name = "selectDriver";
-        checkbox.value = motorista.motocode;
+        checkbox.value = m.motocode;
+        checkbox.className = "form-check-input m-0";
 
-        const motoristaData = JSON.stringify(motorista);
+        const motoristaData = JSON.stringify(m);
         if (motoristaData) {
           checkbox.dataset.motorista = motoristaData;
-        } else {
-          console.warn(`Fornecedor inválido encontrado:`, motorista);
         }
 
+        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
         checkboxCell.appendChild(checkbox);
 
-    
-        linha.insertCell().textContent = motorista.motocode;
-        const statusCell = linha.insertCell();
-        statusCell.textContent = motorista.motostat;
-        statusCell.classList.add("status-moto");
-        linha.insertCell().textContent = motorista.motoname;
-        linha.insertCell().textContent = formatDate(motorista.motodtnc);
-        linha.insertCell().textContent = motorista.motocpf;
-        linha.insertCell().textContent = formatDate(motorista.motodtch);
-        linha.insertCell().textContent = motorista.motoctch;
-        linha.insertCell().textContent = formatDate(motorista.motodtvc);
-        linha.insertCell().textContent = motorista.motorest;
-        linha.insertCell().textContent = motorista.motoorem;
-        linha.insertCell().textContent = motorista.motocelu;
-        linha.insertCell().textContent = motorista.motocep;
-        linha.insertCell().textContent = motorista.motorua;
-        linha.insertCell().textContent = motorista.motocity;
-        linha.insertCell().textContent = motorista.motoestd;
-        linha.insertCell().textContent = motorista.motomail;
-        
+        // Dados
+        const dados = [
+          m.motocode,
+          m.motostat,
+          m.motoname,
+          formatDate(m.motodtnc),
+          m.motocpf,
+          formatDate(m.motodtch),
+          m.motoctch,
+          formatDate(m.motodtvc),
+          m.motorest,
+          m.motoorem,
+          m.motocelu,
+          m.motocep,
+          m.motorua,
+          m.motocity,
+          m.motoestd,
+          m.motomail,
+        ];
+
+        dados.forEach((valor, index) => {
+          const td = linha.insertCell();
+          td.textContent = valor || "";
+          td.classList.add("align-middle", "text-break");
+
+          const coluna = colunas[index + 1]; // +1 por causa do checkbox
+          if (["Código", "Status"].includes(coluna)) {
+            td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
+          } else {
+            td.classList.add("px-3", "py-2");
+          }
+
+          if (coluna === "Status") {
+            td.classList.add("status-moto");
+          }
+        });
       });
 
-      motoristaListDiv.appendChild(tabela);
-    } else {
-      motoristaListDiv.innerHTML = "<p>Nenhum fornecedor cadastrado.</p>";
+      wrapper.appendChild(tabela);
+      motoristaListDiv.appendChild(wrapper);
+  } else {
+    motoristaListDiv.innerHTML = "<p>Nenhum motorista cadastrado.</p>";
+  }
+};
+
+//listagem de motorista
+async function fetchListMotorista() {
+  const token = localStorage.getItem('token');
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+      text: "Sessão expirada. Faça login novamente.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      window.location.href = "/index.html";
+    }, 2000);
+    return;
+  }
+
+  try {
+    const response = await fetch("/api/listingdriver", {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      Toastify({
+        text: result?.message || "Erro ao carregar Motoristas.",
+        duration: 4000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+      return;
     }
+
+    const motorista = result;
+    const motoristaListDiv = document.querySelector(".listingDriver");
+    motoristaListDiv.innerHTML = "";
+
+    if (motorista.length > 0) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "table-responsive";
+
+      const tabela = document.createElement("table");
+      tabela.className = "table table-sm table-hover table-striped table-bordered tableDriver";
+
+      const cabecalho = tabela.createTHead();
+      const linhaCabecalho = cabecalho.insertRow();
+      const colunas = [
+        "Selecionar",
+        "Código",
+        "Status",
+        "Nome",
+        "Data de Nascimento",
+        "CPF",
+        "Data de Emissão",
+        "Categoria da CNH",
+        "Data de Vencimento",
+        "Restrições",
+        "Orgão Emissor",
+        "Celular",
+        "CEP",
+        "Rua",
+        "Cidade",
+        "Estado",
+        "E-mail",
+      ];
+
+      colunas.forEach((coluna) => {
+        const th = document.createElement("th");
+        th.textContent = coluna;
+        if (["Selecionar", "Código", "Status"].includes(coluna)) {
+          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+        } else {
+          th.classList.add("px-3", "py-2", "align-middle");
+        }
+        linhaCabecalho.appendChild(th);
+      });
+
+      const corpo = tabela.createTBody();
+      motorista.forEach((m) => {
+        const linha = corpo.insertRow();
+        linha.setAttribute("data-motocode", m.motocode);
+
+        // Checkbox
+        const checkboxCell = linha.insertCell();
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.name = "selectDriver";
+        checkbox.value = m.motocode;
+        checkbox.className = "form-check-input m-0";
+
+        const motoristaData = JSON.stringify(m);
+        if (motoristaData) {
+          checkbox.dataset.motorista = motoristaData;
+        }
+
+        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
+        checkboxCell.appendChild(checkbox);
+
+        // Dados
+        const dados = [
+          m.motocode,
+          m.motostat,
+          m.motoname,
+          formatDate(m.motodtnc),
+          m.motocpf,
+          formatDate(m.motodtch),
+          m.motoctch,
+          formatDate(m.motodtvc),
+          m.motorest,
+          m.motoorem,
+          m.motocelu,
+          m.motocep,
+          m.motorua,
+          m.motocity,
+          m.motoestd,
+          m.motomail,
+        ];
+
+        dados.forEach((valor, index) => {
+          const td = linha.insertCell();
+          td.textContent = valor || "";
+          td.classList.add("align-middle", "text-break");
+
+          const coluna = colunas[index + 1]; // +1 por causa do checkbox
+          if (["Código", "Status"].includes(coluna)) {
+            td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
+          } else {
+            td.classList.add("px-3", "py-2");
+          }
+
+          if (coluna === "Status") {
+            td.classList.add("status-moto");
+          }
+        });
+      });
+
+      wrapper.appendChild(tabela);
+      motoristaListDiv.appendChild(wrapper);
+    } else {
+      motoristaListDiv.innerHTML = "<p class='text-light'>Nenhum motorista cadastrado.</p>";
+    }
+
   } catch (error) {
-    console.error("Erro ao carregar fornecedores:", error);
+    console.error("Erro ao carregar motoristas:", error);
     document.querySelector(".listingDriver").innerHTML =
-      "<p>Erro ao carregar fornecedores.</p>";
+      "<p>Erro ao carregar motoristas.</p>";
   }
 }
 
-function deleteMotista(){
 
+function deleteMotista(){
   const btnDeleteDriver = document.querySelector(".buttonDeleteDriver");
   btnDeleteDriver.addEventListener("click", async () => {
     const selectedCheckbox = document.querySelector(

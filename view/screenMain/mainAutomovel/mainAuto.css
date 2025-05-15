@@ -1,29 +1,30 @@
-.containerAppAutomo{
-    display: none;
-    background-color: darkgray;
-    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
-    width: 76%;
-    height: 550px;
-    margin-left: 22%;
-    margin-top:1% ;
-    flex-direction: column;
-    justify-content: space-between;
-    border: solid , 2px , white;
-    padding: 7px;
-    border-radius: 10px;
-}
+
 .listingAutomo{
-    overflow: auto;
+  max-height: 75vh;
+  overflow: auto;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
 }
 
 .tableVehicles{
-    width: 100%;
-    border-collapse: collapse;
-    color: black;
-    font-size: 14px;
+    font-size: 0.85rem;
+  color: #000;
 }
 .tableVehicles td{
-    background-color:darkgray;
+  background-color:#f8f9fa;
+   color: #212529;
+   word-break: break-word;
+  white-space: normal;
+}
+.tableVehicles td ,
+.tableVehicles th{
+vertical-align: middle;
+  white-space: normal;
+}
+
+.tableVehicles th{
+    background-color: #1f2937;
+    color: white;
 }
 .foorm{
     margin-bottom: 10%;
@@ -31,3 +32,4 @@
 .foormEditVeicu{
     margin-bottom: 10%;
 }
+

@@ -310,59 +310,93 @@ function insertFamilyGoodsTableRunTime(familyGoods) {
   fabricanteListDiv.innerHTML = "";
 
   if (familyGoods.length > 0) {
-    const tabela = document.createElement("table");
-    tabela.classList.add('tableFamilyBens')
+   const wrapper = document.createElement("div");
+      wrapper.className = "table-responsive";
 
-    // Cabeçalho
-    const cabecalho = tabela.createTHead();
-    const linhaCabecalho = cabecalho.insertRow();
-    const colunas = [
-      "Selecionar",
-      "Código",
-      "Descrição",
-      "Categoria",
-      "Subcategoria",
-      "Observação",
-      "Centro de Custo"
-    ];
+      const tabela = document.createElement("table");
+      tabela.className = "table table-sm table-hover table-striped table-bordered tableFamilyBens";
 
-    colunas.forEach((coluna) => {
-      const th = document.createElement("th");
-      th.textContent = coluna;
-      linhaCabecalho.appendChild(th);
-    });
+      const cabecalho = tabela.createTHead();
+      const linhaCabecalho = cabecalho.insertRow();
+      const colunas = [
+        "Selecionar",
+        "Código",
+        "Descrição",
+        "Categoria",
+        "Subcategoria",
+        "Observação",
+        "Centro de custo",
+      ];
 
-    // Corpo da tabela
-    const corpo = tabela.createTBody();
-    familyGoods.forEach((familyGoods) => {
-      const linha = corpo.insertRow();
-      linha.setAttribute("data-fabecode", familyGoods.fabecode);
+      colunas.forEach((coluna) => {
+        const th = document.createElement("th");
+        th.textContent = coluna;
 
-      const checkboxCell = linha.insertCell();
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.name = "selectfamilyGoods";
-      checkbox.value = familyGoods.fabecode;
-      checkbox.dataset.familyGoods = JSON.stringify(familyGoods);
-      checkboxCell.appendChild(checkbox);
+        if (["Selecionar", "Código"].includes(coluna)) {
+          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+        } else {
+          th.classList.add("px-3", "py-2", "align-middle");
+        }
 
-      linha.insertCell().textContent = familyGoods.fabecode;
-      linha.insertCell().textContent = familyGoods.fabedesc;
-      linha.insertCell().textContent = familyGoods.fabecate;
-      linha.insertCell().textContent = familyGoods.fabesuca;
-      linha.insertCell().textContent = familyGoods.fabeobs;
-      linha.insertCell().textContent = familyGoods.fabectct;
-    });
+        linhaCabecalho.appendChild(th);
+      });
 
-    fabricanteListDiv.appendChild(tabela);
+      const corpo = tabela.createTBody();
+
+      familyGoods.forEach((fabricante) => {
+        const linha = corpo.insertRow();
+        linha.setAttribute("data-fabecode", fabricante.fabecode);
+
+        // Checkbox
+        const checkboxCell = linha.insertCell();
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.name = "selectfamilyGoods";
+        checkbox.value = fabricante.fabecode;
+
+        const fabricanteData = JSON.stringify(fabricante);
+        if (fabricanteData) {
+          checkbox.dataset.familyGoods = fabricanteData;
+        }
+
+        checkbox.className = "form-check-input m-0";
+        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
+        checkboxCell.appendChild(checkbox);
+
+        // Demais dados
+        const dados = [
+          fabricante.fabecode,
+          fabricante.fabedesc,
+          fabricante.fabecate,
+          fabricante.fabesuca,
+          fabricante.fabeobs,
+          fabricante.fabectct,
+        ];
+
+        dados.forEach((valor, index) => {
+          const td = linha.insertCell();
+          td.textContent = valor || "";
+          td.classList.add("align-middle", "text-break");
+
+          const coluna = colunas[index + 1];
+          if (["Código"].includes(coluna)) {
+            td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
+          } else {
+            td.classList.add("px-3", "py-2");
+          }
+        });
+      });
+
+      wrapper.appendChild(tabela);
+      fabricanteListDiv.appendChild(wrapper);
   } else {
     fabricanteListDiv.innerHTML = "<p>Nenhum fabricante cadastrado.</p>";
   }
 }
 
-// // listagem de fabricante
+//Listagem de familia de bens
 async function fetchListFabricante() {
-  const token = localStorage.getItem("token"); 
+  const token = localStorage.getItem("token");
 
   if (!token || isTokenExpired(token)) {
     Toastify({
@@ -380,6 +414,7 @@ async function fetchListFabricante() {
     }, 2000);
     return;
   }
+
   try {
     const response = await fetch("/api/listfabri", {
       headers: {
@@ -387,35 +422,38 @@ async function fetchListFabricante() {
         Authorization: `Bearer ${token}`,
       },
     });
-    const result = await response.json()
-     
-     if (!response.ok) {
-    Toastify({
-      text: result?.message || "Erro ao carregar Familia de bens.",
-      duration: 4000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
-  }
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      Toastify({
+        text: result?.message || "Erro ao carregar Família de Bens.",
+        duration: 4000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+      return;
+    }
 
     const familyGoods = result;
-
     const familyGoodsListDiv = document.querySelector(".listingFabri");
     familyGoodsListDiv.innerHTML = "";
 
     if (familyGoods.length > 0) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "table-responsive";
+
       const tabela = document.createElement("table");
-      tabela.classList.add("tableFamilyBens");
+      tabela.className = "table table-sm table-hover table-striped table-bordered tableFamilyBens";
 
       const cabecalho = tabela.createTHead();
       const linhaCabecalho = cabecalho.insertRow();
       const colunas = [
         "Selecionar",
         "Código",
-        "Discrição",
+        "Descrição",
         "Categoria",
         "Subcategoria",
         "Observação",
@@ -425,41 +463,66 @@ async function fetchListFabricante() {
       colunas.forEach((coluna) => {
         const th = document.createElement("th");
         th.textContent = coluna;
+
+        if (["Selecionar", "Código"].includes(coluna)) {
+          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+        } else {
+          th.classList.add("px-3", "py-2", "align-middle");
+        }
+
         linhaCabecalho.appendChild(th);
       });
 
       const corpo = tabela.createTBody();
-      familyGoods.forEach((familyGoods) => {
+
+      familyGoods.forEach((fabricante) => {
         const linha = corpo.insertRow();
+        linha.setAttribute("data-fabecode", fabricante.fabecode);
 
-        linha.setAttribute("data-fabecode", familyGoods.fabecode);
-
+        // Checkbox
         const checkboxCell = linha.insertCell();
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.name = "selectfamilyGoods";
-        checkbox.value = familyGoods.fabecode;
+        checkbox.value = fabricante.fabecode;
 
-        const fabricanteData = JSON.stringify(familyGoods);
+        const fabricanteData = JSON.stringify(fabricante);
         if (fabricanteData) {
           checkbox.dataset.familyGoods = fabricanteData;
-        } else {
-          console.warn(`Fornecedor inválido encontrado:`, familyGoods);
         }
 
+        checkbox.className = "form-check-input m-0";
+        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
         checkboxCell.appendChild(checkbox);
 
-        linha.insertCell().textContent = familyGoods.fabecode;
-        linha.insertCell().textContent = familyGoods.fabedesc;
-        linha.insertCell().textContent = familyGoods.fabecate;
-        linha.insertCell().textContent = familyGoods.fabesuca;
-        linha.insertCell().textContent = familyGoods.fabeobs;
-        linha.insertCell().textContent = familyGoods.fabectct;
+        // Demais dados
+        const dados = [
+          fabricante.fabecode,
+          fabricante.fabedesc,
+          fabricante.fabecate,
+          fabricante.fabesuca,
+          fabricante.fabeobs,
+          fabricante.fabectct,
+        ];
+
+        dados.forEach((valor, index) => {
+          const td = linha.insertCell();
+          td.textContent = valor || "";
+          td.classList.add("align-middle", "text-break");
+
+          const coluna = colunas[index + 1];
+          if (["Código"].includes(coluna)) {
+            td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
+          } else {
+            td.classList.add("px-3", "py-2");
+          }
+        });
       });
 
-      familyGoodsListDiv.appendChild(tabela);
+      wrapper.appendChild(tabela);
+      familyGoodsListDiv.appendChild(wrapper);
     } else {
-      familyGoodsListDiv.innerHTML = "<p>Nenhum fornecedor cadastrado.</p>";
+      familyGoodsListDiv.innerHTML = "<p class='text-light'>Nenhum fornecedor cadastrado.</p>";
     }
   } catch (error) {
     console.error("Erro ao carregar fornecedores:", error);
@@ -467,6 +530,7 @@ async function fetchListFabricante() {
       "<p>Erro ao carregar fornecedores.</p>";
   }
 }
+
 
 // //deletar fabricante
 function deleteFamilyGoods(){

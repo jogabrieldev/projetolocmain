@@ -12,8 +12,8 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       <button class="btn btn-light text-dark fw-semibold  buttonExitFabri">Voltar</button>
     </div>
   
-    <div class="formRegisterFabri bg-secondary border p-4 rounded shadow text-white" style="display: none">
-      <form class="formRegisterFabricante">
+    <div class="formRegisterFabri" style="display: none">
+      <form class="formRegisterFabricante border border-secondary-subtle rounded-3 p-4 shadow-sm">
         <div class="row g-3">
   
           <div class="col-md-3">
@@ -89,8 +89,10 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
           </div>
   
           <div class="col-12 d-flex justify-content-center gap-3 mt-3">
-            <button type="submit" class="btn btn-success w-25 cadFabri">Cadastrar</button>
-            <button type="button" class="btn btn-secondary w-25  btnOutInitFabri">Voltar</button>
+            
+            <button type="submit" class="btn btn-success w-25 cadFabri"><i class="bi bi-check-circle me-2"></i>Cadastrar</button>
+
+            <button type="button" class="btn btn-secondary w-25  btnOutInitFabri"><i class="bi bi-arrow-left me-2"></i>Voltar</button>
           </div>
   
         </div>
@@ -99,7 +101,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
   
     <!-- FORMULARIO EDIÇÃO -->
     <div class="editFabri container mt-4" style="display: none">
-      <form class="formEditFabri row g-3" class="border border-secondary-subtle rounded-3 p-4 shadow-sm">
+      <form class="formEditFabri row g-3 border border-secondary-subtle rounded-3 p-4 shadow-sm">
         <div class="col-12 col-md-6">
           <label for="editFabeCode" class="form-label">Código</label>
           <input

@@ -235,18 +235,18 @@ function validationFormClientPageLocation(){
             required:true,
             minlength: 15
           },
-          clieCityLoc:{
-          required: true,
-          minlength:4
-         },
-         clieEstdLoc:{
-           required:true,
-           minlength:4
-         },
-         clieRuaLoc:{
-          required: true,
-          minlength: 5
-         },
+        //   clieCityLoc:{
+        //   required: true,
+        //   minlength:4
+        //  },
+        //  clieEstdLoc:{
+        //    required:true,
+        //    minlength:4
+        //  },
+        //  clieRuaLoc:{
+        //   required: true,
+        //   minlength: 5
+        //  },
          clieCepLoc:{
           required: true,
           minlength: 9
@@ -281,18 +281,6 @@ function validationFormClientPageLocation(){
                  required: "OBRIGATORIO",
                  minlength: 'MINIMO 15 CARACTERES'
               },
-              clieCityLoc:{
-                required: "OBRIGATORIO",
-                minlength: 'Caracteres minimos são 4'
-               },
-               clieEstdLoc:{
-                required:'OBRIGATORIO',
-                minlength: 'Caracteres minimos são 4'
-              },
-              clieRuaLoc:{
-                required: 'OBRIGATORIO',
-                minlength: 'Caracteres minimos são 5 Se preciso inclua QD E LT'
-               },
                clieCepLoc:{
                 required: "OBRIGATORIO",
                 minlength: 'MINIMO 9 CARACTERES'
@@ -345,15 +333,6 @@ $(function () {
           fornCep:{
             required: true,
           },
-          // fornRua:{
-          //    required:true
-          // },
-          // fornCity:{
-          //   required: true
-          // },
-          // fornEstd:{
-          //   required: true
-          // },
           fornCelu:{
             required: true
           },
@@ -396,7 +375,7 @@ $(function () {
                minlength: 'MINIMO 18 CARACTERES'
              },
           
-          fornEstd:{
+          fornCep:{
             required: "OBRIGATORIO"
           },
           fornCelu:{

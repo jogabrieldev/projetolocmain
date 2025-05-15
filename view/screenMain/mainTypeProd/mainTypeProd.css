@@ -1,38 +1,30 @@
-.containerAppTipoProd{
-    display: none;
-    background-color: darkgray;
-    box-shadow:4px 5px 8px rgba(0, 0, 0, 0.929) ;
-    width: 76%;
-    height: 550px;
-    margin-left: 22%;
-    margin-top:1%;
-    flex-direction: column;
-    justify-content: space-between;
-    border: 2px solid white;
-    padding: 7px;
-    border-radius: 10px;
-};
+
 .listingTipoProd{
-    width: 100%;
-    height: 400px;
-    overflow: auto; /* Habilita rolagem */
-    border: 1px solid #ccc;
-    background: #f9f9f9;
-    position: relative;
+  max-height: 75vh;
+  overflow: auto;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
 }
+
 .tableTypeProd{
-    width: 100%;
-    border-collapse: collapse;
-    color: black;
-    font-size: 14px;
+  font-size: 0.85rem;
+  color: #000;
 }
 .tableTypeProd td{
-    background-color:darkgray ;
+    background-color:#f8f9fa;
+   color: #212529;
+   word-break: break-word;
+  white-space: normal;
 }
-.tableWrapper {
-    width: 100%;
-    height: 100%;
-    overflow: auto; 
+.tableTypeProd td , 
+.tableTypeProd th{
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.tableTypeProd th{
+     background-color: #1f2937;
+    color: white;
 }
 
 .btnMainPageTipoProd{

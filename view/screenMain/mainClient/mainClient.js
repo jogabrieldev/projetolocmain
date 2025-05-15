@@ -446,127 +446,11 @@ function insertClientTableRunTime(clientes) {
   clientesListDiv.innerHTML = "";
 
   if (clientes.length > 0) {
-    const tabela = document.createElement("table");
-    tabela.classList.add("tableClient");
+   const wrapper = document.createElement("div");
+      wrapper.className = "table-responsive";
 
-    // Cabeçalho
-    const cabecalho = tabela.createTHead();
-    const linhaCabecalho = cabecalho.insertRow();
-    const colunas = [
-      "Selecionar",
-      "Código",
-      "Nome",
-      "CPF",
-      "Data de Cadastro",
-      "Data de Nascimento",
-      "Celular",
-      "Cidade",
-      "Estado",
-      "Rua",
-      "CEP",
-      "E-mail",
-    ];
-
-    colunas.forEach((coluna) => {
-      const th = document.createElement("th");
-      th.textContent = coluna;
-      linhaCabecalho.appendChild(th);
-    });
-
-    // Corpo da tabela
-    const corpo = tabela.createTBody();
-    clientes.forEach((cliente) => {
-      const linha = corpo.insertRow();
-      linha.setAttribute("data-cliecode", cliente.cliecode);
-
-      const checkboxCell = linha.insertCell();
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.name = "selectCliente";
-      checkbox.value = cliente.cliecode;
-
-      const clienteData = JSON.stringify(cliente);
-      if (clienteData) {
-        checkbox.setAttribute("data-cliente", clienteData);
-      } else {
-        console.warn(`Cliente inválido encontrado:`, cliente);
-      }
-
-      checkboxCell.appendChild(checkbox);
-
-      linha.insertCell().textContent = cliente.cliecode;
-      linha.insertCell().textContent = cliente.clienome;
-      linha.insertCell().textContent = cliente.cliecpf;
-      linha.insertCell().textContent = formatDate(cliente.cliedtcd);
-      linha.insertCell().textContent = formatDate(cliente.cliedtnc);
-      linha.insertCell().textContent = cliente.cliecelu;
-      linha.insertCell().textContent = cliente.cliecity;
-      linha.insertCell().textContent = cliente.clieestd;
-      linha.insertCell().textContent = cliente.clierua;
-      linha.insertCell().textContent = cliente.cliecep;
-      linha.insertCell().textContent = cliente.cliemail;
-    });
-
-    // Adiciona a tabela à div
-    clientesListDiv.appendChild(tabela);
-  } else {
-    clientesListDiv.innerHTML = "<p>Nenhum cliente cadastrado.</p>";
-  }
-}
-
-// LISTAGEM DE CLIENTES
-let clientesData = {};
-async function fetchListClientes() {
-  const token = localStorage.getItem("token");
-
-  if (!token || isTokenExpired(token)) {
-    Toastify({
-      text: "Sessão expirada. Faça login novamente.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-
-    localStorage.removeItem("token");
-    setTimeout(() => {
-      window.location.href = "/index.html";
-    }, 2000);
-    return;
-  }
-  try {
-    const response = await fetch("/api/listclient", {
-      method:'GET',
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }); 
-    const result = await response.json();
-
-    if(!response.ok){
-      Toastify({
-      text: result?.message || "Erro ao carregar clientes.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-
-    document.querySelector(".listClient").innerHTML =
-      "<p>Erro ao carregar clientes.</p>";
-    return;
-    }
-    const clientes = result;
-
-    const clientesListDiv = document.querySelector(".listClient");
-    clientesListDiv.innerHTML = "";
-
-    if (clientes.length > 0) {
       const tabela = document.createElement("table");
-      tabela.classList.add("tableClient");
+      tabela.className = "table table-sm table-hover table-striped table-bordered tableBens";
 
       // Cabeçalho
       const cabecalho = tabela.createTHead();
@@ -589,16 +473,23 @@ async function fetchListClientes() {
       colunas.forEach((coluna) => {
         const th = document.createElement("th");
         th.textContent = coluna;
+
+        if (["Selecionar", "Código", "CPF", "Estado", "CEP"].includes(coluna)) {
+          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+        } else {
+          th.classList.add("px-3", "py-2", "align-middle");
+        }
+
         linhaCabecalho.appendChild(th);
       });
 
-      // Corpo da tabela
+      // Corpo
       const corpo = tabela.createTBody();
       clientes.forEach((cliente) => {
         const linha = corpo.insertRow();
-
         linha.setAttribute("data-cliecode", cliente.cliecode);
 
+        // Checkbox
         const checkboxCell = linha.insertCell();
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
@@ -607,42 +498,206 @@ async function fetchListClientes() {
 
         const clienteData = JSON.stringify(cliente);
         if (clienteData) {
-          checkbox.setAttribute("data-cliente", clienteData);
-        } else {
-          console.warn(`Cliente inválido encontrado:`, cliente);
+          checkbox.dataset.cliente = clienteData;
         }
 
+        checkbox.className = "form-check-input m-0";
+        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
         checkboxCell.appendChild(checkbox);
 
-        linha.insertCell().textContent = cliente.cliecode;
-        linha.insertCell().textContent = cliente.clienome;
-        linha.insertCell().textContent = cliente.cliecpf;
-        linha.insertCell().textContent = formatDate(cliente.cliedtcd);
-        linha.insertCell().textContent = formatDate(cliente.cliedtnc);
-        linha.insertCell().textContent = cliente.cliecelu;
-        linha.insertCell().textContent = cliente.cliecity;
-        linha.insertCell().textContent = cliente.clieestd;
-        linha.insertCell().textContent = cliente.clierua;
-        linha.insertCell().textContent = cliente.cliecep;
-        linha.insertCell().textContent = cliente.cliemail;
+        // Dados do cliente
+        const dados = [
+          cliente.cliecode,
+          cliente.clienome,
+          cliente.cliecpf,
+          formatDate(cliente.cliedtcd),
+          formatDate(cliente.cliedtnc),
+          cliente.cliecelu,
+          cliente.cliecity,
+          cliente.clieestd,
+          cliente.clierua,
+          cliente.cliecep,
+          cliente.cliemail,
+        ];
+
+        dados.forEach((valor, index) => {
+          const td = linha.insertCell();
+          td.textContent = valor || "";
+          td.classList.add("align-middle", "text-break");
+
+          const coluna = colunas[index + 1];
+          if (["Código", "CPF", "Estado", "CEP"].includes(coluna)) {
+            td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
+          } else {
+            td.classList.add("px-3", "py-2");
+          }
+        });
       });
 
-      clientesListDiv.appendChild(tabela);
+      wrapper.appendChild(tabela);
+      clientesListDiv.appendChild(wrapper);
+  } else {
+    clientesListDiv.innerHTML = "<p>Nenhum cliente cadastrado.</p>";
+  }
+}
+
+// LISTAGEM DE CLIENTES
+async function fetchListClientes() {
+  const token = localStorage.getItem("token");
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+      text: "Sessão expirada. Faça login novamente.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      window.location.href = "/index.html";
+    }, 2000);
+    return;
+  }
+
+  try {
+    const response = await fetch("/api/listclient", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      Toastify({
+        text: result?.message || "Erro ao carregar clientes.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+
+      document.querySelector(".listClient").innerHTML =
+        "<p>Erro ao carregar clientes.</p>";
+      return;
+    }
+
+    const clientes = result;
+    const clientesListDiv = document.querySelector(".listClient");
+    clientesListDiv.innerHTML = "";
+
+    if (clientes.length > 0) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "table-responsive";
+
+      const tabela = document.createElement("table");
+      tabela.className = "table table-sm table-hover table-striped table-bordered tableBens";
+
+      // Cabeçalho
+      const cabecalho = tabela.createTHead();
+      const linhaCabecalho = cabecalho.insertRow();
+      const colunas = [
+        "Selecionar",
+        "Código",
+        "Nome",
+        "CPF",
+        "Data de Cadastro",
+        "Data de Nascimento",
+        "Celular",
+        "Cidade",
+        "Estado",
+        "Rua",
+        "CEP",
+        "E-mail",
+      ];
+
+      colunas.forEach((coluna) => {
+        const th = document.createElement("th");
+        th.textContent = coluna;
+
+        if (["Selecionar", "Código", "CPF", "Estado", "CEP"].includes(coluna)) {
+          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+        } else {
+          th.classList.add("px-3", "py-2", "align-middle");
+        }
+
+        linhaCabecalho.appendChild(th);
+      });
+
+      // Corpo
+      const corpo = tabela.createTBody();
+      clientes.forEach((cliente) => {
+        const linha = corpo.insertRow();
+        linha.setAttribute("data-cliecode", cliente.cliecode);
+
+        // Checkbox
+        const checkboxCell = linha.insertCell();
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.name = "selectCliente";
+        checkbox.value = cliente.cliecode;
+
+        const clienteData = JSON.stringify(cliente);
+        if (clienteData) {
+          checkbox.dataset.cliente = clienteData;
+        }
+
+        checkbox.className = "form-check-input m-0";
+        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
+        checkboxCell.appendChild(checkbox);
+
+        // Dados do cliente
+        const dados = [
+          cliente.cliecode,
+          cliente.clienome,
+          cliente.cliecpf,
+          formatDate(cliente.cliedtcd),
+          formatDate(cliente.cliedtnc),
+          cliente.cliecelu,
+          cliente.cliecity,
+          cliente.clieestd,
+          cliente.clierua,
+          cliente.cliecep,
+          cliente.cliemail,
+        ];
+
+        dados.forEach((valor, index) => {
+          const td = linha.insertCell();
+          td.textContent = valor || "";
+          td.classList.add("align-middle", "text-break");
+
+          const coluna = colunas[index + 1];
+          if (["Código", "CPF", "Estado", "CEP"].includes(coluna)) {
+            td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
+          } else {
+            td.classList.add("px-3", "py-2");
+          }
+        });
+      });
+
+      wrapper.appendChild(tabela);
+      clientesListDiv.appendChild(wrapper);
     } else {
-      clientesListDiv.innerHTML = "<p>Nenhum cliente cadastrado.</p>";
+      clientesListDiv.innerHTML = "<p class='text-light'>Nenhum cliente cadastrado.</p>";
     }
   } catch (error) {
     console.error("Erro ao carregar clientes:", error);
     Toastify({
-    text: "Erro de conexão com o servidor.",
-    duration: 3000,
-    close: true,
-    gravity: "top",
-    position: "center",
-    backgroundColor: "red",
+      text: "Erro de conexão com o servidor.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
     }).showToast();
     document.querySelector(".listClient").innerHTML =
-    "<p>Erro ao carregar clientes.</p>";
+      "<p>Erro ao carregar clientes.</p>";
   }
 }
 

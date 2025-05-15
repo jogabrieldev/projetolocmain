@@ -403,62 +403,82 @@ function insertVehicleTableRunTime(veiculos) {
   veiculosListDiv.innerHTML = "";
 
   if (veiculos.length > 0) {
-    const tabela = document.createElement("table");
-    tabela.classList.add("tableVehicles");
+     const wrapper = document.createElement("div");
+      wrapper.className = "table-responsive";
 
-    // Cabeçalho da tabela
-    const cabecalho = tabela.createTHead();
-    const linhaCabecalho = cabecalho.insertRow();
-    const colunas = [
-      "Selecionar",
-      "Código",
-      "Placa",
-      "Chassi",
-      "Modelo",
-      "Marca",
-      "Ano",
-      "Cor",
-      "Tipo",
-      "Km Atual",
-      "Motor",
-      "Status",
-      "Data de Cadastro",
-    ];
+      const tabela = document.createElement("table");
+      tabela.className = "table table-sm table-hover table-striped table-bordered tableVehicles";
 
-    colunas.forEach((coluna) => {
-      const th = document.createElement("th");
-      th.textContent = coluna;
-      linhaCabecalho.appendChild(th);
-    });
+      const cabecalho = tabela.createTHead();
+      const linhaCabecalho = cabecalho.insertRow();
 
-    const corpo = tabela.createTBody();
-    veiculos.forEach((veiculo) => {
-      const linha = corpo.insertRow();
-      linha.setAttribute("data-caaucode", veiculo.caaucode);
+      const colunas = [
+        "Selecionar",
+        "Código",
+        "Placa",
+        "Chassi",
+        "Modelo",
+        "Marca",
+        "Ano",
+        "Cor",
+        "Tipo de combustivel",
+        "Km Atual",
+        "Motorista",
+        "Status",
+        "Data de Cadastro",
+      ];
 
-      const checkboxCell = linha.insertCell();
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.name = "selectVeiculo";
-      checkbox.value = veiculo.caaucode;
-      checkbox.dataset.veiculo = JSON.stringify(veiculo);
-      checkboxCell.appendChild(checkbox);
+      colunas.forEach((coluna) => {
+        const th = document.createElement("th");
+        th.textContent = coluna;
+        th.classList.add("px-3", "py-2", "align-middle", "text-center", "wh-nowrap");
+        linhaCabecalho.appendChild(th);
+      });
 
-      linha.insertCell().textContent = veiculo.caaucode || "-";
-      linha.insertCell().textContent = veiculo.caauplac || "-";
-      linha.insertCell().textContent = veiculo.caauchss || "-";
-      linha.insertCell().textContent = veiculo.caaurena || "-";
-      linha.insertCell().textContent = veiculo.caaumaca || "-";
-      linha.insertCell().textContent = veiculo.caaumode || "-";
-      linha.insertCell().textContent = veiculo.caaucor || "-";
-      linha.insertCell().textContent = veiculo.caautico || "-";
-      linha.insertCell().textContent = veiculo.caaukmat || "-";
-      linha.insertCell().textContent = veiculo.caaumoto || "-";
-      linha.insertCell().textContent = veiculo.caaustat || "-";
-      linha.insertCell().textContent = formatDate(veiculo.caaudtca);
-    });
+      const corpo = tabela.createTBody();
+      veiculos.forEach((v) => {
+        const linha = corpo.insertRow();
+        linha.setAttribute("data-caaucode", v.caaucode);
 
-    veiculosListDiv.appendChild(tabela);
+        const checkboxCell = linha.insertCell();
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.name = "selectVeiculo";
+        checkbox.value = v.caaucode;
+        checkbox.className = "form-check-input m-0";
+
+        const veiculoData = JSON.stringify(v);
+        if (veiculoData) {
+          checkbox.dataset.veiculo = veiculoData;
+        }
+
+        checkboxCell.appendChild(checkbox);
+        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
+
+        const dados = [
+          v.caaucode,
+          v.caauplac,
+          v.caauchss,
+          v.caaurena,
+          v.caaumaca,
+          v.caaumode,
+          v.caaucor,
+          v.caautico,
+          v.caaukmat,
+          v.caaumoto,
+          v.caaustat,
+          formatDate(v.caaudtca),
+        ];
+
+        dados.forEach((valor, index) => {
+          const td = linha.insertCell();
+          td.textContent = valor || "";
+          td.classList.add("align-middle", "text-break", "px-3", "py-2");
+        });
+      });
+
+      wrapper.appendChild(tabela);
+      veiculosListDiv.appendChild(wrapper);
   } else {
     veiculosListDiv.innerHTML = "<p>Nenhum veículo cadastrado.</p>";
   }
@@ -484,6 +504,7 @@ async function listarVeiculos() {
     }, 2000);
     return;
   }
+
   try {
     const response = await fetch("/api/listauto", {
       method: "GET",
@@ -492,31 +513,35 @@ async function listarVeiculos() {
         Authorization: `Bearer ${token}`,
       },
     });
-    const result = await response.json()
+
+    const result = await response.json();
 
     if (!response.ok) {
-    Toastify({
-      text: result?.message || "Erro ao carregar Bens.",
-      duration: 4000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
-  }
-    const veiculos = result;
+      Toastify({
+        text: result?.message || "Erro ao carregar Bens.",
+        duration: 4000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+      return;
+    }
 
+    const veiculos = result;
     const veiculosListDiv = document.querySelector(".listingAutomo");
     veiculosListDiv.innerHTML = "";
 
     if (veiculos.length > 0) {
-      const tabela = document.createElement("table");
-      tabela.classList.add("tableVehicles");
+      const wrapper = document.createElement("div");
+      wrapper.className = "table-responsive";
 
-      // Cabeçalho
+      const tabela = document.createElement("table");
+      tabela.className = "table table-sm table-hover table-striped table-bordered tableVehicles";
+
       const cabecalho = tabela.createTHead();
       const linhaCabecalho = cabecalho.insertRow();
+
       const colunas = [
         "Selecionar",
         "Código",
@@ -536,57 +561,65 @@ async function listarVeiculos() {
       colunas.forEach((coluna) => {
         const th = document.createElement("th");
         th.textContent = coluna;
+        th.classList.add("px-3", "py-2", "align-middle", "text-center", "wh-nowrap");
         linhaCabecalho.appendChild(th);
       });
 
-      // Corpo da tabela
       const corpo = tabela.createTBody();
-      veiculos.forEach((veiculo) => {
+      veiculos.forEach((v) => {
         const linha = corpo.insertRow();
-
-        linha.setAttribute("data-caaucode", veiculo.caaucode);
+        linha.setAttribute("data-caaucode", v.caaucode);
 
         const checkboxCell = linha.insertCell();
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.name = "selectVeiculo";
-        checkbox.value = veiculo.caaucode;
+        checkbox.value = v.caaucode;
+        checkbox.className = "form-check-input m-0";
 
-        const veiculoData = JSON.stringify(veiculo);
+        const veiculoData = JSON.stringify(v);
         if (veiculoData) {
           checkbox.dataset.veiculo = veiculoData;
-        } else {
-          console.warn(`Veículo inválido encontrado:`, veiculo);
         }
 
         checkboxCell.appendChild(checkbox);
+        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
 
-        linha.insertCell().textContent = veiculo.caaucode;
-        linha.insertCell().textContent = veiculo.caauplac;
-        linha.insertCell().textContent = veiculo.caauchss;
-        linha.insertCell().textContent = veiculo.caaurena;
-        linha.insertCell().textContent = veiculo.caaumaca;
-        linha.insertCell().textContent = veiculo.caaumode;
-        linha.insertCell().textContent = veiculo.caaucor;
-        linha.insertCell().textContent = veiculo.caautico;
-        linha.insertCell().textContent = veiculo.caaukmat;
-        linha.insertCell().textContent = veiculo.caaumoto;
-        linha.insertCell().textContent = veiculo.caaustat;
+        const dados = [
+          v.caaucode,
+          v.caauplac,
+          v.caauchss,
+          v.caaurena,
+          v.caaumaca,
+          v.caaumode,
+          v.caaucor,
+          v.caautico,
+          v.caaukmat,
+          v.caaumoto,
+          v.caaustat,
+          formatDate(v.caaudtca),
+        ];
 
-        linha.insertCell().textContent = formatDate(veiculo.caaudtca);
+        dados.forEach((valor, index) => {
+          const td = linha.insertCell();
+          td.textContent = valor || "";
+          td.classList.add("align-middle", "text-break", "px-3", "py-2");
+        });
       });
 
-      // Adiciona a tabela à div
-      veiculosListDiv.appendChild(tabela);
+      wrapper.appendChild(tabela);
+      veiculosListDiv.appendChild(wrapper);
     } else {
-      veiculosListDiv.innerHTML = "<p>Nenhum veículo cadastrado.</p>";
+      veiculosListDiv.innerHTML = "<p class='text-light'>Nenhum veículo cadastrado.</p>";
     }
   } catch (error) {
     console.error("Erro ao carregar veículos:", error);
-    document.querySelector(".listVeiculos").innerHTML =
-      "<p>Erro ao carregar veículos.</p>";
+    document.querySelector(".listingAutomo").innerHTML =
+      "<p class='text-light'>Erro ao carregar veículos.</p>";
   }
 }
+
+
 
 // DELETAR VEICULOS
 function deleteVehicles() {

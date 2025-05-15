@@ -1,10 +1,10 @@
 
- .listingBens{
+ /* .listingBens{
     display: flex; 
     flex-wrap: wrap; 
     justify-content: space-between;
     overflow-y: auto;
-}
+} */
 .bem-item{
     background: #f4f4f4;
     border: 1px solid #ccc;
@@ -33,6 +33,7 @@
 
   .flex {
     display: flex !important;
+    
   }
   
   .form-control,
@@ -49,14 +50,33 @@
  .showContentBens{
     overflow: auto;
 } 
-.dark-table {
-    width: 100%;
-    border-collapse: collapse;
-    color: black;
-    font-size: 14px;
-  }
-  
-.dark-table td  {
-    background-color: darkgray;
+.tableBens {
+  font-size: 0.85rem;
+  color: #000;
 }
+
+.tableBens td,
+.tableBens th {
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.tableBens td {
+   background-color:#f8f9fa;
+   color: #212529;
+   word-break: break-word;
+  white-space: normal;
+}
+.tableBens th{
+  background-color:#1f2937;
+  color:#ffffff;
+}
+
+#listingBens {
+  max-height: 75vh;
+  overflow: auto;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+}
+
   

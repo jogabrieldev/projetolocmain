@@ -451,6 +451,7 @@ for (const { key, label } of datas) {
 
 // ATUALIZAR TABELA NA INSERÇÃO EM RUNTIME
 function insertBensInTableRunTime(bens) {
+
   const bensListDiv = document.querySelector("#listingBens");
   if (!bensListDiv) {
     console.error('Elemento .listingBens não encontrado para atualização em tempo real');
@@ -459,70 +460,107 @@ function insertBensInTableRunTime(bens) {
 
   bensListDiv.innerHTML = "";
   if (bens.length > 0) {
-    const tabela = document.createElement("table");
-    tabela.classList.add('dark-table')
+    const wrapper = document.createElement("div");
+      wrapper.className = "table-responsive";
 
-    const cabecalho = tabela.createTHead();
-    const linhaCabecalho = cabecalho.insertRow();
-    const colunas = [
-      "Selecionar", "Código", "Nome", "Família do Bem", "Status", "Número de Série",
-      "Placa", "Ano do Modelo", "Data da Compra", "Valor de Compra", "Nota Fiscal",
-      "Código Fornecedor", "Km Atual", "Data do Km", "Modelo", "Data do Status",
-      "Hora Status", "Chassi", "Cor", "Número", "Renavam", "Ctep", "Ativo",
-      "Alugado", "Valor Alugado", "Fabricante"
-    ];
+      const tabela = document.createElement("table");
+      tabela.className = "table table-sm table-hover table-striped table-bordered tableBens";
 
-    colunas.forEach((coluna) => {
-      const th = document.createElement("th");
-      th.textContent = coluna;
-      linhaCabecalho.appendChild(th);
-    });
+      const cabecalho = tabela.createTHead();
+      const linhaCabecalho = cabecalho.insertRow();
+      const colunas = [
+        "Selecionar", "Código", "Nome", "Familia do Bem", "Status", "Número de Série",
+        "Placa", "Ano do Modelo", "Data da Compra", "valor de Compra", "Nota Fiscal",
+        "Código Fornecedor", "Km Atual", "Data do Km", "Modelo", "Data do Status",
+        "Hora Status", "Chassi", "Cor", "Número", "Renavam", "Ctep", "Ativo",
+        "Alugado", "Valor Alugado", "Fabricante"
+      ];
 
-    const corpo = tabela.createTBody();
-    bens.forEach((bem) => {
-      const linha = corpo.insertRow();
-      linha.setAttribute("data-benscode", bem.benscode);
+      colunas.forEach((coluna) => {
+        const th = document.createElement("th");
+        th.textContent = coluna;
 
-      const checkboxCell = linha.insertCell();
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.name = "selectBem";
-      checkbox.value = bem.benscode;
-      checkbox.dataset.bem = JSON.stringify(bem);
-      checkboxCell.appendChild(checkbox);
+        if (["Selecionar", "Código", "Status", "Ativo", "Alugado", "Ano do Modelo", "Hora Status"].includes(coluna)) {
+          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+        } else {
+          th.classList.add("px-3", "py-2", "align-middle");
+        }
 
-      linha.insertCell().textContent = bem.benscode || '';
-      linha.insertCell().textContent = bem.bensnome || '';
-      linha.insertCell().textContent = bem.benscofa || '';
-      linha.insertCell().textContent = bem.bensstat || '';
-      linha.insertCell().textContent = bem.bensnuse || '';
-      linha.insertCell().textContent = bem.bensplac || '';
-      linha.insertCell().textContent = formatDate(bem.bensanmo);
-      linha.insertCell().textContent = formatDate(bem.bensdtcp);
-      linha.insertCell().textContent = bem.bensvacp || '';
-      linha.insertCell().textContent = bem.bensnunf || '';
-      linha.insertCell().textContent = bem.benscofo || '';
-      linha.insertCell().textContent = bem.benskmat || '';
-      linha.insertCell().textContent = formatDate(bem.bensdtkm);
-      linha.insertCell().textContent = bem.bensmode || '';
-      linha.insertCell().textContent = formatDate(bem.bensdtus);
-      linha.insertCell().textContent = bem.benshrus || '';
-      linha.insertCell().textContent = bem.bensnuch || '';
-      linha.insertCell().textContent = bem.benscore || '';
-      linha.insertCell().textContent = bem.bensnumo || '';
-      linha.insertCell().textContent = bem.bensrena || '';
-      linha.insertCell().textContent = bem.bensctep || '';
-      linha.insertCell().textContent = bem.bensativ || '';
-      linha.insertCell().textContent = bem.bensalug || '';
-      linha.insertCell().textContent = bem.bensvaal || '';
-      linha.insertCell().textContent = bem.bensfabr || '';
-    });
+        linhaCabecalho.appendChild(th);
+      });
 
+      const corpo = tabela.createTBody();
+
+      bens.forEach((bem) => {
+        const linha = corpo.insertRow();
+        linha.setAttribute("data-benscode", bem.benscode);
+
+        const checkboxCell = linha.insertCell();
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.name = "selectBem";
+        checkbox.value = bem.benscode;
+
+        const bemData = JSON.stringify(bem);
+        if (bemData) checkbox.dataset.bem = bemData;
+
+        checkbox.className = "form-check-input m-0";
+        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
+        checkboxCell.appendChild(checkbox);
+
+        const dados = [
+          bem.benscode,
+          bem.bensnome,
+          bem.benscofa,
+          bem.bensstat,
+          bem.bensnuse,
+          bem.bensplac,
+          formatDate(bem.bensanmo),
+          formatDate(bem.bensdtcp),
+          bem.bensvacp,
+          bem.bensnunf,
+          bem.benscofo,
+          bem.benskmat,
+          formatDate(bem.bensdtkm),
+          bem.bensmode,
+          formatDate(bem.bensdtus),
+          bem.benshrus,
+          bem.bensnuch,
+          bem.benscore,
+          bem.bensnumo,
+          bem.bensrena,
+          bem.bensctep,
+          bem.bensativ,
+          bem.bensalug,
+          bem.bensvaal,
+          bem.bensfabr,
+        ];
+
+        dados.forEach((valor, index) => {
+          const td = linha.insertCell();
+          td.textContent = valor || "";
+          td.classList.add("align-middle", "text-break");
+
+          const coluna = colunas[index + 1];
+          if (["Código", "Status", "Ativo", "Alugado", "Ano do Modelo", "Hora Status"].includes(coluna)) {
+            td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
+          } else {
+            td.classList.add("px-3", "py-2");
+          }
+
+          if (coluna === "Status") {
+            td.classList.add("status-bem");
+          }
+        });
+      });
+
+      wrapper.appendChild(tabela);
+      bensListDiv.appendChild(wrapper);
     bensListDiv.appendChild(tabela);
   }
 }
 //LISTAGEM DOS BENS
-let bensData = {};
+
 async function fetchBens() {
   const token = localStorage.getItem("token");
 
@@ -542,120 +580,148 @@ async function fetchBens() {
     }, 2000);
     return;
   }
- try {
-  const response = await fetch("/api/listbens", {
-    method:'GET',
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
 
-  const result = await response.json();
+  try {
+    const response = await fetch("/api/listbens", {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  if (!response.ok) {
+    const result = await response.json();
+
+    if (!response.ok) {
+      Toastify({
+        text: result?.message || "Erro ao carregar Bens.",
+        duration: 4000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+      return;
+    }
+
+    const bens = result;
+    const bensListDiv = document.querySelector("#listingBens");
+    bensListDiv.innerHTML = "";
+
+    if (bens.length > 0) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "table-responsive";
+
+      const tabela = document.createElement("table");
+      tabela.className = "table table-sm table-hover table-striped table-bordered tableBens";
+
+      const cabecalho = tabela.createTHead();
+      const linhaCabecalho = cabecalho.insertRow();
+      const colunas = [
+        "Selecionar", "Código", "Nome", "Familia do Bem", "Status", "Número de Série",
+        "Placa", "Ano do Modelo", "Data da Compra", "valor de Compra", "Nota Fiscal",
+        "Código Fornecedor", "Km Atual", "Data do Km", "Modelo", "Data do Status",
+        "Hora Status", "Chassi", "Cor", "Número", "Renavam", "Ctep", "Ativo",
+        "Alugado", "Valor Alugado", "Fabricante"
+      ];
+
+      colunas.forEach((coluna) => {
+        const th = document.createElement("th");
+        th.textContent = coluna;
+
+        if (["Selecionar", "Código", "Status", "Ativo", "Alugado", "Ano do Modelo", "Hora Status"].includes(coluna)) {
+          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+        } else {
+          th.classList.add("px-3", "py-2", "align-middle");
+        }
+
+        linhaCabecalho.appendChild(th);
+      });
+
+      const corpo = tabela.createTBody();
+
+      bens.forEach((bem) => {
+        const linha = corpo.insertRow();
+        linha.setAttribute("data-benscode", bem.benscode);
+
+        const checkboxCell = linha.insertCell();
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.name = "selectBem";
+        checkbox.value = bem.benscode;
+
+        const bemData = JSON.stringify(bem);
+        if (bemData) checkbox.dataset.bem = bemData;
+
+        checkbox.className = "form-check-input m-0";
+        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
+        checkboxCell.appendChild(checkbox);
+
+        const dados = [
+          bem.benscode,
+          bem.bensnome,
+          bem.benscofa,
+          bem.bensstat,
+          bem.bensnuse,
+          bem.bensplac,
+          formatDate(bem.bensanmo),
+          formatDate(bem.bensdtcp),
+          bem.bensvacp,
+          bem.bensnunf,
+          bem.benscofo,
+          bem.benskmat,
+          formatDate(bem.bensdtkm),
+          bem.bensmode,
+          formatDate(bem.bensdtus),
+          bem.benshrus,
+          bem.bensnuch,
+          bem.benscore,
+          bem.bensnumo,
+          bem.bensrena,
+          bem.bensctep,
+          bem.bensativ,
+          bem.bensalug,
+          bem.bensvaal,
+          bem.bensfabr,
+        ];
+
+        dados.forEach((valor, index) => {
+          const td = linha.insertCell();
+          td.textContent = valor || "";
+          td.classList.add("align-middle", "text-break");
+
+          const coluna = colunas[index + 1];
+          if (["Código", "Status", "Ativo", "Alugado", "Ano do Modelo", "Hora Status"].includes(coluna)) {
+            td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
+          } else {
+            td.classList.add("px-3", "py-2" , "text-break");
+          }
+
+          if (coluna === "Status") {
+            td.classList.add("status-bem");
+          }
+        });
+      });
+
+      wrapper.appendChild(tabela);
+      bensListDiv.appendChild(wrapper);
+    } else {
+      bensListDiv.innerHTML = "<p class='text-light'>Nenhum bem cadastrado.</p>";
+    }
+
+  } catch (error) {
+    console.error("Erro na requisição:", error);
     Toastify({
-      text: result?.message || "Erro ao carregar Bens.",
-      duration: 4000,
+      text: "Erro na comunicação com o servidor.",
+      duration: 3000,
       close: true,
       gravity: "top",
       position: "center",
       backgroundColor: "red",
     }).showToast();
-    return;
   }
-
-  const bens = result;
-  const bensListDiv = document.querySelector("#listingBens");
-  bensListDiv.innerHTML = "";
-
-  if (bens.length > 0) {
-    const tabela = document.createElement("table");
-    tabela.classList.add('dark-table');
-
-    // Cabeçalho
-    const cabecalho = tabela.createTHead();
-    const linhaCabecalho = cabecalho.insertRow();
-    const colunas = [
-      "Selecionar", "Código", "Nome", "Familida do Bem", "Status", "Número de Série",
-      "Placa", "Ano do Modelo", "Data da Compra", "valor de Compra", "Nota Fiscal",
-      "Código Fornecedor", "Km Atual", "Data do Km", "Modelo", "Data do Status",
-      "Hora Status", "Chassi", "Cor", "Número", "Renavam", "Ctep", "Ativo",
-      "Alugado", "Valor Alugado", "Fabricante"
-    ];
-
-    colunas.forEach((coluna) => {
-      const th = document.createElement("th");
-      th.textContent = coluna;
-      linhaCabecalho.appendChild(th);
-    });
-
-    const corpo = tabela.createTBody();
-    bens.forEach((bem) => {
-      const linha = corpo.insertRow();
-      linha.setAttribute("data-benscode", bem.benscode);
-
-      const checkboxCell = linha.insertCell();
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.name = "selectBem";
-      checkbox.value = bem.benscode;
-
-      const bemData = JSON.stringify(bem, bem.bensstat);
-      if (bemData) {
-        checkbox.dataset.bem = bemData;
-      } else {
-        console.warn(`Bem inválido encontrado:`, bem);
-      }
-      checkboxCell.appendChild(checkbox);
-
-      linha.insertCell().textContent = bem.benscode;
-      linha.insertCell().textContent = bem.bensnome;
-      linha.insertCell().textContent = bem.benscofa;
-      const statusCell = linha.insertCell();
-      statusCell.textContent = bem.bensstat;
-      statusCell.classList.add("status-bem");
-      linha.insertCell().textContent = bem.bensnuse;
-      linha.insertCell().textContent = bem.bensplac;
-      linha.insertCell().textContent = formatDate(bem.bensanmo);
-      linha.insertCell().textContent = formatDate(bem.bensdtcp);
-      linha.insertCell().textContent = bem.bensvacp;
-      linha.insertCell().textContent = bem.bensnunf;
-      linha.insertCell().textContent = bem.benscofo;
-      linha.insertCell().textContent = bem.benskmat;
-      linha.insertCell().textContent = formatDate(bem.bensdtkm);
-      linha.insertCell().textContent = bem.bensmode;
-      linha.insertCell().textContent = formatDate(bem.bensdtus);
-      linha.insertCell().textContent = bem.benshrus;
-      linha.insertCell().textContent = bem.bensnuch;
-      linha.insertCell().textContent = bem.benscore;
-      linha.insertCell().textContent = bem.bensnumo;
-      linha.insertCell().textContent = bem.bensrena;
-      linha.insertCell().textContent = bem.bensctep;
-      linha.insertCell().textContent = bem.bensativ;
-      linha.insertCell().textContent = bem.bensalug;
-      linha.insertCell().textContent = bem.bensvaal;
-      linha.insertCell().textContent = bem.bensfabr;
-    });
-
-    bensListDiv.appendChild(tabela);
-  } else {
-    bensListDiv.innerHTML = "<p>Nenhum bem cadastrado.</p>";
-  }
-
-} catch (error) {
-  console.error("Erro na requisição:", error);
-  Toastify({
-    text: "Erro na comunicação com o servidor.",
-    duration: 3000,
-    close: true,
-    gravity: "top",
-    position: "center",
-    backgroundColor: "red",
-  }).showToast();
 }
 
-}
 
 // DELETAR BEM
 async function deleteGoodsSystem() {
