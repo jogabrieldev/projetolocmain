@@ -246,8 +246,6 @@ async function registerNewVehicles() {
 
   const res = await resunt.json();
 
-  console.log("resposta", res);
-
   document
     .querySelector(".cadAutomo")
     .addEventListener("click", async (event) => {

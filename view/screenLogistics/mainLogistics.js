@@ -192,10 +192,12 @@ async function locationPendente() {
 
     if (filterStatusPendente.length > 0) {
       const table = document.createElement("table");
-      table.id = "tableWithAllLocation";
+      table.id = "tabelaLocacoesPendentes"
+      table.className = "table table-sm table-bordered table-hover table-striped text-center mb-0 w-100";
 
       const thead = document.createElement("thead");
       const headerRow = document.createElement("tr");
+
       const headers = [
         "Selecionar",
         "Número de Locação",
@@ -211,6 +213,8 @@ async function locationPendente() {
       headers.forEach((text) => {
         const th = document.createElement("th");
         th.textContent = text;
+        th.scope = "col";
+        th.className = "px-2 py-1";
         headerRow.appendChild(th);
       });
       thead.appendChild(headerRow);
@@ -227,7 +231,7 @@ async function locationPendente() {
         const tdCheckbox = document.createElement("td");
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.classList.add("select-location");
+        checkbox.classList.add("form-check-input", "select-location", "mx-auto", "d-block");
         checkbox.value = locacao.numeroLocacao;
         checkbox.dataset.quantidade = locacao.quantidade;
         checkbox.dataset.familia = locacao.codigoBem;
@@ -252,6 +256,7 @@ async function locationPendente() {
         values.forEach((text) => {
           const td = document.createElement("td");
           td.textContent = text;
+           td.className = "px-2 py-1";
           row.appendChild(td);
         });
 
@@ -291,25 +296,6 @@ async function locationPendente() {
       table.appendChild(tbody);
       tableDiv.appendChild(table);
 
-      // Adicionar eventos aos checkboxes
-      // document.querySelectorAll(".select-location").forEach((checkbox) => {
-      //   checkbox.addEventListener("change", (event) => {
-      //     const quantidadeLocacao = parseInt(event.target.dataset.quantidade);
-      //     const isChecked = event.target.checked;
-      //     const familiaBem = event.target.dataset.familia;
-      //     const cliente = event.target.dataset.cliente;
-      //     const codeLoc = event.target.dataset.belocode;
-
-      //     needVsAvaible(
-      //       cliente,
-      //       quantidadeLocacao,
-      //       familiaBem,
-      //       isChecked,
-      //       codeLoc
-      //     );
-      //     loadingDriver();
-      //   });
-      // });
     } else {
       const msg = document.createElement("p");
       msg.style.textAlign = "center";
@@ -413,9 +399,10 @@ function filterLocation() {
         if (filterStatusEmLocacao.length > 0) {
           // Criar tabela
           const table = document.createElement("table");
-          table.id = "tableWithAllLocation";
+          table.classList.add("table", "table-sm", "table-bordered", "table-hover", "table-striped" ,"table-responsive", "text-center", "align-middle", "mb-0" , "tableLocationInLocation")
 
           const thead = document.createElement("thead");
+          
           const headerRow = document.createElement("tr");
           const headers = [
             "Selecionar",
@@ -448,7 +435,7 @@ function filterLocation() {
             const tdCheckbox = document.createElement("td");
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
-            checkbox.classList.add("select-location");
+            checkbox.classList.add("form-check-input", "select-location", "mx-auto", "d-block");
             checkbox.value = JSON.stringify(locacao);
             checkbox.dataset.quantidade = locacao.quantidade;
             checkbox.dataset.familia = locacao.codigoBem;
@@ -470,6 +457,7 @@ function filterLocation() {
             values.forEach((text) => {
               const td = document.createElement("td");
               td.textContent = text;
+              td.className = "px-2 py-1"
               row.appendChild(td);
             });
 
@@ -499,7 +487,6 @@ function filterLocation() {
           }).showToast();
           return;
         } else {
-          locationPendente();
           Toastify({
             text: "Não temos locações com status (Em Locação)!",
             duration: 4000,
@@ -508,6 +495,7 @@ function filterLocation() {
             position: "center",
             backgroundColor: "orange",
           }).showToast();
+          locationPendente();
           return;
         }
       } catch (error) {
@@ -585,8 +573,7 @@ async function needVsAvaible(
       table.id = "tableGoodsVsRequestPending";
       table.classList.add("table", "table-bordered", "table-sm");
       table.style.width = "100%";
-      table.style.tableLayout = "fixed";
-      // Cabeçalho da tabela
+  
       const thead = document.createElement("thead");
       const headerRow = document.createElement("tr");
       [
@@ -982,16 +969,16 @@ async function VerifiqueSeTemVeiculo(Motorista) {
   }
 }
 
-function todasVinculacoesConcluidas() {
-  for (const [locacao, familias] of vinculacoesPendentes.entries()) {
-    for (const [familia, dados] of Object.entries(familias)) {
-      if (dados.vinculados < dados.solicitados) {
-        return false;
-      }
-    }
-  }
-  return true;
-}
+// function todasVinculacoesConcluidas() {
+//   for (const [locacao, familias] of vinculacoesPendentes.entries()) {
+//     for (const [familia, dados] of Object.entries(familias)) {
+//       if (dados.vinculados < dados.solicitados) {
+//         return false;
+//       }
+//     }
+//   }
+//   return true;
+// }
 
 async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
   const token = localStorage.getItem("token");

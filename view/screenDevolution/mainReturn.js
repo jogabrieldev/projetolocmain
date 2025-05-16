@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <td>${new Date(loc.lofidtlo).toLocaleDateString()}</td>
             <td class="text-danger fw-bold">${new Date(loc.lofidtdv).toLocaleDateString()}</td>
             <td>
-              <button class="btn btn-sm btn-primary btn-details" data-id="${loc.loficode}">Detalhes</button>
+              <button class="btn btn-sm btn-success btn-details" data-id="${loc.loficode}">Detalhes</button>
             </td>
           </tr>
         `;

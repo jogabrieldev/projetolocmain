@@ -28,41 +28,11 @@
   max-width: 100%;
   overflow: auto;
   border: 2px solid white;
-  padding: 0.5rem;
+  /* padding: 0.5rem; */
   box-sizing: border-box;
 }
 
-/* Estilo da tabela */
-#tableWithAllLocation {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px; /* mais compacto */
-  table-layout: fixed;
-  min-width: 800px; /* garante boa leitura */
-  height: auto;
-}
-
-/* Cabeçalho da tabela */
-#tableWithAllLocation thead th {
-  background-color:black;
-  color: white;
-  font-weight: bold;
-  text-align: left;
-  border-bottom: 1px solid white;
-}
-
-/* Células da tabela */
-#tableWithAllLocation td {
-  background-color: darkgray;
-  color: black;
-  border-bottom: 1px solid #999;
-  overflow: hidden;
-}
-
 /* Responsividade horizontal */
-.orders::-webkit-scrollbar {
-  height: 8px;
-}
 .orders::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 4px;
@@ -71,9 +41,38 @@
   background: #ccc;
 }
 
- #tableGoodsVsRequestPending td{
-  background-color: darkgray;
+.tableLocationInLocation th{
+    background-color: #1f2937;
+  color: white;
 } 
+
+/* TABELA DE LOCAÇÕES PENDENTES */
+#tabelaLocacoesPendentes td,
+#tabelaLocacoesPendentes th {
+  padding: 4px 6px; /* Reduz o espaçamento interno */
+  font-size: 0.85rem;
+  vertical-align: middle; 
+  line-height: 1.2;
+}
+
+#tabelaLocacoesPendentes td {
+  background-color: #f9fafb;
+}
+
+#tabelaLocacoesPendentes th {
+  background-color: #1f2937;
+  color: white;
+}
+
+/* Responsividade para dispositivos menores */
+@media (max-width: 768px) {
+  #tabelaLocacoesPendentes th,
+  #tabelaLocacoesPendentes td {
+    font-size: 0.75rem;
+    padding: 0.25rem;
+  }
+}
+
 
 /* COMPARAÇÃO DE BENS DISPONIVEIS E QUANTOS PEDIDOS */
 .need {
@@ -81,55 +80,91 @@
   overflow-x: auto; 
 }
 
-.need table {
+/* Container da tabela */
+.need {
+  width: 100%;
+  overflow-x: auto;
+   padding: 0.5rem; 
+  background-color: #f1f5f9; /* tom cinza claro */
+  border-radius: 0.5rem;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Estilo da tabela */
+#tableGoodsVsRequestPending {
   width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
+  font-size: 0.9rem;
+  background-color: #ffffff;
 }
 
-.need th, .need td {
+#tableGoodsVsRequestPending thead th {
+  background-color: #1f2937; /* azul escuro */
+  color: #ffffff;
   text-align: center;
-  word-wrap: break-word;
-  white-space: normal; 
-  font-size: 0.9rem; /* reduz levemente a fonte */
-  padding: 0.25rem;  
-}
-.need th{
-  background-color: black;
-  color: white;
+  padding: 0.4rem;
+  font-weight: 600;
+   white-space: normal; 
+   word-wrap: break-word;
+  /* overflow-wrap: break-word;   */
 }
 
-.need th:nth-child(1),
-.need th:nth-child(2){
+#tableGoodsVsRequestPending td {
+  background-color: #f8f9fa;
+  color: #212529;
+  text-align: center;
+  padding: 0.4rem;
+  word-break: break-word;
+  white-space: normal;
+  vertical-align: middle;
+}
+
+#tableGoodsVsRequestPending th:nth-child(1),
+#tableGoodsVsRequestPending td:nth-child(1),
+#tableGoodsVsRequestPending th:nth-child(2),
+#tableGoodsVsRequestPending td:nth-child(2) {
+  width: 18%;
+}
+
+#tableGoodsVsRequestPending th:nth-child(3),
+#tableGoodsVsRequestPending td:nth-child(3) {
   width: 25%;
 }
-.need td:nth-child(1),
-.need td:nth-child(2){
-  width: 10%;
-}
 
-.need th:nth-child(3),
-.need td:nth-child(3) {
+#tableGoodsVsRequestPending th:nth-child(4),
+#tableGoodsVsRequestPending td:nth-child(4),
+#tableGoodsVsRequestPending th:nth-child(5),
+#tableGoodsVsRequestPending td:nth-child(5) {
   width: 20%;
 }
 
-.need th:nth-child(4),
-.need td:nth-child(4),
-.need th:nth-child(5),
-.need td:nth-child(5) {
-  width: 18.5%;
+/* Botão Vincular */
+#tableGoodsVsRequestPending .openModal {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 0.375rem;
+  background-color: #198754; /* Bootstrap green */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-@media (max-width: 600px) {
-  .need th, .need td {
-    font-size: 0.75rem;
-    padding: 4px;
-  }
+#tableGoodsVsRequestPending .openModal:hover {
+  background-color: #146c43;
+}
 
-  .need table {
+/* Responsividade extra */
+@media (max-width: 768px) {
+  #tableGoodsVsRequestPending th,
+  #tableGoodsVsRequestPending td {
     font-size: 0.75rem;
+    padding: 0.3rem;
   }
 }
+
 
 .logisticsMainBottom{
   display: flex;
@@ -155,11 +190,12 @@
   table-layout: fixed; /* força largura uniforme */
 }
 #tableGoodsVsRequestPendingall th{
-  background-color: black;
-  color: white;
+  background-color: #1f2937;
+  color: #ffffff;
 }
 #tableGoodsVsRequestPendingall td{
-  background-color: darkgray;
+  background-color: #f8f9fa;
+  color: #212529;
 }
 
 #tableGoodsVsRequestPendingall th,
@@ -167,7 +203,7 @@
   padding: 8px;
   text-align: center;
   word-wrap: break-word;
-  border: 1px solid #fff;
+  border: 1px solid #dee2e6;
 }
 
 #tableGoodsVsRequestPendingall th:nth-child(1),
@@ -207,7 +243,6 @@
   border: 2px solid white;
   box-sizing: border-box;
 }
-
 
 .tableDriver th{
   background-color: black;
