@@ -39,7 +39,7 @@ async function obterNumeroLocacao() {
   }
 }
 
-function atualizarData() {
+function atualizarData(date) {
   const agora = new Date();
 
   const ano = agora.getFullYear();
@@ -48,7 +48,7 @@ function atualizarData() {
 
   const dataHoraFormatada = `${ano}-${mes}-${dia}`;
 
-  document.getElementById("dataLoc").value = dataHoraFormatada;
+  document.getElementById(date).value = dataHoraFormatada;
 }
 
 // VERIFICA SE OS CAMPOS DOS CLIENTES ESTA OK
@@ -94,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 frontLocation();
                 searchClientForLocation();
                 carregarFamilias();
+                atualizarData('dataLoc')
                 registerClientPageLocation();
                 maskFieldClientPageLocation();
                 editLocation();
@@ -693,6 +694,8 @@ function clearFields() {
 
 // ENVIO DA LOCAÇÃO FINALIZADA
 async function handleSubmit() {
+  atualizarData('dataLoc')
+  
   const token = localStorage.getItem("token");
 
   if (!token || isTokenExpired(token)) {
@@ -924,10 +927,6 @@ async function handleSubmit() {
   );
   dataLocDia.setHours(0, 0, 0, 0);
 
-    console.log('hoje' , hoje)
-    console.log('data' , dataLocDia)
-    // console.log('lco' , dataLoc)
-
     if (dataLocDia.getTime() !== hoje.getTime()) {
       Toastify({
         text: "A data da locação deve ser igual à data de hoje.",
@@ -950,9 +949,6 @@ async function handleSubmit() {
     const dataLocNormalizada = normalizarData(dateLocation);
     const dataDevoNormalizada = normalizarData(dateDevolution);
 
-    console.log('devolu' , dataDevoNormalizada)
-    console.log('loc' , dataLocNormalizada )
-
     if (dataLocNormalizada > dataDevoNormalizada) {
       Toastify({
         text: "A data de devolução deve ser maior que a data da locação.",
@@ -974,8 +970,7 @@ async function handleSubmit() {
       bens,
     };
 
-    console.log('payload' , payload)
-
+    
     const response = await fetch("/api/datalocation", {
       method: "POST",
       headers: {
@@ -1000,6 +995,7 @@ async function handleSubmit() {
 
       setTimeout(() => {
         clearFields();
+        atualizarData('dataLoc')
       }, 500);
     } else {
       Toastify({
@@ -1121,9 +1117,10 @@ async function gerarContrato() {
           `
           : "<p>Nenhum item informado.</p>"
       }
-      <div class="text-center mt-4">
+       <div class="text-center mt-4 d-flex justify-content-center gap-2">
         <button id="voltar" class="btn btn-light">Voltar</button>
-      </div>
+        <button id="baixarPdf" class="btn btn-success">Salvar como PDF</button>
+       </div>
     </div>
   `;
   contratoDiv.style.display = "block";
@@ -1145,6 +1142,23 @@ async function gerarContrato() {
       }
     });
   }
+
+  // Evento para gerar o PDF
+const btnBaixarPdf = document.getElementById("baixarPdf");
+if (btnBaixarPdf) {
+  btnBaixarPdf.addEventListener("click", () => {
+    const element = document.getElementById("contrato");
+    const opt = {
+      margin:       0.5,
+      filename:     `contrato-locacao-${numericLocation}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).save();
+  });
+}
+
 }
 
 // cadastrar o cliente pela a tela de locação

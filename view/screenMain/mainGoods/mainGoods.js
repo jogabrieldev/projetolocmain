@@ -25,6 +25,26 @@ const formatDate = (isoDate) => {
   return `${year}/${month}/${day}`;
 };
 
+function dateAtualInFieldAndHours(date , hours){
+  
+   const dtCadInput = document.getElementById(date);
+   
+  
+  const hrCadInput = document.getElementById(hours); 
+
+  const hoje = new Date();
+  const ano = hoje.getFullYear();
+  const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+  const dia = String(hoje.getDate()).padStart(2, "0");
+
+   dtCadInput.value = `${ano}-${mes}-${dia}`;
+  
+   const horas = String(hoje.getHours()).padStart(2, "0");
+   const minutos = String(hoje.getMinutes()).padStart(2, "0");
+   hrCadInput.value = `${horas}:${minutos}`;
+ 
+}
+
 const  socketUpdateBens = io()
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -46,6 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
           interationSystemGoods()
           aplicarMascaras()
           registerGoodsSystem()
+          dateAtualInFieldAndHours("dtStatus" , "hrStatus")
           deleteGoodsSystem()
           updateGoodsSystem()
         } else {
@@ -223,8 +244,8 @@ if (buttonOutGoods) {
 }
  // registrar o bem
  async function registerGoodsSystem(){
-  
 
+  dateAtualInFieldAndHours("dtStatus" , "hrStatus")
   const btnNext = document.querySelector("#btnNext");
   if (!btnNext) {
     console.warn("Botão .btnNext não encontrado no DOM ao tentar registrar o listener.");
@@ -255,6 +276,8 @@ if (buttonOutGoods) {
       return;
     }
 
+    const time = new Date()
+
     const formData = {
       code: document.querySelector("#code").value.trim(),
       name: document.querySelector("#name").value.trim(),
@@ -270,8 +293,8 @@ if (buttonOutGoods) {
       kmAtual: document.querySelector("#kmAtual").value.trim(),
       dtKm: document.querySelector("#dtKm").value.trim(),
       status: document.querySelector("#status").value.trim(),
-      dtStatus: document.querySelector("#dtStatus").value.trim(),
-      hrStatus: document.querySelector("#hrStatus").value.trim(),
+      dtStatus: document.querySelector('#dtStatus').value,
+      hrStatus: document.querySelector("#hrStatus").value,
       chassi: document.querySelector("#chassi").value.trim(),
       cor: document.querySelector("#cor").value.trim(),
       nuMO: document.querySelector("#nuMO").value.trim(),
@@ -288,18 +311,6 @@ if (buttonOutGoods) {
     const currentHours = String(now.getHours()).padStart(2, '0');
     const currentMinutes = String(now.getMinutes()).padStart(2, '0');
     const currentTime = `${currentHours}:${currentMinutes}`;
-
-    if(formData.hrStatus !== currentTime){
-      Toastify({
-        text: "Insira o horario atual ",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "orange",
-      }).showToast();
-      return;
-    }
 
     if (!isDataValida(formData.dtCompra)) {
       Toastify({
@@ -414,6 +425,7 @@ for (const { key, label } of datas) {
         }).showToast();
 
         document.querySelector("#formRegisterBens").reset();
+        dateAtualInFieldAndHours("dtStatus" , "hrStatus")
       } else if (response.status === 409) {
         Toastify({
           text: result.message,

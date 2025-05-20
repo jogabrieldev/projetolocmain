@@ -8,6 +8,18 @@ img{
    max-width:  100%;
     height: 105%;
 }
+
+.img-section {
+  height: 100dvh; /* Ocupa toda a altura da tela */
+  overflow: hidden;
+}
+
+.img-section img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Faz a imagem preencher a div mantendo proporção e cortando excesso */
+}
+
 i{
     font-size: 19px;
     cursor: pointer;
@@ -17,7 +29,7 @@ i{
 }
 .left{
     width: 80%;
-    height:710px;
+    height:auto;
 }
 .container{
     background-color: rgb(21, 21, 21);

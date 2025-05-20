@@ -919,7 +919,7 @@ async function VerifiqueSeTemVeiculo(Motorista) {
       },
     });
 
-    const response = await result.json(); // aqui faltava o await!
+    const response = await result.json(); 
 
     const veiculoEncontrado = response.find((veiculo) =>
       Motorista.includes(veiculo.caaumoto)
@@ -969,17 +969,7 @@ async function VerifiqueSeTemVeiculo(Motorista) {
   }
 }
 
-// function todasVinculacoesConcluidas() {
-//   for (const [locacao, familias] of vinculacoesPendentes.entries()) {
-//     for (const [familia, dados] of Object.entries(familias)) {
-//       if (dados.vinculados < dados.solicitados) {
-//         return false;
-//       }
-//     }
-//   }
-//   return true;
-// }
-
+// MODAL PARA VINCULAR
 async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
   const token = localStorage.getItem("token");
 

@@ -245,12 +245,12 @@ function registerNewFamilyBens() {
 
       // Captura os valores do formulário
       const formData = {
-        fabeCode: document.querySelector("#fabeCode").value, // Código
-        fabeDesc: document.querySelector("#fabeDesc").value, // Descrição
-        fabeCate: document.querySelector("#fabeCate").value, // Categoria
-        fabeSuca: document.querySelector("#fabeSuca").value, // Subcategoria
-        fabeObs: document.querySelector("#fabeObs").value, // Observação
-        fabeCtct: document.querySelector("#fabeCtct").value, // Centro de Custo
+        fabeCode: document.querySelector("#fabeCode").value.trim(), // Código
+        fabeDesc: document.querySelector("#fabeDesc").value.trim(), // Descrição
+        fabeCate: document.querySelector("#fabeCate").value.trim(), // Categoria
+        fabeSuca: document.querySelector("#fabeSuca").value.trim(), // Subcategoria
+        fabeObs: document.querySelector("#fabeObs").value.trim(), // Observação
+        fabeCtct: document.querySelector("#fabeCtct").value.trim(), // Centro de Custo
       };
 
       try {

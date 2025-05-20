@@ -21,25 +21,6 @@ class logistcsModel  {
      }
     }
 
-    async getItensVinculadosPorLocacao(clloid) {
-  try {
-    const query = `
-      SELECT lofiidfa AS familia_bem, COUNT(*) AS quantidade
-      FROM locafim
-      WHERE lofiidlo = $1
-      GROUP BY lofiidfa
-      ORDER BY lofiidfa;
-    `;
-
-    const result = await client.query(query, [clloid]);
-    return result.rows;
-  } catch (error) {
-    console.error('Erro ao buscar itens vinculados:', error);
-    throw error;
-  }
-}
-
-
 };
 
 export default new logistcsModel()

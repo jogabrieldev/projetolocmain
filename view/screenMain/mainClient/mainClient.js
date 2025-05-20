@@ -36,6 +36,24 @@ const formatDate = (isoDate) => {
   const day = String(dateObj.getDate()).padStart(2, "0");
   return `${year}/${month}/${day}`;
 };
+
+function dateAtualInField(date){
+  const inputDtCad = document.getElementById(date)
+  if(inputDtCad){
+
+  const hoje = new Date()
+  const ano = hoje.getFullYear();
+  const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+  const dia = String(hoje.getDate()).padStart(2, "0");
+
+    inputDtCad.value = `${ano}-${mes}-${dia}`;
+    return true; // indica sucesso
+  }else{
+    console.error('Campo #fornDtcd não encontrado no DOM');
+    return false; // indica falha
+  }
+ 
+}
 const socketClient = io();
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -56,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
           maskFieldClient();
           interationSystemClient();
           registerNewClient();
+          dateAtualInField('dtCad')
           deleteClient();
           editarCliente();
         } else {
@@ -218,6 +237,8 @@ async function interationSystemClient() {
 }
 
 async function registerNewClient() {
+
+  dateAtualInField('dtCad')
   document
     .querySelector(".btnRegisterClient")
     .addEventListener("click", async (event) => {
@@ -301,17 +322,17 @@ async function registerNewClient() {
 
       // Captura os valores do formulário após o preenchimento
       const formData = {
-        clieCode: document.querySelector("#clieCode").value,
-        clieName: document.querySelector("#clieName").value,
-        cpf: document.querySelector("#cpf").value,
-        dtCad: document.querySelector("#dtCad").value,
+        clieCode: document.querySelector("#clieCode").value.trim(),
+        clieName: document.querySelector("#clieName").value.trim(),
+        cpf: document.querySelector("#cpf").value.trim(),
+        dtCad:document.querySelector('#dtCad').value,
         dtNasc: document.querySelector("#dtNasc").value,
-        clieCelu: document.querySelector("#clieCelu").value,
-        clieCity: document.querySelector("#clieCity").value,
-        clieEstd: document.querySelector("#clieEstd").value,
-        clieRua: document.querySelector("#clieRua").value,
-        clieCep: document.querySelector("#clieCep").value,
-        clieMail: document.querySelector("#clieMail").value,
+        clieCelu: document.querySelector("#clieCelu").value.trim(),
+        clieCity: document.querySelector("#clieCity").value.trim(),
+        clieEstd: document.querySelector("#clieEstd").value.trim(),
+        clieRua: document.querySelector("#clieRua").value.trim(),
+        clieCep: document.querySelector("#clieCep").value.trim(),
+        clieMail: document.querySelector("#clieMail").value.trim(),
       };
 
        const clieMail = formData.clieMail
@@ -329,7 +350,6 @@ async function registerNewClient() {
       }
 
       const datas = [
-        { key: "dtCad", label: "Data de Cadastro" },
         { key: "dtNasc", label: "Data de Nascimento" },
       ];
       for (const { key, label } of datas) {
@@ -347,9 +367,7 @@ async function registerNewClient() {
         }
       }
 
-      const [yCad, mCad, dCad] = formData.dtCad.split("-").map(Number);
       const [yNasc, mNasc, dNasc] = formData.dtNasc.split("-").map(Number);
-      const dtCad = new Date(yCad, mCad - 1, dCad);
       const dtNasc = new Date(yNasc, mNasc - 1, dNasc);
       const hoje = new Date();
       const hoje0 = new Date(
@@ -357,21 +375,6 @@ async function registerNewClient() {
         hoje.getMonth(),
         hoje.getDate()
       );
-
-      if (
-        dtCad.getTime() > hoje0.getTime() ||
-        dtCad.getTime() < hoje0.getTime()
-      ) {
-        Toastify({
-          text: "Data de Cadastro não pode ser maior  nem menor que a data de hoje.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "orange",
-        }).showToast();
-        return;
-      }
 
       if (dtNasc.getTime() >= hoje0.getTime()) {
         Toastify({
@@ -386,9 +389,9 @@ async function registerNewClient() {
       }
 
       // 5.3) dtNasc deve ser anterior ou igual a dtCad
-      if (dtNasc.getTime() > dtCad.getTime()) {
+      if (dtNasc.getTime() > formData.dtCad) {
         Toastify({
-          text: "Data de Nascimento não pode ser posterior à data de cadastro.",
+          text: "Data de Nascimento não pode ser maior que a data de cadastro.",
           duration: 3000,
           close: true,
           gravity: "top",
@@ -421,6 +424,7 @@ async function registerNewClient() {
           }).showToast();
 
           document.querySelector("#formRegisterClient").reset();
+          dateAtualInField('dtCad')
         } else {
           Toastify({
             text: result?.message || "Erro ao cadastrar Cliente.",

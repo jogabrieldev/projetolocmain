@@ -22,6 +22,24 @@ function masksFieldForne() {
   $("#editFornCep").mask("00000-000");
 }
 
+function dateAtualInField(date){
+  const inputDtCad = document.getElementById(date)
+  if(inputDtCad){
+
+  const hoje = new Date()
+  const ano = hoje.getFullYear();
+  const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+  const dia = String(hoje.getDate()).padStart(2, "0");
+
+    inputDtCad.value = `${ano}-${mes}-${dia}`;
+    return true; 
+  }else{
+    console.error('Campo #fornDtcd não encontrado no DOM');
+    return false; 
+  }
+ 
+}
+
 const socketForn = io();
 document.addEventListener("DOMContentLoaded", () => {
   const btnLoadForn = document.querySelector(".btnCadForn");
@@ -41,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
           masksFieldForne();
           interationSystemForne();
           registerNewFornecedor();
+          dateAtualInField("fornDtcd");
           deleteFornecedor();
           editFornecedor();
         } else {
@@ -212,6 +231,8 @@ function interationSystemForne() {
 }
 
 function registerNewFornecedor() {
+
+ dateAtualInField("fornDtcd")
   document
     .querySelector(".btnRegisterforn")
     .addEventListener("click", async (event) => {
@@ -297,22 +318,22 @@ function registerNewFornecedor() {
       }
       // Captura os valores do formulário
       const formData = {
-        fornCode: document.querySelector("#fornCode").value, // Código
-        fornName: document.querySelector("#fornName").value, // Nome
-        nomeFan: document.querySelector("#nomeFan").value, // Nome Fantasia
-        fornCnpj: document.querySelector("#fornCnpj").value, // CNPJ
-        fornCep: document.querySelector("#fornCep").value, // CEP
-        fornRua: document.querySelector("#fornRua").value, // Rua
-        fornCity: document.querySelector("#fornCity").value, // Cidade
-        fornEstd: document.querySelector("#fornEstd").value, // Estado
-        fornCelu: document.querySelector("#fornCelu").value, // Celular
+        fornCode: document.querySelector("#fornCode").value.trim(), // Código
+        fornName: document.querySelector("#fornName").value.trim(), // Nome
+        nomeFan: document.querySelector("#nomeFan").value.trim(), // Nome Fantasia
+        fornCnpj: document.querySelector("#fornCnpj").value.trim(), // CNPJ
+        fornCep: document.querySelector("#fornCep").value.trim(), // CEP
+        fornRua: document.querySelector("#fornRua").value.trim(), // Rua
+        fornCity: document.querySelector("#fornCity").value.trim(), // Cidade
+        fornEstd: document.querySelector("#fornEstd").value.trim(), // Estado
+        fornCelu: document.querySelector("#fornCelu").value.trim(), // Celular
         fornMail: document.querySelector("#fornMail").value.trim(), // E-mail
-        fornBank: document.querySelector("#fornBank").value, // Banco
-        fornAge: document.querySelector("#fornAge").value, // Agência
-        fornCont: document.querySelector("#fornCont").value, // Conta
-        fornPix: document.querySelector("#fornPix").value, // Pix
+        fornBank: document.querySelector("#fornBank").value.trim(), // Banco
+        fornAge: document.querySelector("#fornAge").value.trim(), // Agência
+        fornCont: document.querySelector("#fornCont").value.trim(), // Conta
+        fornPix: document.querySelector("#fornPix").value.trim(), // Pix
         fornDtcd: document.querySelector("#fornDtcd").value, // Data do Cadastro
-        fornDisPro: document.querySelector("#fornDisPro").value, // Descrição do Produto
+        fornDisPro: document.querySelector("#fornDisPro").value.trim(), // Descrição do Produto
       };
 
       const fornMail = formData.fornMail;
@@ -325,40 +346,6 @@ function registerNewFornecedor() {
           gravity: "top",
           position: "center",
           backgroundColor: "red",
-        }).showToast();
-        return;
-      }
-
-      if (!isDataValida(formData.fornDtcd)) {
-        Toastify({
-          text: "Data de Cadastro INVALIDA.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-        return;
-      }
-
-      const [y, m, d] = formData.fornDtcd.split("-").map(Number);
-      const dtCd = new Date(y, m - 1, d);
-      const hoje = new Date();
-      const hoje0 = new Date(
-        hoje.getFullYear(),
-        hoje.getMonth(),
-        hoje.getDate()
-      );
-
-      //  Regra: não pode ser futura
-      if (dtCd.getTime() !== hoje0.getTime()) {
-        Toastify({
-          text: "Data de cadastro deve ser a data de hoje",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "orange",
         }).showToast();
         return;
       }
@@ -386,6 +373,7 @@ function registerNewFornecedor() {
           }).showToast();
 
           document.querySelector("#registerForn").reset();
+          dateAtualInField("fornDtcd")
         } else {
           Toastify({
             text: result?.message || "Erro ao cadastrar Cliente.",

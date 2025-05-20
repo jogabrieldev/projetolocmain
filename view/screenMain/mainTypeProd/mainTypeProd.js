@@ -216,12 +216,12 @@ function registerNewTypeProduct(){
 
     // Captura os valores do formulário
     const formData = {
-      tpCode: document.querySelector("#tpCode").value, // Código
-      tpDesc: document.querySelector("#tpDesc").value, // Descrição
-      tpCat: document.querySelector("#tpCat").value, // Categoria
-      tpSubCat: document.querySelector("#tpSubCat").value, // Subcategoria
-      tpObs: document.querySelector("#tpObs").value, // Observação
-      tpCtct: document.querySelector("#tpCtct").value, // Centro de Custo
+      tpCode: document.querySelector("#tpCode").value.trim(), // Código
+      tpDesc: document.querySelector("#tpDesc").value.trim(), // Descrição
+      tpCat: document.querySelector("#tpCat").value.trim(), // Categoria
+      tpSubCat: document.querySelector("#tpSubCat").value.trim(), // Subcategoria
+      tpObs: document.querySelector("#tpObs").value.trim(), // Observação
+      tpCtct: document.querySelector("#tpCtct").value.trim(), // Centro de Custo
     }; 
 
     

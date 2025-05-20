@@ -684,12 +684,6 @@ function  validationFormMoto(){
            required: true,
            minlength: 9
         },
-        // motoRua:{
-        //    required: true
-        // },
-        // motoCity:{
-        //    required: true
-        // },
         motoStat:{
            required:true
         }

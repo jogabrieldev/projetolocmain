@@ -12,13 +12,6 @@ export const movementGoods = {
       return res.status(400).json({ message: "Nenhum dado enviado" });
     }
 
-    //  Validação da hora atual
-    const now = new Date();
-    const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-    if (data.hrStatus !== currentTime) {
-      return res.status(400).json({ message: "Horário de status deve ser igual ao horário atual." });
-    }
-
     //  Validação de datas
     const hoje = new Date();
     const hojeFormatada = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());

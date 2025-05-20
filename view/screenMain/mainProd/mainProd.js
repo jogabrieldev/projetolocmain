@@ -23,6 +23,25 @@ function maskFieldProduto(){
   $("#editProdPebr").mask('R$ 000.000.000,00', { reverse: true,  });
 }
 
+function dateAtualInField(date){
+  const inputDtCad = document.getElementById(date)
+  if(inputDtCad){
+
+  const hoje = new Date()
+  const ano = hoje.getFullYear();
+  const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+  const dia = String(hoje.getDate()).padStart(2, "0");
+
+    inputDtCad.value = `${ano}-${mes}-${dia}`;
+    return true; 
+  }else{
+    console.error('Campo data cadastro não encontrado no DOM');
+    return false; 
+  }
+ 
+}
+
+
 const socketProduto = io();
 document.addEventListener('DOMContentLoaded' , ()=>{
     
@@ -42,6 +61,7 @@ document.addEventListener('DOMContentLoaded' , ()=>{
               mainContent.innerHTML = html;
                  maskFieldProduto()
                 interationSystemProduto()
+                dateAtualInField('prodData')
                  registerNewProduto()
                  deleteProduto()
                  editProduto()
@@ -204,6 +224,8 @@ if(btnOutEditForm){
 
 function registerNewProduto(){
 
+  dateAtualInField('prodData')
+
     document.querySelector(".cadProd").addEventListener("click", async (event) => {
       event.preventDefault(); 
 
@@ -231,14 +253,14 @@ function registerNewProduto(){
       }
 
       const formData = {
-        prodCode: document.querySelector("#prodCode").value, // Código
-        prodDesc: document.querySelector("#prodDesc").value, // Descrição
-        prodTipo: document.querySelector("#prodTipo").value, // Tipo de Produto
-        prodUni: document.querySelector("#prodUni").value, // Unidade
+        prodCode: document.querySelector("#prodCode").value.trim(), // Código
+        prodDesc: document.querySelector("#prodDesc").value.trim(), // Descrição
+        prodTipo: document.querySelector("#prodTipo").value.trim(), // Tipo de Produto
+        prodUni: document.querySelector("#prodUni").value.trim(), // Unidade
         prodData: document.querySelector("#prodData").value, // Data
-        prodValor: document.querySelector("#prodValor").value, // Valor de Compra
-        prodPeli: document.querySelector("#prodPeli").value, // Preço Líquido
-        prodPebr: document.querySelector("#prodPebr").value, // Preço Bruto
+        prodValor: document.querySelector("#prodValor").value.trim(), // Valor de Compra
+        prodPeli: document.querySelector("#prodPeli").value.trim(), // Preço Líquido
+        prodPebr: document.querySelector("#prodPebr").value.trim(), // Preço Bruto
         prodAtiv: document.querySelector("#prodAtiv").value, // Ativo
       };
        
@@ -308,9 +330,9 @@ function registerNewProduto(){
             backgroundColor: "green",
           }).showToast();
 
-          // Limpar o formulário após o sucesso
+      
           document.querySelector(".formRegisterProduto").reset();
-
+          dateAtualInField('prodData')
         } else if(response.status === 409) {
           Toastify({
             text: result.message,

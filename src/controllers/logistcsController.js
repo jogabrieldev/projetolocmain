@@ -60,28 +60,7 @@ class logistcgController {
       res.status(500).json({ sucess: false, message: error.message });
     }
   }
-   
-  async getItensVinculados(req, res) {
-  try {
-    const { clloid } = req.params;
-
-    if (!clloid) {
-      return res.status(400).json({ message: "Parâmetro clloid é obrigatório" });
-    }
-
-    const result = await logistcsModel.getItensVinculadosPorLocacao(clloid);
-
-    if (result.length === 0) {
-      return res.status(200).json({ message: "Nenhum bem vinculado a esta locação.", data: [] });
-    }
-
-    return res.status(200).json({ data: result });
-  } catch (error) {
-    console.error("Erro no getItensVinculados:", error);
-    return res.status(500).json({ message: "Erro ao buscar itens vinculados", error: error.message });
-  }
-}
-
+  
 };
 
 export default new logistcgController();

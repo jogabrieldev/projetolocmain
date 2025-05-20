@@ -57,6 +57,23 @@ function isTokenExpired(token) {
     return true;
   }
 }
+function dateAtualInField(date){
+  const inputDtCad = document.getElementById(date)
+  if(inputDtCad){
+
+  const hoje = new Date()
+  const ano = hoje.getFullYear();
+  const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+  const dia = String(hoje.getDate()).padStart(2, "0");
+
+    inputDtCad.value = `${ano}-${mes}-${dia}`;
+    return true; // indica sucesso
+  }else{
+    console.error('Campo #fornDtcd não encontrado no DOM');
+    return false; // indica falha
+  }
+ 
+}
 
 const socketAutomovel = io();
 document.addEventListener("DOMContentLoaded", () => {
@@ -77,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
           loadDrivers();
           interationSystemVehicles();
           registerNewVehicles();
+          dateAtualInField('dtCadAuto');
           deleteVehicles();
           editVehicles();
         } else {
@@ -234,6 +252,8 @@ function interationSystemVehicles() {
 }
 
 async function registerNewVehicles() {
+
+ dateAtualInField('dtCadAuto')
   const token = localStorage.getItem("token");
 
   const resunt = await fetch("/api/listauto", {
@@ -275,69 +295,20 @@ async function registerNewVehicles() {
       }
       // Captura os valores do formulário
       const formData = {
-        caaucode: document.querySelector("#codeAuto").value,
-        caauplac: document.querySelector("#placAuto").value,
-        caauchss: document.querySelector("#chassAuto").value,
-        caaurena: document.querySelector("#renaAuto").value,
-        caaumaca: document.querySelector("#macaAuto").value,
-        caaumode: document.querySelector("#modeAuto").value,
-        caaucor: document.querySelector("#corAuto").value,
-        caautico: document.querySelector("#tpCombusAuto").value,
-        caaukmat: document.querySelector("#kmAtAuto").value,
-        caaumoto: document.querySelector("#motoAuto").value,
-        caaustat: document.querySelector("#statAuto").value,
-        caaudtca: document.querySelector("#dtCadAuto").value,
+        caaucode: document.querySelector("#codeAuto").value.trim(),
+        caauplac: document.querySelector("#placAuto").value.toUpperCase().replace(/[^A-Z0-9-]/g, ""),
+        caauchss: document.querySelector("#chassAuto").value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 17),
+        caaurena: document.querySelector("#renaAuto").value.trim(),
+        caaumaca: document.querySelector("#macaAuto").value.trim(),
+        caaumode: document.querySelector("#modeAuto").value.trim(),
+        caaucor: document.querySelector("#corAuto").value.trim(),
+        caautico: document.querySelector("#tpCombusAuto").value.trim(),
+        caaukmat: document.querySelector("#kmAtAuto").value.trim(),
+        caaumoto: document.querySelector("#motoAuto").value.trim(),
+        caaustat: document.querySelector("#statAuto").value.trim(),
+        caaudtca: document.querySelector('#dtCadAuto').value,
       };
 
-      if (!isDataValida(formData.caaudtca)) {
-        Toastify({
-          text: "Data de Cadastro INVALIDA.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-        return;
-      }
-
-      //  Converte “YYYY-MM-DD” para Date local e zera horas
-      const [y, m, d] = formData.caaudtca.split("-").map(Number);
-      const dtCd = new Date(y, m - 1, d);
-      const hoje = new Date();
-      const hoje0 = new Date(
-        hoje.getFullYear(),
-        hoje.getMonth(),
-        hoje.getDate()
-      );
-
-      //  Regra: não pode ser futura
-      if (dtCd.getTime() !== hoje0.getTime()) {
-        Toastify({
-          text: "Data de cadastro deve ser a data de hoje",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "orange",
-        }).showToast();
-        return;
-      }
-
-      const motoristaJaExiste = res.some(
-        (veiculo) => veiculo.caaumoto === formData.caaumoto
-      );
-      if (motoristaJaExiste) {
-        Toastify({
-          text: "Motorista já cadastrado em outro veiculo!",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-        return;
-      }
 
       try {
         const response = await fetch("http://localhost:3000/api/cadauto", {
@@ -361,6 +332,7 @@ async function registerNewVehicles() {
             backgroundColor: "green",
           }).showToast();
           document.querySelector(".foorm").reset();
+          dateAtualInField('dtCadAuto')
         } else if (response.status === 409) {
           Toastify({
             text: result.message || "Codigo ja cadastrado",

@@ -296,21 +296,21 @@ function registerNewDriver(){
     }
 
       const formData = {
-          motoCode: document.querySelector('#motoCode').value,     // Código
-          motoNome: document.querySelector('#motoNome').value,     // Nome
+          motoCode: document.querySelector('#motoCode').value.trim(),     // Código
+          motoNome: document.querySelector('#motoNome').value.trim(),     // Nome
           motoDtnc: document.querySelector('#motoDtnc').value,     // Data de nascimento
-          motoCpf: document.querySelector('#motoCpf').value,       // CPF
-          motoDtch: document.querySelector('#motoDtch').value,     // Data de emissão da CNH
-          motoctch: document.querySelector('#motoctch').value,     // Categoria da CNH
+          motoCpf: document.querySelector('#motoCpf').value.trim(),       // CPF
+          motoDtch: document.querySelector('#motoDtch').value.trim(),     // Data de emissão da CNH
+          motoctch: document.querySelector('#motoctch').value.trim(),     // Categoria da CNH
           motoDtvc: document.querySelector('#motoDtvc').value,     // Data de vencimento
-          motoRest: document.querySelector('#motoRest').value,     // Restrições
-          motoOrem: document.querySelector('#motoOrem').value,     // Órgão emissor
-          motoCelu: document.querySelector('#motoCelu').value,     // Celular
-          motoCep: document.querySelector('#motoCep').value,       // CEP
-          motoRua: document.querySelector('#motoRua').value,       // Rua
-          motoCity: document.querySelector('#motoCity').value,     // Cidade
-          motoEstd: document.querySelector('#motoEstd').value,     // Estado
-          motoMail: document.querySelector('#motoMail').value,      // E-mail
+          motoRest: document.querySelector('#motoRest').value.trim(),     // Restrições
+          motoOrem: document.querySelector('#motoOrem').value.trim(),     // Órgão emissor
+          motoCelu: document.querySelector('#motoCelu').value.trim(),     // Celular
+          motoCep: document.querySelector('#motoCep').value.trim(),       // CEP
+          motoRua: document.querySelector('#motoRua').value.trim(),       // Rua
+          motoCity: document.querySelector('#motoCity').value.trim(),     // Cidade
+          motoEstd: document.querySelector('#motoEstd').value.trim(),     // Estado
+          motoMail: document.querySelector('#motoMail').value.trim(),      // E-mail
           motoStat: document.querySelector("#motoStat").value       // status
       };
 
