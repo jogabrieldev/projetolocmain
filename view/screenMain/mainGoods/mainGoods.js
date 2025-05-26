@@ -299,7 +299,7 @@ if (buttonOutGoods) {
       cor: document.querySelector("#cor").value.trim(),
       nuMO: document.querySelector("#nuMO").value.trim(),
       rena: document.querySelector("#rena").value.trim(),
-      bensCtep: document.querySelector("#bensCtep").value.trim(),
+      // bensCtep: document.querySelector("#bensCtep").value.trim(),
       bensAtiv: document.querySelector("#bensAtiv").value.trim(),
       alug: document.querySelector("#alug").value.trim(),
       valorAlug: document.querySelector("#valorAlugMain").value.trim(),
@@ -481,7 +481,7 @@ function insertBensInTableRunTime(bens) {
       const cabecalho = tabela.createTHead();
       const linhaCabecalho = cabecalho.insertRow();
       const colunas = [
-        "Selecionar", "Código", "Nome", "Familia do Bem", "Status", "Número de Série",
+        "Selecionar", "Código", "Nome do Bem", "Familia do Bem", "Status", "Número de Série",
         "Placa", "Ano do Modelo", "Data da Compra", "valor de Compra", "Nota Fiscal",
         "Código Fornecedor", "Km Atual", "Data do Km", "Modelo", "Data do Status",
         "Hora Status", "Chassi", "Cor", "Número", "Renavam", "Ctep", "Ativo",
@@ -630,7 +630,7 @@ async function fetchBens() {
       const cabecalho = tabela.createTHead();
       const linhaCabecalho = cabecalho.insertRow();
       const colunas = [
-        "Selecionar", "Código", "Nome", "Familia do Bem", "Status", "Número de Série",
+        "Selecionar", "Código", "Nome do Bem", "Familia do Bem", "Status", "Número de Série",
         "Placa", "Ano do Modelo", "Data da Compra", "valor de Compra", "Nota Fiscal",
         "Código Fornecedor", "Km Atual", "Data do Km", "Modelo", "Data do Status",
         "Hora Status", "Chassi", "Cor", "Número", "Renavam", "Ctep", "Ativo",

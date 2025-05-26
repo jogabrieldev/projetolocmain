@@ -11,6 +11,14 @@ export const movementForne = {
           .status(400)
           .json({ message: "campos obrigatorios não preenchidos" });
       }
+      
+            const validCnpjSystem = await fornRegister.buscarIdFornCnpj();
+            const resuntConsult = validCnpjSystem.map(item => (item.forncnpj));
+            const cnpjToCheck = (dataForn.fornCnpj);
+
+           if (resuntConsult.includes(cnpjToCheck)) {
+              return res.status(400).json({ message: "CNPJ ja cadastrado valide com seu fornecedor" });
+            }
 
       const isDataValida = (dataStr) => {
         const regex = /^\d{4}-\d{2}-\d{2}$/;

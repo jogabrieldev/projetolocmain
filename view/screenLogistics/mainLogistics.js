@@ -414,7 +414,6 @@ function filterLocation() {
             "Familia do bem",
             "Descrição",
             "Quantidade",
-            "Edição",
           ];
 
           headers.forEach((text) => {
@@ -461,16 +460,7 @@ function filterLocation() {
               row.appendChild(td);
             });
 
-            const tdEdit = document.createElement("td");
-            const buttonEdit = document.createElement("button");
-            buttonEdit.textContent = "Editar";
-            buttonEdit.classList.add("buttonEditLocationFinish");
-            buttonEdit.dataset.id = locacao.numeroLocacao; // ou outro ID que desejar
-            tdEdit.appendChild(buttonEdit);
-            row.appendChild(tdEdit);
-
             tbody.appendChild(row);
-
             tbody.appendChild(row);
           });
 
@@ -1012,7 +1002,6 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
 
   const motoId = motoristasSelecionados[0];
 
-  try {
     const response = await fetch("/api/listbens", {
       headers: {
         "Content-Type": "application/json",
@@ -1151,9 +1140,6 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
         const codeLocation = botao.dataset.code;
         const codeLoc = botao.dataset.belocode;
 
-        console.log("code", codeLoc);
-        console.log("location", codeLocation);
-
         const sucesso = await vincularBem(
           bemId,
           familiaBem,
@@ -1194,23 +1180,91 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
     });
 
     // Evento para fechar a pagina de vinculo
-    document
-      .querySelector(".OutScreenLinkGoods")
-      .addEventListener("click", () => {
-        modalWrapper.classList.remove("flex");
-        modalWrapper.classList.add("hidden");
-        const containerLogistica = document.querySelector(
-          ".containerLogistica"
-        );
-        if (containerLogistica) {
-          containerLogistica.classList.remove("hidden");
-          containerLogistica.classList.add("flex");
-        }
-      });
-  } catch (error) {
-    console.error("Erro ao abrir modal e vincular bem", error);
-  }
+  document.querySelector(".OutScreenLinkGoods").addEventListener("click", async () => {
+  
+    if(modalWrapper){
+       modalWrapper.classList.remove("flex");
+      modalWrapper.classList.add("hidden");
+    }
+    
+      const containerLogistica = document.querySelector(".containerLogistica");
+      if (containerLogistica) {
+        containerLogistica.classList.remove("hidden");
+        containerLogistica.classList.add("flex");
+      }
+  // const token = localStorage.getItem("token");
+  // const codeLocation = document.querySelector("#codeLocationAtual")?.value; // Id da locação atual
+  // const familiaSelecionada = document.querySelector("#familiaSelecionada")?.value; // Família atual
+
+  // if (!codeLocation || !familiaSelecionada) {
+  //   Toastify({
+  //     text: "Erro interno: código da locação ou família não definidos.",
+  //     duration: 4000,
+  //     close: true,
+  //     gravity: "top",
+  //     position: "center",
+  //     backgroundColor: "red",
+  //   }).showToast();
+  //   return;
+  // }
+
+  // try {
+  //   const locations = await getAllLocationsForLogistics(token);
+  //   const locacao = locations.locacoes.find((loc) =>
+  //     loc.bens?.some((b) => String(b.belocode) === codeLocation)
+  //   );
+
+  //   if (!locacao) {
+  //     Toastify({
+  //       text: "Locação não encontrada para verificação.",
+  //       duration: 4000,
+  //       close: true,
+  //       gravity: "top",
+  //       position: "center",
+  //       backgroundColor: "red",
+  //     }).showToast();
+  //     return;
+  //   }
+
+  //   // Conta quantos bens da família estão vinculados (status Locado ou Em Locação)
+  //   const vinculados = locacao.bens.filter(
+  //     (b) => b.beloben === familiaSelecionada && 
+  //            (b.belostat === "Locado" || b.belostat === "Em Locação")
+  //   ).length;
+
+  //   // Conta a quantidade solicitada dessa família
+  //   const quantidadeSolicitada = locacao.bens.filter(
+  //     (b) => b.beloben === familiaSelecionada
+  //   ).length;
+
+  //   if (vinculados >= quantidadeSolicitada) {
+  //     // Pode sair
+      
+  //   } else {
+  //     Toastify({
+  //       text: `Faltam ${quantidadeSolicitada - vinculados} bem(ns) para finalizar a vinculação.`,
+  //       duration: 4000,
+  //       close: true,
+  //       gravity: "top",
+  //       position: "center",
+  //       backgroundColor: "red",
+  //     }).showToast();
+  //   }
+  // } catch (err) {
+  //   console.error(err);
+  //   Toastify({
+  //     text: "Erro ao verificar a quantidade de bens vinculados.",
+  //     duration: 4000,
+  //     close: true,
+  //     gravity: "top",
+  //     position: "center",
+  //     backgroundColor: "red",
+  //   }).showToast();
+  // }
+});
+
 }
+
 
 // pegar locações para logistica
 async function getAllLocationsForLogistics(token) {
@@ -1315,10 +1369,10 @@ function atingiuQuantidadeSolicitada(locacao, familiaBem) {
 
   // Considera todos os bens dessa família que já estão com status "Em Locação"
   const vinculados = bensFamilia.filter(
-    (b) => b.belostat === "Em Locação"
+    (b) => b.belostat === "Locado"
   ).length;
 
-  return vinculados + 1 >= quantidadeSolicitada;
+  return vinculados >= quantidadeSolicitada;
 }
 
 // vincular o bem a locação e atualizar status
@@ -1348,12 +1402,9 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
       throw new Error("Não foi possível localizar dados de locação.");
     }
 
-    // Procurar a locação correta diretamente pelo codeLocation
     const locacaoEncontrada = locations.locacoes.find((loc) =>
       loc.bens?.some((b) => String(b.belocode) === codeLocation)
     );
-
-    console.log("location", locacaoEncontrada);
 
     if (!locacaoEncontrada) {
       Toastify({
@@ -1367,21 +1418,7 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
       return false;
     }
 
-    const bem = locacaoEncontrada.bens.find(
-      (b) => String(b.belocode) === codeLocation
-    );
-    if (!bem || bem.belostat !== "Pendente") {
-      Toastify({
-        text: `O bem não está disponível para vinculação.`,
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-      return false;
-    }
-
+   
     const nomeCliente = locacaoEncontrada.clloclno.trim();
     const cliente = await buscarClientePorNome(nomeCliente, token);
     if (!cliente) return false;
@@ -1419,12 +1456,17 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
       {
         bensstat: "Locado",
       },
-      "Erro ao atualizar status do bem",
+      "Erro ao atualizar status do bem", 
       token
     );
 
-   
-    await atualizarStatus(
+    const bemRow = document.querySelector(`[data-benscode="${bemId}"]`);
+    if (bemRow) {
+    const statusBem = bemRow.querySelector(".status-bem");
+    if (statusBem) statusBem.textContent = "Locado";
+    }
+ 
+     await atualizarStatus(
       `/api/updatestatusMoto/${motoId}`,
       {
         motostat: "Entrega destinada",
@@ -1440,26 +1482,20 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
         token
       );
 
-     // Atualizar visual do bem na tabela
-  const bemRow = document.querySelector(`[data-benscode="${bemId}"]`);
-  if (bemRow) {
-  const statusBem = bemRow.querySelector(".status-bem");
-  if (statusBem) statusBem.textContent = "Locado";
-}
+      const locacaoRow = document.querySelector(`tr[data-locacao='${locacaoEncontrada.cllonmlo}']`);
+       if (locacaoRow) {
+       const statusLocacao = locacaoRow.querySelector("td:nth-child(3)");
+       if (statusLocacao) statusLocacao.textContent = "Em Locação";
+      }
 
-const locacaoRow = document.querySelector(`tr[data-locacao='${locacaoEncontrada.cllonmlo}']`);
-if (locacaoRow) {
-  const statusLocacao = locacaoRow.querySelector("td:nth-child(3)");
-  if (statusLocacao) statusLocacao.textContent = "Em Locação";
-}
-
-const motoRow = document.querySelector(`[data-motocode="${motoId}"]`);
-if (motoRow) {
-  const statusMoto = motoRow.querySelector(".status-moto");
-  if (statusMoto) statusMoto.textContent = "Entrega destinada";
-}
-
-
+      const motoRow = document.querySelector(`[data-motocode="${motoId}"]`);
+      if (motoRow) {
+      const statusMoto = motoRow.querySelector(".status-moto");
+      if (statusMoto) statusMoto.textContent = "Entrega destinada";
+     }
+ 
+   
+     
     Toastify({
       text: `Bem ${bemId} vinculado com sucesso!`,
       duration: 4000,

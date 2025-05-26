@@ -686,7 +686,10 @@ function  validationFormMoto(){
         },
         motoStat:{
            required:true
-        }
+        },
+        motoMail:{
+              required:true
+           }
 
 
     },
@@ -730,7 +733,10 @@ function  validationFormMoto(){
             },
             motoStat:{
               required: "OBRIGATORIO"
+           },motoMail:{
+              required: "OBRIGATORIO"
            }
+
           
           },
 

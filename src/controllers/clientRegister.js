@@ -12,6 +12,18 @@ export const movementClient = {
           .json({ message: "Campos obrigatórios não preenchidos." });
       }
 
+      // Função para normalizar CPF (remover tudo que não for número)
+      const formatCPF = cpf => cpf.trim();
+
+      const validCpfSystem = await clientRegister.getAllClientcpf();
+      const resuntConsult = validCpfSystem.map(item => formatCPF(item.cliecpf));
+      const cpfToCheck = formatCPF(dataClientSubmit.cpf);
+
+     if (resuntConsult.includes(cpfToCheck)) {
+        return res.status(400).json({ message: "CPF já cadastrado no sistema, valide com o cliente" });
+      }
+
+
       const { dtCad, dtNasc } = dataClientSubmit;
 
       // Função auxiliar para validar se a data é válida

@@ -58,23 +58,40 @@ export const location = {
       }
        
       const feriados = [
-        "2025-01-01", // Confraternização Universal
-        "2025-04-18", // Sexta-feira Santa
-        "2025-04-21", // Tiradentes
-        "2025-05-01", // Dia do Trabalho
-        "2025-09-07", // Independência do Brasil
-        "2025-10-12", // Nossa Senhora Aparecida
-        "2025-11-02", // Finados
-        "2025-11-15", // Proclamação da República
-        "2025-12-25"  // Natal
+        "01-01", // Confraternização Universal
+        "04-18", // Sexta-feira Santa
+        "04-21", // Tiradentes
+        "05-01", // Dia do Trabalho
+        "09-07", // Independência do Brasil
+        "10-12", // Nossa Senhora Aparecida
+        "11-02", // Finados
+        "11-15", // Proclamação da República
+        "12-25"  // Natal
       ];
 
-      const dataDevoStr = dataDevoNormalizada.toISOString().split("T")[0];
-      if (feriados.includes(dataDevoStr)) {
-        return res.status(400).json({ error: `A data de devolução (${dataDevoStr}) cai em um feriado. Escolha outra data.` });
-      }
-  
+      const formatDiaMes = (data) => {
+      const dia = String(data.getDate()).padStart(2, "0");
+      const mes = String(data.getMonth() + 1).padStart(2, "0");
+      return `${mes}-${dia}`;
+    };
+
+    const dataDevoDiaMes = formatDiaMes(dataDevoNormalizada);
+    if (feriados.includes(dataDevoDiaMes)) {
+      return res.status(400).json({ error: `A data de devolução (${dataDevo}) cai em um feriado. Escolha outra data.` });
+    }
+       
+      const codigoUsado = new Set()
       for (const [index, bem] of bens.entries()) {
+
+        if (!bem.codeBen) {
+        return res.status(400).json({ error: `Grupo ${index + 1}: Código do bem é obrigatório.` });
+      }
+
+      if (codigoUsado.has(bem.codeBen)) {
+        return res.status(400).json({ error: `Grupo ${index + 1}: O código "${bem.codeBen}" já foi utilizado em outro grupo.` });
+      }
+      codigoUsado.add(bem.codeBen);
+
         if (!bem.dataFim) {
           return res.status(400).json({ error: `Grupo ${index + 1}: Data FIM do bem é obrigatória.` });
         }
@@ -155,9 +172,9 @@ export const location = {
     try {
       const familias = await LocacaoModel.buscarCodigosBens();
       if(!familias){
-        res.status(400).json({success:false , message:'Erro ao buscar dados'})
+        res.status(400).json({success:false , message:'Erro ao buscar dados da familia'})
       }
-      res.status(200).json(familias); // Retorna os dados como JSON
+      res.status(200).json(familias); 
     } catch (error) {
       console.error("Erro ao listar famílias de bens:", error);
       res.status(500).json({ error: "Erro ao buscar famílias de bens." });
@@ -293,14 +310,25 @@ async DeleteLocationFinish(req, res) {
   async insertNewGoods(req , res){
       
     try {
-        //  const {idLoc} = req.params
          const {newGoods} = req.body 
-
-         console.log('novo' ,newGoods)
 
          if ( !Array.isArray(newGoods)) {
           return res.status(400).json({ error: "Dados inválidos para atualização." });
         }
+
+        const codigoUsado = new Set();
+
+        for (const [index, bem] of newGoods.entries()) {
+         if (!bem.codeBen) {
+          return res.status(400).json({ error: `Grupo ${index + 1}: Código do bem é obrigatório.` });
+       }
+
+      if (codigoUsado.has(bem.codeBen)) {
+        return res.status(400).json({
+          error: `Grupo ${index + 1}: O código "${bem.codeBen}" já foi utilizado em outro grupo.`,
+        });
+      }
+    }
       
        const novosbensInseridosLocacao = await LocacaoModel.inserirNovosBens(newGoods)
        if(!novosbensInseridosLocacao){

@@ -440,7 +440,7 @@ function deletarLocation() {
     }
   });
 
-  // 🔹 Função de exclusão
+  //  Função de exclusão
   async function deletelocation(id, rowProd) {
     const token = localStorage.getItem("token");
 
@@ -738,8 +738,11 @@ function editarlocationFinish(id) {
           return;
         }
 
+        const dataDevolutionStr = document.getElementById('dateDev')?.value || "";
         const dataInicio = parseDataLocal(dataInicioStr);
         const dataFim = parseDataLocal(dataFimStr);
+        const dataDevolution = parseDataLocal(dataDevolutionStr);
+       
         const hoje = new Date();
         hoje.setHours(0, 0, 0, 0);
 
@@ -754,6 +757,18 @@ function editarlocationFinish(id) {
           }).showToast();
           return;
         }
+
+        if (dataFim.getTime() !== dataDevolution.getTime()) {
+           Toastify({
+           text: `Item ${i}: A data FIM foi alterada, portanto, a data de DEVOLUÇÃO da locação também deve ser atualizada.`,
+           duration: 4000,
+           close: true,
+           gravity: "top",
+           position: "center",
+           backgroundColor: "red",
+        }).showToast();
+       return;
+     }
         if (!belocode && dataInicio > hoje) {
           Toastify({
             text: `Item ${i}: a data de INÍCIO deve ser hoje ou futura.`,

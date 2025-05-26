@@ -109,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 deletarLocation();
-                atualizarData() ;
                 esconderElemento();
                 mostrarElemento();
               } else {
@@ -369,26 +368,12 @@ function searchClientForLocation() {
   if (searchClient) {
     searchClient.addEventListener("click", async (event) => {
       event.preventDefault();
-      const inputSearchClient = document.querySelector("#client").value.trim();
+        const inputElement = document.querySelector("#client");
+        const inputSearchClient = inputElement.value.trim();
+
+      console.log('client' , inputSearchClient)
 
       const token = localStorage.getItem("token");
-
-      if (!token || isTokenExpired(token)) {
-        Toastify({
-          text: "Sessão expirada. Faça login novamente.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-
-        localStorage.removeItem("token");
-        setTimeout(() => {
-          window.location.href = "/index.html";
-        }, 2000);
-        return;
-      }
 
       try {
         const response = await fetch("/api/listclient", {
@@ -488,6 +473,7 @@ function searchClientForLocation() {
         `;
 
             const buttonOutContainerSearch = document.createElement("button");
+            buttonOutContainerSearch.className = "btn btn-outline-secondary d-flex align-items-center";
             buttonOutContainerSearch.textContent = "Voltar";
             buttonOutContainerSearch.style.cursor = "pointer";
             buttonOutContainerSearch.addEventListener("click", () => {
@@ -737,6 +723,8 @@ async function handleSubmit() {
   const totalGrups = 4;
   const bens = [];
 
+  const codigosUsados = new Set();
+
   // Capturar dados dos grupos
   for (let i = 1; i <= totalGrups; i++) {
     const codeBen = document.getElementById(`family${i}`)?.value || "";
@@ -756,6 +744,20 @@ async function handleSubmit() {
       quantidade;
 
     if (isParcial) {
+
+       if (codigosUsados.has(codeBen)) {
+      Toastify({
+        text: `Grupo ${i}: O código "${codeBen}" já foi selecionado em outro grupo.`,
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+      return;
+    }
+
+      codigosUsados.add(codeBen);
       if (!codeBen || !dataInicioStr || !dataFimStr || !quantidade) {
         Toastify({
           text: `Grupo ${i}: Preencha código, quantidade, data de início e data fim.`,
@@ -1248,17 +1250,17 @@ function registerClientPageLocation() {
 
 
       const formDataLocation = {
-        clieCode: document.querySelector("#clieCodeLoc").value, // Codigo
-        clieName: document.querySelector("#clieNameLoc").value, // Nome
-        cpf: document.querySelector("#cpfClientLoc").value, // CPF
+        clieCode: document.querySelector("#clieCodeLoc").value.trim(), // Codigo
+        clieName: document.querySelector("#clieNameLoc").value.trim(), // Nome
+        cpf: document.querySelector("#cpfClientLoc").value.trim(), // CPF
         dtCad: document.querySelector("#dtCadLoc").value, // Data de Cadastro
         dtNasc: document.querySelector("#dtNascLoc").value, // Data de Nascimento
-        clieCelu: document.querySelector("#clieCeluLoc").value, // Celular
-        clieCity: document.querySelector("#clieCityLoc").value, // Cidade
-        clieEstd: document.querySelector("#clieEstdLoc").value, // Estado
-        clieRua: document.querySelector("#clieRuaLoc").value, // Rua
-        clieCep: document.querySelector("#clieCepLoc").value, // Cep
-        clieMail: document.querySelector("#clieMailLoc").value, // E-mail
+        clieCelu: document.querySelector("#clieCeluLoc").value.trim(), // Celular
+        clieCity: document.querySelector("#clieCityLoc").value.trim(), // Cidade
+        clieEstd: document.querySelector("#clieEstdLoc").value.trim(), // Estado
+        clieRua: document.querySelector("#clieRuaLoc").value.trim(), // Rua
+        clieCep: document.querySelector("#clieCepLoc").value.trim(), // Cep
+        clieMail: document.querySelector("#clieMailLoc").value.trim(), // E-mail
       };
 
       const clieMail = formDataLocation.clieMail

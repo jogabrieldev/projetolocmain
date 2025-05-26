@@ -72,6 +72,18 @@ export const crudRegisterForn = {
     }
   },
 
+  buscarIdFornCnpj: async () => {
+    try {
+      const result = await userDbFo.query(
+        "SELECT forncnpj FROM cadforn"
+      );
+      return result.rows;
+    } catch (error) {
+      console.log("error no model fornecedor", error);
+      throw error;
+    }
+  },
+
   buscarIdForn: async () => {
     try {
       const result = await userDbFo.query(

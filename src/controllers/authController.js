@@ -19,7 +19,7 @@ async function AuthController(req, res) {
       return res.status(401).json({ message: "Usuario ou senha invalidos" });
     }
 
-    const token = jwt.sign({ id: user.username, password: user.password }, secretKey, { expiresIn: '1h' });
+    const token = jwt.sign({ user: user.username,  id: user.empCode }, secretKey, { expiresIn: '1h' });
 
     return res.json({  token });
   } catch (error) {

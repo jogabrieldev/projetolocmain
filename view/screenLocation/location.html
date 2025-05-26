@@ -33,89 +33,87 @@
     </button>
   </div>
 
-  <main class="container content py-3 overflow-auto" style="display: none">
+  <main class="container content py-2" style="display: none; max-height: 90vh; overflow-y: auto;">
     <div class="searchClient mb-4" style="display: none"></div>
 
     <!-- Formulário do cliente -->
-    <form id="formClient" class="p-3 rounded shadow-sm mb-4">
-      <div class="row g-3 align-items-end">
-        <div class="col-md-5">
-          <label for="client" class="form-label fw-bold"
-            >Pesquise o Cliente</label
-          >
-          <div class="d-flex flex-wrap gap-2 align-items-center">
-            <input
-              type="text"
-              name="client"
-              id="client"
-              class="form-control flex-grow-1"
-              placeholder="CPF ou Nome"
-              required
-            />
-            <span class="material-symbols-outlined" id="search">search</span>
-          </div>
-        </div>
+    <form id="formClient" class="p-4 rounded shadow mb-4  border">
+  <div class="row g-3 align-items-end">
+    <div class="col-md-5">
+  <label for="client" class="form-label fw-bold">Pesquise o Cliente</label>
+  <div class="input-group shadow-sm " style="height: 50px;">
+    <input
+      type="text"
+      name="client"
+      id="client"
+      class="form-control py-6 rounded-start h-100"
+      placeholder="Digite o CPF ou Nome do cliente"
+      required
+    />
+    <button type="button" class="btn btn-outline-secondary" id="search" title="Buscar cliente">
+      <span class="material-symbols-outlined">search</span>
+    </button>
+  </div>
+</div>
 
-        <div class="col-md-2">
-          <label for="numeroLocation" class="form-label fw-bold">Locação</label>
-          <input
-            type="number"
-            name="numeroLocation"
-            id="numeroLocation"
-            class="form-control"
-            readonly
-          />
-        </div>
 
-        <div class="col-md-2">
-          <label for="dataLoc" class="form-label fw-bold"
-            >Data da locação</label
-          >
-          <input
-            type="date"
-            name="dataLoc"
-            id="dataLoc"
-            class="form-control"
-            required
-            readonly
-          />
-        </div>
+    <div class="col-md-2">
+      <label for="numeroLocation" class="form-label fw-bold">Locação</label>
+      <input
+        type="number"
+        name="numeroLocation"
+        id="numeroLocation"
+        class="form-control"
+        readonly
+      />
+    </div>
 
-        <div class="col-md-2">
-          <label for="DataDevo" class="form-label fw-bold"
-            >Data de devolução</label
-          >
-          <input
-            type="date"
-            name="DataDevo"
-            id="DataDevo"
-            class="form-control"
-            required
-          />
-        </div>
+    <div class="col-md-2">
+      <label for="dataLoc" class="form-label fw-bold">Data da locação</label>
+      <input
+        type="date"
+        name="dataLoc"
+        id="dataLoc"
+        class="form-control"
+        required
+        readonly
+      />
+    </div>
 
-        <div class="col-md-4">
-          <label for="pagament" class="form-label fw-bold"
-            >Forma de pagamento</label
-          >
-          <select name="pagament" id="pagament" class="form-select" required>
-            <option value="">Selecione...</option>
-            <option value="Pix">Pix</option>
-            <option value="Credito">Crédito</option>
-            <option value="Debito">Débito</option>
-            <option value="Boleto">Boleto</option>
-          </select>
-        </div>
+    <div class="col-md-3">
+      <label for="DataDevo" class="form-label fw-bold">Data de devolução</label>
+      <input
+        type="date"
+        name="DataDevo"
+        id="DataDevo"
+        class="form-control"
+        required
+      />
+    </div>
 
-        <button
-          type="button"
-          class="registerClientPageLocation btn text-white fw-semibold px-3 py-2"
-          id="registerClientPageLocation"
-        >
-          Cadastrar Cliente
-        </button>
-      </div>
-    </form>
+    <div class="col-md-4">
+      <label for="pagament" class="form-label fw-bold">Forma de pagamento</label>
+      <select name="pagament" id="pagament" class="form-select" required>
+        <option value="">Selecione...</option>
+        <option value="Pix">Pix</option>
+        <option value="Credito">Crédito</option>
+        <option value="Debito">Débito</option>
+        <option value="Boleto">Boleto</option>
+      </select>
+    </div>
+
+    <div class="col-12 d-flex justify-content-end">
+      <button
+        type="button"
+        class="registerClientPageLocation btn btn-primary fw-semibold px-4 py-2 shadow-sm"
+        id="registerClientPageLocation"
+      >
+        <i class="bi bi-person-plus-fill me-2"></i> Cadastrar Cliente
+      </button>
+    </div>
+  </div>
+</form>
+
 
     <!-- Dados do cliente -->
     <div class="row g-3 mb-4">
@@ -194,10 +192,10 @@
     </div>
 
     <!-- Seção de Bens -->
-    <div class="p-4 rounded shadow-sm mb-4">
+    <div class="p-3 rounded shadow-sm mb-3 border">
       <div
-        class="p-3 rounded shadow-sm mb-4 bg-secondary overflow-auto"
-        style="min-width: 1000px; max-width: 100%; overflow-x: auto"
+       class="p-2 bg-secondary rounded shadow-sm"
+    style="overflow-x: auto;"
       >
         <!-- Cabeçalhos -->
         <div class="row gx-2 gy-1 mb-2 flex-nowrap align-items-center">

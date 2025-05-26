@@ -57,6 +57,21 @@ export const crudRegisterDriver = {
     }
   },
 
+   getAllDriverIdCpf: async()=>{
+    try {
+      const query = "SELECT motocpf FROM cadmoto";
+
+      const result = await userDbDriver.query(query);
+      if(result){
+        return result.rows;
+      }
+      
+    } catch (error) {
+      console.error("Erro em listar ID Fornecedor:", error.message);
+      throw error;
+    }
+  },
+
   getAllDriverId: async()=>{
     try {
       const query = "SELECT motocode FROM cadmoto";

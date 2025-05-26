@@ -14,6 +14,15 @@ export const movementOfDriver = {
           .json({ message: "Campos obrigatórios não preenchidos." });
       }
 
+      
+            const validCpfSystem = await driverRegister.getAllDriverIdCpf();
+            const resuntConsult = validCpfSystem.map(item =>(item.motocpf));
+            const cpfToCheck = data.motoCpf;
+      
+           if (resuntConsult.includes(cpfToCheck)) {
+              return res.status(400).json({ message: "CPF já cadastrado no sistema, valide com o motorista" });
+            }
+
       function isDataValida(dataStr) {
         const regex = /^\d{4}-\d{2}-\d{2}$/;
         if (!regex.test(dataStr)) return false;

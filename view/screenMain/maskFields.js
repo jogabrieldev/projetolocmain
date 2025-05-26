@@ -85,26 +85,6 @@ $(document).ready(function () {
 
 
   
-$(document).ready(function () {
-
-  $("#placAuto").mask("SSS-0S00", {
-    translation: {
-      'S': { pattern: /[A-Za-z]/ },
-    },
-    placeholder: "___-__00",
-    onKeyPress: function (val, e, field, options) {
-      field.val(val.toUpperCase());
-    }
-  });
-
-  $("#renaAuto").mask("00000000000");
-
-  $("#chassAuto").on("input", function () {
-    this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 17);
-  });
-});
-
-  
 
 
 

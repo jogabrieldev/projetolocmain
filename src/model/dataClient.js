@@ -62,6 +62,21 @@ export const clientRegister = {
     }
   },
 
+    getAllClientcpf: async()=>{
+    try {
+      const query = "SELECT cliecpf FROM cadclie";
+
+      const result = await dataClient.query(query);
+      if(result){
+        return result.rows;
+      }
+      
+    } catch (error) {
+      console.error("Erro em listar ID Cliente:", error.message);
+      throw error;
+    }
+  },
+
   listingClient: async () => {
     try {
       const query = "SELECT * FROM cadclie";
