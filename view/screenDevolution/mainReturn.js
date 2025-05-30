@@ -20,6 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
            }else{
              console.warn('#mainContent não encontrado no DOM')
            }
+
+           const informative = document.querySelector(".information");
+           if(informative){
+             informative.style.display = "block";
+             informative.textContent = "SESSÃO DEVOLUÇÃO";
+           }
         } catch (error) {
           
         }

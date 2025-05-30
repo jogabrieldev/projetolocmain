@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const informative = document.querySelector(".information");
         informative.style.display = "block";
-        informative.textContent = "SEÇÃO LOGISTICA";
+        informative.textContent = "SESSÃO LOGISTICA";
 
         const containerLogistica = document.querySelector(
           ".containerLogistica"

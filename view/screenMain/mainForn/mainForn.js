@@ -465,128 +465,6 @@ function insertFornecedoresInTableRunTime(fornecedores) {
 }
 
 // lista de fornecedor
-// async function fetchListFornecedores() {
-//   const token = localStorage.getItem("token");
-
-//   if (!token || isTokenExpired(token)) {
-//     Toastify({
-//       text: "Sessão expirada. Faça login novamente.",
-//       duration: 3000,
-//       close: true,
-//       gravity: "top",
-//       position: "center",
-//       backgroundColor: "red",
-//     }).showToast();
-
-//     localStorage.removeItem("token");
-//     setTimeout(() => {
-//       window.location.href = "/index.html";
-//     }, 2000);
-//     return;
-//   }
-//   try {
-//     const response = await fetch("/api/listForn", {
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${token}`,
-//       },
-//     });
-//     const result = await response.json();
-
-//     if (!response.ok) {
-//       Toastify({
-//         text: result?.message || "Erro ao carregar clientes.",
-//         duration: 3000,
-//         close: true,
-//         gravity: "top",
-//         position: "center",
-//         backgroundColor: "red",
-//       }).showToast();
-
-//       document.querySelector(".listClient").innerHTML =
-//         "<p>Erro ao carregar clientes.</p>";
-//       return;
-//     }
-//     const fornecedores = result;
-
-//     const fornecedoresListDiv = document.querySelector(".listingForn");
-//     fornecedoresListDiv.innerHTML = "";
-
-//     if (fornecedores.length > 0) {
-//       const tabela = document.createElement("table");
-//       tabela.classList.add("tableFornecedor");
-
-//       const cabecalho = tabela.createTHead();
-//       const linhaCabecalho = cabecalho.insertRow();
-//       const colunas = [
-//         "Selecionar",
-//         "Código",
-//         "Nome",
-//         "Nome Fantasia",
-//         "CNPJ",
-//         "CEP",
-//         "Rua",
-//         "Cidade",
-//         "Estado",
-//         "Celular",
-//         "E-mail",
-//         "Banco",
-//         "Agência",
-//         "Conta",
-//         "Pix",
-//         "Data do cadastro",
-//         "Discrição",
-//       ];
-
-//       colunas.forEach((coluna) => {
-//         const th = document.createElement("th");
-//         th.textContent = coluna;
-//         linhaCabecalho.appendChild(th);
-//       });
-
-//       const corpo = tabela.createTBody();
-//       fornecedores.forEach((fornecedor) => {
-//         const linha = corpo.insertRow();
-
-//         linha.setAttribute("data-forncode", fornecedor.forncode);
-
-//         const checkboxCell = linha.insertCell();
-//         const checkbox = document.createElement("input");
-//         checkbox.type = "checkbox";
-//         checkbox.name = "selectFornecedor";
-//         checkbox.value = fornecedor.forncode;
-
-//         checkbox.dataset.fornecedor = JSON.stringify(fornecedor);
-//         checkboxCell.appendChild(checkbox);
-
-//         linha.insertCell().textContent = fornecedor.forncode;
-//         linha.insertCell().textContent = fornecedor.fornnome;
-//         linha.insertCell().textContent = fornecedor.fornnoft;
-//         linha.insertCell().textContent = fornecedor.forncnpj;
-//         linha.insertCell().textContent = fornecedor.forncep;
-//         linha.insertCell().textContent = fornecedor.fornrua;
-//         linha.insertCell().textContent = fornecedor.forncity;
-//         linha.insertCell().textContent = fornecedor.fornestd;
-//         linha.insertCell().textContent = fornecedor.forncelu;
-//         linha.insertCell().textContent = fornecedor.fornmail;
-//         linha.insertCell().textContent = fornecedor.fornbanc;
-//         linha.insertCell().textContent = fornecedor.fornagen;
-//         linha.insertCell().textContent = fornecedor.forncont;
-//         linha.insertCell().textContent = fornecedor.fornpix;
-//         linha.insertCell().textContent = formatDate(fornecedor.forndtcd);
-//         linha.insertCell().textContent = fornecedor.fornptsv;
-//       });
-
-//       fornecedoresListDiv.appendChild(tabela);
-//     } else {
-//       fornecedoresListDiv.innerHTML = "<p>Nenhum fornecedor cadastrado.</p>";
-//     }
-//   } catch (error) {
-//     console.error("Erro ao carregar fornecedores:", error);
-//     document.querySelector(".listingForn").innerHTML =
-//       "<p>Erro ao carregar fornecedores.</p>";
-//   }
-// }
 
 async function fetchListFornecedores() {
   const token = localStorage.getItem("token");
@@ -1091,6 +969,11 @@ function editFornecedor() {
       }
 
       try {
+
+        const confirmedEdition = confirm(
+        `Tem certeza de que deseja ATUALIZAR os dados desse Fornecedor?`
+        );
+          if (!confirmedEdition) return;
         const response = await fetch(`/api/updateforn/${fornIdParsed}`, {
           method: "PUT",
           headers: {

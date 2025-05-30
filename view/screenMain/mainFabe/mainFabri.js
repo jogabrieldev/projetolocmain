@@ -248,7 +248,7 @@ function registerNewFamilyBens() {
         fabeCode: document.querySelector("#fabeCode").value.trim(), // Código
         fabeDesc: document.querySelector("#fabeDesc").value.trim(), // Descrição
         fabeCate: document.querySelector("#fabeCate").value.trim(), // Categoria
-        fabeSuca: document.querySelector("#fabeSuca").value.trim(), // Subcategoria
+        fabeCapa: document.querySelector("#fabeCapa").value.trim(), // Subcategoria
         fabeObs: document.querySelector("#fabeObs").value.trim(), // Observação
         fabeCtct: document.querySelector("#fabeCtct").value.trim(), // Centro de Custo
       };
@@ -323,7 +323,7 @@ function insertFamilyGoodsTableRunTime(familyGoods) {
         "Código",
         "Descrição",
         "Categoria",
-        "Subcategoria",
+        "Capacidade",
         "Observação",
         "Centro de custo",
       ];
@@ -368,7 +368,7 @@ function insertFamilyGoodsTableRunTime(familyGoods) {
           fabricante.fabecode,
           fabricante.fabedesc,
           fabricante.fabecate,
-          fabricante.fabesuca,
+          fabricante.fabecapa,
           fabricante.fabeobs,
           fabricante.fabectct,
         ];
@@ -455,7 +455,7 @@ async function fetchListFabricante() {
         "Código",
         "Descrição",
         "Categoria",
-        "Subcategoria",
+        "Capacidade",
         "Observação",
         "Centro de custo",
       ];
@@ -500,7 +500,7 @@ async function fetchListFabricante() {
           fabricante.fabecode,
           fabricante.fabedesc,
           fabricante.fabecate,
-          fabricante.fabesuca,
+          fabricante.fabecapa,
           fabricante.fabeobs,
           fabricante.fabectct,
         ];
@@ -687,17 +687,17 @@ const containerEditForm = document.querySelector('.editFabri')
   try {
     const fabricanteSelecionado = JSON.parse(fabricanteData);
 
+  
     // Campos e IDs correspondentes
     const campos = [
       { id: "editFabeCode", valor: fabricanteSelecionado.fabecode },
       { id: "editFabeDesc", valor: fabricanteSelecionado.fabedesc },
       { id: "editFabeCate", valor: fabricanteSelecionado.fabecate },
-      { id: "editFabeSuca", valor: fabricanteSelecionado.fabesuca },
-      { id: "editFabeObs", valor: fabricanteSelecionado.fabeobs },
+      { id: "editFabeCapa", valor: fabricanteSelecionado.fabecapa },
+      { id: "editFabeObs", valor: fabricanteSelecionado.fabeobse },
       { id: "editFabeCtct", valor: fabricanteSelecionado.fabectct },
     ];
 
-    console.log(campos);
     // Atualizar valores no formulário
     campos.forEach(({ id, valor }) => {
       const elemento = document.getElementById(id);
@@ -771,8 +771,8 @@ async function editAndUpdateOfFabric() {
       fabecode: document.getElementById("editFabeCode").value,
       fabedesc: document.getElementById("editFabeDesc").value,
       fabecate: document.getElementById("editFabeCate").value,
-      fabesuca: document.getElementById("editFabeSuca").value,
-      fabeobs: document.getElementById("editFabeObs").value,
+      fabecapa: document.getElementById("editFabeCapa").value,
+      fabeobse: document.getElementById("editFabeObs").value,
       fabectct: document.getElementById("editFabeCtct").value,
     };
 
@@ -796,6 +796,11 @@ async function editAndUpdateOfFabric() {
     }
 
     try {
+
+      const confirmedEdition = confirm(
+        `Tem certeza de que deseja ATUALIZAR os dados dessa Familia de bem ?`
+        );
+          if (!confirmedEdition) return;
       const response = await fetch(`/api/updatefabe/${fabeIdParsed}`, {
         method: "PUT",
         headers: {
@@ -838,8 +843,8 @@ function updateFamilyGoodsInTableRunTime(updatedFamimyGoods) {
     // Atualiza as células da linha com as novas informações do fabricante
     row.cells[2].textContent = updatedFamimyGoods.fabedesc || "-"; // Descrição
     row.cells[3].textContent = updatedFamimyGoods.fabecate || "-"; // Categoria
-    row.cells[4].textContent = updatedFamimyGoods.fabesuca || "-"; // Subcategoria
-    row.cells[5].textContent = updatedFamimyGoods.fabeobs || "-"; // Observação
+    row.cells[4].textContent = updatedFamimyGoods.fabecapa || "-"; // Subcategoria
+    row.cells[5].textContent = updatedFamimyGoods.fabeobse || "-"; // Observação
     row.cells[6].textContent = updatedFamimyGoods.fabectct || "-"; // Centro de Custo
   }
 };

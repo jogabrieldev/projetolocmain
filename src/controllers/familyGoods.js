@@ -6,6 +6,8 @@ export const movementOfFamilyGoods = {
     try {
       const dataFabri = req.body;
 
+      console.log('corpo' , dataFabri)
+
       if (!dataFabri) {
         return res
           .status(400)
@@ -20,7 +22,6 @@ export const movementOfFamilyGoods = {
       if(!listFamilyBens){
          return res.status(400).json({message:"Erro ao listar familias para o socket"})
       }
-
 
       const io = req.app.get("socketio");
       if (io) {

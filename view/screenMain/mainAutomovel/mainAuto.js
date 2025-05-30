@@ -664,8 +664,19 @@ function deleteVehicles() {
 
         autoRow.remove();
       } else {
+      if (response.status === 400) {
         Toastify({
-          text: "Erro na exclusão do veículo",
+          text: data.message, // Mensagem retornada do backend
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "orange",
+        }).showToast();
+      } else {
+        console.log("Erro para excluir:", data);
+        Toastify({
+          text: "Erro na exclusão do Veiculo ",
           duration: 2000,
           close: true,
           gravity: "top",
@@ -673,6 +684,7 @@ function deleteVehicles() {
           backgroundColor: "red",
         }).showToast();
       }
+    }
     } catch (error) {
       console.error("Erro ao excluir veículo:", error);
       Toastify({
@@ -764,8 +776,25 @@ function editVehicles() {
           } else {
             elemento.value = valor || "";
           }
+
+          
         } else {
           console.warn(`Elemento com ID '${id}' não encontrado.`);
+        }
+          
+         let valorFormatado = (valor || "").trim();
+        if (elemento.tagName === "SELECT") {
+          const option = [...elemento.options].find(opt => opt.value === valorFormatado);
+          if (option) {
+            elemento.value = valorFormatado;
+
+            if (id === "tpCombusAutoEdit") {
+              const hiddenInput = document.getElementById("tpCombusAutoEditHidden");
+              if (hiddenInput) {
+                hiddenInput.value = valorFormatado;
+              }
+            }
+          }
         }
       });
     } catch (error) {
@@ -818,8 +847,6 @@ function editVehicles() {
         caaudtca: document.getElementById("dtCadAutoEdit").value,
       };
 
-      console.log("Atualização", updateAuto.caaudtca);
-
       const token = localStorage.getItem("token"); // Pega o token armazenado no login
 
       if (!token || isTokenExpired(token)) {
@@ -839,6 +866,12 @@ function editVehicles() {
         return;
       }
       try {
+
+        const confirmedEdition = confirm(
+        `Tem certeza de que deseja ATUALIZAR os dados desse veiculo?`
+        );
+          if (!confirmedEdition) return;
+
         const response = await fetch(
           `/api/cadauto/${autoSelecionado.caaucode}`,
           {

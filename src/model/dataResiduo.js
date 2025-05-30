@@ -1,0 +1,45 @@
+import {client} from '../database/userDataBase.js'
+const resi = client
+
+export const moduleResiduo = {
+
+    async registerResiduo(data){
+        try {
+            const {codeRes , descResi} = data
+
+            console.log(data)
+
+             const insert = `INSERT INTO cadresi( resicode , residesc) VALUES( $1 , $2 ) RETURNING *`;
+
+             const values = [codeRes , descResi]
+             console.log('valor' , values)
+             const resunt = await resi.query(insert , values)
+             return resunt.rows[0]
+        } catch (error) {
+
+            if (error.code === "23505") { // Código de erro para chave duplicada no PostgreSQL
+          throw new Error("Código de cliente já cadastrado. Tente outro.");
+         }
+          console.error("Erro no registro do cliente");
+           throw error;
+      }
+  },
+
+
+   // analisar por que não deleta
+  deleteResiduo: async (id) => {
+    try {
+
+        console.log(id)
+      const deleteResiduo =
+        "DELETE FROM cadresi WHERE resicode = $1 RETURNING *";
+      const result = await resi.query(deleteResiduo, [id]);
+     
+      console.log(result)
+      return result.rows[0];
+    } catch (error) {
+      console.error("Erro no model:", error.message);
+      throw error;
+    }
+  },
+}

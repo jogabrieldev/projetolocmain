@@ -1033,6 +1033,12 @@ function editarCliente() {
       };
 
       try {
+
+        const confirmedEdition = confirm(
+        `Tem certeza de que deseja ATUALIZAR os dados desse Cliente?`
+        );
+          if (!confirmedEdition) return;
+
         const response = await fetch(`/api/updateclient/${clientIdParsed}`, {
           method: "PUT",
           headers: {
@@ -1055,7 +1061,7 @@ function editarCliente() {
           formEditClient.reset();
         } else {
   
-           const errorResponse = await response.json();
+          const errorResponse = await response.json();
           Toastify({
             text: errorResponse.message || "Erro ao atualizar Cliente.",
             duration: 3000,

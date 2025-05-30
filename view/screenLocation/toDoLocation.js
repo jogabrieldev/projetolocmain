@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (editFormClient) editFormClient.style.display = "none";
         if (informative) {
           informative.style.display = "block";
-          informative.textContent = "SEÇÃO LOCAÇÃO";
+          informative.textContent = "SESSÃO LOCAÇÃO";
         }
       } catch (error) {
         console.error("erro para carregar");
@@ -818,9 +818,9 @@ async function handleSubmit() {
       const dataInicioNormalizada = new Date(dataInicio);
       dataInicioNormalizada.setHours(0, 0, 0, 0);
 
-      if (dataInicioNormalizada.getTime() !== hoje.getTime()) {
+      if (dataInicioNormalizada.getTime() < hoje.getTime()) {
         Toastify({
-          text: `Item ${i}: A data INÍCIO deve ser igual à data atual.`,
+          text: `Item ${i}: A data INÍCIO deve ser igual à data atual ou posterior.`,
           duration: 3000,
           close: true,
           gravity: "top",

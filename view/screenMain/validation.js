@@ -235,18 +235,7 @@ function validationFormClientPageLocation(){
             required:true,
             minlength: 15
           },
-        //   clieCityLoc:{
-        //   required: true,
-        //   minlength:4
-        //  },
-        //  clieEstdLoc:{
-        //    required:true,
-        //    minlength:4
-        //  },
-        //  clieRuaLoc:{
-        //   required: true,
-        //   minlength: 5
-        //  },
+
          clieCepLoc:{
           required: true,
           minlength: 9
@@ -533,7 +522,7 @@ function validationFormFabric(){
         fabeCtct:{
           required: true
         },
-        fabeSuca:{
+        fabeCapa:{
           required: true
         }
         
@@ -553,7 +542,7 @@ function validationFormFabric(){
            fabeCtct:{
             required: "OBRIGATORIO"
            },
-           fabeSuca:{
+           fabeCapa:{
             required: "OBRIGATORIO"
            }
           

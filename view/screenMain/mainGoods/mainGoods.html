@@ -52,11 +52,6 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
             </div>
       
             <div class="col">
-              <label for="placaEdit" class="form-label">Placa</label>
-              <input type="text" class="form-control form-control-sm" id="placaEdit" name="placaEdit" placeholder="placa" maxlength="10" readonly>
-            </div>
-      
-            <div class="col">
               <label for="bensAnmoEdit" class="form-label">Ano do modelo</label>
               <input type="date" class="form-control form-control-sm" id="bensAnmoEdit" name="bensAnmoEdit" readonly>
             </div>
@@ -83,16 +78,6 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
             </div>
       
             <div class="col">
-              <label for="kmAtualEdit" class="form-label">KM Atual</label>
-              <input type="number" class="form-control form-control-sm" id="kmAtualEdit" name="kmAtualEdit" placeholder="km Atual" maxlength="7">
-            </div>
-      
-            <div class="col">
-              <label for="dtKmEdit" class="form-label">Data do KM</label>
-              <input type="date" class="form-control form-control-sm" id="dtKmEdit" name="dtKmEdit">
-            </div>
-      
-            <div class="col">
               <label for="statusEdit" class="form-label">Status</label>
               <select class="form-select form-select-sm" id="statusEdit" name="statusEdit" disabled>
                 <option value="Disponivel">Disponivel</option>
@@ -116,30 +101,12 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
               <input type="time" class="form-control form-control-sm" id="hrStatusEdit" name="hrStatusEdit" placeholder="bensHrus" readonly>
             </div>
       
-            <div class="col">
-              <label for="chassiEdit" class="form-label">Chassi</label>
-              <input type="text" class="form-control form-control-sm" id="chassiEdit" name="chassiEdit" placeholder="Chassi" maxlength="20" readonly>
-            </div>
-      
+        
             <div class="col">
               <label for="corEdit" class="form-label">Cor</label>
-              <input type="text" class="form-control form-control-sm" id="corEdit" name="corEdit" placeholder="bensCore" maxlength="15" readonly>
+              <input type="text" class="form-control form-control-sm" id="corEdit" name="corEdit" placeholder="Cor" maxlength="15" readonly>
             </div>
       
-            <div class="col">
-              <label for="nuMOEdit" class="form-label">nuMO</label>
-              <input type="text" class="form-control form-control-sm" id="nuMOEdit" name="nuMOEdit" placeholder="bensNumo" maxlength="15">
-            </div>
-      
-            <div class="col">
-              <label for="renaEdit" class="form-label">Renavam</label>
-              <input type="text" class="form-control form-control-sm" id="renaEdit" name="renaEdit" placeholder="bensRena" maxlength="15" readonly>
-            </div>
-      
-            <div class="col">
-              <label for="bensCtepEdit" class="form-label">bensCtep</label>
-              <input type="text" class="form-control form-control-sm" id="bensCtepEdit" name="bensCtepEdit" placeholder="bensCtep" maxlength="40">
-            </div>
       
             <div class="col">
               <label for="bensAtivEdit" class="form-label">Ativo</label>
@@ -215,12 +182,6 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
         <input type="text" class="form-control form-control-sm" id="serial" name="serial" maxlength="25" placeholder="Número de Série">
       </div>
 
-      <!-- Campo: Placa -->
-      <div class="col">
-        <label for="placa" class="form-label">Placa</label>
-        <input type="text" class="form-control form-control-sm" id="placa" name="placa" maxlength="10" placeholder="Placa">
-      </div>
-
       <!-- Campos restantes (mesma lógica de estrutura compacta) -->
       <div class="col">
         <label for="bensAnmo" class="form-label">Ano do Modelo</label>
@@ -244,14 +205,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
           <option value="">Selecione...</option>
         </select>
       </div>
-      <div class="col">
-        <label for="kmAtual" class="form-label">KM Atual</label>
-        <input type="number" class="form-control form-control-sm" id="kmAtual" name="kmAtual" maxlength="7" placeholder="Km">
-      </div>
-      <div class="col">
-        <label for="dtKm" class="form-label">Data do KM</label>
-        <input type="date" class="form-control form-control-sm" id="dtKm" name="dtKm">
-      </div>
+
       <div class="col">
         <label for="status" class="form-label">Status</label>
         <select class="form-select form-select-sm" id="status" name="status">
@@ -273,26 +227,12 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
         <label for="hrStatus" class="form-label">Hora do Status</label>
         <input type="time" class="form-control form-control-sm" id="hrStatus" name="hrStatus" readonly>
       </div>
-      <div class="col">
-        <label for="chassi" class="form-label">Chassi</label>
-        <input type="number" class="form-control form-control-sm" id="chassi" name="chassi" maxlength="20" placeholder="Chassi">
-      </div>
+      
       <div class="col">
         <label for="cor" class="form-label">Cor</label>
         <input type="text" class="form-control form-control-sm" id="cor" name="cor" maxlength="15" placeholder="Cor">
       </div>
-      <div class="col">
-        <label for="nuMO" class="form-label">Número</label>
-        <input type="number" class="form-control form-control-sm" id="nuMO" name="nuMO" maxlength="15" placeholder="Número">
-      </div>
-      <div class="col">
-        <label for="rena" class="form-label">Renavam</label>
-        <input type="text" class="form-control form-control-sm" id="rena" name="rena" maxlength="20" placeholder="Renavam">
-      </div>
-      <!-- <div class="col">
-        <label for="bensCtep" class="form-label">Ctep</label>
-        <input type="text" class="form-control form-control-sm" id="bensCtep" name="bensCtep" maxlength="40" placeholder="Ctep">
-      </div> -->
+    
       <div class="col">
         <label for="bensAtiv" class="form-label">Ativo</label>
         <select class="form-select form-select-sm" id="bensAtiv" name="bensAtiv">

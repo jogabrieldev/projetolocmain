@@ -15,7 +15,8 @@ import { movementAuto } from '../controllers/automovelController.js';
 import {location} from '../controllers/locationController.js';
 import logistics from '../controllers/logistcsController.js'
 import { controllerDelivery } from "../controllers/deliveryController.js";
-
+import { movementResiduo } from "../controllers/residuoController.js";
+import { movementClientEmp } from "../controllers/clientEmpController.js";
 
 
 route.post("/autenticar",  (req, res) => {
@@ -62,6 +63,11 @@ route.put('/api/updateclient/:id' , authenticateToken, (req , res)=>{
   movementClient.updateOfClient(req , res)
 })
 
+// clientEmpresarial
+
+route.post('/api/clientemp' , (req ,res)=>{
+  movementClientEmp.registerNewClientEmp(req ,res)
+})
 
 // fornecedor
 route.post('/api/forne/submit' , authenticateToken, (req , res)=>{
@@ -106,6 +112,17 @@ route.delete('/api/deleteprod/:id' ,  authenticateToken,  (req , res)=>{
 route.put('/api/updateprod/:id' ,  authenticateToken,   (req , res)=>{
   movementOfProd.updateProduct(req, res)
 })
+
+// residuo
+
+route.post('/residuo' , (req ,res)=>{
+   movementResiduo.registerResiduo(req ,res)
+})
+
+route.delete("/residuo/:id" , (req , res)=>{
+   movementResiduo.deleteResiduo(req , res)
+})
+
 
 //Familia do bem
 
@@ -235,6 +252,8 @@ route.get('/api/codefamilybens', authenticateToken,(req , res)=>{
  route.get('/api/getdelivery' , (req ,res)=>{
   controllerDelivery.getDate(req ,res)
  })
+
+
 
 
  export {route}

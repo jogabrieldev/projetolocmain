@@ -5,16 +5,16 @@ const dbFamilyGoods = client;
 export const crudRegisterFamilyGoods = {
   registerOfFabri: async (data) => {
     try {
-      const { fabeCode, fabeDesc, fabeCate, fabeSuca, fabeObs, fabeCtct } =
+      const { fabeCode, fabeDesc, fabeCate, fabeCapa, fabeObs, fabeCtct } =
         data;
 
-      const insert = `INSERT INTO cadfabe( fabecode, fabedesc, fabecate, fabesuca, fabeobs, fabectct) VALUES( $1 , $2 , $3 , $4 , $5 ,$6 ) RETURNING *`;
+      const insert = `INSERT INTO cadfabe( fabecode, fabedesc, fabecate, fabecapa, fabeobse, fabectct) VALUES( $1 , $2 , $3 , $4 , $5 ,$6 ) RETURNING *`;
 
       const values = [
         fabeCode,
         fabeDesc,
         fabeCate,
-        fabeSuca,
+        fabeCapa,
         fabeObs,
         fabeCtct,
       ];
@@ -106,15 +106,15 @@ export const crudRegisterFamilyGoods = {
       const query = `
         UPDATE cadfabe
         SET 
-             fabedesc = $1, fabecate = $2, fabesuca = $3, fabeobs = $4, fabectct = $5 
+             fabedesc = $1, fabecate = $2, fabecapa = $3, fabeobse = $4, fabectct = $5 
              WHERE fabecode = $6
             RETURNING *;
             `;
       const values = [
         updateFabri.fabedesc || null,
         updateFabri.fabecate || null,
-        updateFabri.fabesuca || null,
-        updateFabri.fabeobs || null,
+        updateFabri.fabecapa || null,
+        updateFabri.fabeobse || null,
         updateFabri.fabectct || null,
         id,
       ];

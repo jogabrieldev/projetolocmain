@@ -56,7 +56,14 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
   
           <div class="col-md-4">
             <label for="tpCombusAuto" class="form-label">Tipo de Combustível</label>
-            <input type="text" class="form-control" name="tpCombusAuto" id="tpCombusAuto" maxlength="20" placeholder="Combustível" />
+            <select name="tpCombusAuto" id="tpCombusAuto" class="form-select">
+              <option value="">Selecione...</option>
+              <option value="Gasolina">Gasolina</option>
+              <option value="Etanol">Etanol</option>
+              <option value="Gasolina/Etanol">Gasolina/Etanol</option>
+              <option value="Diesel">Diesel</option>
+            </select>
+            <!-- <input type="text" class="form-control" name="tpCombusAuto" id="tpCombusAuto" maxlength="20" placeholder="Combustível" /> -->
           </div>
   
           <div class="col-md-4">
@@ -137,7 +144,15 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       
             <div class="col-md-3">
               <label for="tpCombusAutoEdit" class="form-label">Tipo de Combustível</label>
-              <input type="text" class="form-control" id="tpCombusAutoEdit" name="tpCombusAutoEdit" placeholder="Tipo de Combustível" maxlength="20" readonly />
+                <select name="tpCombusAutoEdit" id="tpCombusAutoEdit" class="form-select" disabled>
+                  <option value="">Selecione...</option>
+                  <option value="Gasolina">Gasolina</option>
+                  <option value="Etanol">Etanol</option>
+                  <option value="Gasolina/Etanol">Gasolina/Etanol</option>
+                  <option value="Diesel">Diesel</option>
+                 </select>
+              <input type="hidden" name="tpCombusAutoEditHidden" id="tpCombusAutoEditHidden"/>
+             
             </div>
       
             <div class="col-md-3">

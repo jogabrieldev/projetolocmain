@@ -224,8 +224,6 @@ function registerNewTypeProduct(){
       tpCtct: document.querySelector("#tpCtct").value.trim(), // Centro de Custo
     }; 
 
-    
-
     try {
       const response = await fetch(
         "http://localhost:3000/api/typeprod/submit",
@@ -740,25 +738,14 @@ async function editAndUpdateOfTypeProduct() {
       tiprobs: document.getElementById("editTpObs").value,
       tiprctct: document.getElementById("editTpCtct").value,
     };
+
     const token = localStorage.getItem("token"); // Pega o token armazenado no login
 
-    if (!token || isTokenExpired(token)) {
-      Toastify({
-        text: "Sessão expirada. Faça login novamente.",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-
-      localStorage.removeItem("token");
-      setTimeout(() => {
-        window.location.href = "/index.html";
-      }, 2000);
-      return;
-    }
     try {
+      const confirmedEdition = confirm(
+        `Tem certeza de que deseja ATUALIZAR os dados desse Tipo de produto?`
+        );
+          if (!confirmedEdition) return;
       const response = await fetch(`/api/updatetypeprod/${typeProdIdParsed}`, {
         method: "PUT",
         headers: {

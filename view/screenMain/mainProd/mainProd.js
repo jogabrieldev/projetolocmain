@@ -943,6 +943,11 @@ async function editAndUpdateOfProduct() {
     }
 
     try {
+
+      const confirmedEdition = confirm(
+        `Tem certeza de que deseja ATUALIZAR os dados do produto?`
+        );
+          if (!confirmedEdition) return;
       const response = await fetch(`/api/updateprod/${prodIdParsed}`, {
         method: "PUT",
         headers: {

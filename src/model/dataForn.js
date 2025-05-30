@@ -4,7 +4,7 @@ const userDbFo = client;
 
 export const crudRegisterForn = {
   registerOfForn: async (data) => {
-    console.log('frone' , data)
+
     try {
       const {
         fornCode,

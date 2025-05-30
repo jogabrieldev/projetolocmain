@@ -1072,6 +1072,11 @@ if (cepInput) {
     }
           
       try {
+
+        const confirmedEdition = confirm(
+        `Tem certeza de que deseja ATUALIZAR os dados desse Motorista?`
+        );
+          if (!confirmedEdition) return;
         const response = await fetch(`/api/updatemoto/${motoIdParsed}`, {
           method: "PUT",
           headers: {

@@ -1,5 +1,6 @@
 import { client } from "../database/userDataBase.js";
 const dataClient = client;
+import { crudRegisterDriver } from "./dataDriver.js";
 
 export const autoRegister = {
   registerAuto: async (data) => {
@@ -63,6 +64,29 @@ export const autoRegister = {
     }
   },
 
+   verificarDependeciaDoAutomovel: async() => {
+  try {
+    const checkdriver = await crudRegisterDriver.getAllDriverId();
+   
+    const driverCodes = checkdriver.map(driver => driver.motocode);
+
+    if (driverCodes.length === 0) return false;
+
+    const checkQuery = `
+      SELECT COUNT(*) FROM cadauto
+      WHERE caaumoto = ANY($1)
+    `;
+
+    const checkResult = await dataClient.query(checkQuery, [driverCodes]);
+
+    return parseInt(checkResult.rows[0].count) > 0;
+  } catch (error) {
+    console.error("Erro ao verificar dependências de automovel:", error);
+    throw error;
+  }
+},
+
+  
   deleteAuto: async (id) => {
     try {
       const deleteQuery = "DELETE FROM cadauto WHERE caaucode = $1 RETURNING *";

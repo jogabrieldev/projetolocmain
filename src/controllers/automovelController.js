@@ -101,9 +101,15 @@ export const movementAuto = {
     }
   },
 
+  
   async deleteOfAuto(req, res) {
     try {
       const { id } = req.params;
+
+      const hasDependecy = await autoRegister.verificarDependeciaDoAutomovel()
+      if(hasDependecy){
+        return res.status(400).json({message: 'Não é Possivel apagar o veiculo, tem um motorista vinculado ao veiculo'})
+      }
       const deletedAuto = await autoRegister.deleteAuto(id);
 
       if (!deletedAuto) {

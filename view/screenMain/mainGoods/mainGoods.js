@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (editForm) editForm.style.display = 'none';
         if (informative) {
           informative.style.display = 'block';
-          informative.textContent = 'SEÇÃO BENS';
+          informative.textContent = 'SESSÃO BENS';
         }
         
        
@@ -284,22 +284,15 @@ if (buttonOutGoods) {
       cofa: document.querySelector("#cofa").value.trim(),
       model: document.querySelector("#model").value.trim(),
       serial: document.querySelector("#serial").value.trim(),
-      placa: document.querySelector("#placa").value.trim(),
       bensAnmo: document.querySelector("#bensAnmo").value.trim(),
       dtCompra: document.querySelector("#dtCompra").value.trim(),
       valorCp: document.querySelector("#valorCpMain").value.trim(),
       ntFiscal: document.querySelector("#ntFiscal").value.trim(),
       cofo: document.querySelector("#cofo").value.trim(),
-      kmAtual: document.querySelector("#kmAtual").value.trim(),
-      dtKm: document.querySelector("#dtKm").value.trim(),
       status: document.querySelector("#status").value.trim(),
       dtStatus: document.querySelector('#dtStatus').value,
       hrStatus: document.querySelector("#hrStatus").value,
-      chassi: document.querySelector("#chassi").value.trim(),
       cor: document.querySelector("#cor").value.trim(),
-      nuMO: document.querySelector("#nuMO").value.trim(),
-      rena: document.querySelector("#rena").value.trim(),
-      // bensCtep: document.querySelector("#bensCtep").value.trim(),
       bensAtiv: document.querySelector("#bensAtiv").value.trim(),
       alug: document.querySelector("#alug").value.trim(),
       valorAlug: document.querySelector("#valorAlugMain").value.trim(),
@@ -477,14 +470,15 @@ function insertBensInTableRunTime(bens) {
 
       const tabela = document.createElement("table");
       tabela.className = "table table-sm table-hover table-striped table-bordered tableBens";
-
+   
+      // "Ctep"
       const cabecalho = tabela.createTHead();
       const linhaCabecalho = cabecalho.insertRow();
       const colunas = [
         "Selecionar", "Código", "Nome do Bem", "Familia do Bem", "Status", "Número de Série",
-        "Placa", "Ano do Modelo", "Data da Compra", "valor de Compra", "Nota Fiscal",
-        "Código Fornecedor", "Km Atual", "Data do Km", "Modelo", "Data do Status",
-        "Hora Status", "Chassi", "Cor", "Número", "Renavam", "Ctep", "Ativo",
+         "Ano do Modelo", "Data da Compra", "valor de Compra", "Nota Fiscal",
+        "Código Fornecedor", "Modelo", "Data do Status",
+        "Hora Status", "Cor", "Ativo",
         "Alugado", "Valor Alugado", "Fabricante"
       ];
 
@@ -526,22 +520,15 @@ function insertBensInTableRunTime(bens) {
           bem.benscofa,
           bem.bensstat,
           bem.bensnuse,
-          bem.bensplac,
           formatDate(bem.bensanmo),
           formatDate(bem.bensdtcp),
           bem.bensvacp,
           bem.bensnunf,
           bem.benscofo,
-          bem.benskmat,
-          formatDate(bem.bensdtkm),
           bem.bensmode,
           formatDate(bem.bensdtus),
           bem.benshrus,
-          bem.bensnuch,
           bem.benscore,
-          bem.bensnumo,
-          bem.bensrena,
-          bem.bensctep,
           bem.bensativ,
           bem.bensalug,
           bem.bensvaal,
@@ -626,14 +613,15 @@ async function fetchBens() {
 
       const tabela = document.createElement("table");
       tabela.className = "table table-sm table-hover table-striped table-bordered tableBens";
-
+       
+      // "Ctep"
       const cabecalho = tabela.createTHead();
       const linhaCabecalho = cabecalho.insertRow();
       const colunas = [
         "Selecionar", "Código", "Nome do Bem", "Familia do Bem", "Status", "Número de Série",
-        "Placa", "Ano do Modelo", "Data da Compra", "valor de Compra", "Nota Fiscal",
-        "Código Fornecedor", "Km Atual", "Data do Km", "Modelo", "Data do Status",
-        "Hora Status", "Chassi", "Cor", "Número", "Renavam", "Ctep", "Ativo",
+         "Ano do Modelo", "Data da compra", "valor de Compra", "Nota Fiscal",
+        "Código Fornecedor", "Modelo", "Data do Status",
+        "Hora Status",  "Cor", "Ativo",
         "Alugado", "Valor Alugado", "Fabricante"
       ];
 
@@ -675,22 +663,15 @@ async function fetchBens() {
           bem.benscofa,
           bem.bensstat,
           bem.bensnuse,
-          bem.bensplac,
           formatDate(bem.bensanmo),
           formatDate(bem.bensdtcp),
           bem.bensvacp,
           bem.bensnunf,
           bem.benscofo,
-          bem.benskmat,
-          formatDate(bem.bensdtkm),
           bem.bensmode,
           formatDate(bem.bensdtus),
           bem.benshrus,
-          bem.bensnuch,
           bem.benscore,
-          bem.bensnumo,
-          bem.bensrena,
-          bem.bensctep,
           bem.bensativ,
           bem.bensalug,
           bem.bensvaal,
@@ -842,7 +823,7 @@ async function updateGoodsSystem() {
 
   const editButton = document.querySelector("#buttonEdit");
   editButton.addEventListener("click", (event) => {
-  
+   
     loadSelectOptions("/api/codefamilyben", "cofaEdit", "fabecode");
     loadSelectOptions("/api/codeforn", "cofoEdit", "forncode");
   
@@ -895,22 +876,15 @@ async function updateGoodsSystem() {
         { id: "cofaEdit", valor: bemSelecionado.benscofa },
         { id: "modelEdit", valor: bemSelecionado.bensmode },
         { id: "serialEdit", valor: bemSelecionado.bensnuse },
-        { id: "placaEdit", valor: bemSelecionado.bensplac },
         { id: "bensAnmoEdit", valor: bemSelecionado.bensanmo },
         { id: "dtCompraEdit", valor: bemSelecionado.bensdtcp },
         { id: "valorCpEdit", valor: bemSelecionado.bensvacp },
         { id: "ntFiscalEdit", valor: bemSelecionado.bensnunf },
         { id: "cofoEdit", valor: bemSelecionado.benscofo },
-        { id: "kmAtualEdit", valor: bemSelecionado.benskmat },
-        { id: "dtKmEdit", valor: bemSelecionado.bensdtkm },
         { id: "statusEdit", valor: bemSelecionado.bensstat },
         { id: "dtStatusEdit", valor: bemSelecionado.bensdtus },
         { id: "hrStatusEdit", valor: bemSelecionado.benshrus },
-        { id: "chassiEdit", valor: bemSelecionado.bensnuch },
         { id: "corEdit", valor: bemSelecionado.benscore },
-        { id: "nuMOEdit", valor: bemSelecionado.bensnumo },
-        { id: "renaEdit", valor: bemSelecionado.bensrena },
-        { id: "bensCtepEdit", valor: bemSelecionado.bensctep },
         { id: "bensAtivEdit", valor: bemSelecionado.bensativ },
         { id: "alugEdit", valor: bemSelecionado.bensalug },
         { id: "valorAlugEdit", valor: bemSelecionado.bensvaal },
@@ -966,10 +940,15 @@ async function updateGoodsSystem() {
       document.querySelector(".editForm").style.display = "flex";
       document.querySelector("#listingBens").style.display = "none";
       document.querySelector("#btnPageListGoods").style.display = "none";
+
+      
+
     } catch (error) {
       console.error("Erro ao fazer parse de data-bem:", error);
     }
   });
+
+   
   editAndUpdateOfBens()
 }
 
@@ -993,6 +972,7 @@ async function editAndUpdateOfBens() {
       return;
     }
 
+   
   const formEditBens = document.querySelector("#formEditBens");
 
   formEditBens.addEventListener("submit", async (event) => {
@@ -1031,31 +1011,29 @@ async function editAndUpdateOfBens() {
       benscofa: document.getElementById("cofaEdit").value,
       bensmode: document.getElementById("modelEdit").value,
       bensnuse: document.getElementById("serialEdit").value,
-      bensplac: document.getElementById("placaEdit").value,
       bensanmo: document.getElementById("bensAnmoEdit").value,
       bensdtcp: document.getElementById("dtCompraEdit").value || null,
       bensvacp: document.getElementById("valorCpEdit").value,
       bensnunf: document.getElementById("ntFiscalEdit").value,
       benscofo: document.getElementById("cofoEdit").value,
-      benskmat: document.getElementById("kmAtualEdit").value,
-      bensdtkm: document.getElementById("dtKmEdit").value || null,
       bensstat: document.getElementById("statusEdit").value,
       bensdtus: document.getElementById("dtStatusEdit").value || null,
       benshrus: document.getElementById("hrStatusEdit").value,
-      bensnuch: document.getElementById("chassiEdit").value,
       benscore: document.getElementById("corEdit").value,
-      bensnumo: document.getElementById("nuMOEdit").value,
-      bensrena: document.getElementById("renaEdit").value,
-      bensctep: document.getElementById("bensCtepEdit").value,
       bensativ: document.getElementById("bensAtivEdit").value,
       bensalug: document.getElementById("alugEdit").value,
       bensvaal: document.getElementById("valorAlugEdit").value,
       bensfabr: document.getElementById("fabriEdit").value,
     };
        
-    
-   
+     
     try {
+        
+      const confirmedEdition = confirm(
+        `Tem certeza de que deseja ATUALIZAR Bem?`
+      );
+      if (!confirmedEdition) return;
+
       const response = await fetch(`/api/update/${bemIdParsed}`, {
         method: "PUT",
         headers: {
@@ -1108,26 +1086,19 @@ function updateBemInTableRunTime(updatedBem) {
     row.cells[3].textContent = updatedBem.benscofa || "-"; // Família do Bem
     row.cells[4].textContent = updatedBem.bensstat || "-"; // Status
     row.cells[5].textContent = updatedBem.bensnuse || "-"; // Número de Série
-    row.cells[6].textContent = updatedBem.bensplac || "-"; // Placa
-    row.cells[7].textContent = formatDate(updatedBem.bensanmo) || "-"; // Ano do Modelo
-    row.cells[8].textContent = formatDate(updatedBem.bensdtcp) || "-"; // Data da Compra
-    row.cells[9].textContent = updatedBem.bensvacp || "-"; // Valor de Compra
-    row.cells[10].textContent = updatedBem.bensnunf || "-"; // Nota Fiscal
-    row.cells[11].textContent = updatedBem.benscofo || "-"; // Código Fornecedor
-    row.cells[12].textContent = updatedBem.benskmat || "-"; // Km Atual
-    row.cells[13].textContent = formatDate(updatedBem.bensdtkm) || "-"; // Data do Km
-    row.cells[14].textContent = updatedBem.bensmode || "-"; // Modelo
-    row.cells[15].textContent = formatDate(updatedBem.bensdtus) || "-"; // Data do Status
-    row.cells[16].textContent = updatedBem.benshrus || "-"; // Hora Status
-    row.cells[17].textContent = updatedBem.bensnuch || "-"; // Chassi
-    row.cells[18].textContent = updatedBem.benscore || "-"; // Cor
-    row.cells[19].textContent = updatedBem.bensnumo || "-"; // Número
-    row.cells[20].textContent = updatedBem.bensrena || "-"; // Renavam
-    row.cells[21].textContent = updatedBem.bensctep || "-"; // Ctep
-    row.cells[22].textContent = updatedBem.bensativ || "-"; // Ativo
-    row.cells[23].textContent = updatedBem.bensalug || "-"; // Alugado
-    row.cells[24].textContent = updatedBem.bensvaal || "-"; // Valor Alugado
-    row.cells[25].textContent = updatedBem.bensfabr || "-"; // Fabricante
+    row.cells[6].textContent = formatDate(updatedBem.bensanmo) || "-"; // Ano do Modelo
+    row.cells[7].textContent = formatDate(updatedBem.bensdtcp) || "-"; // Data da Compra
+    row.cells[8].textContent = updatedBem.bensvacp || "-"; // Valor de Compra
+    row.cells[9].textContent = updatedBem.bensnunf || "-"; // Nota Fiscal
+    row.cells[10].textContent = updatedBem.benscofo || "-"; // Código Fornecedor
+    row.cells[11].textContent = updatedBem.bensmode || "-"; // Modelo
+    row.cells[12].textContent = formatDate(updatedBem.bensdtus) || "-"; // Data do Status
+    row.cells[13].textContent = updatedBem.benshrus || "-"; // Hora Status
+    row.cells[14].textContent = updatedBem.benscore || "-"; // Cor
+    row.cells[15].textContent = updatedBem.bensativ || "-"; // Ativo
+    row.cells[16].textContent = updatedBem.bensalug || "-"; // Alugado
+    row.cells[17].textContent = updatedBem.bensvaal || "-"; // Valor Alugado
+    row.cells[18].textContent = updatedBem.bensfabr || "-"; // Fabricante
   }
 };
 
