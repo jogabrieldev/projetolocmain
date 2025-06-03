@@ -145,11 +145,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   socketAutomovel.on("updateRunTimeAutomovel", (veiculos) => {
-    insertVehicleTableRunTime(veiculos);
+    listarVeiculos();
   });
 
   socketAutomovel.on("updateTableAutomovel", (updatedVeiculo) => {
-    updateVeiculoInTableRunTime(updatedVeiculo);
+    listarVeiculos();
   });
 });
 
@@ -365,93 +365,6 @@ async function registerNewVehicles() {
       }
     });
   validationFormAutomovel();
-}
-
-// inserindo os dados na tabela em runtime
-function insertVehicleTableRunTime(veiculos) {
-  const veiculosListDiv = document.querySelector(".listingAutomo");
-  veiculosListDiv.innerHTML = "";
-
-  if (veiculos.length > 0) {
-     const wrapper = document.createElement("div");
-      wrapper.className = "table-responsive";
-
-      const tabela = document.createElement("table");
-      tabela.className = "table table-sm table-hover table-striped table-bordered tableVehicles";
-
-      const cabecalho = tabela.createTHead();
-      const linhaCabecalho = cabecalho.insertRow();
-
-      const colunas = [
-        "Selecionar",
-        "Código",
-        "Placa",
-        "Chassi",
-        "Modelo",
-        "Marca",
-        "Ano",
-        "Cor",
-        "Tipo de combustivel",
-        "Km Atual",
-        "Motorista",
-        "Status",
-        "Data de Cadastro",
-      ];
-
-      colunas.forEach((coluna) => {
-        const th = document.createElement("th");
-        th.textContent = coluna;
-        th.classList.add("px-3", "py-2", "align-middle", "text-center", "wh-nowrap");
-        linhaCabecalho.appendChild(th);
-      });
-
-      const corpo = tabela.createTBody();
-      veiculos.forEach((v) => {
-        const linha = corpo.insertRow();
-        linha.setAttribute("data-caaucode", v.caaucode);
-
-        const checkboxCell = linha.insertCell();
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.name = "selectVeiculo";
-        checkbox.value = v.caaucode;
-        checkbox.className = "form-check-input m-0";
-
-        const veiculoData = JSON.stringify(v);
-        if (veiculoData) {
-          checkbox.dataset.veiculo = veiculoData;
-        }
-
-        checkboxCell.appendChild(checkbox);
-        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
-
-        const dados = [
-          v.caaucode,
-          v.caauplac,
-          v.caauchss,
-          v.caaurena,
-          v.caaumaca,
-          v.caaumode,
-          v.caaucor,
-          v.caautico,
-          v.caaukmat,
-          v.caaumoto,
-          v.caaustat,
-          formatDate(v.caaudtca),
-        ];
-
-        dados.forEach((valor, index) => {
-          const td = linha.insertCell();
-          td.textContent = valor || "";
-          td.classList.add("align-middle", "text-break", "px-3", "py-2");
-        });
-      });
-
-      wrapper.appendChild(tabela);
-      veiculosListDiv.appendChild(wrapper);
-  } else {
-    veiculosListDiv.innerHTML = "<p>Nenhum veículo cadastrado.</p>";
-  }
 }
 
 //listagem de veiculos
@@ -914,25 +827,5 @@ function editVehicles() {
   }
 
   editAndUpdateOfAuto();
-}
+};
 
-// ATUALIZAR EM TEMPO REAL
-function updateVeiculoInTableRunTime(updatedVeiculo) {
-  const row = document.querySelector(
-    `[data-caaucode="${updatedVeiculo.caaucode}"]`
-  );
-
-  if (row) {
-    row.cells[2].textContent = updatedVeiculo.caauplac || "-"; // Placa
-    row.cells[3].textContent = updatedVeiculo.caauchss || "-"; // Chassi
-    row.cells[4].textContent = updatedVeiculo.caaurena || "-"; // Modelo
-    row.cells[5].textContent = updatedVeiculo.caaumaca || "-"; // Marca
-    row.cells[6].textContent = updatedVeiculo.caaumode || "-"; // Ano
-    row.cells[7].textContent = updatedVeiculo.caaucor || "-"; // Cor
-    row.cells[8].textContent = updatedVeiculo.caautico || "-"; // Tipo
-    row.cells[9].textContent = updatedVeiculo.caaukmat || "-"; // Km Atual
-    row.cells[10].textContent = updatedVeiculo.caaumoto || "-"; // Motor
-    row.cells[11].textContent = updatedVeiculo.caaustat || "-"; // Status
-    row.cells[12].textContent = formatDate(updatedVeiculo.caaudtca); // Data de Cadastro
-  }
-}

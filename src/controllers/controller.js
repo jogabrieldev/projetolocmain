@@ -17,6 +17,10 @@ class Control {
   client(req, res) {
     res.sendFile(path.join(__dirname, '..', '..', 'view', 'screenMain', 'mainClient', 'mainClient.html'));
   }
+
+  clientEmp(req , res){
+     res.sendFile(path.join(__dirname , '..' , '..' , 'view' , 'screenMain' , 'mainClientEmp' , 'ClientEmp.html'))
+  }
   
   forne(req, res) {
     res.sendFile(path.join(__dirname, '..', '..', 'view', 'screenMain', 'mainForn', 'mainForn.html'));
@@ -42,6 +46,10 @@ class Control {
     res.sendFile(path.join(__dirname , '..' , '..' , 'view' , 'screenMain' , 'mainAutomovel' , 'mainAuto.html'))
   }
    
+  residuoView(req , res){
+     res.sendFile(path.join(__dirname , '..' , '..' , 'view' , 'screenMain' , 'mainResiduo' , 'mainResiduo.html'))
+  }
+ 
   
   location(req ,res){
     res.sendFile(path.join(__dirname , '..' , '..' , 'view' , 'screenLocation' , 'location.html'))
@@ -58,6 +66,8 @@ class Control {
   devolution(req , res){
     res.sendFile(path.join(__dirname , '..' , '..' , 'view' , 'screenDevolution' , 'mainDevolution.html'))
   }
+
 }
+
 
 export const control = new Control();

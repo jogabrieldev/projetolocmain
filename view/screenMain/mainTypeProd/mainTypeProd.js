@@ -71,11 +71,11 @@ document.addEventListener('DOMContentLoaded' , ()=>{
           })
        }
        socketTypeProd.on("updateRunTimeTypeProduto", (tipoProduto) => {
-        insertTypeProductTableRunTime(tipoProduto)
+        fetchListTypeProduct();
       });
     
       socketTypeProd.on("updateRunTimeTableTypeProduto", (updatedTypeProduct) => {
-        updateTypeProductInTableRunTime(updatedTypeProduct)
+        fetchListTypeProduct();
       });
 })
 
@@ -181,11 +181,9 @@ if(btnOutInitTpEdit){
     }
     
   });
-  
-}
 
-
-}
+ }
+};
 
 function registerNewTypeProduct(){
        
@@ -280,97 +278,7 @@ function registerNewTypeProduct(){
   validationFormTipoProd();
 }
 
-
-  
-// // ATUALIZAR A TABELA EM RUNTIME NA INSERÇÃO
-function insertTypeProductTableRunTime(tipoProduto) {
-  const tableWrapper = document.querySelector(".listingTipoProd");
-  tableWrapper.innerHTML = ""; 
-
-  if (tipoProduto.length > 0) {
-    const wrapper = document.createElement("div");
-      wrapper.className = "table-responsive";
-
-      const tabela = document.createElement("table");
-      tabela.className = "table table-sm table-hover table-striped table-bordered tableTypeProd";
-
-      const cabecalho = tabela.createTHead();
-      const linhaCabecalho = cabecalho.insertRow();
-      const colunas = [
-        "Selecionar",
-        "Código",
-        "Descrição",
-        "Categoria",
-        "Subcategoria",
-        "Observação",
-        "Centro de custo",
-      ];
-
-      colunas.forEach((coluna) => {
-        const th = document.createElement("th");
-        th.textContent = coluna;
-
-        if (["Selecionar", "Código"].includes(coluna)) {
-          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
-        } else {
-          th.classList.add("px-3", "py-2", "align-middle");
-        }
-
-        linhaCabecalho.appendChild(th);
-      });
-
-      const corpo = tabela.createTBody();
-      tipoProduto.forEach((typeProd) => {
-        const linha = corpo.insertRow();
-        linha.setAttribute("data-typecode", typeProd.tiprcode);
-
-        // Checkbox
-        const checkboxCell = linha.insertCell();
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.name = "selectTypeProd";
-        checkbox.value = typeProd.tiprcode;
-
-        const typeProdData = JSON.stringify(typeProd);
-        if (typeProdData) {
-          checkbox.dataset.typeProd = typeProdData;
-        }
-
-        checkbox.className = "form-check-input m-0";
-        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
-        checkboxCell.appendChild(checkbox);
-
-        // Demais dados
-        const dados = [
-          typeProd.tiprcode,
-          typeProd.tiprdesc,
-          typeProd.tiprcate,
-          typeProd.tiprsuca,
-          typeProd.tiprobs,
-          typeProd.tiprctct,
-        ];
-
-        dados.forEach((valor, index) => {
-          const td = linha.insertCell();
-          td.textContent = valor || "";
-          td.classList.add("align-middle", "text-break");
-
-          const coluna = colunas[index + 1];
-          if (["Código"].includes(coluna)) {
-            td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
-          } else {
-            td.classList.add("px-3", "py-2");
-          }
-        });
-      });
-
-      wrapper.appendChild(tabela);
-      tableWrapper.appendChild(wrapper);
-  } else {
-    tableWrapper.innerHTML = "<p>Nenhum tipo de produto cadastrado.</p>";
-  }
-};
-
+// listagem tipo de produto
 async function fetchListTypeProduct() {
   const token = localStorage.getItem('token');
 
@@ -779,19 +687,6 @@ async function editAndUpdateOfTypeProduct() {
   });
 };
 editAndUpdateOfTypeProduct();
-}
-// // atualização em runtime NA EDIÇÃO
-function updateTypeProductInTableRunTime(updatedTypeProduct) {
-  const row = document.querySelector(
-    `[data-typecode="${updatedTypeProduct.tiprcode}"]`
-  );
-
-  if (row) {
-    // Atualiza as células da linha com as novas informações do tipo de produto
-    row.cells[2].textContent = updatedTypeProduct.tiprdesc || "-"; // Descrição
-    row.cells[3].textContent = updatedTypeProduct.tiprcate || "-"; // Categoria
-    row.cells[4].textContent = updatedTypeProduct.tiprsuca || "-"; // Subcategoria
-    row.cells[5].textContent = updatedTypeProduct.tiprobs || "-"; // Observação
-    row.cells[6].textContent = updatedTypeProduct.tiprctct || "-"; // Centro de Custo
-  }
 };
+
+

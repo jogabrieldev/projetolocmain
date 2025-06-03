@@ -48,7 +48,7 @@ function dateAtualInFieldAndHours(date , hours){
 const  socketUpdateBens = io()
 document.addEventListener("DOMContentLoaded", () => {
 
-  const btnLoadBens = document.querySelector('#btnLoadBens');
+  const btnLoadBens = document.querySelector('.btnLoadBens');
   if (btnLoadBens) {
     btnLoadBens.addEventListener('click', async (event) => {
       event.preventDefault();
@@ -124,11 +124,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
  
   socketUpdateBens.on("updateRunTimeGoods", (bens) => {
-    insertBensInTableRunTime(bens);
+    fetchBens();
   });
 
   socketUpdateBens.on("updateGoodsTable", (updatedBem) => {
-     updateBemInTableRunTime(updatedBem)
+     fetchBens()
   });
 });
 
@@ -453,113 +453,8 @@ for (const { key, label } of datas) {
   });
   validationFormGoods()
  }
-
-// ATUALIZAR TABELA NA INSERÇÃO EM RUNTIME
-function insertBensInTableRunTime(bens) {
-
-  const bensListDiv = document.querySelector("#listingBens");
-  if (!bensListDiv) {
-    console.error('Elemento .listingBens não encontrado para atualização em tempo real');
-    return;
-  }
-
-  bensListDiv.innerHTML = "";
-  if (bens.length > 0) {
-    const wrapper = document.createElement("div");
-      wrapper.className = "table-responsive";
-
-      const tabela = document.createElement("table");
-      tabela.className = "table table-sm table-hover table-striped table-bordered tableBens";
-   
-      // "Ctep"
-      const cabecalho = tabela.createTHead();
-      const linhaCabecalho = cabecalho.insertRow();
-      const colunas = [
-        "Selecionar", "Código", "Nome do Bem", "Familia do Bem", "Status", "Número de Série",
-         "Ano do Modelo", "Data da Compra", "valor de Compra", "Nota Fiscal",
-        "Código Fornecedor", "Modelo", "Data do Status",
-        "Hora Status", "Cor", "Ativo",
-        "Alugado", "Valor Alugado", "Fabricante"
-      ];
-
-      colunas.forEach((coluna) => {
-        const th = document.createElement("th");
-        th.textContent = coluna;
-
-        if (["Selecionar", "Código", "Status", "Ativo", "Alugado", "Ano do Modelo", "Hora Status"].includes(coluna)) {
-          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
-        } else {
-          th.classList.add("px-3", "py-2", "align-middle");
-        }
-
-        linhaCabecalho.appendChild(th);
-      });
-
-      const corpo = tabela.createTBody();
-
-      bens.forEach((bem) => {
-        const linha = corpo.insertRow();
-        linha.setAttribute("data-benscode", bem.benscode);
-
-        const checkboxCell = linha.insertCell();
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.name = "selectBem";
-        checkbox.value = bem.benscode;
-
-        const bemData = JSON.stringify(bem);
-        if (bemData) checkbox.dataset.bem = bemData;
-
-        checkbox.className = "form-check-input m-0";
-        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
-        checkboxCell.appendChild(checkbox);
-
-        const dados = [
-          bem.benscode,
-          bem.bensnome,
-          bem.benscofa,
-          bem.bensstat,
-          bem.bensnuse,
-          formatDate(bem.bensanmo),
-          formatDate(bem.bensdtcp),
-          bem.bensvacp,
-          bem.bensnunf,
-          bem.benscofo,
-          bem.bensmode,
-          formatDate(bem.bensdtus),
-          bem.benshrus,
-          bem.benscore,
-          bem.bensativ,
-          bem.bensalug,
-          bem.bensvaal,
-          bem.bensfabr,
-        ];
-
-        dados.forEach((valor, index) => {
-          const td = linha.insertCell();
-          td.textContent = valor || "";
-          td.classList.add("align-middle", "text-break");
-
-          const coluna = colunas[index + 1];
-          if (["Código", "Status", "Ativo", "Alugado", "Ano do Modelo", "Hora Status"].includes(coluna)) {
-            td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
-          } else {
-            td.classList.add("px-3", "py-2");
-          }
-
-          if (coluna === "Status") {
-            td.classList.add("status-bem");
-          }
-        });
-      });
-
-      wrapper.appendChild(tabela);
-      bensListDiv.appendChild(wrapper);
-    bensListDiv.appendChild(tabela);
-  }
-}
+ 
 //LISTAGEM DOS BENS
-
 async function fetchBens() {
   const token = localStorage.getItem("token");
 
@@ -1072,34 +967,5 @@ async function editAndUpdateOfBens() {
     }
   });
 }
-
-// ATUALIZAÇÃO EM RUNTIME 
-function updateBemInTableRunTime(updatedBem) {
-  const row = document.querySelector(
-    `[data-benscode="${updatedBem.benscode}"]`
-  );
-   
-  if (row) {
-   
-    row.cells[1].textContent = updatedBem.benscode || "-"; // Código
-    row.cells[2].textContent = updatedBem.bensnome || "-"; // Nome
-    row.cells[3].textContent = updatedBem.benscofa || "-"; // Família do Bem
-    row.cells[4].textContent = updatedBem.bensstat || "-"; // Status
-    row.cells[5].textContent = updatedBem.bensnuse || "-"; // Número de Série
-    row.cells[6].textContent = formatDate(updatedBem.bensanmo) || "-"; // Ano do Modelo
-    row.cells[7].textContent = formatDate(updatedBem.bensdtcp) || "-"; // Data da Compra
-    row.cells[8].textContent = updatedBem.bensvacp || "-"; // Valor de Compra
-    row.cells[9].textContent = updatedBem.bensnunf || "-"; // Nota Fiscal
-    row.cells[10].textContent = updatedBem.benscofo || "-"; // Código Fornecedor
-    row.cells[11].textContent = updatedBem.bensmode || "-"; // Modelo
-    row.cells[12].textContent = formatDate(updatedBem.bensdtus) || "-"; // Data do Status
-    row.cells[13].textContent = updatedBem.benshrus || "-"; // Hora Status
-    row.cells[14].textContent = updatedBem.benscore || "-"; // Cor
-    row.cells[15].textContent = updatedBem.bensativ || "-"; // Ativo
-    row.cells[16].textContent = updatedBem.bensalug || "-"; // Alugado
-    row.cells[17].textContent = updatedBem.bensvaal || "-"; // Valor Alugado
-    row.cells[18].textContent = updatedBem.bensfabr || "-"; // Fabricante
-  }
-};
 
 

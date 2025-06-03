@@ -114,11 +114,11 @@ document.addEventListener('DOMContentLoaded' , ()=>{
   }
 
   socketProduto.on("updateRunTimeProduto", (produtos) => {
-    insertProductTableRunTime(produtos);
+    fetchListProdutos();
   });
 
   socketProduto.on("updateRunTimeTableProduto", (updatedProduct) => {
-    updateProductInTableRunTime(updatedProduct);
+   fetchListProdutos();
   });
 })
 
@@ -423,98 +423,6 @@ async function loadSelectOptions(url, selectId, fieldName) {
     });
   } catch (error) {
     console.error(`Erro ao carregar os dados para ${selectId}:`, error);
-  }
-}
-
-//inserção em runtime in table 
-function insertProductTableRunTime(produtos) {
-  const produtosListDiv = document.querySelector(".listingProd");
-  produtosListDiv.innerHTML = "";
-
-  if (produtos.length > 0) {
-     const wrapper = document.createElement("div");
-      wrapper.className = "table-responsive";
-
-      const tabela = document.createElement("table");
-      tabela.className = "table table-sm table-hover table-striped table-bordered tableProd";
-
-      // Cabeçalho
-      const cabecalho = tabela.createTHead();
-      const linhaCabecalho = cabecalho.insertRow();
-      const colunas = [
-        "Selecionar",
-        "Código",
-        "Descrição",
-        "Tipo",
-        "Unidade",
-        "Data da compra",
-        "Valor",
-        "Preço Líquido",
-        "Preço Bruto",
-        "Ativo",
-      ];
-
-      colunas.forEach((coluna) => {
-        const th = document.createElement("th");
-        th.textContent = coluna;
-
-        if (["Selecionar", "Código", "Unidade", "Ativo"].includes(coluna)) {
-          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
-        } else {
-          th.classList.add("px-3", "py-2", "align-middle");
-        }
-
-        linhaCabecalho.appendChild(th);
-      });
-
-      // Corpo
-      const corpo = tabela.createTBody();
-      produtos.forEach((produto) => {
-        const linha = corpo.insertRow();
-        linha.setAttribute("data-prodcode", produto.prodcode);
-
-        // Checkbox
-        const checkboxCell = linha.insertCell();
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.name = "selectProduto";
-        checkbox.value = produto.prodcode;
-        checkbox.dataset.produto = JSON.stringify(produto);
-        checkbox.className = "form-check-input m-0";
-        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
-        checkboxCell.appendChild(checkbox);
-
-        // Dados do produto
-        const dados = [
-          produto.prodcode,
-          produto.proddesc,
-          produto.prodtipo,
-          produto.produnid,
-          formatDate(produto.proddtuc),
-          produto.prodvluc,
-          produto.prodpeli,
-          produto.prodpebr,
-          produto.prodativ,
-        ];
-
-        dados.forEach((valor, index) => {
-          const td = linha.insertCell();
-          td.textContent = valor || "";
-          td.classList.add("align-middle", "text-break");
-
-          const coluna = colunas[index + 1]; // Ignorando "Selecionar"
-          if (["Código", "Unidade", "Ativo"].includes(coluna)) {
-            td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
-          } else {
-            td.classList.add("px-3", "py-2");
-          }
-        });
-      });
-
-      wrapper.appendChild(tabela);
-      produtosListDiv.appendChild(wrapper);
-  } else {
-    produtosListDiv.innerHTML = "<p>Nenhum produto cadastrado.</p>";
   }
 }
 
@@ -989,21 +897,4 @@ async function editAndUpdateOfProduct() {
  editAndUpdateOfProduct();
 }
 
-//atualizar em run time A EDIÇÃO
-function updateProductInTableRunTime(updatedProduct) {
-  const row = document.querySelector(
-    `[data-prodcode="${updatedProduct.prodcode}"]`
-  );
 
-  if (row) {
-    // Atualiza as células da linha com as novas informações do produto
-    row.cells[2].textContent = updatedProduct.proddesc || "-"; // Descrição
-    row.cells[3].textContent = updatedProduct.prodtipo || "-"; // Tipo
-    row.cells[4].textContent = updatedProduct.produnid || "-"; // Unidade
-    row.cells[5].textContent = formatDate(updatedProduct.proddtuc) || "-"; // Data da compra
-    row.cells[6].textContent = updatedProduct.prodvluc || "-"; // Valor
-    row.cells[7].textContent = updatedProduct.prodpeli || "-"; // Preço Líquido
-    row.cells[8].textContent = updatedProduct.prodpebr || "-"; // Preço Bruto
-    row.cells[9].textContent = updatedProduct.prodativ || "-"; // Ativo
-  }
-}

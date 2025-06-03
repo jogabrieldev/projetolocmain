@@ -132,11 +132,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   socketClient.on("updateClients", (updatedClient) => {
-    updateClientInTableRunTime(updatedClient);
+    fetchListClientes();
   });
 
   socketClient.on("clienteAtualizado", (clientes) => {
-    insertClientTableRunTime(clientes);
+    fetchListClientes();
   });
 });
 
@@ -444,107 +444,6 @@ async function registerNewClient() {
   validationFormClient();
 }
 
-//ATUALIZAR EM TEMPO REAL NA INSERÇÃO
-function insertClientTableRunTime(clientes) {
-  const clientesListDiv = document.querySelector(".listClient");
-  clientesListDiv.innerHTML = "";
-
-  if (clientes.length > 0) {
-   const wrapper = document.createElement("div");
-      wrapper.className = "table-responsive";
-
-      const tabela = document.createElement("table");
-      tabela.className = "table table-sm table-hover table-striped table-bordered tableBens";
-
-      // Cabeçalho
-      const cabecalho = tabela.createTHead();
-      const linhaCabecalho = cabecalho.insertRow();
-      const colunas = [
-        "Selecionar",
-        "Código",
-        "Nome",
-        "CPF",
-        "Data de Cadastro",
-        "Data de Nascimento",
-        "Celular",
-        "Cidade",
-        "Estado",
-        "Rua",
-        "CEP",
-        "E-mail",
-      ];
-
-      colunas.forEach((coluna) => {
-        const th = document.createElement("th");
-        th.textContent = coluna;
-
-        if (["Selecionar", "Código", "CPF", "Estado", "CEP"].includes(coluna)) {
-          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
-        } else {
-          th.classList.add("px-3", "py-2", "align-middle");
-        }
-
-        linhaCabecalho.appendChild(th);
-      });
-
-      // Corpo
-      const corpo = tabela.createTBody();
-      clientes.forEach((cliente) => {
-        const linha = corpo.insertRow();
-        linha.setAttribute("data-cliecode", cliente.cliecode);
-
-        // Checkbox
-        const checkboxCell = linha.insertCell();
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.name = "selectCliente";
-        checkbox.value = cliente.cliecode;
-
-        const clienteData = JSON.stringify(cliente);
-        if (clienteData) {
-          checkbox.dataset.cliente = clienteData;
-        }
-
-        checkbox.className = "form-check-input m-0";
-        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
-        checkboxCell.appendChild(checkbox);
-
-        // Dados do cliente
-        const dados = [
-          cliente.cliecode,
-          cliente.clienome,
-          cliente.cliecpf,
-          formatDate(cliente.cliedtcd),
-          formatDate(cliente.cliedtnc),
-          cliente.cliecelu,
-          cliente.cliecity,
-          cliente.clieestd,
-          cliente.clierua,
-          cliente.cliecep,
-          cliente.cliemail,
-        ];
-
-        dados.forEach((valor, index) => {
-          const td = linha.insertCell();
-          td.textContent = valor || "";
-          td.classList.add("align-middle", "text-break");
-
-          const coluna = colunas[index + 1];
-          if (["Código", "CPF", "Estado", "CEP"].includes(coluna)) {
-            td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
-          } else {
-            td.classList.add("px-3", "py-2");
-          }
-        });
-      });
-
-      wrapper.appendChild(tabela);
-      clientesListDiv.appendChild(wrapper);
-  } else {
-    clientesListDiv.innerHTML = "<p>Nenhum cliente cadastrado.</p>";
-  }
-}
-
 // LISTAGEM DE CLIENTES
 async function fetchListClientes() {
   const token = localStorage.getItem("token");
@@ -601,7 +500,7 @@ async function fetchListClientes() {
       wrapper.className = "table-responsive";
 
       const tabela = document.createElement("table");
-      tabela.className = "table table-sm table-hover table-striped table-bordered tableBens";
+      tabela.className = "table table-sm table-hover table-striped table-bordered tableClient";
 
       // Cabeçalho
       const cabecalho = tabela.createTHead();
@@ -1088,22 +987,3 @@ function editarCliente() {
   editAndUpdateOfClient();
 }
 
-// atualizar a celula da tabela runtime
-function updateClientInTableRunTime(updatedClient) {
-  const row = document.querySelector(
-    `[data-cliecode="${updatedClient.cliecode}"]`
-  );
-
-  if (row) {
-    row.cells[2].textContent = updatedClient.clienome || "-"; // Nome
-    row.cells[3].textContent = updatedClient.cliecpf || "-"; // CPF
-    row.cells[4].textContent = formatDate(updatedClient.cliedtcd) || "-"; // Data de Cadastro
-    row.cells[5].textContent = formatDate(updatedClient.cliedtnc) || "-"; // Data de Nascimento
-    row.cells[6].textContent = updatedClient.cliecelu || "-"; // Celular
-    row.cells[7].textContent = updatedClient.cliecity || "-"; // Cidade
-    row.cells[8].textContent = updatedClient.clieestd || "-"; // Estado
-    row.cells[9].textContent = updatedClient.clierua || "-"; // Rua
-    row.cells[10].textContent = updatedClient.cliecep || "-"; // CEP
-    row.cells[11].textContent = updatedClient.cliemail || "-"; // E-mail
-  }
-}

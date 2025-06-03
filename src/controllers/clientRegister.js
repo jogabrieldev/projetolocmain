@@ -121,6 +121,7 @@ export const movementClient = {
       }
 
       res.status(201).json({ success: true, user: newClient });
+      
     } catch (error) {
       console.error("erro no controller client");
 

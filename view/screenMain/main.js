@@ -42,81 +42,39 @@ function parseDataLocal(dataStr) {
   return new Date(ano, mes - 1, dia); // mês é zero-based
 }
 
-
-
 const buttonOutStart = document.querySelector(".material-symbols-outlined");
 buttonOutStart.addEventListener("click", () => {
   window.location.reload()
 });
 
 const btnStartRegister = document.getElementById('btnStartRegister');
-if(btnStartRegister){
+
+if (btnStartRegister) {
+  const menuButton = document.querySelector('#cadastrosMenu');
+  const collapse = new bootstrap.Collapse(menuButton, {
+    toggle: false
+  });
+
+  const outrosBotoes = [
+    document.querySelector('.btnRegisterLocation'),
+    document.querySelector('.btnLogistic'),
+    document.querySelector('.delivery'),
+    document.querySelector('.btnDevolution')
+  ];
+
+  let menuAberto = false;
 
   btnStartRegister.addEventListener('click', () => {
-    const menuButton =  document.querySelector('#cadastrosMenu')
-    if(menuButton){
-       menuButton.classList.remove('hidden')
-       menuButton.classList.add('flex')
+    menuAberto = !menuAberto;
+
+    if (menuAberto) {
+      collapse.show();
+      outrosBotoes.forEach(el => el?.classList.add('d-none'));
+    } else {
+      collapse.hide();
+      outrosBotoes.forEach(el => el?.classList.remove('d-none'));
     }
-    
-       const btnLocation =  document.querySelector('.btnRegisterLocation')
-       if(btnLocation){
-        btnLocation.classList.remove('flex')
-        btnLocation.classList.add('hidden')
-       }
-        
-       const btnLogistic = document.querySelector('.btnLogistic')
-       if(btnLogistic){
-         btnLogistic.classList.remove('flex')
-         btnLogistic.classList.add('hidden')
-       }
-       
-       const btnDelivery = document.querySelector('.delivery')
-       if(btnDelivery){
-          btnDelivery.classList.remove('flex')
-          btnDelivery.classList.add('hidden')
-       }
-
-       const buttonDevolution = document.querySelector('.btnDevolution')
-       if(buttonDevolution){
-          buttonDevolution.classList.remove('flex')
-          buttonDevolution.classList.add('hidden')
-       }
-    
- });
-
- btnStartRegister.addEventListener('dblclick', () => {
-  const cadastrosMenu = document.querySelector('#cadastrosMenu');
-  if(cadastrosMenu){
-     cadastrosMenu.classList.remove('flex')
-     cadastrosMenu.classList.add('hidden')
-  }
- 
-   const btnLocation = document.querySelector('.btnRegisterLocation')
-    if(btnLocation){
-      btnLocation.classList.remove('hidden')
-      btnLocation.classList.add('flex')
-    }
-  const btnLogistics = document.querySelector('.btnLogistic')
-  if(btnLogistics){
-     btnLogistics.classList.remove("hidden")
-     btnLogistics.classList.add('flex')
-  }
-    
-  const buttonDelivery = document.querySelector('.delivery')
-  if(buttonDelivery){
-     buttonDelivery.classList.remove('hidden')
-     buttonDelivery.classList.add('flex')
-  }
-
-  const buttonDevolution = document.querySelector('.btnDevolution')
-  if(buttonDevolution){
-     buttonDevolution.classList.remove('hidden')
-     buttonDevolution.classList.add('flex')
-  }
- 
-});
-
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -161,4 +119,91 @@ document.addEventListener("DOMContentLoaded", () => {
    });
  });
 
+//  document.addEventListener("click", async function (e) {
+//   const target = e.target;
+
+//   // Botão Bens
+//   if (target.closest(".btnLoadBens")) {
+//     e.preventDefault();
+//     await loadingSectionGoods();
+//     return;
+//   }
+
+//   // Cliente com CPF
+//   if (target.closest(".btnCadClie")) {
+//     e.preventDefault();
+//     await loadingSectionClient();
+//     return;
+//   }
+
+//   // Fornecedor
+//   if (target.closest(".btnCadForn")) {
+//     e.preventDefault();
+//     await carregarFornecedor();
+//     return;
+//   }
+
+//   // Produto
+//   if (target.closest(".btnCadProd")) {
+//     e.preventDefault();
+//     await carregarProduto();
+//     return;
+//   }
+
+//   // Família de Bens
+//   if (target.closest(".btnCadFabri")) {
+//     e.preventDefault();
+//     await carregarFamiliaBens();
+//     return;
+//   }
+
+//   // Tipo do Produto
+//   if (target.closest(".btnCadTypeProd")) {
+//     e.preventDefault();
+//     await carregarTipoProduto();
+//     return;
+//   }
+
+//   // Motorista
+//   if (target.closest(".btnCadMotorista")) {
+//     e.preventDefault();
+//     await carregarMotorista();
+//     return;
+//   }
+
+//   // Veículos
+//   if (target.closest(".btnCadAutomo")) {
+//     e.preventDefault();
+//     await carregarVeiculos();
+//     return;
+//   }
+
+//   // Locação
+//   if (target.closest(".btnRegisterLocation")) {
+//     e.preventDefault();
+//     await carregarLocacao();
+//     return;
+//   }
+
+//   // Logística
+//   if (target.closest(".btnLogistic")) {
+//     e.preventDefault();
+//     locationPendente();
+//     return;
+//   }
+
+//   // Entrega
+//   if (target.closest(".delivery")) {
+//     e.preventDefault();
+//     await carregarEntrega();
+//     return;
+//   }
+
+//   // Devoluções
+//   if (target.closest(".btnDevolution")) {
+//     e.preventDefault();
+//     await carregarDevolucao();
+//     return;
+//   }
+// });
 

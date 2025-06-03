@@ -15,6 +15,11 @@
   white-space: nowrap;
 }
 
+.tableClient th{
+  background-color:#1f2937;
+  color:#ffffff;
+}
+
 .tableClient td{
     background-color:#f8f9fa;
    color: #212529;

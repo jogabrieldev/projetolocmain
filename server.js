@@ -73,6 +73,10 @@ io.on("connection", (socket) => {
         io.emit("updateRunTimeAutomovel", msg); 
     });
 
+    socket.on("updateRunTimeResiduo", (msg) => {
+        io.emit("updateRunTimeResiduo", msg); 
+    });
+
     socket.on("updateRunTimeRegisterLocation", (msg) => {
         io.emit("updateRunTimeRegisterLocation", msg); 
     });

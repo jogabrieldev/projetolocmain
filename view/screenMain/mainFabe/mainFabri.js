@@ -83,11 +83,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
   socketFamilyBens.on("updateRunTimeFamilyBens", (familyGoods) => {
-    insertFamilyGoodsTableRunTime(familyGoods);
+    fetchListFabricante();
   });
 
   socketFamilyBens.on("updateRunTimeTableFamilyGoods", (updatedFamimyGoods) => {
-    updateFamilyGoodsInTableRunTime(updatedFamimyGoods);
+    fetchListFabricante();
   });
 });
 
@@ -302,97 +302,7 @@ function registerNewFamilyBens() {
       }
     });
   validationFormFabric();
-}
-
-// INSERÇÃO EM TEMPO REAL
-function insertFamilyGoodsTableRunTime(familyGoods) {
-  const fabricanteListDiv = document.querySelector(".listingFabri");
-  fabricanteListDiv.innerHTML = "";
-
-  if (familyGoods.length > 0) {
-   const wrapper = document.createElement("div");
-      wrapper.className = "table-responsive";
-
-      const tabela = document.createElement("table");
-      tabela.className = "table table-sm table-hover table-striped table-bordered tableFamilyBens";
-
-      const cabecalho = tabela.createTHead();
-      const linhaCabecalho = cabecalho.insertRow();
-      const colunas = [
-        "Selecionar",
-        "Código",
-        "Descrição",
-        "Categoria",
-        "Capacidade",
-        "Observação",
-        "Centro de custo",
-      ];
-
-      colunas.forEach((coluna) => {
-        const th = document.createElement("th");
-        th.textContent = coluna;
-
-        if (["Selecionar", "Código"].includes(coluna)) {
-          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
-        } else {
-          th.classList.add("px-3", "py-2", "align-middle");
-        }
-
-        linhaCabecalho.appendChild(th);
-      });
-
-      const corpo = tabela.createTBody();
-
-      familyGoods.forEach((fabricante) => {
-        const linha = corpo.insertRow();
-        linha.setAttribute("data-fabecode", fabricante.fabecode);
-
-        // Checkbox
-        const checkboxCell = linha.insertCell();
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.name = "selectfamilyGoods";
-        checkbox.value = fabricante.fabecode;
-
-        const fabricanteData = JSON.stringify(fabricante);
-        if (fabricanteData) {
-          checkbox.dataset.familyGoods = fabricanteData;
-        }
-
-        checkbox.className = "form-check-input m-0";
-        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
-        checkboxCell.appendChild(checkbox);
-
-        // Demais dados
-        const dados = [
-          fabricante.fabecode,
-          fabricante.fabedesc,
-          fabricante.fabecate,
-          fabricante.fabecapa,
-          fabricante.fabeobs,
-          fabricante.fabectct,
-        ];
-
-        dados.forEach((valor, index) => {
-          const td = linha.insertCell();
-          td.textContent = valor || "";
-          td.classList.add("align-middle", "text-break");
-
-          const coluna = colunas[index + 1];
-          if (["Código"].includes(coluna)) {
-            td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
-          } else {
-            td.classList.add("px-3", "py-2");
-          }
-        });
-      });
-
-      wrapper.appendChild(tabela);
-      fabricanteListDiv.appendChild(wrapper);
-  } else {
-    fabricanteListDiv.innerHTML = "<p>Nenhum fabricante cadastrado.</p>";
-  }
-}
+};
 
 //Listagem de familia de bens
 async function fetchListFabricante() {
@@ -501,7 +411,7 @@ async function fetchListFabricante() {
           fabricante.fabedesc,
           fabricante.fabecate,
           fabricante.fabecapa,
-          fabricante.fabeobs,
+          fabricante.fabeobse,
           fabricante.fabectct,
         ];
 
@@ -636,7 +546,7 @@ async function deleteFabri(id, fabeRow) {
       backgroundColor: "red",
     }).showToast();
   }
-}
+ }
 }
 
 // Edição do familia de ben
@@ -830,21 +740,5 @@ async function editAndUpdateOfFabric() {
     }
   });
 };
-editAndUpdateOfFabric();
-
-}
-// ATUALIZÇÃO EM RUNTIME
-function updateFamilyGoodsInTableRunTime(updatedFamimyGoods) {
-  const row = document.querySelector(
-    `[data-fabecode="${updatedFamimyGoods.fabecode}"]`
-  );
-
-  if (row) {
-    // Atualiza as células da linha com as novas informações do fabricante
-    row.cells[2].textContent = updatedFamimyGoods.fabedesc || "-"; // Descrição
-    row.cells[3].textContent = updatedFamimyGoods.fabecate || "-"; // Categoria
-    row.cells[4].textContent = updatedFamimyGoods.fabecapa || "-"; // Subcategoria
-    row.cells[5].textContent = updatedFamimyGoods.fabeobse || "-"; // Observação
-    row.cells[6].textContent = updatedFamimyGoods.fabectct || "-"; // Centro de Custo
-  }
+  editAndUpdateOfFabric();
 };

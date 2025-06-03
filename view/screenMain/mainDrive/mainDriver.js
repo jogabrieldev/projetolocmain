@@ -97,13 +97,13 @@ document.addEventListener('DOMContentLoaded' , ()=>{
       }
 
       sokectDriver.on("updateRunTimeDriver", (motorista) => {
-    insertDriverTableRunTime(motorista);
-    loadingDriver()
+   fetchListMotorista();
+    loadingDriver();
   });
 
   sokectDriver.on("updateRunTimeTableDrive", (updatedDriver) => {
-    updateDriverInTableRunTime(updatedDriver)
-    loadingDriver()
+    fetchListMotorista();
+    loadingDriver();
   });
 
 })
@@ -420,117 +420,6 @@ function registerNewDriver(){
   validationFormMoto()
 
 }
-
-// ATUALIZAR EM RUNTIME QUANDO INSERIR
-function insertDriverTableRunTime(motorista) {
-  const motoristaListDiv = document.querySelector(".listingDriver");
-  motoristaListDiv.innerHTML = ""; 
-
-  if (motorista.length > 0) {
-    const wrapper = document.createElement("div");
-      wrapper.className = "table-responsive";
-
-      const tabela = document.createElement("table");
-      tabela.className = "table table-sm table-hover table-striped table-bordered tableDriver";
-
-      const cabecalho = tabela.createTHead();
-      const linhaCabecalho = cabecalho.insertRow();
-      const colunas = [
-        "Selecionar",
-        "Código",
-        "Status",
-        "Nome",
-        "Data de Nascimento",
-        "CPF",
-        "Data de Emissão",
-        "Categoria da CNH",
-        "Data de Vencimento",
-        "Restrições",
-        "Orgão Emissor",
-        "Celular",
-        "CEP",
-        "Rua",
-        "Cidade",
-        "Estado",
-        "E-mail",
-      ];
-
-      colunas.forEach((coluna) => {
-        const th = document.createElement("th");
-        th.textContent = coluna;
-        if (["Selecionar", "Código", "Status" ].includes(coluna)) {
-          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
-        } else {
-          th.classList.add("px-3", "py-2", "align-middle");
-        }
-        linhaCabecalho.appendChild(th);
-      });
-
-      const corpo = tabela.createTBody();
-      motorista.forEach((m) => {
-        const linha = corpo.insertRow();
-        linha.setAttribute("data-motocode", m.motocode);
-
-        // Checkbox
-        const checkboxCell = linha.insertCell();
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.name = "selectDriver";
-        checkbox.value = m.motocode;
-        checkbox.className = "form-check-input m-0";
-
-        const motoristaData = JSON.stringify(m);
-        if (motoristaData) {
-          checkbox.dataset.motorista = motoristaData;
-        }
-
-        checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
-        checkboxCell.appendChild(checkbox);
-
-        // Dados
-        const dados = [
-          m.motocode,
-          m.motostat,
-          m.motoname,
-          formatDate(m.motodtnc),
-          m.motocpf,
-          formatDate(m.motodtch),
-          m.motoctch,
-          formatDate(m.motodtvc),
-          m.motorest,
-          m.motoorem,
-          m.motocelu,
-          m.motocep,
-          m.motorua,
-          m.motocity,
-          m.motoestd,
-          m.motomail,
-        ];
-
-        dados.forEach((valor, index) => {
-          const td = linha.insertCell();
-          td.textContent = valor || "";
-          td.classList.add("align-middle", "text-break");
-
-          const coluna = colunas[index + 1]; // +1 por causa do checkbox
-          if (["Código", "Status"].includes(coluna)) {
-            td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
-          } else {
-            td.classList.add("px-3", "py-2");
-          }
-
-          if (coluna === "Status") {
-            td.classList.add("status-moto");
-          }
-        });
-      });
-
-      wrapper.appendChild(tabela);
-      motoristaListDiv.appendChild(wrapper);
-  } else {
-    motoristaListDiv.innerHTML = "<p>Nenhum motorista cadastrado.</p>";
-  }
-};
 
 //listagem de motorista
 async function fetchListMotorista() {
@@ -996,11 +885,10 @@ if (cepInput) {
       if (stateField) stateField.value = "";
     }
   });
- }
-}
+ };
+};
 
-
-  async function editAndUpdateOfDriver() {
+async function editAndUpdateOfDriver() {
     const formEditDrive = document.querySelector(".formEditDriver");
   
     formEditDrive.addEventListener("submit", async (event) => {
@@ -1121,32 +1009,9 @@ if (cepInput) {
           backgroundColor: "red",
         }).showToast();
       }
-    });
-  }
- 
-// botão de editar
-
-
-// ATUALIZAÇÃO EM RUNTIME
-function updateDriverInTableRunTime(updatedDriver) {
-  const row = document.querySelector(`[data-motocode="${updatedDriver.motocode}"]`);
-
-  if (row) {
-
-    row.cells[2].textContent = updatedDriver.motostat || "-"; // Status
-    row.cells[3].textContent = updatedDriver.motoname || "-"; // Nome
-    row.cells[4].textContent = formatDate(updatedDriver.motodtnc); // Data de Nascimento
-    row.cells[5].textContent = updatedDriver.motocpf || "-"; // CPF
-    row.cells[6].textContent = formatDate(updatedDriver.motodtch); // Data de Emissão
-    row.cells[7].textContent = updatedDriver.motoctch || "-"; // Categoria da CNH
-    row.cells[8].textContent = formatDate(updatedDriver.motodtvc); // Data de Vencimento
-    row.cells[9].textContent = updatedDriver.motorest || "-"; // Restrições
-    row.cells[10].textContent = updatedDriver.motoorem || "-"; // Órgão Emissor
-    row.cells[11].textContent = updatedDriver.motocelu || "-"; // Celular
-    row.cells[12].textContent = updatedDriver.motocep || "-"; // CEP
-    row.cells[13].textContent = updatedDriver.motorua || "-"; // Rua
-    row.cells[14].textContent = updatedDriver.motocity || "-"; // Cidade
-    row.cells[15].textContent = updatedDriver.motoestd || "-"; // Estado
-    row.cells[16].textContent = updatedDriver.motomail || "-"; // E-mail
-  }
+   });
 };
+ 
+
+
+

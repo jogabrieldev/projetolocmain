@@ -7,8 +7,6 @@ export const movementResiduo =  {
         try {
          const {dataResi} = req.body
 
-         console.log(" corpo" ,  dataResi)
-
          if(!dataResi){
             res.status(400).json({message: 'Precisa passar os dados obrigatorios'})
          }
@@ -17,15 +15,37 @@ export const movementResiduo =  {
          if(!result){
             res.status(400).json({message:'Erro para inserir no DB'})
         }
-        
+
+          const io = req.app.get("socketio");
+            if (io) {
+              const residuo = await moduleResiduo.getAllResiduo();
+               io.emit("updateRunTimeResiduo", residuo);
+              }
+
+       
         res.status(200).json({message:"Residuo Inserido com sucesso" , success:true , residuo:result})
      
         } catch (error) {
             console.error('erro na aplicação na parte residuo' , error)
+
+            if (error.message.includes("Código de Residuo já cadastrado. Tente outro.")) {
+            return res.status(409).json({ success: false, message: error.message });
+      }
             res.status(500).json({message: 'Erro no controller do residuo' , success:false})
         }
        
     },
+
+     async listResiduo(req , res){
+          try {
+              const residuo = await moduleResiduo.getAllResiduo()
+              if(!residuo){return res.status(400).json({message:"Erro para pegar os residuos"})}
+              return res.status(200).json({success: true , list: residuo})
+          } catch (error) {
+            console.error('erro na aplicação na parte residuo para listar' , error)
+            res.status(500).json({message: 'Erro no controller do residuo' , success:false})
+          }
+     },
 
       async deleteResiduo(req, res) {
        

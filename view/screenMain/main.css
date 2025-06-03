@@ -63,76 +63,68 @@ input{
     height: 100%;
 }
 
+/* Estilo para o menu lateral fixo no desktop */
 .workButton {
   display: flex;
   flex-direction: column;
   position: fixed;
-  top: 8;
+  top: 0;
   left: 0;
-  width: 20%;
-  height: 95vh;
+  width: 21%;
+  height: 100vh;
   padding: 10px;
-  background-color: #6c757d; /* caso queira manter a cor de bg-secondary */
-  box-shadow: 7px 0  4px rgba(0, 0, 0, 0.2);
+  background-color: #6c757d;
+  box-shadow: 7px 0 4px rgba(0, 0, 0, 0.2);
   overflow-y: auto;
-  border-radius: 10px;
-  z-index: 1000;
-  border-top-right-radius: 1.5px solid white ;
+  z-index: 1040;
 }
 
-/* Para telas menores */
+/* Botão de recarregar */
+.sync-icon {
+  font-size: 28px;
+  color: #fff;
+  cursor: pointer;
+}
+.sync-icon:hover {
+  color: #7eb8cb;
+}
+
+/* Responsivo para mobile com offcanvas */
 @media (max-width: 768px) {
   .workButton {
-    width: 100%;
-    height: auto;
-    position: relative;
-    flex-direction: row;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 10px;
+    display: none;
   }
 
-  .workButton ul.nav {
-    flex-direction: row !important;
-    flex-wrap: nowrap;
-    gap: 10px;
+  #mobileMenuToggle {
+    display: block;
   }
 
-  .workButton ul.nav li,
-  .workButton .collapse {
-    flex: 1 0 auto;
-    width: auto;
+  .offcanvas-start {
+    background-color: #6c757d;
+    color: white;
   }
 
-  .collapse {
-    display: none !important; /* você pode esconder submenus ou usar JS para abrir tipo dropdown */
+  .offcanvas-body img {
+    width: 60px;
+    border-radius: 50%;
+    margin-bottom: 10px;
   }
-}
-#btnStartRegister{
-  background-color: rgb(100, 137, 189);
-}
-#btnStartRegister:hover{
-background-color: white;
-}
-@media (max-width: 768px) {
-    .workButton {
-      padding: 1rem;
-      font-size: 0.95rem;
-    }
-  
-    .btn-submenu {
-      font-size: 0.9rem;
-    }
-  }
-  
-ul{
-    width: 100%;
-    list-style-type: none;
-}
 
-button{
-    border-radius: 10px;
+  .btn-submenu {
+    font-size: 0.9rem;
+  }
 }
+ #cadastrosMenu.collapse,
+  #cadastrosMenu.collapsing {
+    transition: none !important;
+  }
+
+  /* Garante que o menu feche imediatamente */
+  #cadastrosMenu.collapsing {
+    height: 0 !important;
+    display: none !important;
+  }
+
 
 /* MENSSAGEM DE ERRO */
 .error-text{
