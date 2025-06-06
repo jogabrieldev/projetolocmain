@@ -157,13 +157,7 @@ export const movementOfDriver = {
   async deleteOfDriver(req, res) {
     const { id } = req.params;
     try {
-      const verificar = await driverRegister.verificarDepedenciaDeMotorista(id);
-      if (verificar) {
-        return res.status(400).json({
-          message:
-            "Não e possivel excluir. Motorista tem veiculo vinculado a ele",
-        });
-      }
+      
       const verificarEntregas =
         await driverRegister.verificarEntregaComMotorista(id);
       if (verificarEntregas) {

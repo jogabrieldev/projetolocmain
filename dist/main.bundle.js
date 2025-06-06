@@ -1,0 +1,49 @@
+/*
+ * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./view/screenMain/main.js":
+/*!*********************************!*\
+  !*** ./view/screenMain/main.js ***!
+  \*********************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\nfunction _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }\nfunction _nonIterableRest() { throw new TypeError(\"Invalid attempt to destructure non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.\"); }\nfunction _unsupportedIterableToArray(r, a) { if (r) { if (\"string\" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return \"Object\" === t && r.constructor && (t = r.constructor.name), \"Map\" === t || \"Set\" === t ? Array.from(r) : \"Arguments\" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }\nfunction _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }\nfunction _iterableToArrayLimit(r, l) { var t = null == r ? null : \"undefined\" != typeof Symbol && r[Symbol.iterator] || r[\"@@iterator\"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t[\"return\"] && (u = t[\"return\"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }\nfunction _arrayWithHoles(r) { if (Array.isArray(r)) return r; }\nfunction isDataValida(data) {\n  var date = new Date(data);\n  var ano = date.getFullYear();\n  return !isNaN(date.getTime()) &&\n  // Verifica se o Date é válido\n  ano >= 1960 && ano <= 2027 // Define limites plausíveis para ano\n  ;\n}\nfunction isDataVencimento(data) {\n  var date = new Date(data);\n  var ano = date.getFullYear();\n  return !isNaN(date.getTime()) && ano >= 2025 && ano <= 2035;\n}\nfunction validarPrecoLiquidoMenorOuIgual(precoLiquido, precoBruto) {\n  var valorLiquido = parseFloat(precoLiquido);\n  var valorBruto = parseFloat(precoBruto);\n  if (isNaN(valorLiquido) || isNaN(valorBruto)) {\n    console.warn(\"Valores inválidos informados para validação de preços.\");\n    return false;\n  }\n  return valorLiquido <= valorBruto;\n}\nfunction formatDateInput(dataISO) {\n  if (!dataISO) return \"\";\n  var data = new Date(dataISO);\n  var offset = data.getTimezoneOffset();\n  data.setMinutes(data.getMinutes() - offset);\n  return data.toISOString().split(\"T\")[0];\n}\nfunction parseDataLocal(dataStr) {\n  var _dataStr$split$map = dataStr.split(\"-\").map(Number),\n    _dataStr$split$map2 = _slicedToArray(_dataStr$split$map, 3),\n    ano = _dataStr$split$map2[0],\n    mes = _dataStr$split$map2[1],\n    dia = _dataStr$split$map2[2];\n  return new Date(ano, mes - 1, dia); // mês é zero-based\n}\nvar buttonOutStart = document.querySelector(\".material-symbols-outlined\");\nbuttonOutStart.addEventListener(\"click\", function () {\n  window.location.reload();\n});\nvar btnStartRegister = document.getElementById('btnStartRegister');\nif (btnStartRegister) {\n  var menuButton = document.querySelector('#cadastrosMenu');\n  var collapse = new bootstrap.Collapse(menuButton, {\n    toggle: false\n  });\n  var outrosBotoes = [document.querySelector('.btnRegisterLocation'), document.querySelector('.btnLogistic'), document.querySelector('.delivery'), document.querySelector('.btnDevolution')];\n  var menuAberto = false;\n  btnStartRegister.addEventListener('click', function () {\n    menuAberto = !menuAberto;\n    if (menuAberto) {\n      collapse.show();\n      outrosBotoes.forEach(function (el) {\n        return el === null || el === void 0 ? void 0 : el.classList.add('d-none');\n      });\n    } else {\n      collapse.hide();\n      outrosBotoes.forEach(function (el) {\n        return el === null || el === void 0 ? void 0 : el.classList.remove('d-none');\n      });\n    }\n  });\n}\ndocument.addEventListener(\"DOMContentLoaded\", function () {\n  var mainContent = document.getElementById(\"mainContent\");\n  function showWelcome() {\n    var animationHTML = \"\\n       <section id=\\\"welcomeAnimation\\\" class=\\\"welcome-container text-white\\\">\\n         <div class=\\\"text-center animate__animated animate__fadeInDown\\\">\\n           <svg width=\\\"100\\\" height=\\\"100\\\" viewBox=\\\"0 0 24 24\\\" fill=\\\"none\\\"\\n             stroke=\\\"#00d1ff\\\" stroke-width=\\\"2\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\"\\n             class=\\\"mb-4 animate__animated animate__pulse animate__infinite\\\">\\n             <path d=\\\"M20 6L9 17l-5-5\\\" />\\n           </svg>\\n           <h1 class=\\\"fw-bold mb-3 typewriter\\\">Bem-vindo ao sistema SGTTEC!</h1>\\n           \\n         </div>\\n       </section>\\n     \";\n    mainContent.innerHTML = animationHTML;\n  }\n  function hideWelcome() {\n    var welcome = document.getElementById(\"welcomeAnimation\");\n    if (welcome) {\n      welcome.classList.add(\"hidden\");\n    }\n  }\n\n  // Mostra após login\n  showWelcome();\n\n  // Oculta ao clicar em qualquer botão de navegação\n  var buttons = document.querySelectorAll(\"#btnLoadBens, .btnCadClie, .btnCadForn, .btnCadProd, .btnCadFabri, .btnCadTypeProd, .btnCadMotorista, .btnCadAutomo, .btnRegisterLocation, .btnLogistic, .delivery , .btnDevolution\");\n  buttons.forEach(function (btn) {\n    btn.addEventListener(\"click\", function () {\n      hideWelcome();\n    });\n  });\n});\n\n//  document.addEventListener(\"click\", async function (e) {\n//   const target = e.target;\n\n//   // Botão Bens\n//   if (target.closest(\".btnLoadBens\")) {\n//     e.preventDefault();\n//     await loadingSectionGoods();\n//     return;\n//   }\n\n//   // Cliente com CPF\n//   if (target.closest(\".btnCadClie\")) {\n//     e.preventDefault();\n//     await loadingSectionClient();\n//     return;\n//   }\n\n//   // Fornecedor\n//   if (target.closest(\".btnCadForn\")) {\n//     e.preventDefault();\n//     await carregarFornecedor();\n//     return;\n//   }\n\n//   // Produto\n//   if (target.closest(\".btnCadProd\")) {\n//     e.preventDefault();\n//     await carregarProduto();\n//     return;\n//   }\n\n//   // Família de Bens\n//   if (target.closest(\".btnCadFabri\")) {\n//     e.preventDefault();\n//     await carregarFamiliaBens();\n//     return;\n//   }\n\n//   // Tipo do Produto\n//   if (target.closest(\".btnCadTypeProd\")) {\n//     e.preventDefault();\n//     await carregarTipoProduto();\n//     return;\n//   }\n\n//   // Motorista\n//   if (target.closest(\".btnCadMotorista\")) {\n//     e.preventDefault();\n//     await carregarMotorista();\n//     return;\n//   }\n\n//   // Veículos\n//   if (target.closest(\".btnCadAutomo\")) {\n//     e.preventDefault();\n//     await carregarVeiculos();\n//     return;\n//   }\n\n//   // Locação\n//   if (target.closest(\".btnRegisterLocation\")) {\n//     e.preventDefault();\n//     await carregarLocacao();\n//     return;\n//   }\n\n//   // Logística\n//   if (target.closest(\".btnLogistic\")) {\n//     e.preventDefault();\n//     locationPendente();\n//     return;\n//   }\n\n//   // Entrega\n//   if (target.closest(\".delivery\")) {\n//     e.preventDefault();\n//     await carregarEntrega();\n//     return;\n//   }\n\n//   // Devoluções\n//   if (target.closest(\".btnDevolution\")) {\n//     e.preventDefault();\n//     await carregarDevolucao();\n//     return;\n//   }\n// });\n\n//# sourceURL=webpack://projeto_locacao/./view/screenMain/main.js?");
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The require scope
+/******/ 	var __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module can't be inlined because the eval devtool is used.
+/******/ 	var __webpack_exports__ = {};
+/******/ 	__webpack_modules__["./view/screenMain/main.js"](0, __webpack_exports__, __webpack_require__);
+/******/ 	
+/******/ })()
+;

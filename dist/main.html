@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="../screenDelivery/mainDelivery.css" />
     <link rel="stylesheet" href="../screenDevolution/devolution.css">
     <link rel="stylesheet" href="./mainResiduo/mainResiduo.css">
+    <link rel="stylesheet" href="./mainClientEmp/clientEmp.css"/>
     
     <link
       rel="stylesheet"
@@ -40,7 +41,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <title>Caçamba</title>
-  </head>
+  <script defer src="main.bundle.js"></script></head>
 
 <body>
 
@@ -82,9 +83,19 @@
           </li>
 
           <li class="nav-item my-1">
-            <button class="btn btn-submenu btn-outline-light w-100 btnCadClie ">
+            <button class="btn btn-submenu btn-outline-light w-100 " data-bs-toggle="collapse" data-bs-target="#submenuClientes" aria-expanded="false" aria-controls="submenuClientes">
               Clientes
             </button>
+            <div class="collapse mt-1 ms-3" id="submenuClientes">
+              <ul class="nav flex-column">
+                <li class="nav-item my-1">
+                  <button class="btn btn-sm btn-outline-light w-100 btnCadClie">Cliente com CPF</button>
+                </li>
+                <li class="nav-item my-1">
+                  <button class="btn btn-sm btn-outline-light w-100 btnLoadClientJuri">Cliente com CNPJ</button>
+                </li>
+              </ul>
+            </div>
           </li>
 
           <li class="nav-item my-1"><button class="btn btn-submenu btn-outline-light w-100 btnCadForn">Fornecedor</button></li>
@@ -138,9 +149,19 @@
           </li>
 
           <li class="nav-item my-1">
-            <button class="btn btn-submenu btn-outline-light w-100 btnCadClie">
+            <button class="btn btn-submenu btn-outline-light w-100 " data-bs-toggle="collapse" data-bs-target="#submenuClientes" aria-expanded="false" aria-controls="submenuClientes">
               Clientes
             </button>
+            <div class="collapse mt-1 ms-3" id="submenuClientes">
+              <ul class="nav flex-column">
+                <li class="nav-item my-1">
+                  <button class="btn btn-sm btn-outline-light w-100 btnCadClie">Cliente com CPF</button>
+                </li>
+                <li class="nav-item my-1">
+                  <button class="btn btn-sm btn-outline-light w-100">Cliente com CNPJ</button>
+                </li>
+              </ul>
+            </div>
           </li>
 
           <li class="nav-item my-1"><button class="btn btn-submenu btn-outline-light w-100 btnCadForn">Fornecedor</button></li>
@@ -159,6 +180,9 @@
         </ul>
       </div>
 
+
+       
+     
       <li class="nav-item mb-2 "><button class="btn btn-outline-light w-100 btnRegisterLocation">Locação</button></li>
       
       <li class="nav-item mb-2 btn-logistica"><button class="btn btn-outline-light w-100 btnLogistic" onclick="locationPendente()">Logística</button></li>
@@ -212,6 +236,7 @@
     <script src="./mainDrive/mainDriver.js"></script>
     <script src="./mainAutomovel/mainAuto.js"></script>
     <script src="./mainResiduo/mainResiduo.js"></script>
+    <script src="./mainClientEmp/clientEmp.js"></script>
     <script src="../screenLocation/toDoLocation.js"></script>
     <script src="../screenLocation/locationFinish.js"></script>
     <script src="../screenLogistics/mainLogistics.js"></script>

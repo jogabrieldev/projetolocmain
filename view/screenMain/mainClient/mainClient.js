@@ -9,13 +9,28 @@ function isTokenExpired(token) {
 }
 
 function maskFieldClient() {
-  $("#cpf").mask("000.000.000-00");
+  const cpfCnpjMaskBehavior = function (val) {
+    return val.replace(/\D/g, '').length <= 11
+      ? '000.000.000-00'
+      : '00.000.000/0000-00';
+  };
+
+  // Opções para aplicar dinamicamente a máscara
+  const cpfCnpjOptions = {
+    onKeyPress: function (val, e, field, options) {
+      field.mask(cpfCnpjMaskBehavior.apply({}, arguments), options);
+    }
+  };
+
+  // Aplica ao campo específico
+  $('#cpfAndCnpj').mask(cpfCnpjMaskBehavior($('#cpfAndCnpj').val()), cpfCnpjOptions);
+
 
   $("#clieCelu").mask("(00) 00000-0000");
 
   $("#clieCep").mask("00000-000");
 
-  $("#editCliecpf").mask("000.000.000-00");
+  $("#editCliecpfCnpj").mask("000.000.000-00");
 
   $("#editClieCelu").mask("(00) 00000-0000");
 
@@ -47,15 +62,15 @@ function dateAtualInField(date){
   const dia = String(hoje.getDate()).padStart(2, "0");
 
     inputDtCad.value = `${ano}-${mes}-${dia}`;
-    return true; // indica sucesso
+    return true; 
   }else{
     console.error('Campo #fornDtcd não encontrado no DOM');
     return false; // indica falha
   }
  
 }
-const socketClient = io();
 
+const socketClient = io();
 document.addEventListener("DOMContentLoaded", () => {
   const btnloadClie = document.querySelector(".btnCadClie");
   if (btnloadClie) {
@@ -324,7 +339,8 @@ async function registerNewClient() {
       const formData = {
         clieCode: document.querySelector("#clieCode").value.trim(),
         clieName: document.querySelector("#clieName").value.trim(),
-        cpf: document.querySelector("#cpf").value.trim(),
+        clieTpCl: document.querySelector('#clieTiCli').value.trim(),
+        cpfAndCnpj: document.querySelector("#cpfAndCnpj").value.trim(),
         dtCad:document.querySelector('#dtCad').value,
         dtNasc: document.querySelector("#dtNasc").value,
         clieCelu: document.querySelector("#clieCelu").value.trim(),
@@ -333,8 +349,13 @@ async function registerNewClient() {
         clieRua: document.querySelector("#clieRua").value.trim(),
         clieCep: document.querySelector("#clieCep").value.trim(),
         clieMail: document.querySelector("#clieMail").value.trim(),
+        clieBanc: document.querySelector('#clieBanc').value.trim(),
+        clieAgen: document.querySelector('#clieAgen').value.trim(),
+        clieCont: document.querySelector('#clieCont').value.trim(),
+        cliePix: document.querySelector('#cliePix').value.trim()
       };
-
+    
+      console.log('dados' , formData)
        const clieMail = formData.clieMail
       const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -509,7 +530,7 @@ async function fetchListClientes() {
         "Selecionar",
         "Código",
         "Nome",
-        "CPF",
+        "CPF/CNPJ",
         "Data de Cadastro",
         "Data de Nascimento",
         "Celular",
@@ -518,6 +539,11 @@ async function fetchListClientes() {
         "Rua",
         "CEP",
         "E-mail",
+        "Tipo de Cliente",
+        "Banco",
+        "Agencia",
+        "Conta"
+        
       ];
 
       colunas.forEach((coluna) => {
@@ -559,7 +585,7 @@ async function fetchListClientes() {
         const dados = [
           cliente.cliecode,
           cliente.clienome,
-          cliente.cliecpf,
+          cliente.cliecpcn,
           formatDate(cliente.cliedtcd),
           formatDate(cliente.cliedtnc),
           cliente.cliecelu,
@@ -568,6 +594,10 @@ async function fetchListClientes() {
           cliente.clierua,
           cliente.cliecep,
           cliente.cliemail,
+          cliente.clietpcl,
+          cliente.cliebanc,
+          cliente.clieagen,
+          cliente.cliecont
         ];
 
         dados.forEach((valor, index) => {
@@ -762,10 +792,12 @@ function editarCliente() {
 
     try {
       const clientSelecionado = JSON.parse(clientData);
+     
       const campos = [
         { id: "editClieCode", valor: clientSelecionado.cliecode },
         { id: "editClieName", valor: clientSelecionado.clienome },
-        { id: "editCliecpf", valor: clientSelecionado.cliecpf },
+        { id: "EditClieTiCli", valor: clientSelecionado.clietpcl },
+        { id: "editCliecpfCnpj", valor: clientSelecionado.cliecpcn },
         { id: "editClieDtCad", valor: formatDate(clientSelecionado.cliedtcd) },
         { id: "editClieDtNasc", valor: formatDate(clientSelecionado.cliedtnc) },
         { id: "editClieCelu", valor: clientSelecionado.cliecelu },
@@ -774,22 +806,37 @@ function editarCliente() {
         { id: "editClieRua", valor: clientSelecionado.clierua },
         { id: "editClieCep", valor: clientSelecionado.cliecep },
         { id: "editClieMail", valor: clientSelecionado.cliemail },
+        {id: "editClieBanc" , valor: clientSelecionado.cliebanc},
+        {id: "editClieAgen" , valor: clientSelecionado.clieagen},
+        {id: "editClieCont" , valor: clientSelecionado.cliecont},
+        {id: "editCliePix" , valor: clientSelecionado.cliepix}
       ];
 
       // Atualizar valores no formulário
       campos.forEach(({ id, valor }) => {
-        const elemento = document.getElementById(id);
-        if (elemento) {
-          if (elemento.type === "date" && valor) {
-            // Formata a data para YYYY-MM-DD, caso seja necessário
-            const dataFormatada = new Date(valor).toISOString().split("T")[0];
-            elemento.value = dataFormatada;
-          } else {
-            elemento.value = valor || "";
-          }
-        } else {
-          console.warn(`Elemento com ID '${id}' não encontrado.`);
+       const elemento = document.getElementById(id);
+  if (!elemento) {
+    console.warn(`Elemento com ID '${id}' não encontrado.`);
+    return;
+  }
+
+  if (elemento.type === "date" && valor) {
+    const dataFormatada = new Date(valor).toISOString().split("T")[0];
+    elemento.value = dataFormatada;
+  } else if (elemento.tagName === "SELECT") {
+    const option = [...elemento.options].find(opt => opt.value === valor);
+    if (option) {
+      elemento.value = valor;
+      if (id === "EditClieTiCli") {
+        const hiddenInput = document.getElementById("tipoClieEditHidden");
+        if (hiddenInput) {
+          hiddenInput.value = valor;
         }
+      }
+    }
+  } else {
+    elemento.value = valor || "";
+  }
       });
 
       document.querySelector(".formEditClient").style.display = "flex";
@@ -920,7 +967,8 @@ function editarCliente() {
       const updateClient = {
         cliecode: document.getElementById("editClieCode").value,
         clienome: document.getElementById("editClieName").value,
-        cliecpf: document.getElementById("editCliecpf").value,
+        clietpcl: document.getElementById('EditClieTiCli').value,
+        cliecpcn: document.getElementById("editCliecpfCnpj").value,
         cliedtcd: document.getElementById("editClieDtCad").value || null,
         cliedtnc: document.getElementById("editClieDtNasc").value || null,
         cliecelu: document.getElementById("editClieCelu").value,
@@ -929,6 +977,10 @@ function editarCliente() {
         clierua: document.getElementById("editClieRua").value,
         cliecep: document.getElementById("editClieCep").value,
         cliemail: document.getElementById("editClieMail").value,
+        cliebanc: document.getElementById("editClieBanc").value,
+        clieagen: document.getElementById("editClieAgen").value,
+        cliecont: document.getElementById("editClieCont").value,
+        cliepix: document.getElementById("editCliePix").value,
       };
 
       try {

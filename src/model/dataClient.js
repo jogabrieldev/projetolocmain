@@ -8,7 +8,8 @@ export const clientRegister = {
       const {
         clieCode,
         clieName,
-        cpf,
+        clieTpCl,
+        cpfAndCnpj,
         dtCad,
         dtNasc,
         clieCelu,
@@ -17,14 +18,19 @@ export const clientRegister = {
         clieRua,
         clieCep,
         clieMail,
+        clieBanc,
+        clieAgen,
+        clieCont,
+        cliePix
       } = data;
 
-      const insert = `INSERT INTO cadclie( cliecode, clienome, cliecpf, cliedtcd, cliedtnc, cliecelu, cliecity, clieestd, clierua, cliecep, cliemail ) VALUES( $1 , $2 , $3 , $4 , $5 ,$6 , $7 , $8 , $9 , $10 , $11) RETURNING *`;
+      const insert = `INSERT INTO cadclie( cliecode, clienome,clietpcl, cliecpcn, cliedtcd, cliedtnc, cliecelu, cliecity, clieestd, clierua, cliecep, cliemail, cliebanc, clieagen , cliecont , cliepix ) VALUES( $1 , $2 , $3 , $4 , $5 ,$6 , $7 , $8 , $9 , $10 , $11 , $12 , $13 , $14 ,$15 , $16) RETURNING *`;
 
       const values = [
         clieCode,
         clieName,
-        cpf,
+        clieTpCl,
+        cpfAndCnpj,
         dtCad,
         dtNasc,
         clieCelu,
@@ -33,6 +39,10 @@ export const clientRegister = {
         clieRua,
         clieCep,
         clieMail,
+        clieBanc,
+        clieAgen,
+        clieCont,
+        cliePix
       ];
 
       const result = await dataClient.query(insert, values);
@@ -50,21 +60,6 @@ export const clientRegister = {
     getAllClientId: async()=>{
     try {
       const query = "SELECT cliecode FROM cadclie";
-
-      const result = await dataClient.query(query);
-      if(result){
-        return result.rows;
-      }
-      
-    } catch (error) {
-      console.error("Erro em listar ID Cliente:", error.message);
-      throw error;
-    }
-  },
-
-    getAllClientcpf: async()=>{
-    try {
-      const query = "SELECT cliecpf FROM cadclie";
 
       const result = await dataClient.query(query);
       if(result){
@@ -100,6 +95,7 @@ export const clientRegister = {
       throw error;
     }
   },
+  
   deleteClient: async (id) => {
     try {
       const deleteCadclie =
@@ -112,13 +108,15 @@ export const clientRegister = {
       throw error;
     }
   },
+
   updateClient: async (id, updateClient) => {
     try {
-      const query = ` UPDATE cadclie SET  clienome = $1, cliecpf = $2, cliedtcd = $3, cliedtnc = $4, cliecelu = $5, cliecity = $6, clieestd = $7, clierua = $8, cliecep = $9, cliemail = $10 WHERE cliecode = $11 RETURNING * ;`;
+      const query = ` UPDATE cadclie SET  clienome = $1, clietpcl = $2, cliecpcn = $3, cliedtcd = $4, cliedtnc = $5, cliecelu = $6, cliecity = $7, clieestd = $8, clierua = $9, cliecep = $10, cliemail = $11, cliebanc = $12, clieagen = $13 , cliecont = $14 , cliepix = $15 WHERE cliecode = $16 RETURNING * ;`;
 
       const values = [
         updateClient.clienome || null,
-        updateClient.cliecpf || null,
+        updateClient.clietpcl || null,
+        updateClient.cliecpcn || null,
         updateClient.cliedtcd || null,
         updateClient.cliedtnc || null,
         updateClient.cliecelu || null,
@@ -127,6 +125,10 @@ export const clientRegister = {
         updateClient.clierua || null,
         updateClient.cliecep || null,
         updateClient.cliemail || null,
+        updateClient.cliebanc || null,
+        updateClient.clieagen || null,
+        updateClient.cliecont|| null,
+        updateClient.cliepix || null,
         id,
       ];
 

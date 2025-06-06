@@ -8,10 +8,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default  {
-  entry: path.resolve (__dirname ,"view" , "login.js" ), // Arquivo principal do frontend
+  entry: {
+    login: path.resolve(__dirname, "view", "login.js"),
+   main: path.resolve(__dirname, "view", "screenMain", "main.js"), // Arquivo principal do frontend
+  },
+  
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js",
+    filename: "[name].bundle.js",
+    // filename: "[name].bundle.js",
+    // filename: "[name].bundle.js"
   },
   mode: "development", // Mude para "production" quando for lançar o sistema
   module: {
@@ -27,23 +33,34 @@ export default  {
           
         },
       },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
+      }
     ],
   },
   plugins: [
-    new CleanWebpackPlugin({
+    new CleanWebpackPlugin(),
 
-    }), // Limpa a pasta dist antes de cada build
-
+    // Gera a página de login
     new HtmlWebpackPlugin({
-      template: "./view/index.html", // HTML base do frontend
+      template: "./view/index.html",
       filename: "index.html",
+      chunks: ["login"], // só inclui login.bundle.js
     }),
 
+    // Gera a SPA principal
+    new HtmlWebpackPlugin({
+      template: "./view/screenMain/main.html",
+      filename: "main.html",
+      chunks: ["main"], // só inclui main.bundle.js
+    }),
   ],
   devServer: {
     static: path.join(__dirname, "dist"),
     compress: true,
-    port: 9000, // Porta do servidor Webpack DevServer
+    port: 9000,
+    open: true,
   },
 
   // resolve:{

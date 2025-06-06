@@ -43,22 +43,6 @@ export const movementAuto = {
       });
     }
 
-    // === Validação: motorista já cadastrado ===
-    const veiculos = await autoRegister.listAutos(); 
-
-    const motoristaJaExiste = veiculos.some(
-      (v) => v.caaumoto === dataAuto.caaumoto
-    ); 
-
-    
-    if (motoristaJaExiste) {
-      return res.status(409).json({
-        success: false,
-        message: "Motorista já cadastrado em outro veículo!",
-      });
-    }
-
-    // === Cadastro ===
     const newAuto = await autoRegister.registerAuto(dataAuto);
     if(!newAuto){
       return res.status(400).json({message: 'Erro ao gerar cadastro de um automovel'})
@@ -82,7 +66,6 @@ export const movementAuto = {
     res.status(500).json({ success: false, message: "Erro interno no servidor." });
   }
 },
-
 
   async listingOfAuto(req, res) {
     try {

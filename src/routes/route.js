@@ -16,7 +16,6 @@ import {location} from '../controllers/locationController.js';
 import logistics from '../controllers/logistcsController.js'
 import { controllerDelivery } from "../controllers/deliveryController.js";
 import { movementResiduo } from "../controllers/residuoController.js";
-import { movementClientEmp } from "../controllers/clientEmpController.js";
 
 
 route.post("/autenticar",  (req, res) => {
@@ -62,24 +61,6 @@ route.delete('/api/deleteclient/:id' , authenticateToken, (req ,res)=>{
 route.put('/api/updateclient/:id' , authenticateToken, (req , res)=>{
   movementClient.updateOfClient(req , res)
 });
-
-// clientEmpresarial
-
-route.post('/api/clientemp' , (req ,res)=>{
-  movementClientEmp.registerNewClientEmp(req ,res)
-});
-
-route.get('/api/clientemp' , (req , res)=>{
-   movementClientEmp.listClientEmp(req, res)
-});
-
-route.delete('/api/clientemp/:id' , (req ,res)=>{
-   movementClientEmp.deleteClientEmp(req,res)
-});
-
-route.put('/api/clientemp/:clemcode' , (req ,res)=>{
-   movementClientEmp.update(req ,res)
-})
 
 // fornecedor
 route.post('/api/forne/submit' , authenticateToken, (req , res)=>{

@@ -386,7 +386,14 @@ function registerNewFornecedor() {
         }
       } catch (error) {
         console.error("Erro ao enviar formulário:", error);
-        alert("Erro ao enviar os dados para o server.");
+       Toastify({
+            text:"Erro no server para cadastrar",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
       }
     });
   validationFormForne();

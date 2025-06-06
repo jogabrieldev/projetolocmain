@@ -71,19 +71,23 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
             <input type="number" class="form-control" name="kmAtAuto" id="kmAtAuto" placeholder="Quilometragem Atual" />
           </div>
   
-          <div class="col-md-4">
-            <label for="motoAuto" class="form-label">Motorista</label>
-            <select class="form-select" name="motoAuto" id="motoAuto">
-              <option value="">Selecione...</option>
-            </select>
-          </div>
-  
+      
           <div class="col-md-4">
             <label for="statAuto" class="form-label">Status</label>
             <select class="form-select" name="statAuto" id="statAuto">
               <option value="">Selecione...</option>
               <option value="Ativo">Ativo</option>
               <option value="Desativo">Desativo</option>
+               <option value="Manutenção">manutenção</option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label for="pdLocCar" class="form-label">Pode ser Locado</label>
+            <select class="form-select" name="pdLocCar" id="pdLocCar">
+              <option value="">Selecione...</option>
+              <option value="Sim">Sim</option>
+              <option value="Não">Não</option>
             </select>
           </div>
   
@@ -161,13 +165,6 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
             </div>
       
             <div class="col-md-3">
-              <label for="motoAutoEdit" class="form-label">Motorista</label>
-              <select class="form-select" id="motoAutoEdit" name="motoAutoEdit">
-                <option value="">Selecione...</option>
-              </select>
-            </div>
-      
-            <div class="col-md-3">
               <label for="statAutoEdit" class="form-label">Status</label>
               <select class="form-select" id="statAutoEdit" name="statAutoEdit">
                 <option value="">Selecione...</option>
@@ -175,6 +172,15 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
                 <option value="Desativo">Desativo</option>
               </select>
             </div>
+
+            <div class="col-md-4">
+            <label for="pdLocCarEdit" class="form-label">Pode ser Locado</label>
+            <select class="form-select" name="pdLocCarEdit" id="pdLocCarEdit">
+              <!-- <option value="">Selecione...</option> -->
+              <option value="Sim">Sim</option>
+              <option value="Não">Não</option>
+            </select>
+          </div>
       
             <div class="col-md-3">
               <label for="dtCadAutoEdit" class="form-label">Data do Cadastro</label>

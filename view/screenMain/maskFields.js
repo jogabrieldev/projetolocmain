@@ -1,7 +1,7 @@
 
 $(document).ready(function () {
   
-  $("#cpf").mask("000.000.000-00")
+  // $("#cpf").mask("000.000.000-00")
     
   $("#clieCelu").mask("(00) 00000-0000");
 
@@ -38,6 +38,17 @@ $(document).ready(function () {
   
   
 });
+
+$(document).ready(function () {
+
+ $("#clemcnpj").mask('00.000.000/0000-00')
+   
+  $("#clemcelu").mask("(00)00000-0000");
+  
+$("#clemcep").mask("00000-000");
+
+});
+
 
 $(document).ready(function () {
 

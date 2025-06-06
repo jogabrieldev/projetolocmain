@@ -18,10 +18,6 @@ class Control {
     res.sendFile(path.join(__dirname, '..', '..', 'view', 'screenMain', 'mainClient', 'mainClient.html'));
   }
 
-  clientEmp(req , res){
-     res.sendFile(path.join(__dirname , '..' , '..' , 'view' , 'screenMain' , 'mainClientEmp' , 'ClientEmp.html'))
-  }
-  
   forne(req, res) {
     res.sendFile(path.join(__dirname, '..', '..', 'view', 'screenMain', 'mainForn', 'mainForn.html'));
   }

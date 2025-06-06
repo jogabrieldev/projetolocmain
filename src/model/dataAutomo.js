@@ -3,6 +3,7 @@ const dataClient = client;
 import { crudRegisterDriver } from "./dataDriver.js";
 
 export const autoRegister = {
+
   registerAuto: async (data) => {
     try {
       const {
@@ -14,16 +15,16 @@ export const autoRegister = {
         caaumode,
         caaucor,
         caautico,
+        caauloca,
         caaukmat,
-        caaumoto,
         caaustat,
         caaudtca,
       } = data;
 
       const insert = `INSERT INTO cadauto (caaucode, caauplac, caauchss, caaurena, caaumaca,
-                                                caaumode, caaucor, caautico, caaukmat, caaumoto,
+                                                caaumode, caaucor, caautico, caauloca, caaukmat,
                                                 caaustat, caaudtca) 
-                            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *`;
+                            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 , $12) RETURNING *`;
 
       const values = [
         caaucode,
@@ -34,8 +35,8 @@ export const autoRegister = {
         caaumode,
         caaucor,
         caautico,
+        caauloca,
         caaukmat,
-        caaumoto,
         caaustat,
         caaudtca,
       ];
@@ -64,29 +65,6 @@ export const autoRegister = {
     }
   },
 
-   verificarDependeciaDoAutomovel: async() => {
-  try {
-    const checkdriver = await crudRegisterDriver.getAllDriverId();
-   
-    const driverCodes = checkdriver.map(driver => driver.motocode);
-
-    if (driverCodes.length === 0) return false;
-
-    const checkQuery = `
-      SELECT COUNT(*) FROM cadauto
-      WHERE caaumoto = ANY($1)
-    `;
-
-    const checkResult = await dataClient.query(checkQuery, [driverCodes]);
-
-    return parseInt(checkResult.rows[0].count) > 0;
-  } catch (error) {
-    console.error("Erro ao verificar dependências de automovel:", error);
-    throw error;
-  }
-},
-
-  
   deleteAuto: async (id) => {
     try {
       const deleteQuery = "DELETE FROM cadauto WHERE caaucode = $1 RETURNING *";
@@ -102,7 +80,7 @@ export const autoRegister = {
     try {
       const query = `UPDATE cadauto SET caauplac = $1, caauchss = $2, caaurena = $3, 
                            caaumaca = $4, caaumode = $5, caaucor = $6, caautico = $7, 
-                           caaukmat = $8, caaumoto = $9, caaustat = $10, caaudtca = $11
+                           caaukmat = $8, caauloca = $9, caaustat = $10, caaudtca = $11
                            WHERE caaucode = $12 RETURNING *;`;
 
       const values = [
@@ -114,7 +92,7 @@ export const autoRegister = {
         updateData.caaucor || null,
         updateData.caautico || null,
         updateData.caaukmat || null,
-        updateData.caaumoto || null,
+        updateData.caauloca || null,
         updateData.caaustat || null,
         updateData.caaudtca || null,
         id,

@@ -22,9 +22,10 @@ export const crudRegisterDriver = {
         motoEstd,
         motoMail,
         motoStat,
+        motoSitu
       } = data;
 
-      const insert = `INSERT INTO cadmoto( motocode, motoname, motodtnc, motocpf, motodtch, motoctch , motodtvc, motorest, motoorem, motocelu, motocep, motorua, motocity, motoestd, motomail,motostat  ) VALUES( $1 , $2 , $3 , $4 , $5 ,$6 , $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *`;
+      const insert = `INSERT INTO cadmoto( motocode, motonome, motodtnc, motocpf, motodtch, motoctch , motodtvc, motorest, motoorem, motocelu, motocep, motorua, motocity, motoestd, motomail,motostat,motositu  ) VALUES( $1 , $2 , $3 , $4 , $5 ,$6 , $7, $8, $9, $10, $11, $12, $13, $14, $15, $16 , $17) RETURNING *`;
 
       const values = [
         motoCode,
@@ -43,6 +44,7 @@ export const crudRegisterDriver = {
         motoEstd,
         motoMail,
         motoStat,
+        motoSitu
       ];
 
       const result = await userDbDriver.query(insert, values);

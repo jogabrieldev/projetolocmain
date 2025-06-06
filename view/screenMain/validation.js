@@ -130,7 +130,10 @@ function validationFormClient(){
               required: true,
               minlength: 4
             },
-            cpf:{
+            clieTiCli:{
+              required:true
+            },
+            cpfAndCnpj:{
                 required: true,
             },
             dtCad:{
@@ -162,9 +165,11 @@ function validationFormClient(){
                   required: "OBRIGATORIO",
                   minlength: "O nome deve ter no mínimo 4 caracteres."
                 },
-                cpf: {
-                    required: "OBRIGATORIO",
-                  minlength: "MINIMO 14 CARACTERES"
+                clieTiCli:{
+                  required:'OBRIGATORIO'
+               },
+                cpfAndCnpj:{
+                required: 'OBRIGATORIO'
                 },
                 dtCad:{
                     required: 'OBRIGATORIO',
@@ -298,6 +303,122 @@ function validationFormClientPageLocation(){
 $(function () {
   validationFormClientPageLocation();
 });
+ 
+
+function validationFormclientEmp(){
+    $('#formRegisterClientEmp').validate({
+        rules: {
+            
+          clemcode:{
+            required: true ,
+            maxlength: 15
+          },
+          clemnome:{
+            required: true
+          },
+          clemnoft:{
+             minlength:5
+
+          },
+          clemcnpj:{
+            required: true,
+            minlength:true
+          },
+          clemcep:{
+            required: true,
+          },
+          clemcelu:{
+            required: true,
+            // maxlength:true
+          },
+          clemmail:{
+            required: true,
+          },
+          clembanc:{
+            required: true
+          },
+          clemagen:{
+             required: true,
+             maxlength: 5
+          },
+          clemcont:{
+            required: true,
+            maxlength:15
+          },
+          clempix:{
+            required: true
+         },
+         clemdtcd:{
+           required: true,
+           date: true
+         }
+
+      },
+            messages: {
+              clemcode:{
+                required: 'OBRIGATORIO',
+                maxlength: 'MAXIMO 15 CARACTERES'
+              },
+              clemnome:{
+                 required:'OBRIGATORIO'
+              },
+              clemnoft:{
+                minlength:'minimo 5 caracteres'
+             },
+             clemcnpj:{
+               required:'OBRIGATORIO',
+               minlength: 'MINIMO 18 CARACTERES'
+             },
+          
+          clemcep:{
+            required: "OBRIGATORIO"
+          },
+          clemcelu:{
+            required: 'OBRIGATORIO',
+            maxlength:'MAXIMO 15 CARACTERS'
+          },
+          clemmail:{
+            required: 'OBRIGATORIO'
+          },
+          clembanc:{
+            required: " OBRIGATORIO"
+          },
+          clemagen:{
+            required: "OBRIGATORIO",
+            maxlength: 'MAXIMO 5 CARACTERES'
+         },
+         clemcont:{
+           required: "OBRIGATORIO",
+           maxlength: 'MAXIMO 15 CARACTERES'
+         },
+         clempix:{
+            required: 'OBRIGATORIO'
+         },
+         clemdtcd:{
+          required: 'OBRIGATORIO',
+          date: 'INSIRA UMA DATA VALIDA'
+        }
+           
+      },
+
+            errorPlacement: function (error, element) {
+                error.addClass('error-text');
+                error.insertAfter(element);
+              },
+              highlight: function (element) {
+                $(element).addClass('error-field');
+              },
+              unhighlight: function (element) {
+                $(element).removeClass('error-field');
+              },
+              submitHandler: function (form) {
+                form.submit();
+              }
+    })
+}
+$(function () {
+    validationFormForne();
+  });
 
 
  // fornecedor
@@ -589,7 +710,6 @@ function validationFormTipoProd(){
           required: true
         }
         
-
     },
           messages: {
 
@@ -677,7 +797,10 @@ function  validationFormMoto(){
            required:true
         },
         motoMail:{
-              required:true
+            required:true
+           },
+        motoSitu:{
+            required:true
            }
 
 
@@ -724,9 +847,11 @@ function  validationFormMoto(){
               required: "OBRIGATORIO"
            },motoMail:{
               required: "OBRIGATORIO"
+           },
+           motoSitu:{
+            required: "OBRIGATORIO"
            }
 
-          
           },
 
           errorPlacement: function (error, element) {
@@ -784,7 +909,7 @@ function  validationFormAutomovel(){
           required: true,
           number:true
         },
-        motoAuto:{
+       pdLocCar:{
           required: true
         },
         statAuto:{
@@ -827,7 +952,7 @@ function  validationFormAutomovel(){
               required: "OBRIGATORIO",
               number:"Somente valor numerico"
             },
-            motoAuto:{
+            pdLocCar:{
               required: "OBRIGATORIO"
             },
             statAuto:{

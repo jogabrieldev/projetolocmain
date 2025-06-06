@@ -110,6 +110,15 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
         </select>
       </div>
 
+      <div class="col-md-6">
+        <label for="motoSitu" class="form-label">Situação</label>
+         <select name="motoSitu" id="motoSitu" class="form-select form-select-sm">
+           <option value="">Selecione...</option>
+           <option value="Interno">Interno</option>
+           <option value="Externo">Externo</option>
+         </select>
+      </div>
+
       <div class="col-12 d-flex justify-content-center gap-3 mt-4">
         <button type="button" class="cadDriver btn btn-success  px-5"><i class="bi bi-check-circle me-2"></i>Cadastrar</button>
         <button type="button" class="btnOutPageRegister btn btn-secondary  px-5"> <i class="bi bi-arrow-left me-2"></i>Voltar</button>
@@ -122,7 +131,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
     <!-- FORMULARIO DE EDIÇÃO -->
 
     <div class="containerFormEditDriver container border border-secondary-subtle rounded-3 py-4 px-3" style="display: none;">
-  <form class="formEditDriver">
+    <form class="formEditDriver">
     <div class="row g-3">
 
       <div class="col-md-3">
@@ -132,7 +141,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
 
       <div class="col-md-5"> 
         <label for="editMotoNome" class="form-label">Nome</label>
-        <input type="text" class="form-control" name="editMotoNome" id="editMotoNome" placeholder="Discrição" maxlength="80" readonly>
+        <input type="text" class="form-control" name="editMotoNome" id="editMotoNome" placeholder="nome" maxlength="80" readonly>
       </div>
 
       <div class="col-md-4">
@@ -152,7 +161,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
 
       <div class="col-md-3">
         <label for="editMotoCtch" class="form-label">Categoria da CNH</label>
-        <select class="form-select" name="editMotoCtch" id="editMotoCtch">
+        <select class="form-select form-select-sm" name="editMotoCtch" id="editMotoCtch">
           <option value="A">A</option>
           <option value="B">B</option>
           <option value="C">C</option>
@@ -211,12 +220,21 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
 
       <div class="col-md-4">
         <label for="editMotoStat" class="form-label">Status</label>
-        <select class="form-select" name="editMotoStat" id="editMotoStat" disabled>
+        <select class="form-select form-select-sm" name="editMotoStat" id="editMotoStat" disabled>
           <option value="Disponivel">Disponível</option>
           <option value="Entrega destinada">Entrega destinada</option>
           <option value="Indisponivel">Indisponível</option>
         </select>
         <input type="hidden" name="editMotoStat" id="editMotoStatHidden" />
+      </div>
+
+      <div class="col-md-4">
+        <label for="motoSituEdit" class="form-label">Situação</label>
+         <select name="motoSituEdit" id="motoSituEdit" class="form-select form-select-sm" disabled>
+           <option value="Interno">Interno</option>
+           <option value="Externo">Externo</option>
+         </select>
+         <input type="hidden" name="motoSituEdit" id="motoSituEditHidden" />
       </div>
 
       <div class="col-12 d-flex justify-content-center gap-3 pt-4">

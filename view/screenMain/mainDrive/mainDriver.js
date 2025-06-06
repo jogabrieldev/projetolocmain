@@ -311,7 +311,8 @@ function registerNewDriver(){
           motoCity: document.querySelector('#motoCity').value.trim(),     // Cidade
           motoEstd: document.querySelector('#motoEstd').value.trim(),     // Estado
           motoMail: document.querySelector('#motoMail').value.trim(),      // E-mail
-          motoStat: document.querySelector("#motoStat").value       // status
+          motoStat: document.querySelector("#motoStat").value.trim(),
+          motoSitu: document.querySelector('#motoSitu').value.trim()      // status
       };
 
       const datas = [
@@ -466,6 +467,7 @@ async function fetchListMotorista() {
     }
 
     const motorista = result;
+    console.log('motorista' , motorista)
     const motoristaListDiv = document.querySelector(".listingDriver");
     motoristaListDiv.innerHTML = "";
 
@@ -483,6 +485,7 @@ async function fetchListMotorista() {
         "Código",
         "Status",
         "Nome",
+        "Situação",
         "Data de Nascimento",
         "CPF",
         "Data de Emissão",
@@ -534,7 +537,8 @@ async function fetchListMotorista() {
         const dados = [
           m.motocode,
           m.motostat,
-          m.motoname,
+          m.motonome,
+          m.motositu,
           formatDate(m.motodtnc),
           m.motocpf,
           formatDate(m.motodtch),
@@ -736,7 +740,7 @@ function editDriver(){
        console.log(motoristaSelecionado.motoctch)
       const campos = [
         { id: "editMotoCode", valor: motoristaSelecionado.motocode },
-        { id: "editMotoNome", valor: motoristaSelecionado.motoname },
+        { id: "editMotoNome", valor: motoristaSelecionado.motonome },
         { id: "editMotoDtnc", valor: motoristaSelecionado.motodtnc },
         { id: "editMotoCpf", valor: motoristaSelecionado.motocpf },
         { id: "editMotoDtch", valor: motoristaSelecionado.motodtch },
@@ -747,10 +751,11 @@ function editDriver(){
         { id: "editMotoCelu", valor: motoristaSelecionado.motocelu },
         { id: "editMotoCep", valor: motoristaSelecionado.motocep },
         { id: "editMotoRua", valor: motoristaSelecionado.motorua },
-        { id: "editMotoCity", valor: motoristaSelecionado.motorua },
+        { id: "editMotoCity", valor: motoristaSelecionado.motocity},
         { id: "editMotoEstd", valor: motoristaSelecionado.motoestd },
         { id: "editMotoMail", valor: motoristaSelecionado.motomail },
-        { id: "editMotoStat" , valor: motoristaSelecionado.motostat}
+        { id: "editMotoStat" , valor: motoristaSelecionado.motostat},
+        {id:"motoSituEdit" , valor:motoristaSelecionado.motositu }
       ];
   
       // Atualizar valores no formulário
@@ -780,6 +785,13 @@ function editDriver(){
               }
             }
           }
+
+          if (id === "motoSituEdit") {
+                const hiddenInput = document.getElementById("motoSituEditHidden");
+                if (hiddenInput) {
+                  hiddenInput.value = valorFormatado;
+                }
+              }
 
           if (id === "editMotoStat") {
             const hiddenInput = document.getElementById("editMotoStatHidden");
@@ -923,7 +935,7 @@ async function editAndUpdateOfDriver() {
   
       const updateDriver = {
         motocode: document.getElementById("editMotoCode").value,
-        motoname: document.getElementById("editMotoNome").value,
+        motonome: document.getElementById("editMotoNome").value,
         motodtnc: document.getElementById("editMotoDtnc").value,
         motocpf: document.getElementById("editMotoCpf").value,
         motodtch: document.getElementById("editMotoDtch").value,

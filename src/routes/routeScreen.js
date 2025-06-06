@@ -9,8 +9,6 @@ routeEscreen.get('/bens', control.bens);
 
 routeEscreen.get('/client' , control.client)
 
-routeEscreen.get('/clientemp', control.clientEmp)
-
 routeEscreen.get('/fornecedor' , control.forne)
 
 routeEscreen.get('/produto' , control.prod)

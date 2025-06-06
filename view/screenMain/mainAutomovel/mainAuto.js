@@ -1,52 +1,3 @@
-const loadDrivers = async () => {
-  const token = localStorage.getItem("token");
-
-  if (!token || isTokenExpired(token)) {
-    Toastify({
-      text: "Sessão expirada. Faça login novamente.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-
-    localStorage.removeItem("token");
-    setTimeout(() => {
-      window.location.href = "/index.html";
-    }, 2000);
-    return;
-  }
-  try {
-    const response = await fetch("/api/listingdriver", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const drivers = await response.json();
-
-    const select = document.getElementById("motoAuto");
-    const selectEdit = document.getElementById("motoAutoEdit");
-
-    // Adiciona as opções ao select
-    drivers.forEach((driver) => {
-      const option = document.createElement("option");
-      option.value = driver.motocode;
-      option.textContent = driver.motoname;
-      select.appendChild(option);
-    });
-    drivers.forEach((driver) => {
-      const option = document.createElement("option");
-      option.value = driver.motocode;
-      option.textContent = driver.motoname;
-      selectEdit.appendChild(option);
-    });
-  } catch (error) {
-    console.error("Erro ao carregar motoristas:", error);
-  }
-};
 
 function isTokenExpired(token) {
   try {
@@ -91,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const mainContent = document.querySelector("#mainContent");
         if (mainContent) {
           mainContent.innerHTML = html;
-          loadDrivers();
           interationSystemVehicles();
           registerNewVehicles();
           dateAtualInField('dtCadAuto');
@@ -304,7 +254,7 @@ async function registerNewVehicles() {
         caaucor: document.querySelector("#corAuto").value.trim(),
         caautico: document.querySelector("#tpCombusAuto").value.trim(),
         caaukmat: document.querySelector("#kmAtAuto").value.trim(),
-        caaumoto: document.querySelector("#motoAuto").value.trim(),
+        caauloca: document.querySelector('#pdLocCar').value.trim(),
         caaustat: document.querySelector("#statAuto").value.trim(),
         caaudtca: document.querySelector('#dtCadAuto').value,
       };
@@ -436,7 +386,7 @@ async function listarVeiculos() {
         "Cor",
         "Tipo de combustivel",
         "Km Atual",
-        "Motorista",
+        "Pode ser Locado",
         "Status",
         "Data de Cadastro",
       ];
@@ -478,7 +428,7 @@ async function listarVeiculos() {
           v.caaucor,
           v.caautico,
           v.caaukmat,
-          v.caaumoto,
+          v.caauloca,
           v.caaustat,
           formatDate(v.caaudtca),
         ];
@@ -676,8 +626,8 @@ function editVehicles() {
         { id: "corAutoEdit", valor: autoSelecionado.caaucor },
         { id: "tpCombusAutoEdit", valor: autoSelecionado.caautico },
         { id: "kmAtAutoEdit", valor: autoSelecionado.caaukmat },
-        { id: "motoAutoEdit", valor: autoSelecionado.caaumoto },
         { id: "statAutoEdit", valor: autoSelecionado.caaustat },
+        {id: "pdLocCarEdit" , valor: autoSelecionado.caauloca},
         { id: "dtCadAutoEdit", valor: autoSelecionado.caaudtca },
       ];
 
@@ -690,7 +640,6 @@ function editVehicles() {
             elemento.value = valor || "";
           }
 
-          
         } else {
           console.warn(`Elemento com ID '${id}' não encontrado.`);
         }
@@ -755,8 +704,8 @@ function editVehicles() {
         caaucor: document.getElementById("corAutoEdit").value,
         caautico: document.getElementById("tpCombusAutoEdit").value,
         caaukmat: document.getElementById("kmAtAutoEdit").value,
-        caaumoto: document.getElementById("motoAutoEdit").value,
         caaustat: document.getElementById("statAutoEdit").value,
+        caauloca: document.getElementById('pdLocCarEdit').value,
         caaudtca: document.getElementById("dtCadAutoEdit").value,
       };
 
