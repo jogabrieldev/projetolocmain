@@ -51,6 +51,33 @@ function atualizarData(date) {
   document.getElementById(date).value = dataHoraFormatada;
 }
 
+async function preencheraResiduo(id) {
+  const fieldResi = document.getElementById(id);
+  try {
+    const res = await fetch("/residuo", {
+      method: "GET",
+    });
+    const data = await res.json();
+    console.log("residuo", data);
+
+    const lista = data.list;
+
+    if (Array.isArray(lista) && fieldResi) {
+      lista.forEach(({ resicode, residesc }) => {
+        const option = document.createElement("option");
+        option.value = resicode;
+        option.textContent = residesc;
+        fieldResi.appendChild(option);
+      });
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Erro na function AUXILIAR resi", error);
+    return false;
+  }
+}
+
 // VERIFICA SE OS CAMPOS DOS CLIENTES ESTA OK
 function verificarPreenchimentoCliente() {
   const inputsCliente = [
@@ -86,7 +113,11 @@ document.addEventListener("DOMContentLoaded", () => {
               contentMain.innerHTML = html;
             }
             interationSystemLocation();
-
+            preencheraResiduo("residuoSelect");
+            interationSystemLocationVehicle();
+            
+             
+            localStorage.removeItem("dadosInputs");
             const aguardarElementos = () => {
               const select1 = document.getElementById("family1");
               const tableLocation = document.querySelector(".tableLocation");
@@ -94,11 +125,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 frontLocation();
                 searchClientForLocation();
                 carregarFamilias();
-                atualizarData('dataLoc')
+                atualizarData("dataLoc");
+                loadingVehicle('veiculo1');
+                loadingVehicle('veiculo2');
                 registerClientPageLocation();
+                saveLocalizationInCache();
                 maskFieldClientPageLocation();
                 editLocation();
                 isDataValida();
+                hoursField('time1')
+                hoursField('time2')
                 const buttonSubmitLocationFinish =
                   document.querySelector(".finish");
                 if (buttonSubmitLocationFinish) {
@@ -108,6 +144,16 @@ document.addEventListener("DOMContentLoaded", () => {
                   );
                 }
 
+                const buttonSubmitLocationFinishVehicles =
+                  document.querySelector(".finishVehicles");
+                if (buttonSubmitLocationFinishVehicles) {
+                  buttonSubmitLocationFinishVehicles.addEventListener(
+                    "click",
+                    locationTheVehicle
+                  );
+                }
+
+                addLocalizationInLocation();
                 deletarLocation();
                 esconderElemento();
                 mostrarElemento();
@@ -286,21 +332,42 @@ function interationSystemLocation() {
     });
   }
 
+  const btnAtivGoods = document.querySelector(".btnAtivGoods");
+  if (btnAtivGoods) {
+    btnAtivGoods.addEventListener("click", () => {
+      const containerLocationPartGoods =
+        document.querySelector(".containerGoodsloc");
+      if (containerLocationPartGoods) {
+        mostrarElemento(containerLocationPartGoods);
+      }
+
+      const containerdecision = document.querySelector(".decisionHeader");
+      if (containerdecision) {
+        esconderElemento(containerdecision);
+      }
+
+      const textTypeLocation = document.querySelector(".textTypeLocation");
+      if (textTypeLocation) {
+        textTypeLocation.innerHTML = "<b>Locação de Caçambas</b>";
+      }
+    });
+  }
+
   const buttonOutLocation = document.querySelector(".outLocation");
   if (buttonOutLocation) {
     buttonOutLocation.addEventListener("click", () => {
-      const content = document.querySelector(".content");
+      const content = document.querySelector(".containerGoodsloc ");
       if (content) {
         esconderElemento(content);
       }
-      const table = document.querySelector(".tableLocation");
-      if (table) {
-        mostrarElemento(table);
+      const decisionHeader = document.querySelector(".decisionHeader");
+      if (decisionHeader) {
+        mostrarElemento(decisionHeader);
       }
 
-      const btnMainPage = document.querySelector(".btnInitPageMainLoc");
-      if (btnMainPage) {
-        mostrarElemento(btnMainPage);
+      const textTypeLoc = document.querySelector(".textTypeLocation");
+      if (textTypeLoc) {
+        textTypeLoc.innerHTML = "<b>Qual tipo de locação</b>";
       }
     });
   }
@@ -368,10 +435,20 @@ function searchClientForLocation() {
   if (searchClient) {
     searchClient.addEventListener("click", async (event) => {
       event.preventDefault();
-        const inputElement = document.querySelector("#client");
-        const inputSearchClient = inputElement.value.trim();
+      const inputElement = document.querySelector("#client");
+      const inputSearchClient = inputElement.value.trim();
 
-      console.log('client' , inputSearchClient)
+      if (!inputSearchClient) {
+        Toastify({
+          text: "Por favor, digite o nome ou CPF do cliente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "orange",
+        }).showToast();
+        return;
+      }
 
       const token = localStorage.getItem("token");
 
@@ -390,7 +467,6 @@ function searchClientForLocation() {
 
         const clientes = await response.json();
 
-        // Função para normalizar textos (remover acentos e converter para minúsculas)
         const normalizeText = (text) => {
           return text
             ? text
@@ -400,8 +476,7 @@ function searchClientForLocation() {
             : "";
         };
 
-        // Função para remover caracteres não numéricos do CPF
-        const normalizeCPF = (cpf) => cpf.replace(/\D/g, "");
+        const normalizeCPF = (cpf) => (cpf ? cpf.replace(/\D/g, "") : "");
 
         const inputNormalized = normalizeText(inputSearchClient);
         const inputCpfNormalized = normalizeCPF(inputSearchClient);
@@ -424,7 +499,7 @@ function searchClientForLocation() {
           const cliente = clienteEncontrado[0];
 
           document.querySelector("#nameClient").value = cliente.clienome || "";
-          document.querySelector("#cpfClient").value = cliente.cliecpf || "";
+          document.querySelector("#cpfClient").value = cliente.cliecpcn || "";
           document.querySelector("#ruaClient").value = cliente.clierua || "";
           document.querySelector("#cityClient").value = cliente.cliecity || "";
           document.querySelector("#cepClient").value = cliente.cliecep || "";
@@ -473,7 +548,8 @@ function searchClientForLocation() {
         `;
 
             const buttonOutContainerSearch = document.createElement("button");
-            buttonOutContainerSearch.className = "btn btn-outline-secondary d-flex align-items-center";
+            buttonOutContainerSearch.className =
+              "btn btn-outline-secondary d-flex align-items-center";
             buttonOutContainerSearch.textContent = "Voltar";
             buttonOutContainerSearch.style.cursor = "pointer";
             buttonOutContainerSearch.addEventListener("click", () => {
@@ -680,8 +756,8 @@ function clearFields() {
 
 // ENVIO DA LOCAÇÃO FINALIZADA
 async function handleSubmit() {
-  atualizarData('dataLoc')
-  
+  atualizarData("dataLoc");
+
   const token = localStorage.getItem("token");
 
   if (!token || isTokenExpired(token)) {
@@ -744,18 +820,17 @@ async function handleSubmit() {
       quantidade;
 
     if (isParcial) {
-
-       if (codigosUsados.has(codeBen)) {
-      Toastify({
-        text: `Grupo ${i}: O código "${codeBen}" já foi selecionado em outro grupo.`,
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-      return;
-    }
+      if (codigosUsados.has(codeBen)) {
+        Toastify({
+          text: `Grupo ${i}: O código "${codeBen}" já foi selecionado em outro grupo.`,
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
 
       codigosUsados.add(codeBen);
       if (!codeBen || !dataInicioStr || !dataFimStr || !quantidade) {
@@ -875,8 +950,21 @@ async function handleSubmit() {
     const dataLocStr = document.getElementById("dataLoc")?.value || null;
     const dataDevoStr = document.getElementById("DataDevo")?.value || null;
     const pagament = document.getElementById("pagament")?.value || null;
+    const residuo = document.getElementById("residuoSelect").value;
 
-    console.log('locacao' , dataLocStr)
+    console.log("residuoSelect", residuo);
+    if (!residuo) {
+      Toastify({
+        text: "Selecione o residuo envolvido nessa Locação",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "orange",
+      }).showToast();
+
+      return;
+    }
 
     if (!dataDevoStr || !pagament) {
       Toastify({
@@ -921,13 +1009,13 @@ async function handleSubmit() {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
 
-    const partes = dataLocStr.split('-');
+    const partes = dataLocStr.split("-");
     const dataLocDia = new Date(
-    Number(partes[0]), // ano
-    Number(partes[1]) - 1, // mês (0-indexado)
-    Number(partes[2]) // dia
-  );
-  dataLocDia.setHours(0, 0, 0, 0);
+      Number(partes[0]), // ano
+      Number(partes[1]) - 1, // mês (0-indexado)
+      Number(partes[2]) // dia
+    );
+    dataLocDia.setHours(0, 0, 0, 0);
 
     if (dataLocDia.getTime() !== hoje.getTime()) {
       Toastify({
@@ -945,8 +1033,8 @@ async function handleSubmit() {
       return new Date(data.getFullYear(), data.getMonth(), data.getDate());
     };
 
-    const dateLocation = new Date(dataLocStr)
-    const dateDevolution = new Date(dataDevoStr)
+    const dateLocation = new Date(dataLocStr);
+    const dateDevolution = new Date(dataDevoStr);
 
     const dataLocNormalizada = normalizarData(dateLocation);
     const dataDevoNormalizada = normalizarData(dateDevolution);
@@ -963,16 +1051,48 @@ async function handleSubmit() {
       return;
     }
 
+    const dadosInputsLoc = localStorage.getItem("dadosInputs");
+
+    if (!dadosInputsLoc) {
+      Toastify({
+        text: "Você precisa preencher os dados de localização antes de continuar.",
+        duration: 4000,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "#f44336",
+      }).showToast();
+      return; // impede o envio
+    }
+
+    let dateSave;
+    try {
+      dateSave = JSON.parse(dadosInputsLoc);
+    } catch (e) {
+      Toastify({
+        text: "Erro ao processar os dados de localização salvos. Por favor, tente novamente.",
+        duration: 4000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "#f44336",
+      }).showToast();
+      return;
+    }
+
+    console.log(dateSave);
+
     const payload = {
       numericLocation,
       userClientValidade,
       dataLoc: dataLocStr,
       dataDevo: dataDevo.toISOString().split("T")[0],
+      localization: dateSave,
+      resi: residuo,
       pagament,
       bens,
     };
 
-    
+    console.log("payload locação", payload);
+
     const response = await fetch("/api/datalocation", {
       method: "POST",
       headers: {
@@ -997,7 +1117,9 @@ async function handleSubmit() {
 
       setTimeout(() => {
         clearFields();
-        atualizarData('dataLoc')
+        localStorage.removeItem("dadosInputs");
+        atualizarData("dataLoc");
+        preencheraResiduo("residuoSelect");
       }, 500);
     } else {
       Toastify({
@@ -1082,6 +1204,9 @@ async function gerarContrato() {
     esconderElemento(containerContent);
   }
 
+  const dadosInputsLoc = localStorage.getItem("dadosInputs");
+  const enderecoLocacao = dadosInputsLoc ? JSON.parse(dadosInputsLoc) : {};
+
   // Gerar conteúdo do contrato
   const contratoDiv = document.getElementById("contrato");
   contratoDiv.innerHTML = `
@@ -1091,6 +1216,31 @@ async function gerarContrato() {
       <p><strong>Número da locação:</strong> ${numericLocation}</p>
       <p><strong>Nome do Cliente:</strong> ${nomeCliente}</p>
       <p><strong>CPF do Cliente:</strong> ${cpfCliente}</p>
+      <div class="border rounded p-3 mb-3 bg-dark-subtle text-white">
+      <p class="mb-1"><strong>Endereço da Locação:</strong></p>
+      <div class="row">
+       <div class="col-md-4 text-dark"><strong>Rua:</strong> ${
+         enderecoLocacao?.localizationRua || "-"
+       }</div>
+       <div class="col-md-4 text-dark"><strong>Bairro:</strong> ${
+         enderecoLocacao?.localizationBairro || "-"
+       }</div>
+    <div class="col-md-4 text-dark"><strong>Cidade:</strong> ${
+      enderecoLocacao?.localizationCida || "-"
+    }</div>
+  </div>
+  <div class="row">
+    <div class="col-md-4 text-dark"><strong>CEP:</strong> ${
+      enderecoLocacao?.localizationCep || "-"
+    }</div>
+    <div class="col-md-4 text-dark"><strong>Referência:</strong> ${
+      enderecoLocacao?.localizationRefe || "-"
+    }</div>
+    <div class="col-md-4 text-dark"><strong>Quadra/Lote:</strong> ${
+      enderecoLocacao?.localizationQdLt || "-"
+    }</div>
+  </div>
+</div>
       <p><strong>Data da Locação:</strong> ${dataLocacao}</p>
       <p><strong>Data de Devolução:</strong> ${dataDevolucao}</p>
       <p><strong>Forma de Pagamento:</strong> ${pagamento}</p>
@@ -1146,21 +1296,20 @@ async function gerarContrato() {
   }
 
   // Evento para gerar o PDF
-const btnBaixarPdf = document.getElementById("baixarPdf");
-if (btnBaixarPdf) {
-  btnBaixarPdf.addEventListener("click", () => {
-    const element = document.getElementById("contrato");
-    const opt = {
-      margin:       0.5,
-      filename:     `contrato-locacao-${numericLocation}.pdf`,
-      image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2 },
-      jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-    };
-    html2pdf().set(opt).from(element).save();
-  });
-}
-
+  const btnBaixarPdf = document.getElementById("baixarPdf");
+  if (btnBaixarPdf) {
+    btnBaixarPdf.addEventListener("click", () => {
+      const element = document.getElementById("contrato");
+      const opt = {
+        margin: 0.5,
+        filename: `contrato-locacao-${numericLocation}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+      };
+      html2pdf().set(opt).from(element).save();
+    });
+  }
 }
 
 // cadastrar o cliente pela a tela de locação
@@ -1248,7 +1397,6 @@ function registerClientPageLocation() {
         return;
       }
 
-
       const formDataLocation = {
         clieCode: document.querySelector("#clieCodeLoc").value.trim(), // Codigo
         clieName: document.querySelector("#clieNameLoc").value.trim(), // Nome
@@ -1263,7 +1411,7 @@ function registerClientPageLocation() {
         clieMail: document.querySelector("#clieMailLoc").value.trim(), // E-mail
       };
 
-      const clieMail = formDataLocation.clieMail
+      const clieMail = formDataLocation.clieMail;
       const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       if (!emailValido.test(clieMail)) {
@@ -1297,7 +1445,9 @@ function registerClientPageLocation() {
       }
 
       const [yCad, mCad, dCad] = formDataLocation.dtCad.split("-").map(Number);
-      const [yNasc, mNasc, dNasc] = formDataLocation.dtNasc.split("-").map(Number);
+      const [yNasc, mNasc, dNasc] = formDataLocation.dtNasc
+        .split("-")
+        .map(Number);
       const dtCad = new Date(yCad, mCad - 1, dCad);
       const dtNasc = new Date(yNasc, mNasc - 1, dNasc);
       const hoje = new Date();
@@ -1321,7 +1471,6 @@ function registerClientPageLocation() {
         }).showToast();
         return;
       }
-
 
       // 5.2) dtNasc não pode ser futura
       if (dtNasc.getTime() > hoje0.getTime()) {

@@ -45,10 +45,7 @@ io.on("connection", (socket) => {
         io.emit("clienteAtualizado", msg); 
     });
 
-    //  socket.on("updateRunTimeClientEmp", (msg) => {
-    //     io.emit("updateRunTimeClientEmp", msg); 
-    // });
-
+    
     socket.on("updateRunTimeGoods", (msg) => {
         io.emit("updateRunTimeGoods", msg); 
     });

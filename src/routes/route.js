@@ -16,6 +16,7 @@ import {location} from '../controllers/locationController.js';
 import logistics from '../controllers/logistcsController.js'
 import { controllerDelivery } from "../controllers/deliveryController.js";
 import { movementResiduo } from "../controllers/residuoController.js";
+import{controllerLocationVehicle} from "../controllers/locationVehicleController.js"
 
 
 route.post("/autenticar",  (req, res) => {
@@ -199,7 +200,7 @@ route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
   movementAuto.deleteOfAuto(req , res)
  }); 
 
- //locação 
+ //locação Bens
 
  route.get('/api/generateNumber' , (req , res)=>{
    location.gerarNumeroLocacao(req , res)
@@ -239,6 +240,16 @@ route.get('/api/codefamilybens', authenticateToken,(req , res)=>{
  route.put("/api/location/:id", authenticateToken, (req ,res)=>{
   location.updateLocationAndBens(req ,res)
  });
+
+ // LOCAÇÃO VEICULOS
+
+ route.post('/api/locacaoveiculo' , (req ,res)=>{
+  controllerLocationVehicle.dataLocacaoVehicle(req ,res)
+ })
+
+ route.get('/api/locacaoveiculo' , (req , res)=>{
+   controllerLocationVehicle.getLocationVehicles(req ,res)
+ })
     
  // DELIVERY LOCATION 
 

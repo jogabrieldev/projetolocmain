@@ -1,5 +1,6 @@
 import { LocacaoModel } from "../model/location.js";
 
+
 export const location = {
 
   async gerarNumeroLocacao(req, res) {
@@ -17,20 +18,23 @@ export const location = {
   },
 
   async dataLocacao(req, res) {
-    const { userClientValidade, numericLocation, dataLoc, dataDevo, pagament, bens } = req.body;
+    const { userClientValidade, numericLocation, dataLoc, localization, resi, dataDevo, pagament, bens } = req.body;
 
+    
     try {
+    
       if (!bens || bens.length === 0) {
-        return res.status(400).json({ error: "Nenhum dado de bens enviado." });
+       return res.status(400).json({ error: "Nenhum dado de bens enviado." });
       }
-  
+
       if (!userClientValidade || userClientValidade.length < 2) {
         return res.status(400).json({ error: "CPF do cliente é obrigatório." });
       }
   
       const cpfClient = userClientValidade[1];
+      
       const cliente = await LocacaoModel.buscarClientePorCPF(cpfClient);
-  
+     
       if (!cliente) {
         return res.status(404).json({ error: "Cliente não encontrado." });
       }
@@ -118,10 +122,18 @@ export const location = {
         cllopgmt: pagament,
         clloclno: cliente.clienome,
         cllocpf: cpfClient,
+        clloresi: resi,
+        cllorua:localization.localizationRua,
+        cllobair:localization.localizationBairro,
+        cllocida:localization.localizationCida,
+        cllocep:localization.localizationCep,
+        cllorefe:localization.localizationRefe,
+        clloqdlt:localization.localizationQdLt
       });
-  
+
+     
       await LocacaoModel.inserirBens(bens, locationClient);
-  
+      
       const listAllLocation = await LocacaoModel.buscarTodasLocacoes();
   
       const io = req.app.get("socketio");
@@ -135,6 +147,8 @@ export const location = {
       return res.status(500).json({ error: "Erro interno do servidor." });
     }
   },
+
+ 
   
   async getClientByCPF(req, res) {
     try {

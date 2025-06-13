@@ -80,7 +80,6 @@ meu html princpal e o main.html , nele esta todas as seções de cadastro e cada
    }
 
   
-
 ## execute o projeto 
  npm run dev   
 
@@ -88,7 +87,9 @@ meu html princpal e o main.html , nele esta todas as seções de cadastro e cada
 
 * meu processo de locação esta envolvendo 2 tabelas , uma para registrar o cliente que locou e outra para registrar o bem locado. Assim que a locação e finalizada e gerado um numero de locação e com esse numero temos acesso ao locação. Temos acesso ao bem que foi locado/ produto, temos acesso a quantidade, a descrição desse bem, e o cliente que solicitou e os dados desse cliente.
 
-* Meu back-end que esta gerando esse numero atraves de uma comparação caso o numero não esteja sendo usado ja ele vai gerar para aquela determinada locação.
+* no processo de locação também e adicionado qual residuo vai ser usado naquela locação e qual e a localização caso seja uma localização que não esteja cadastrado no sistema
+
+* meu back-end esta gerando o numero de locaçaõ fazendo uma comparação com os numero que ja foram gerados para ser numeros mais precisos
 
 ## backend 
 

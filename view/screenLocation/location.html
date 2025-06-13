@@ -31,6 +31,10 @@
     >
       Voltar
     </button>
+
+     <button class="registerLocation btn btn-primary text-dark fw-semibold buttonLoadLocationVihicle">
+      locação de Veiculos
+    </button>
   </div>
 
   <main class="container content py-2" style="display: none; max-height: 90vh; overflow-y: auto;">
@@ -55,6 +59,10 @@
     </button>
   </div>
 </div>
+
+<!-- <button class="btnExitAddLoc btn btn-sm btn-danger">
+      <i class="bi bi-x-lg"></i>
+    </button> -->
 
 
     <div class="col-md-2">
@@ -90,6 +98,7 @@
         required
       />
     </div>
+      
 
     <div class="col-md-4">
       <label for="pagament" class="form-label fw-bold">Forma de pagamento</label>
@@ -102,18 +111,103 @@
       </select>
     </div>
 
-    <div class="col-12 d-flex justify-content-end">
+    <div class="col-md-4">
+      <label for="residuoSelect" class="form-label fw-bold">Residuo Envolvido</label>
+      <select name="residuoSelect" id="residuoSelect" class="form-select" required>
+        <option value="">Selecione...</option>
+      </select>
+    </div>
+
+
+    <div class="col-12 d-flex justify-content-between">
       <button
         type="button"
-        class="registerClientPageLocation btn btn-primary fw-semibold px-4 py-2 shadow-sm"
+        class="registerClientPageLocation btn btn-primary fw-semibold px-4 py-2 shadow-sm btn-sm"
         id="registerClientPageLocation"
       >
         <i class="bi bi-person-plus-fill me-2"></i> Cadastrar Cliente
+      </button>
+
+       <button
+        type="button"
+        class="btn btn-primary fw-semibold px-4 py-2 shadow-sm btn-sm"
+        id="addlocalization"
+      >
+       <i class="bi bi-plus-circle"></i>
+        Adicionar Localização
       </button>
     </div>
   </div>
 </form>
 
+  <div class="containerMaps d-none p-4 rounded shadow">
+  <div class="d-flex justify-content-between align-items-center mb-3 text-dark">
+    <h5 class="m-0">Adicionar Endereço</h5>
+    <button class="btnExitAddLoc btn btn-sm btn-danger">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+ <div class="container border rounded p-4 bg-light shadow-sm">
+  <div class="row g-3">
+
+    <div class="col-md-6">
+      <div class="form-floating">
+        <input type="text" class="form-control" id="enderecoCepInput" placeholder="CEP">
+        <label for="enderecoCepInput"><i class="bi bi-geo-alt-fill me-2"></i>CEP</label>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-floating">
+        <input type="text" class="form-control" id="enderecoQdLtInput" placeholder="Quadra e Lote">
+        <label for="enderecoQdLtInput"><i class="bi bi-layout-text-sidebar-reverse me-2"></i>Quadra / Lote</label>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-floating">
+        <input type="text" class="form-control" id="enderecoRuaInput" placeholder="Rua" required>
+        <label for="enderecoRuaInput"><i class="bi bi-signpost-split me-2"></i>Rua</label>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-floating">
+        <input type="text" class="form-control" id="enderecoCityInput" placeholder="Cidade" required>
+        <label for="enderecoCityInput"><i class="bi bi-buildings me-2"></i>Cidade</label>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-floating">
+        <input type="text" class="form-control" id="enderecoBairroInput" placeholder="Bairro" required>
+        <label for="enderecoBairroInput"><i class="bi bi-map-fill me-2" required></i>Bairro</label>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-floating">
+        <input type="text" class="form-control" id="enderecoRefeInput" placeholder="Referências">
+        <label for="enderecoRefeInput"><i class="bi bi-info-circle-fill me-2"></i>Referências</label>
+      </div>
+    </div>
+
+    <div class="iframe-container col-12">
+     <iframe id="iframeMaps" width="100%" height="250" style="border:0;" allowfullscreen loading="lazy"></iframe>
+   </div>
+
+    <div class="col-12 text-center">
+      <button class="btn btn-success w-50 btnSaveLocalization mt-4">
+        <i class="bi bi-check-circle me-2"></i>Salvar Localização
+      </button>
+    </div>
+
+  </div>
+</div>
+
+</div>
+ 
 
     <!-- Dados do cliente -->
     <div class="row g-3 mb-4">
@@ -190,9 +284,107 @@
         />
       </div>
     </div>
+     
+    <!-- Botões para decidir a locação -->
+     <div class=" container p-4 ">
+         <div class="p-2 text-center" >
+               <h5 class="text-dark textTypeLocation"><b>Qual tipo de locação</b></h5>
+         </div>
 
-    <!-- Seção de Bens -->
-    <div class="p-3 rounded shadow-sm mb-3 border">
+         <div class="decisionHeader p-3 d-flex justify-content-between gap-3">
+            <button class="btnAtivGoods btn btn-warning w-50">Caçambas</button>
+            <button class="btn btn-light w-50 btnAtiLocationVehicle">Veiculos</button>
+         </div>
+     </div>
+     
+      
+     <!-- Locação de veiculos -->
+  <div class="container containerLocationVehicles d-none">
+  <div class="container mt-3">
+    <!-- Botão Voltar -->
+    
+    <form>
+      <!-- Veículo 1 -->
+      <div class="border rounded p-2 mb-3">
+        <h6 class="mb-2">Veículo 1</h6>
+        <div class="row gx-2 gy-2">
+          <div class="col-md-6">
+            <label for="veiculo1" class="form-label">Veículo</label>
+            <select class="form-select form-select-sm" id="veiculo1" required>
+              <option selected disabled value="">Selecione...</option>
+              
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="placa1" class="form-label">Placa</label>
+            <input type="text" class="form-control form-control-sm" id="placa1" readonly >
+          </div>
+
+          <div class="col-md-3">
+            <label for="modelo1" class="form-label">Modelo</label>
+            <input type="text" class="form-control form-control-sm" id="modelo1" readonly>
+          </div>
+          <div class="col-md-3">
+            <label for="time1" class="form-label">Horario</label>
+            <input type="time" class="form-control form-control-sm" id="time1" readonly>
+          </div>
+          
+          <div class="col-md-6">
+            <label for="carga1" class="form-label">Tipo de Carga</label>
+            <input type="text" class="form-control form-control-sm" id="carga1">
+          </div>
+        </div>
+      </div>
+
+      <!-- Veículo 2 -->
+      <div class="border rounded p-2 mb-3">
+        <h6 class="mb-2">Veículo 2</h6>
+        <div class="row gx-2 gy-2">
+          <div class="col-md-6">
+            <label for="veiculo2" class="form-label">Veículo</label>
+            <select class="form-select form-select-sm" id="veiculo2">
+              <option selected disabled value="">Selecione...</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="placa2" class="form-label">Placa</label>
+            <input type="text" class="form-control form-control-sm" id="placa2" readonly>
+          </div>
+           <div class="col-md-3">
+            <label for="modelo2" class="form-label">Modelo</label>
+            <input type="text" class="form-control form-control-sm" id="modelo2" readonly>
+          </div>
+          <div class="col-md-3">
+            <label for="time2" class="form-label">Horario</label>
+            <input type="time" class="form-control form-control-sm" id="time2" readonly>
+          </div>
+         
+          <div class="col-md-6">
+            <label for="carga2" class="form-label">Tipo de Carga</label>
+            <input type="text" class="form-control form-control-sm" id="carga2">
+          </div>
+        </div>
+      </div>
+
+     
+
+      <!-- Botão Finalizar -->
+      <div class="mt-3 d-flex justify-content-around">
+        <button type="button" class="btn btn-success btn-sm finishVehicles">
+          <i class="bi bi-check-circle-fill"></i> Finalizar Locação
+        </button>
+
+        <button type="button" class="btn btn-light btn-sm btnOutLocationVehicles">
+        <i class="bi bi-arrow-left-circle"></i> Voltar
+      </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+    <!-- Seção de Bens para locação -->
+  <div class="containerGoodsloc d-none p-3 rounded shadow-sm mb-3 border">
       <div
        class="p-2 bg-secondary rounded shadow-sm"
     style="overflow-x: auto;"
@@ -471,8 +663,11 @@
 
         <!-- Botões -->
         <div class="d-flex justify-content-center gap-3 mt-4">
-          <button class="btn btn-success text-dark finish">Finalizar</button>
+          <button class="btn btn-success text-dark finish">
+            <i class="bi bi-check-circle-fill"></i>
+             Finalizar</button>
           <button class="btn btn-light text-dark outLocation" type="button">
+            <i class="bi bi-arrow-left-circle"></i>
             Voltar
           </button>
         </div>
@@ -1020,3 +1215,5 @@
   
 </section>
 <script src="locationFinish.js"></script>
+<script src="localization.js"></script>
+

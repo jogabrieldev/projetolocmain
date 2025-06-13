@@ -31,4 +31,6 @@ routeEscreen.get('/devolution' , control.devolution)
 
 routeEscreen.get('/residuoview' , control.residuoView)
 
+routeEscreen.get('/localization' , control.localization)
+
 export { routeEscreen };

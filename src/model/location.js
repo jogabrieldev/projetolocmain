@@ -13,46 +13,24 @@ export const LocacaoModel = {
       const query = "SELECT COUNT(*) FROM clieloc WHERE cllonmlo = $1";
       const result = await dataLocation.query(query, [numero]);
       existe = parseInt(result.rows[0].count) > 0;
-    } while (existe); // Se já existir, gera outro
+    } while (existe); 
 
     return numero;
   },
-  async criarLocacao({
-    cllonmlo,
-    clloidcl,
-    cllodtdv,
-    cllodtlo,
-    cllopgmt,
-    clloclno,
-    cllocpf,
-  }) {
+  async criarLocacao({cllonmlo, clloidcl, cllodtdv, cllodtlo, cllopgmt,cllorua ,cllocep, clloclno, cllobair, cllocida,cllorefe, clloqdlt, clloresi , cllocpf}) {
     try {
-      if (
-        !cllonmlo ||
-        !cllodtdv ||
-        !cllodtlo ||
-        !cllopgmt ||
-        !clloidcl ||
-        !clloclno ||
-        !cllocpf
-      ) {
-        throw new Error("Erro: Algum valor está indefinido!");
-      }
+      // if (!cllonmlo|| !clloidcl||!cllodtdv||!cllodtlo|| !cllopgmt|| !cllorua|| !cllobair|| !cllocida|| !clloresi|| !clloclno|| !cliecpcn){
+      //   throw new Error("Erro: Algum valor está indefinido na inserção do cliente que locou!");
+      // }
 
       const insertQuery = `
-  INSERT INTO clieloc(cllonmlo, clloidcl, cllodtdv, cllodtlo, cllopgmt, clloclno, cllocpf)
-  VALUES ($1, $2, $3, $4, $5, $6 , $7)
+  INSERT INTO clieloc(cllonmlo, clloidcl, cllodtdv, cllodtlo, cllopgmt,cllorua ,cllocep, clloclno, cllobair, cllocida,cllorefe, clloqdlt, clloresi , cllocpf)
+  VALUES ($1, $2, $3, $4, $5, $6 , $7 ,$8 ,$9 , $10 , $11 , $12 , $13 , $14)
   RETURNING clloid;
 `;
 
       const values = [
-        cllonmlo,
-        clloidcl,
-        cllodtdv,
-        cllodtlo,
-        cllopgmt,
-        clloclno,
-        cllocpf,
+        cllonmlo, clloidcl, cllodtdv, cllodtlo, cllopgmt,cllorua ,cllocep, clloclno, cllobair, cllocida,cllorefe, clloqdlt, clloresi , cllocpf
       ];
 
       const result = await dataLocation.query(insertQuery, values);
@@ -110,7 +88,7 @@ export const LocacaoModel = {
 
   async getClientByCPF(cpf) {
     try {
-      const query = "SELECT clienome FROM cadclie WHERE cliecpf = $1";
+      const query = "SELECT clienome FROM cadclie WHERE cliecpcn = $1";
       const values = [cpf];
 
       const result = await dataLocation.query(query, values);
@@ -122,7 +100,7 @@ export const LocacaoModel = {
   },
 
   async buscarClientePorCPF(cpf) {
-    const query = `SELECT cliecode, clienome FROM cadclie WHERE cliecpf = $1; `;
+    const query = `SELECT cliecode, clienome FROM cadclie WHERE cliecpcn = $1; `;
     const { rows } = await dataLocation.query(query, [cpf]);
     return rows[0];
   },
@@ -139,70 +117,85 @@ export const LocacaoModel = {
 
   async buscarTodasLocacoes() {
     const query = `
-      SELECT 
-        c.clloid, 
-        c.cllonmlo, 
-        c.cllodtdv, 
-        c.cllodtlo, 
-        c.cllopgmt, 
-        c.clloclno, 
-        c.cllocpf,
-        b.belocode, 
-        b.bencodb, 
-        b.beloben, 
-        b.belodtin, 
-        b.belodtfi, 
-        b.beloqntd, 
-        b.beloobsv, 
-        b.belostat
-      FROM clieloc c
-      LEFT JOIN bensloc b ON c.clloid = b.beloidcl
-      ORDER BY c.clloid;
-    `;
+     SELECT 
+  c.clloid, 
+  c.cllonmlo, 
+  c.cllodtdv, 
+  c.cllodtlo, 
+  c.cllopgmt, 
+  c.clloclno, 
+  c.cllocpf,
+  c.cllorua,
+  c.cllocep,
+  c.cllobair,
+  c.cllocida,
+  c.cllorefe,
+  c.clloqdlt,
+  c.clloresi,
+  
+  b.belocode, 
+  b.bencodb, 
+  b.beloben, 
+  b.belodtin, 
+  b.belodtfi, 
+  b.beloqntd, 
+  b.beloobsv, 
+  b.belostat
+FROM clieloc c
+LEFT JOIN bensloc b ON c.clloid = b.beloidcl
+ORDER BY c.clloid;`
 
-    try {
-      const { rows } = await dataLocation.query(query);
+   
+   try {
+    const { rows } = await dataLocation.query(query);
 
-      // Agrupar os bens de cada locação em um array
-      const locacoes = rows.reduce((acc, row) => {
-        let locacao = acc.find((l) => l.clloid === row.clloid);
+  const locacoes = rows.reduce((acc, row) => {
+    let locacao = acc.find((l) => l.clloid === row.clloid);
 
-        if (!locacao) {
-          locacao = {
-            clloid: row.clloid,
-            cllonmlo: row.cllonmlo,
-            cllodtdv: row.cllodtdv,
-            cllodtlo: row.cllodtlo,
-            cllopgmt: row.cllopgmt,
-            clloclno: row.clloclno,
-            cllocpf: row.cllocpf,
-            bens: [],
-          };
-          acc.push(locacao);
-        }
-
-        if (row.belocode) {
-          locacao.bens.push({
-            belocode: row.belocode,
-            bencodb: row.bencodb,
-            beloben: row.beloben,
-            belodtin: row.belodtin,
-            belodtfi: row.belodtfi,
-            beloqntd: row.beloqntd,
-            beloobsv: row.beloobsv,
-            belostat: row.belostat,
-          });
-        }
-
-        return acc;
-      }, []);
-
-      return locacoes;
-    } catch (error) {
-      console.error("Erro ao buscar locações e bens:", error);
-      throw error;
+    if (!locacao) {
+      locacao = {
+        clloid: row.clloid,
+        cllonmlo: row.cllonmlo,
+        cllodtdv: row.cllodtdv,
+        cllodtlo: row.cllodtlo,
+        cllopgmt: row.cllopgmt,
+        clloclno: row.clloclno,
+        cllocpf: row.cllocpf,
+        cllorua: row.cllorua,
+        cllocep: row.cllocep,
+        cllobair: row.cllobair,
+        cllocida: row.cllocida,
+        cllorefe: row.cllorefe,
+        clloqdlt: row.clloqdlt,
+        clloresi: row.clloresi,
+        bens: [],
+      };
+      acc.push(locacao);
     }
-  },
+
+    if (row.belocode) {
+      locacao.bens.push({
+        belocode: row.belocode,
+        bencodb: row.bencodb,
+        beloben: row.beloben,
+        belodtin: row.belodtin,
+        belodtfi: row.belodtfi,
+        beloqntd: row.beloqntd,
+        beloobsv: row.beloobsv,
+        belostat: row.belostat,
+      });
+    }
+
+    return acc;
+  }, []);
+
+  return locacoes;
+} catch (error) {
+  console.error("Erro ao buscar locações e bens:", error);
+  throw error;
+}
+
+ },
 
   async buscarLocationPorId(id) {
     const query = `SELECT * FROM clieloc WHERE cllonmlo = $1`;

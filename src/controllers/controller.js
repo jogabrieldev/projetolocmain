@@ -51,6 +51,10 @@ class Control {
     res.sendFile(path.join(__dirname , '..' , '..' , 'view' , 'screenLocation' , 'location.html'))
   }
 
+  localization(req ,res){
+    res.sendFile(path.join(__dirname , '..' , '..' , 'view' , 'screenLocalization', 'localization.html'))
+  }
+
   logistcs(req ,res){
     res.sendFile(path.join(__dirname , '..' , '..' , 'view' , 'screenLogistics' , 'logistics.html'))
   }

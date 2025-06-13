@@ -69,27 +69,12 @@ async function frontLocation() {
             dataInicio: formatDate(bem.belodtin),
             dataFim: formatDate(bem.belodtfi),
           }));
-        } else {
-          return [
-            {
-              idClient: locacao.clloid,
-              numeroLocacao: locacao.cllonmlo || "Não definido",
-              nomeCliente: locacao.clloclno || "Não definido",
-              cpfCliente: locacao.cllocpf || "Não definido",
-              dataLocacao: formatDate(locacao.cllodtlo),
-              dataDevolucao: formatDate(locacao.cllodtdv),
-              formaPagamento: locacao.cllopgmt || "Não definido",
-              codigoBem: "-",
-              produto: "Nenhum bem associado",
-              quantidade: "-",
-              status: "-",
-              observacao: "Nenhuma observação",
-              dataInicio: "-",
-              dataFim: "-",
-            },
-          ];
-        }
+           
+         }else{
+            return []
+         }
       })
+    
       .flat(); 
 
     renderTable(listaLocacoes); // Renderiza a tabela com os dados obtidos
