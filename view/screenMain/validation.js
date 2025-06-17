@@ -226,7 +226,7 @@ function validationFormClientPageLocation(){
           },
           cpfClientLoc:{
               required: true,
-              minlength: 14
+              
           },
           dtCadLoc:{
               required:true ,
@@ -260,8 +260,8 @@ function validationFormClientPageLocation(){
                 minlength: "O nome deve ter no mínimo 4 caracteres."
               },
               cpfClientLoc: {
-                  required: "OBRIGATORIO",
-                 minlength: "MINIMO 14 CARACTERES"
+                  required: "OBRIGATORIO"
+               
               },
               dtCadLoc:{
                   required: 'OBRIGATORIO',

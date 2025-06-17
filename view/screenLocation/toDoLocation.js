@@ -126,8 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 searchClientForLocation();
                 carregarFamilias();
                 atualizarData("dataLoc");
-                loadingVehicle('veiculo1');
-                loadingVehicle('veiculo2');
+                loadVehicles()
                 registerClientPageLocation();
                 saveLocalizationInCache();
                 maskFieldClientPageLocation();
@@ -152,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     locationTheVehicle
                   );
                 }
-
+                maskFieldLocalization();
                 addLocalizationInLocation();
                 deletarLocation();
                 esconderElemento();
@@ -219,26 +218,9 @@ document.addEventListener("DOMContentLoaded", () => {
               dataInicio: formatDate(bem.belodtin),
               dataFim: formatDate(bem.belodtfi),
             }));
-          } else {
-            return [
-              {
-                idClient: locacao.clloid,
-                numeroLocacao: locacao.cllonmlo || "Não definido",
-                nomeCliente: locacao.clloclno || "Não definido",
-                cpfCliente: locacao.cllocpf || "Não definido",
-                dataLocacao: formatDate(locacao.cllodtlo),
-                dataDevolucao: formatDate(locacao.cllodtdv),
-                formaPagamento: locacao.cllopgmt || "Não definido",
-                codigoBem: "-",
-                produto: "Nenhum bem associado",
-                quantidade: "-",
-                status: "-",
-                observacao: "Nenhuma observação",
-                dataInicio: "-",
-                dataFim: "-",
-              },
-            ];
-          }
+          } else{
+            return []
+         }
         })
         .flat();
 
@@ -540,7 +522,7 @@ function searchClientForLocation() {
             const infoDiv = document.createElement("div");
             infoDiv.innerHTML = `
           <p><strong>Nome:</strong> ${cliente.clienome || "N/A"}</p>
-          <p><strong>CPF:</strong> ${cliente.cliecpf || "N/A"}</p>
+          <p><strong>CPF:</strong> ${cliente.cliecpcn || "N/A"}</p>
           <p><strong>Rua:</strong> ${cliente.clierua || "N/A"}</p>
           <p><strong>Cidade:</strong> ${cliente.cliecity || "N/A"}</p>
           <p><strong>CEP:</strong> ${cliente.cliecep || "N/A"}</p>
@@ -568,7 +550,7 @@ function searchClientForLocation() {
                 document.querySelector("#nameClient").value =
                   cliente.clienome || "";
                 document.querySelector("#cpfClient").value =
-                  cliente.cliecpf || "";
+                  cliente.cliecpcn || "";
                 document.querySelector("#ruaClient").value =
                   cliente.clierua || "";
                 document.querySelector("#cityClient").value =
@@ -1236,8 +1218,8 @@ async function gerarContrato() {
     <div class="col-md-4 text-dark"><strong>Referência:</strong> ${
       enderecoLocacao?.localizationRefe || "-"
     }</div>
-    <div class="col-md-4 text-dark"><strong>Quadra/Lote:</strong> ${
-      enderecoLocacao?.localizationQdLt || "-"
+    <div class="col-md-4 text-dark"><strong>Região:</strong> ${
+      enderecoLocacao?.localizationRegion || "-"
     }</div>
   </div>
 </div>

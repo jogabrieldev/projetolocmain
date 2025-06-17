@@ -67,58 +67,70 @@ function hoursField(field){
     }
 }
 
-async function loadingVehicle(car) {
-  const select = document.getElementById(car);
+async function loadVehicles() {
   const token = localStorage.getItem('token');
+  if (!token) return;
 
-  if (!token || !select) return;
+  try {
+    const res = await fetch('/api/listauto', {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      }
+    });
 
-  const res = await fetch('/api/listauto', {
-    method: 'GET',
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    }
-  });
+    const veiculos = await res.json();
+    console.log('veiculos:', veiculos);
 
-  const veiculos = await res.json();
+    const veiculoMap = new Map();
 
-  const veiculoMap = new Map();
+    // Filtro apenas veículos ativos e disponíveis para locação
+    const veiculosFiltrados = veiculos.filter(item => item.caaustat === 'Ativo' && item.caauloca === 'Sim');
 
+    // Preenche os dois selects
+    ['veiculo1', 'veiculo2'].forEach(selectId => {
+      const select = document.getElementById(selectId);
+      if (!select) return;
 
-  veiculos.forEach(item => {
-    if (item.caaustat === 'Ativo') {
-      const option = document.createElement('option');
-      option.value = item.caaucode;
-      option.textContent = `${item.caaucode}`;
-      select.appendChild(option);
+      // Limpa antes de adicionar as opções
+      select.innerHTML = '<option selected disabled value="">Selecione...</option>';
 
-      veiculoMap.set(item.caaucode, item);
-    }
-  });
+      veiculosFiltrados.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.caaucode;
+        option.textContent = `${item.caaucode}`;
+        select.appendChild(option);
 
-  // Preenche automaticamente placa e modelo ao selecionar
-  select.addEventListener('change', () => {
-    const selectedCode = select.value;
-    const data = veiculoMap.get(selectedCode);
+        // Salva o veículo no mapa, usando o código como chave
+        veiculoMap.set(item.caaucode, item);
+      });
 
-    if (data) {
-      const index = car.replace(/\D/g, ''); // extrai "1" de "veiculo1"
-      const placaInput = document.getElementById(`placa${index}`);
-      const modeloInput = document.getElementById(`modelo${index}`);
+      // Evento de mudança de seleção
+      select.addEventListener('change', () => {
+        const selectedCode = select.value;
+        const data = veiculoMap.get(selectedCode);
+        const index = selectId.replace(/\D/g, ''); // pega o número (1 ou 2)
 
-      if (placaInput) placaInput.value = data.caauplac || '';
-      if (modeloInput) modeloInput.value = `${data.caaumaca} ${data.caaumode}` || '';
-    }
-  });
+        const placaInput = document.getElementById(`placa${index}`);
+        const modeloInput = document.getElementById(`modelo${index}`);
+
+        if (data) {
+          if (placaInput) placaInput.value = data.caauplac || '';
+          if (modeloInput) modeloInput.value = `${data.caaumaca} ${data.caaumode}` || '';
+        }
+      });
+    });
+
+  } catch (error) {
+    console.error('Erro ao carregar veículos:', error);
+  }
 }
-
 
 async function locationTheVehicle() {
 
   try {
 
-    
     const numericLocation = await obterNumeroLocacao();
     document.querySelector("#numeroLocation").value = numericLocation;
     const nameClient = document.querySelector("#nameClient").value;
@@ -315,7 +327,7 @@ async function locationTheVehicle() {
     if (veiculo2.value) {
       veiculos.push({
         code: veiculo2.value,
-        modelo: modelo2.value,
+        modelo: modelo2,
         placa: placa2,
         horario: horario2,
         carga: carga2,
@@ -323,25 +335,24 @@ async function locationTheVehicle() {
       });
     }
 
-    const body = {
+    const payloadLocationVehicle = {
       tipo: "veiculo",
       client: dateLocation,
       veiculos: veiculos,
     };
 
-    console.log("body", body);
+    console.log("body", payloadLocationVehicle);
 
     const res = await fetch("/api/locacaoveiculo", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(payloadLocationVehicle),
     });
 
     const errorData = await res.json();
   
-   
     if (res.ok) {
       Toastify({
         text: "Locaçaõ de Veiculo feita com sucesso",
@@ -350,8 +361,9 @@ async function locationTheVehicle() {
         position: "center",
         backgroundColor: "green",
       }).showToast();
-
-        clearFields();
+         
+      gerarContratoVeiculos();
+      clearFields();
 
     }  else {
       Toastify({
@@ -375,6 +387,142 @@ async function locationTheVehicle() {
       }).showToast();
   }
 }
+
+// Contrato locação 
+
+async function gerarContratoVeiculos() {
+  const cpfCliente = document.getElementById("cpfClient")?.value || "Não informado";
+  const nomeCliente = document.getElementById("nameClient")?.value || "Não informado";
+  const dataLocacao = document.getElementById("dataLoc")?.value || "Não informado";
+  const dataDevolucao = document.getElementById("DataDevo")?.value || "Não informado";
+  const numericLocation = document.getElementById("numeroLocation")?.value || "Não informado";
+  const pagamento = document.getElementById("pagament")?.value || "Não informado";
+  const residuoSelect = document.getElementById('residuoSelect');
+  const residuo = residuoSelect?.options[residuoSelect.selectedIndex]?.text || "Não informado";
+
+  const gruposVeiculos = [];
+  for (let i = 1; i <= 2; i++) {
+    const codeVeiculo = document.getElementById(`veiculo${i}`)?.value || "Não informado";
+    const modelo = document.getElementById(`modelo${i}`)?.value || "Não informado";
+    const placa = document.getElementById(`placa${i}`)?.value || "Não informado";
+    const horario = document.getElementById(`time${i}`)?.value || "Não informado";
+    const carga = document.getElementById(`carga${i}`)?.value || "Não informado";
+
+    if (modelo !== "Não informado") {
+      gruposVeiculos.push(`
+        <tr>
+          <td>${codeVeiculo}</td>
+          <td>${modelo}</td>
+          <td>${placa}</td>
+          <td>${horario}</td>
+          <td>${carga}</td>
+        </tr>
+      `);
+    }
+  }
+
+  const containerContent = document.querySelector(".content");
+  if (containerContent) {
+    esconderElemento(containerContent);
+  }
+
+  const dadosInputsLoc = localStorage.getItem("dadosInputs");
+  const enderecoLocacao = dadosInputsLoc ? JSON.parse(dadosInputsLoc) : {};
+
+  const contratoDiv = document.getElementById("contrato");
+  contratoDiv.innerHTML = `
+    <div class="text-white p-4 rounded">
+      <h2 class="text-center mb-4">Contrato de Locação de Veículos</h2>
+      <hr class="border-light">
+      <p><strong>Número da locação:</strong> ${numericLocation}</p>
+      <p><strong>Nome do Cliente:</strong> ${nomeCliente}</p>
+      <p><strong>CPF do Cliente:</strong> ${cpfCliente}</p>
+      
+      <div class="border rounded p-3 mb-3 bg-dark-subtle text-white">
+        <p class="mb-1"><strong>Endereço da Locação:</strong></p>
+        <div class="row">
+          <div class="col-md-4 text-dark"><strong>Rua:</strong> ${enderecoLocacao?.localizationRua || "-"}</div>
+          <div class="col-md-4 text-dark"><strong>Bairro:</strong> ${enderecoLocacao?.localizationBairro || "-"}</div>
+          <div class="col-md-4 text-dark"><strong>Cidade:</strong> ${enderecoLocacao?.localizationCida || "-"}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 text-dark"><strong>CEP:</strong> ${enderecoLocacao?.localizationCep || "-"}</div>
+          <div class="col-md-4 text-dark"><strong>Referência:</strong> ${enderecoLocacao?.localizationRefe || "-"}</div>
+          <div class="col-md-4 text-dark"><strong>Quadra/Lote:</strong> ${enderecoLocacao?.localizationQdLt || "-"}</div>
+        </div>
+      </div> 
+       
+       <p><strong>Residuo Envolvido na locação:</strong> ${residuo}</p>
+      <p><strong>Data da Locação:</strong> ${dataLocacao}</p>
+      <p><strong>Data de Devolução:</strong> ${dataDevolucao}</p>
+      <p><strong>Forma de Pagamento:</strong> ${pagamento}</p>
+      <hr class="border-light">
+
+      <p><strong>Veículos Locados:</strong></p>
+      ${
+        gruposVeiculos.length > 0
+          ? `
+          <div class="table-responsive">
+            <table class="table table-bordered table-dark table-sm">
+              <thead class="table-light">
+                <tr>
+                  <th>Código do Veículo</th>
+                  <th>Modelo</th>
+                  <th>Placa</th>
+                  <th>Horário</th>
+                  <th>Carga</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${gruposVeiculos.join("")}
+              </tbody>
+            </table>
+          </div>
+          `
+          : "<p>Nenhum veículo informado.</p>"
+      }
+
+      <div class="text-center mt-4 d-flex justify-content-center gap-2">
+        <button id="voltar" class="btn btn-light">Voltar</button>
+        <button id="baixarPdf" class="btn btn-success">Salvar como PDF</button>
+      </div>
+    </div>
+  `;
+
+  contratoDiv.style.display = "block";
+
+  const voltarPageContrato = document.getElementById("voltar");
+  if (voltarPageContrato) {
+    voltarPageContrato.addEventListener("click", () => {
+      esconderElemento(contratoDiv);
+
+      const listLocation = document.querySelector(".tableLocation");
+      if (listLocation) {
+        mostrarElemento(listLocation);
+      }
+
+      const buttonMainPage = document.querySelector(".btnInitPageMainLoc");
+      if (buttonMainPage) {
+        mostrarElemento(buttonMainPage);
+      }
+    });
+  };
+
+  const btnBaixarPdf = document.getElementById("baixarPdf");
+  if (btnBaixarPdf) {
+    btnBaixarPdf.addEventListener("click", () => {
+      const element = document.getElementById("contrato");
+      const opt = {
+        margin: 0.5,
+        filename: `contrato-locacao-veiculos-${numericLocation}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+      };
+      html2pdf().set(opt).from(element).save();
+    });
+  };
+};
 
 async function frontLocationVeiculos() {
   const token = localStorage.getItem("token");
@@ -429,7 +577,6 @@ async function frontLocationVeiculos() {
           dataLocacao: formatDate(locacao.cllodtlo),
           dataDevolucao: formatDate(locacao.cllodtdv),
           formaPagamento: locacao.cllopgmt || "Não definido",
-          velocode: veiculo.velocode,
           veloidau: veiculo.veloidau || "-",
           veloplac: veiculo.veloplac || "-",
           velomode: veiculo.velomode || "-",
@@ -460,7 +607,7 @@ function renderTableVeiculos(data) {
   container.style.marginBottom = "10px";
 
   const title = document.createElement("h2");
-  title.textContent = "Locações com Veículos";
+  title.textContent = "Locações de Veículos";
 
   const messageFilter = document.createElement("span");
   messageFilter.id = "messsageFilter";
@@ -497,7 +644,6 @@ function renderTableVeiculos(data) {
     "Data da Locação",
     "Data de Devolução",
     "Forma de Pagamento",
-    "Código Veículo",
     "Identificador",
     "Placa",
     "Modelo",
@@ -522,6 +668,9 @@ function renderTableVeiculos(data) {
     const checkboxTd = document.createElement("td");
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
+    checkbox.setAttribute("data-tipo", "veiculo");
+    checkbox.value = locacao.numeroLocacao;
+
     checkbox.classList.add("locacao-checkbox");
     checkbox.value = JSON.stringify(locacao);
     checkboxTd.appendChild(checkbox);
@@ -535,7 +684,6 @@ function renderTableVeiculos(data) {
       "dataLocacao",
       "dataDevolucao",
       "formaPagamento",
-      "velocode",
       "veloidau",
       "veloplac",
       "velomode",

@@ -113,6 +113,8 @@ async function getAllDelivery() {
         const response = await fetch('/api/getdelivery');
         deliveryData = await response.json();
 
+        console.log('entrega' , deliveryData)
+
         await getAllClients(); // Buscar clientes antes de preencher a tabela
 
     } catch (error) {
@@ -259,6 +261,8 @@ let motoris = []
          const item = deliveryData.find(d => d.loficode === codigo);
          if (!item) return;
 
+         console.log('item')
+
          const cliente = clientData.find(c => c.cliecode === item.lofiidcl);
    
          const motorista = motoris.find(m => m.motocode === item.lofiidmt); 
@@ -287,7 +291,7 @@ let motoris = []
              <h3>Detalhes da Locação</h3>
              <p><strong>ID do Bem:</strong> ${item.lofiidbe}</p>
              <p><strong>ID locação:</strong> ${item.lofiidlo}</p>
-             <p><strong>Motorista:</strong> ${motorista ? motorista.motoname : "Nenhum"}</p>
+             <p><strong>Motorista:</strong> ${motorista ? motorista.motonome : "Nenhum"}</p>
              <p><strong>Data e Hora da locação:</strong> ${new Date(item.lofidtlo).toLocaleString()}</p>
              <p><strong>Data de devolução:</strong> ${dataFormat}</p>
              <p><strong>Forma de Pagamento:</strong> ${item.lofipgmt}</p>
@@ -304,11 +308,13 @@ let motoris = []
              ? `
              <h3>Detalhes do Cliente</h3>
              <p><strong>Nome:</strong> ${cliente.clienome}</p>
-             <p><strong>CPF:</strong> ${cliente.cliecpf}</p>
+             <p><strong>CPF:</strong> ${cliente.cliecpcn}</p>
              <p><strong>Celular:</strong> ${cliente.cliecelu}</p>
-             <p><strong>Região:</strong> ${cliente.cliecity}, ${cliente.clieestd}</p>
-             <p><strong>Rua:</strong> ${cliente.clierua}</p>
-             <p><strong>CEP:</strong> ${cliente.cliecep}</p>
+             <p><strong>Região:</strong> ${item.lofibair ||cliente.cliecity}</p>
+             <p><strong>Rua:</strong> ${item.lofirua || cliente.clierua}</p>
+             <p><strong>CEP:</strong> ${item.loficep || cliente.cliecep}</p>
+             <p><strong>Referencia:</strong> ${item.lofirefe || 'Não tem referencia '}</p>
+             <p><strong>Cidade:</strong> ${item.loficida || cliente.clieestd}</p>
              `
              : `<p><strong>Cliente não encontrado.</strong></p>`;
           

@@ -250,11 +250,15 @@ route.get('/api/codefamilybens', authenticateToken,(req , res)=>{
  route.get('/api/locacaoveiculo' , (req , res)=>{
    controllerLocationVehicle.getLocationVehicles(req ,res)
  })
+
+ route.delete('/api/locacaoveiculo/:id' ,authenticateToken , (req ,res)=>{
+   controllerLocationVehicle.deleteLocationVehicles(req ,res)
+ })
     
  // DELIVERY LOCATION 
 
  route.post('/logistics' , (req , res)=>{
-  logistics.postData(req , res)
+  logistics.submitDateForLogistcs(req ,res)
 });
 
  route.get('/api/getdelivery' , (req ,res)=>{

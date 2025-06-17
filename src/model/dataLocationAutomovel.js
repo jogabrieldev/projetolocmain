@@ -126,6 +126,35 @@ export const modelsLocationAuto = {
     console.error("Erro ao buscar locações e veículos:", error);
     throw error;
   }
+},
+
+async deleteLocationVehicles(numeroLocacao){
+       try {
+      const result = await locationAuto.query(
+        "SELECT clloid FROM clieloc WHERE cllonmlo = $1",
+        [numeroLocacao]
+      );
+
+      if (result.rows.length === 0) {
+        console.log("Nenhuma locação encontrada com o número fornecido.");
+        return false;
+      }
+
+      const idLocacao = result.rows[0].clloid;
+
+      await locationAuto.query("DELETE FROM autoloc WHERE veloclie = $1", [
+        idLocacao,
+      ]);
+
+      await locationAuto.query("DELETE FROM clieloc WHERE clloid = $1", [
+        idLocacao,
+      ]);
+
+      return true;
+    } catch (error) {
+      console.error("Erro no model:", error.message);
+      throw error;
+    }
 }
 
 }

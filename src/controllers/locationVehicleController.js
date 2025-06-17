@@ -119,6 +119,30 @@ async dataLocacaoVehicle(req ,res){
     } catch (error) {
       res.status(500).json({ error: "Erro ao buscar os dados de locação" });
     }
+  },
+
+  async deleteLocationVehicles(req , res){
+       
+    const {id} = req.params
+
+    console.log('identificador' , id)
+
+    try {
+      
+      const deleteSuccess = await modelsLocationAuto.deleteLocationVehicles(id);
+
+    if (!deleteSuccess) {
+      return res.status(404).json({ message: "Locação não encontrada" });
+    }
+
+    return res.status(200).json({
+      message: "Locação apagada com sucesso",
+    });
+    } catch (error) {
+       console.error('Erro para deletar locação do veiculo')
+
+       res.status(500).json({message: 'Erro no server para deletar'})
+    }
   }
 
 }

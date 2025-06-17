@@ -9,39 +9,34 @@ function isTokenExpired(token) {
 }
 
 function maskFieldClient() {
-  const cpfCnpjMaskBehavior = function (val) {
-    return val.replace(/\D/g, '').length <= 11
-      ? '000.000.000-00'
-      : '00.000.000/0000-00';
-  };
-
-  // Opções para aplicar dinamicamente a máscara
-  const cpfCnpjOptions = {
+ 
+ $(document).ready(function () {
+  var cpfCnpjOptions = {
     onKeyPress: function (val, e, field, options) {
-      field.mask(cpfCnpjMaskBehavior.apply({}, arguments), options);
+      var length = val.replace(/\D/g, '').length;
+
+      var mask = (length > 11) ? '00.000.000/0000-00' : '000.000.000-00';
+
+      // Reaplica só se for diferente da máscara atual
+      if (field.data('mask') !== mask) {
+        field.mask(mask, options);
+      }
     }
   };
 
-  // Aplica ao campo específico
-  $('#cpfAndCnpj').mask(cpfCnpjMaskBehavior($('#cpfAndCnpj').val()), cpfCnpjOptions);
-
-
+  $('#cpfCnpjInput').mask('000.000.000-00', cpfCnpjOptions);
+});
+   
   $("#clieCelu").mask("(00) 00000-0000");
-
   $("#clieCep").mask("00000-000");
-
   $("#editCliecpfCnpj").mask("000.000.000-00");
-
   $("#editClieCelu").mask("(00) 00000-0000");
-
   $("#editClieCep").mask("00000-000");
-
   $("#clieCepLoc").mask("00000-000");
-
   $("#clieCeluLoc").mask("(00) 00000-0000");
-
   $("#cpfClientLoc").mask("000.000.000-00");
 }
+
 
 const formatDate = (isoDate) => {
   if (!isoDate) return "";
@@ -340,7 +335,7 @@ async function registerNewClient() {
         clieCode: document.querySelector("#clieCode").value.trim(),
         clieName: document.querySelector("#clieName").value.trim(),
         clieTpCl: document.querySelector('#clieTiCli').value.trim(),
-        cpfAndCnpj: document.querySelector("#cpfAndCnpj").value.trim(),
+        cpfAndCnpj: document.querySelector("#cpfCnpjInput").value.trim(),
         dtCad:document.querySelector('#dtCad').value,
         dtNasc: document.querySelector("#dtNasc").value,
         clieCelu: document.querySelector("#clieCelu").value.trim(),

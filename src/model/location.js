@@ -117,7 +117,7 @@ export const LocacaoModel = {
 
   async buscarTodasLocacoes() {
     const query = `
-     SELECT 
+    SELECT 
   c.clloid, 
   c.cllonmlo, 
   c.cllodtdv, 
@@ -142,7 +142,7 @@ export const LocacaoModel = {
   b.beloobsv, 
   b.belostat
 FROM clieloc c
-LEFT JOIN bensloc b ON c.clloid = b.beloidcl
+INNER JOIN bensloc b ON c.clloid = b.beloidcl
 ORDER BY c.clloid;`
 
    

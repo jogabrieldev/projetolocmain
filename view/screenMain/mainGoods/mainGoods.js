@@ -69,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
           dateAtualInFieldAndHours("dtStatus" , "hrStatus")
           deleteGoodsSystem()
           updateGoodsSystem()
+          valueFieldName('cofa')
         } else {
           console.error('#mainContent não encontrado no DOM');
           return;
@@ -242,7 +243,28 @@ if (buttonOutGoods) {
     event.preventDefault();
   });
 }
- // registrar o bem
+ 
+
+ function valueFieldName(id) {
+  const select = document.getElementById(id);
+
+  if (!select) {
+    console.error(`Elemento com id "${id}" não encontrado no DOM.`);
+    return;
+  }
+
+  select.addEventListener('change', function() {
+    const selectedOption = this.selectedOptions && this.selectedOptions[0];
+    if (selectedOption) {
+      const desc = selectedOption.dataset.desc;
+      if (desc) {
+        document.querySelector('#name').value = desc;
+      }
+    }
+  });
+}
+ 
+// registrar o bem
  async function registerGoodsSystem(){
 
   dateAtualInFieldAndHours("dtStatus" , "hrStatus")

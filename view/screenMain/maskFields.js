@@ -80,7 +80,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   
-    $("#motoCpf").mask("000.000.000-00")
+    $("#motoCpf").mask("000.000.000-00");
       
     $("#motoCelu").mask("(00) 00000-0000");
   

@@ -164,25 +164,8 @@ async function locationPendente() {
           dataInicio: formatDate(bem.belodtin),
           dataFim: formatDate(bem.belodtfi),
         }));
-      } else {
-        return [
-          {
-            idClient: locacao.clloid,
-            numeroLocacao: locacao.cllonmlo || "Não definido",
-            nomeCliente: locacao.clloclno || "Não definido",
-            cpfCliente: locacao.cllocpf || "Não definido",
-            dataLocacao: formatDate(locacao.cllodtlo),
-            dataDevolucao: formatDate(locacao.cllodtdv),
-            formaPagamento: locacao.cllopgmt || "Não definido",
-            codigoBem: "-",
-            produto: "Nenhum bem associado",
-            quantidade: "-",
-            status: "-",
-            observacao: "Nenhuma observação",
-            dataInicio: "-",
-            dataFim: "-",
-          },
-        ];
+      } else{
+        return []
       }
     });
 
@@ -370,25 +353,8 @@ function filterLocation() {
               dataInicio: formatDate(bem.belodtin),
               dataFim: formatDate(bem.belodtfi),
             }));
-          } else {
-            return [
-              {
-                idClient: locacao.clloid,
-                numeroLocacao: locacao.cllonmlo || "Não definido",
-                nomeCliente: locacao.clloclno || "Não definido",
-                cpfCliente: locacao.cllocpf || "Não definido",
-                dataLocacao: formatDate(locacao.cllodtlo),
-                dataDevolucao: formatDate(locacao.cllodtdv),
-                formaPagamento: locacao.cllopgmt || "Não definido",
-                codigoBem: "-",
-                produto: "Nenhum bem associado",
-                quantidade: "-",
-                status: "-",
-                observacao: "Nenhuma observação",
-                dataInicio: "-",
-                dataFim: "-",
-              },
-            ];
+          } else{
+             return []
           }
         });
 
@@ -862,7 +828,7 @@ async function loadingDriver() {
 
       checkboxCell.appendChild(checkbox);
 
-      linha.insertCell().textContent = motorista.motoname;
+      linha.insertCell().textContent = motorista.motonome;
       linha.insertCell().textContent = motorista.motostat;
       linha.insertCell().textContent = motorista.motoctch;
       linha.insertCell().textContent = formatDate(motorista.motodtvc);
@@ -880,84 +846,84 @@ async function loadingDriver() {
 }
 
 // VERIFICA SE O MOTORISTA TEM VEICULO
-async function VerifiqueSeTemVeiculo(Motorista) {
-  const token = localStorage.getItem("token");
+// async function VerifiqueSeTemVeiculo(Motorista) {
+//   const token = localStorage.getItem("token");
 
-  if (!token || isTokenExpired(token)) {
-    Toastify({
-      text: "Sessão expirada. Faça login novamente.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
+//   if (!token || isTokenExpired(token)) {
+//     Toastify({
+//       text: "Sessão expirada. Faça login novamente.",
+//       duration: 3000,
+//       close: true,
+//       gravity: "top",
+//       position: "center",
+//       backgroundColor: "red",
+//     }).showToast();
 
-    localStorage.removeItem("token");
-    setTimeout(() => {
-      window.location.href = "/index.html";
-    }, 2000);
-    return;
-  }
+//     localStorage.removeItem("token");
+//     setTimeout(() => {
+//       window.location.href = "/index.html";
+//     }, 2000);
+//     return;
+//   }
 
-  try {
-    const result = await fetch("/api/listauto", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+//   try {
+//     const result = await fetch("/api/listauto", {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: `Bearer ${token}`,
+//       },
+//     });
 
-    const response = await result.json(); 
+//     const response = await result.json(); 
 
-    const veiculoEncontrado = response.find((veiculo) =>
-      Motorista.includes(veiculo.caaumoto)
-    );
+//     const veiculoEncontrado = response.find((veiculo) =>
+//       Motorista.includes(veiculo.caaumoto)
+//     );
 
-    if (veiculoEncontrado) {
-      if (veiculoEncontrado.caaustat === "Ativo") {
-        return true;
-      } else {
-        console.log("Motorista tem veículo, mas está inativo.");
-        // Mostrar toast avisando, se quiser
-        Toastify({
-          text: "Veículo do motorista está inativo.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "orange",
-        }).showToast();
-        return false;
-      }
-    } else {
-      console.log("Motorista não possui veículo cadastrado.");
-      Toastify({
-        text: "Motorista não possui veículo cadastrado.",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-      return false;
-    }
-  } catch (error) {
-    console.error(
-      "ERRO TOTAL NA VERIFICAÇÃO DO MOTORISTA SE TEM VEICULO NO NOME DELE"
-    );
-    Toastify({
-      text: "ERRO TOTAL NA VERIFICAÇÃO DO MOTORISTA SE TEM VEICULO NO NOME DELE.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return false;
-  }
-}
+//     if (veiculoEncontrado) {
+//       if (veiculoEncontrado.caaustat === "Ativo") {
+//         return true;
+//       } else {
+//         console.log("Motorista tem veículo, mas está inativo.");
+//         // Mostrar toast avisando, se quiser
+//         Toastify({
+//           text: "Veículo do motorista está inativo.",
+//           duration: 3000,
+//           close: true,
+//           gravity: "top",
+//           position: "center",
+//           backgroundColor: "orange",
+//         }).showToast();
+//         return false;
+//       }
+//     } else {
+//       console.log("Motorista não possui veículo cadastrado.");
+//       Toastify({
+//         text: "Motorista não possui veículo cadastrado.",
+//         duration: 3000,
+//         close: true,
+//         gravity: "top",
+//         position: "center",
+//         backgroundColor: "red",
+//       }).showToast();
+//       return false;
+//     }
+//   } catch (error) {
+//     console.error(
+//       "ERRO TOTAL NA VERIFICAÇÃO DO MOTORISTA SE TEM VEICULO NO NOME DELE"
+//     );
+//     Toastify({
+//       text: "ERRO TOTAL NA VERIFICAÇÃO DO MOTORISTA SE TEM VEICULO NO NOME DELE.",
+//       duration: 3000,
+//       close: true,
+//       gravity: "top",
+//       position: "center",
+//       backgroundColor: "red",
+//     }).showToast();
+//     return false;
+//   }
+// }
 
 // MODAL PARA VINCULAR
 async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
@@ -995,10 +961,10 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
     return;
   }
 
-  const motoristaValido = await VerifiqueSeTemVeiculo(motoristasSelecionados);
-  if (!motoristaValido) {
-    return;
-  }
+  // const motoristaValido = await VerifiqueSeTemVeiculo(motoristasSelecionados);
+  // if (!motoristaValido) {
+  //   return;
+  // }
 
   const motoId = motoristasSelecionados[0];
 
@@ -1192,75 +1158,7 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
         containerLogistica.classList.remove("hidden");
         containerLogistica.classList.add("flex");
       }
-  // const token = localStorage.getItem("token");
-  // const codeLocation = document.querySelector("#codeLocationAtual")?.value; // Id da locação atual
-  // const familiaSelecionada = document.querySelector("#familiaSelecionada")?.value; // Família atual
-
-  // if (!codeLocation || !familiaSelecionada) {
-  //   Toastify({
-  //     text: "Erro interno: código da locação ou família não definidos.",
-  //     duration: 4000,
-  //     close: true,
-  //     gravity: "top",
-  //     position: "center",
-  //     backgroundColor: "red",
-  //   }).showToast();
-  //   return;
-  // }
-
-  // try {
-  //   const locations = await getAllLocationsForLogistics(token);
-  //   const locacao = locations.locacoes.find((loc) =>
-  //     loc.bens?.some((b) => String(b.belocode) === codeLocation)
-  //   );
-
-  //   if (!locacao) {
-  //     Toastify({
-  //       text: "Locação não encontrada para verificação.",
-  //       duration: 4000,
-  //       close: true,
-  //       gravity: "top",
-  //       position: "center",
-  //       backgroundColor: "red",
-  //     }).showToast();
-  //     return;
-  //   }
-
-  //   // Conta quantos bens da família estão vinculados (status Locado ou Em Locação)
-  //   const vinculados = locacao.bens.filter(
-  //     (b) => b.beloben === familiaSelecionada && 
-  //            (b.belostat === "Locado" || b.belostat === "Em Locação")
-  //   ).length;
-
-  //   // Conta a quantidade solicitada dessa família
-  //   const quantidadeSolicitada = locacao.bens.filter(
-  //     (b) => b.beloben === familiaSelecionada
-  //   ).length;
-
-  //   if (vinculados >= quantidadeSolicitada) {
-  //     // Pode sair
-      
-  //   } else {
-  //     Toastify({
-  //       text: `Faltam ${quantidadeSolicitada - vinculados} bem(ns) para finalizar a vinculação.`,
-  //       duration: 4000,
-  //       close: true,
-  //       gravity: "top",
-  //       position: "center",
-  //       backgroundColor: "red",
-  //     }).showToast();
-  //   }
-  // } catch (err) {
-  //   console.error(err);
-  //   Toastify({
-  //     text: "Erro ao verificar a quantidade de bens vinculados.",
-  //     duration: 4000,
-  //     close: true,
-  //     gravity: "top",
-  //     position: "center",
-  //     backgroundColor: "red",
-  //   }).showToast();
-  // }
+  
 });
 
 }
@@ -1406,6 +1304,8 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
       loc.bens?.some((b) => String(b.belocode) === codeLocation)
     );
 
+    console.log('Encontrada' ,  locacaoEncontrada)
+
     if (!locacaoEncontrada) {
       Toastify({
         text: `Locação não encontrada na base de dados.`,
@@ -1428,13 +1328,7 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
     );
     if (!confirmacao) return false;
 
-    // Envio dos dados da locação
-    const response = await fetch("/logistics", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    const payloadLogistcs = {
         bemId: bemId,
         familiaBem,
         idClient: cliente.cliecode,
@@ -1442,7 +1336,25 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
         driver: motoId,
         pagament: locacaoEncontrada.cllopgmt,
         devolution: locacaoEncontrada.cllodtdv,
-      }),
+        localization:{
+           rua:locacaoEncontrada.cllorua,
+           cep:locacaoEncontrada.cllocep,
+           bairro:locacaoEncontrada.cllobair,
+           refere: locacaoEncontrada.cllorefe,
+           region: locacaoEncontrada.clloqdlt,
+           cidade: locacaoEncontrada.cllocida
+        }
+    }
+
+    console.log('payload' ,payloadLogistcs)
+
+    // Envio dos dados da locação
+    const response = await fetch("/logistics", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({payloadLogistcs}),
     });
 
     if (!response.ok) {

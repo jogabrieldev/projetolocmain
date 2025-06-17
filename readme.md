@@ -1,126 +1,164 @@
-## Projeto caçamba 1.0.0 MVP
-usando uma arquitetura MVC .
-Estamos usando variavel de ambiente.
-Meu html (MAIN) e unico e mantem toda minha estrutura do meu site , navegação do meu site esta por seções dentro de uma unica tela html.
-aplicação usando a arquitetura SPA para renderização.
+# 📦 Projeto Caçamba 1.0.0 - MVP
+
+Sistema de gestão de locação de caçambas e logística de resíduos, desenvolvido seguindo a arquitetura **MVC (Model-View-Controller)**.
+
+A aplicação é uma **SPA (Single Page Application)** com **JavaScript puro no frontend**, **Node.js no backend** e **PostgreSQL como banco de dados relacional**.
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+- **Frontend:** HTML5, CSS3 (puro), JavaScript Vanilla , Bootstrap5
+- **Backend:** Node.js + Express.js
+- **Banco de Dados:** PostgreSQL
+- **Segurança:** JWT (JSON Web Token), Bcrypt para criptografia de senhas
+- **Build/Dev Tools:** Webpack, Babel, Nodemon, Dotenv
+
+---
+
+## 📁 Estrutura de Pastas
+
+├── public/ → Frontend (HTML, CSS, JS View)
+├── controller/ → Camada Controller (lógica das requisições)
+├── model/ → Modelos de dados e acesso ao banco
+├── routes/ → Endpoints da API
+├── middleware/ → Middlewares (ex: autenticação)
+├── config/ → Configurações globais e variáveis de ambiente
+├── database/ → Conexão com o banco PostgreSQL
+├── .env → Variáveis de ambiente (credenciais, configs)
+└── server.js → Inicialização da aplicação
 
 
-## CSS
-Cada modulo do css esta configurado com seu conteudo , pela a mesma pasta e o nome do arquivo esta fazendo referencia ao html que ele esta estilizando e a estilização principal da minha aplicação esta na pasta main.css as outras estão fazendo a estilização daquela determinada seção.
+---
 
-* Meus CSS main, envolve algumas estilizações globais , que são estilizações que englobam todo projeto.
+## 🧱 Arquitetura MVC
 
-*Tenho CSS para cada arquivo , os css desses arquivos estiliza somente aquele parte do projeto.
+| Camada      | Função                                                                                       |
+|-------------|----------------------------------------------------------------------------------------------|
+| **Model**   | Contém a lógica de acesso ao banco de dados (queries SQL), mapeamento de tabelas . Utiliza placeholders nas queries para evitar SQL Injection. |
+| **View**    | Interface do usuário: SPA com um único HTML (`main.html`), CSS modular por seção e JavaScript responsável por manipulação de DOM e consumo da API via Fetch. |
+| **Controller** | Faz a ponte entre o frontend e os models. Recebe as requisições HTTP, valida os dados e coordena as respostas da API. |
+| **Routes**  | Define todos os endpoints REST disponíveis na API, conectando as requisições aos controllers correspondentes. |
 
-*Estou usando alguns icones do google fonts e do bootstrapIcons.
+---
 
-*Meu CSS da pasta (screenMain) esta estruturado de acordo com os componentes do html , os arquivos estao intuitivas e os nomes dizem bastante do papel que aquela arquivo exerce na aplicação.
+## 🌐 Frontend (View)
 
-*a chamada dos meus ID e classes estão usando a a nomeclatura CAMEL CASE. Bem intuitiva e facil para intender.
+- Estruturado como **SPA (Single Page Application)**.
+- Todas as telas (cadastro, locação, logística, entrega, devolução, etc) estão dentro de **uma única página principal (`main.html`)**, navegadas via manipulação de seções DOM com `display: none` / `display: block`.
+- **CSS Modular:**  
+Cada seção tem seu próprio arquivo CSS, além de um CSS global `main.css` com estilos gerais da aplicação.
+- **Nomenclatura:**  
+Padrão **camelCase** aplicado em IDs, classes, variáveis e funções JavaScript.
+- Uso de **Bootstrap Icons** e **Google Fonts** para a interface.
+- Manipulação de DOM com JavaScript puro.
+- Consumo da API usando `fetch()`.
 
-* Estou usando CSS puro para estilizar 
+---
 
-## HTML  
-meu html princpal e o main.html , nele esta todas as seções de cadastro e cada seçaõ eu gerei seu proprio arquivo javascript e o proprio arquivo css , dentro do main.html também contem a estrutra do restante da aplicação ( locação , logistica , entrega , devolução).
+## 📜 Backend (Node.js + PostgreSQL + Express)
 
-*Meu index.html renderiza a pagina de login ou seja a pagina inicial para acessar a tela Main.html
- 
-*usei um padrão para nomear classes , ids , variaveis , (camelCase)
+### Controllers:
+- Recebem requisições da View.
+- Validam dados.
+- Chamam os Models.
+- Retornam as respostas para o cliente.
 
-*Meu html esta destribuido por seções onde tenho algumas sesões com display none que são acionadas ao clicar em botões referentes , usando o DOM do javascript.
+### Models:
+- Todas as queries SQL (CRUD e relacionamentos).
+- Queries com **placeholders** para prevenir SQL Injection.
+- Estrutura por entidade/tabela (ex: `clientes`, `locacoes`, `bens`, `logisticas` , `Cadbens` etc).
+- Joins em tabelas quando necessário (ex: consultar cliente + bens locados).
+- Exemplo:  
+  - Validação de login usando **Bcrypt** para comparar a senha criptografada no banco com a senha digitada.
 
+### Middlewares:
+- **Autenticação JWT:**  
+Intercepta requisições privadas e valida o token de acesso antes de liberar a execução.
 
-## Javascript
- *Meus Arquivos javascript da camada view, faz a interação com rotas que foram criadas , enviam dadoS e pegam dados , os nomes dos arquivos diz bastante sobre qual parte da aplicação ele e acionado , meus arquivos do JS da view tem também a interação dos botões usando o DOM para essa manipulação , e também esta sendo responsavel para gerar dados dinamicamente no meu front, atraves de respostas de API.
+### Routes:
+- Definem todos os **endpoints REST da aplicação**, agrupados por módulo.
+- Exemplo de endpoints:
+  - `POST /api/login`
+  - `GET /api/locacao`
+  - `DELETE /api/locacaoveiculo/:id`
+  - ...
 
- *Meus arquivos .js esta toda logica do meu front e da chamadas de api , no meu view eu uso o paradigma estrutural onde tenho funções executando comandos e estruturado usando condicionais , loop , os metodos de array para manipulação 
+---
 
- *meus arquivos JS na camada CONTROLLER tem regra de negocio também  e para gerar a rota , e oque aquele rota ira fazer 
+## 🔐 Segurança
 
- *E na camada Model , envolve SQL e a regra de negocio onde faço o link da minha aplicação com os dados do banco , e com isso consigo fazer relacionamentos , envio de dados , e coletas de dados.
+- **Senhas criptografadas** com Bcrypt.
+- **Validação de tokens JWT** nas rotas privadas.
+- **Prevenção contra SQL Injection** com uso de queries parametrizadas.
 
-## Camadas do projeto 
- VIEWS: temos o lado cliente com toda parte de interface. css para estilizar , html para estruturar, js para a interaçao nome dos arquivos dizem em qual parte aquele arquivo e , ou interage minhas chaamadas de API esta também na view.
+---
 
- CONTROLLER: contoller esta pegando as requisiçoes do usuario e associando com o model , e o model esta retornando para controller a requisição .
+## 📦 Instalação e Execução
 
- ROUTES: esta nosso arquivo de rotas e o que cada rota esta apresentando, dentro dele esta meus endpoint que esta fazendo todo meu back-End
+### 1️⃣ Instalar as dependências:
 
- MODEL: Esta contendo os codigos SQl para a parte da interação da minha aplicação com o banco de dados, la através de um objeto tenho as propriedades para fazer um crud de cada seção , o nome da pasta diz muito sobre oque aquele model esta interagindo
+```bash
+npm install
 
+Executar a aplicação em modo desenvolvimento:
+npm run dev
 
-## instale as dependencias 
-  npm install  
-   dependecias do projeto{
-
-    "bcrypt": "^5.1.1",
-    "body-parser": "^1.20.3",
-    "express": "^4.21.1",
-    "jquery": "^3.7.1",
-    "jquery-mask-plugin": "^1.14.16",
-    "jquery-validation": "^1.21.0",
-    "jsonwebtoken": "^9.0.2",
-    "pg": "^8.13.1",
-    "pg-hstore": "^2.3.4",
-    "socket.io": "^4.8.1" 
-   }
-
-   dependecias de dev{
-     "@babel/core": "^7.26.10",
-    "@babel/preset-env": "^7.26.9",
-    "@babel/preset-react": "^7.26.3",
-    "babel-loader": "^10.0.0",
-    "clean-webpack-plugin": "^4.0.0",
-    "dotenv": "^16.4.5",
-    "html-webpack-plugin": "^5.6.3",
-    "nodemon": "^3.1.7",
-    "webpack": "^5.97.1",
-    "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.0"
-   }
-
-  
-## execute o projeto 
- npm run dev   
-
-## locação
-
-* meu processo de locação esta envolvendo 2 tabelas , uma para registrar o cliente que locou e outra para registrar o bem locado. Assim que a locação e finalizada e gerado um numero de locação e com esse numero temos acesso ao locação. Temos acesso ao bem que foi locado/ produto, temos acesso a quantidade, a descrição desse bem, e o cliente que solicitou e os dados desse cliente.
-
-* no processo de locação também e adicionado qual residuo vai ser usado naquela locação e qual e a localização caso seja uma localização que não esteja cadastrado no sistema
-
-* meu back-end esta gerando o numero de locaçaõ fazendo uma comparação com os numero que ja foram gerados para ser numeros mais precisos
-
-## backend 
-
-*  meu back-end e composto por arquivo (CONTROLLER, MODEL, ROUTES ,  MIDDLEWARE , DATABASE , E O CONFIG ENVOLVE AS VARIAVEIS DE AMBIENTE.)
-(MODEL)
-
-* no meu model estou estruturando minhas "QUERY" para o banco de dados configurado estou usando placeholders para evitar SQL INJECTION.
+## DEPENDENCIA DE PRODUÇÃO
+"bcrypt": "^5.1.1",
+"body-parser": "^1.20.3",
+"express": "^4.21.1",
+"jquery": "^3.7.1",
+"jquery-mask-plugin": "^1.14.16",
+"jquery-validation": "^1.21.0",
+"jsonwebtoken": "^9.0.2",
+"pg": "^8.13.1",
+"pg-hstore": "^2.3.4",
+"socket.io": "^4.8.1"
 
 
-* no model cada arquivo contem os dados para uma tabela especifica no banco , nos arquivos (location.js , logisticsModel.js) temos relacionamentos para ser feito aquele determinado processo, e também temos tabelas para os 2 processos para armazenar NO CASO ESTOU FAZENDO O JOIN DE MANEIRA CORRETA PARA UNIR OS BENS CORRETOS QUE AQUELE CLIENTE LOCOU.
+##DEPENDENCIA DE DESENVOLVIMENTO
 
-* No arquivo auth do meu model: eu estou validando se os dados fornecidos no parametro da função são iguais a determinada coluna da tabela , para ai sim poder fazer a validação esses dados estão sendo preenchido pelo o front por 2 inputs na hora do login estou usando o BCRYPT para compara a senha criptografada do banco, com a senha fornecida no input  ou seja  tenho essas camada de segurança pois todas minhas senhas no banco vão estar criptografadas.
+"@babel/core": "^7.26.10",
+"@babel/preset-env": "^7.26.9",
+"@babel/preset-react": "^7.26.3",
+"babel-loader": "^10.0.0",
+"clean-webpack-plugin": "^4.0.0",
+"dotenv": "^16.4.5",
+"html-webpack-plugin": "^5.6.3",
+"nodemon": "^3.1.7",
+"webpack": "^5.97.1",
+"webpack-cli": "^6.0.1",
+"webpack-dev-server": "^5.2.0"
 
-* o arquivo (Index.js) do meu model faz o link para uma outra pagina que e onde rola todo meu processo temos um controller e uma rota também para esse processo.
+### MODULO DE LOCAÇÃO
 
-* nos outros arquivos eles fazem basicamente um (CRUD) nas suas respectivas tabelas , alguns faço consulta para buscar um dado ou outro  dependendo doque minha aplicação vai precisar , e se não estiver um endpoint que execute aqule processo.
+Processo de locação envolve duas tabelas:
 
-(MIDDLEWARE)
+Clientes: Dados de quem está locando.
 
-* estou pegando o tokem fornecido e validando ele para que ele possa acessar determinada rota , ou seja estou  passando uma camada de segurança para que se o o tokem não for fornecido não poderar acessar a rota
+Bens Locados: Produtos/caçambas associados à locação ou veiculos.
 
-(CONTROLLER)
+Geração automática de número de locação sequencial e único.
 
-* meus controllers são a ponte para ser emitido meu endPoint no routes
+Cadastro de localização (permitindo inclusão de novos endereços).
 
-* neles também estou retornando a resposta para o cliente e pegando as requisições
+Associação de resíduos a cada locação.
 
-* no controller o nome dos arquivos também diz muito sobre em que precesso ele esta envolvido e quais rotas ele esta controlando.
+Consulta de histórico de locações com detalhes completos de cliente e itens.
 
-(ROUTES)
+### BOAS PRATICAS
 
-* Todos meus endPoints estão nessa pasta router , e meus arquivos da views estão interagindo com esses endPoints de acordo com a necessidade
+struturação em camadas claras (MVC)
 
-* tenho as difinições la no arquivo route.js onde eu descrevo para que esta servindo aqueles determinados endPoints 
+Separação de responsabilidades
+
+Nomenclatura consistente
+
+Segurança com JWT e Bcrypt
+
+Queries protegidas contra SQL Injection
+
+SPA com JavaScript puro para melhor desempenho em ambientes leves
+
+Uso de Webpack e Babel no build do frontend

@@ -26,6 +26,19 @@ function dateAtualInField(date){
  
 }
 
+function maskFieldveicu(){
+   
+  $(document).ready(function(){
+  $('#placAuto').mask('AAA0A00', {
+    translation: {
+      'A': { pattern: /[A-Za-z]/ },
+      '0': { pattern: /[0-9]/ }
+    }
+  });
+});
+
+}
+
 const socketAutomovel = io();
 document.addEventListener("DOMContentLoaded", () => {
   const btnLoadVehicles = document.querySelector(".btnCadAutomo");
@@ -47,6 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
           dateAtualInField('dtCadAuto');
           deleteVehicles();
           editVehicles();
+          maskFieldveicu();
         } else {
           console.error("#mainContent não encontrado no DOM");
         }

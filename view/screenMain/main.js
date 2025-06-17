@@ -18,6 +18,68 @@ function isDataVencimento(data) {
   );
 }
 
+async function loadSelectOptions(url, selectId, fieldName) {
+  const token = localStorage.getItem("token");
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+      text: "Sessão expirada. Faça login novamente.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      window.location.href = "/index.html";
+    }, 2000);
+    return;
+  }
+  try {
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const result = await response.json();
+
+    const data = Array.isArray(result) ? result : result.data;
+
+    if (!Array.isArray(data)) {
+      throw new Error(
+        `Formato de dados inesperado de ${url}: ` + JSON.stringify(result)
+      );
+    }
+
+    const select = document.getElementById(selectId);
+    if (!select) {
+      throw new Error(`Elemento select com ID '${selectId}' não encontrado.`);
+    }
+
+    data.forEach((item) => {
+      // Debug
+      if (!item.hasOwnProperty(fieldName)) {
+        console.warn(`Campo '${fieldName}' não encontrado em`, item);
+        return;
+      }
+
+      const option = document.createElement("option");
+      option.value = item[fieldName];
+      option.textContent = item[fieldName];
+
+      if (item.hasOwnProperty("fabedesc")) {
+    option.dataset.desc = item.fabedesc;
+    }
+      select.appendChild(option);
+    });
+  } catch (error) {
+    console.error(`Erro ao carregar os dados para ${selectId}:`, error);
+  }
+}
+
 function validarPrecoLiquidoMenorOuIgual(precoLiquido, precoBruto) {
   const valorLiquido = parseFloat(precoLiquido);
   const valorBruto = parseFloat(precoBruto);
@@ -119,91 +181,4 @@ document.addEventListener("DOMContentLoaded", () => {
    });
  });
 
-//  document.addEventListener("click", async function (e) {
-//   const target = e.target;
-
-//   // Botão Bens
-//   if (target.closest(".btnLoadBens")) {
-//     e.preventDefault();
-//     await loadingSectionGoods();
-//     return;
-//   }
-
-//   // Cliente com CPF
-//   if (target.closest(".btnCadClie")) {
-//     e.preventDefault();
-//     await loadingSectionClient();
-//     return;
-//   }
-
-//   // Fornecedor
-//   if (target.closest(".btnCadForn")) {
-//     e.preventDefault();
-//     await carregarFornecedor();
-//     return;
-//   }
-
-//   // Produto
-//   if (target.closest(".btnCadProd")) {
-//     e.preventDefault();
-//     await carregarProduto();
-//     return;
-//   }
-
-//   // Família de Bens
-//   if (target.closest(".btnCadFabri")) {
-//     e.preventDefault();
-//     await carregarFamiliaBens();
-//     return;
-//   }
-
-//   // Tipo do Produto
-//   if (target.closest(".btnCadTypeProd")) {
-//     e.preventDefault();
-//     await carregarTipoProduto();
-//     return;
-//   }
-
-//   // Motorista
-//   if (target.closest(".btnCadMotorista")) {
-//     e.preventDefault();
-//     await carregarMotorista();
-//     return;
-//   }
-
-//   // Veículos
-//   if (target.closest(".btnCadAutomo")) {
-//     e.preventDefault();
-//     await carregarVeiculos();
-//     return;
-//   }
-
-//   // Locação
-//   if (target.closest(".btnRegisterLocation")) {
-//     e.preventDefault();
-//     await carregarLocacao();
-//     return;
-//   }
-
-//   // Logística
-//   if (target.closest(".btnLogistic")) {
-//     e.preventDefault();
-//     locationPendente();
-//     return;
-//   }
-
-//   // Entrega
-//   if (target.closest(".delivery")) {
-//     e.preventDefault();
-//     await carregarEntrega();
-//     return;
-//   }
-
-//   // Devoluções
-//   if (target.closest(".btnDevolution")) {
-//     e.preventDefault();
-//     await carregarDevolucao();
-//     return;
-//   }
-// });
 

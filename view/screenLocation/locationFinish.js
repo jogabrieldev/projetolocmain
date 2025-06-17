@@ -95,7 +95,7 @@ function renderTable(data) {
   container.style.marginBottom = "10px";
 
   const title = document.createElement("h2");
-  title.textContent = "Dados da Locação";
+  title.textContent = "Locaçaõ de Bens";
   title.style.margin = "0";
 
   const messageFilter = document.createElement("span");
@@ -403,6 +403,8 @@ function deletarLocation() {
         }).showToast();
         return;
       }
+      const tipo = selectedCheckbox.getAttribute("data-tipo");
+
       const locacaoData = JSON.parse(selectedCheckbox.value);
       const locacaoId = locacaoData.numeroLocacao;
 
@@ -411,7 +413,7 @@ function deletarLocation() {
       );
       if (!confirmacao) return;
 
-      await deletelocation(locacaoId, selectedCheckbox.closest("tr"));
+      await deletelocation(locacaoId, tipo, selectedCheckbox.closest("tr"));
     } catch (error) {
       console.error("Erro ao excluir locação", error);
       Toastify({
@@ -426,7 +428,7 @@ function deletarLocation() {
   });
 
   //  Função de exclusão
-  async function deletelocation(id, rowProd) {
+  async function deletelocation(id,tipo, rowProd) {
     const token = localStorage.getItem("token");
 
     if (!token || isTokenExpired(token)) {
@@ -447,7 +449,8 @@ function deletarLocation() {
     }
 
     try {
-      const response = await fetch(`/api/deletelocation/${id}`, {
+      let rota = tipo === "veiculo" ? `/api/locacaoveiculo/${id}` : `/api/deletelocation/${id}`;
+      const response = await fetch(rota, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

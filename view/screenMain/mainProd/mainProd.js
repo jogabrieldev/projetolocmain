@@ -368,64 +368,6 @@ function registerNewProduto(){
   validationFormProd();
 }
   
-async function loadSelectOptions(url, selectId, fieldName) {
-  const token = localStorage.getItem("token");
-
-  if (!token || isTokenExpired(token)) {
-    Toastify({
-      text: "Sessão expirada. Faça login novamente.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-
-    localStorage.removeItem("token");
-    setTimeout(() => {
-      window.location.href = "/index.html";
-    }, 2000);
-    return;
-  }
-  try {
-    const response = await fetch(url, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const result = await response.json();
-
-    const data = Array.isArray(result) ? result : result.data;
-
-    if (!Array.isArray(data)) {
-      throw new Error(
-        `Formato de dados inesperado de ${url}: ` + JSON.stringify(result)
-      );
-    }
-
-    const select = document.getElementById(selectId);
-    if (!select) {
-      throw new Error(`Elemento select com ID '${selectId}' não encontrado.`);
-    }
-
-    data.forEach((item) => {
-      // Debug
-      if (!item.hasOwnProperty(fieldName)) {
-        console.warn(`Campo '${fieldName}' não encontrado em`, item);
-        return;
-      }
-
-      const option = document.createElement("option");
-      option.value = item[fieldName];
-      option.textContent = item[fieldName];
-      select.appendChild(option);
-    });
-  } catch (error) {
-    console.error(`Erro ao carregar os dados para ${selectId}:`, error);
-  }
-}
-
 // Listagens de produtos
 async function fetchListProdutos() {
   const token = localStorage.getItem("token");
