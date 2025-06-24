@@ -10,23 +10,8 @@ function isTokenExpired(token) {
 
 function maskFieldClient() {
  
- $(document).ready(function () {
-  var cpfCnpjOptions = {
-    onKeyPress: function (val, e, field, options) {
-      var length = val.replace(/\D/g, '').length;
-
-      var mask = (length > 11) ? '00.000.000/0000-00' : '000.000.000-00';
-
-      // Reaplica só se for diferente da máscara atual
-      if (field.data('mask') !== mask) {
-        field.mask(mask, options);
-      }
-    }
-  };
-
-  $('#cpfCnpjInput').mask('000.000.000-00', cpfCnpjOptions);
-});
-   
+  $("#clieCpf").mask("000.000.000-00");
+  $("#clieCnpj").mask("00.000.000/0000-00");
   $("#clieCelu").mask("(00) 00000-0000");
   $("#clieCep").mask("00000-000");
   $("#editCliecpfCnpj").mask("000.000.000-00");
@@ -65,6 +50,30 @@ function dateAtualInField(date){
  
 }
 
+function readOnlyFieldChange(){
+
+    document.getElementById('clieTiCli').addEventListener('change', function () {
+       const tipoCliente = this.value;
+       const cpfField = document.getElementById('clieCpf');
+       const cnpjField = document.getElementById('clieCnpj');
+
+      if (tipoCliente === "Pessoa Jurídica") {
+         cpfField.value = "";
+         cpfField.readOnly = true;
+         cnpjField.readOnly = false;
+
+      } else if (tipoCliente === "Pessoa Física") {
+        cnpjField.value = "";
+        cnpjField.readOnly = true;
+        cpfField.readOnly = false;
+
+      } else {
+       cpfField.readOnly = false;
+       cnpjField.readOnly = false;
+      }
+  });
+}
+
 const socketClient = io();
 document.addEventListener("DOMContentLoaded", () => {
   const btnloadClie = document.querySelector(".btnCadClie");
@@ -82,6 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (mainContent) {
           mainContent.innerHTML = html;
           maskFieldClient();
+          readOnlyFieldChange();
           interationSystemClient();
           registerNewClient();
           dateAtualInField('dtCad')
@@ -335,23 +345,48 @@ async function registerNewClient() {
         clieCode: document.querySelector("#clieCode").value.trim(),
         clieName: document.querySelector("#clieName").value.trim(),
         clieTpCl: document.querySelector('#clieTiCli').value.trim(),
-        cpfAndCnpj: document.querySelector("#cpfCnpjInput").value.trim(),
+        clieCpf: document.querySelector("#clieCpf").value.trim().replace(/\D/g, ''),    // <-- Limpa CPF
+        clieCnpj: document.querySelector("#clieCnpj").value.trim().replace(/\D/g, ''),
         dtCad:document.querySelector('#dtCad').value,
         dtNasc: document.querySelector("#dtNasc").value,
-        clieCelu: document.querySelector("#clieCelu").value.trim(),
+        clieCelu: document.querySelector("#clieCelu").value.trim().replace(/\D/g, ''),
         clieCity: document.querySelector("#clieCity").value.trim(),
         clieEstd: document.querySelector("#clieEstd").value.trim(),
         clieRua: document.querySelector("#clieRua").value.trim(),
-        clieCep: document.querySelector("#clieCep").value.trim(),
+        clieCep: document.querySelector("#clieCep").value.trim().replace(/\D/g, ''),
         clieMail: document.querySelector("#clieMail").value.trim(),
         clieBanc: document.querySelector('#clieBanc').value.trim(),
         clieAgen: document.querySelector('#clieAgen').value.trim(),
         clieCont: document.querySelector('#clieCont').value.trim(),
         cliePix: document.querySelector('#cliePix').value.trim()
       };
-    
-      console.log('dados' , formData)
-       const clieMail = formData.clieMail
+
+      console.log('data' , formData.clieCnpj , formData.clieCpf)
+       
+      if(formData.clieTpCl === "Pessoa Jurídica" && formData.clieCnpj === ""){
+          Toastify({
+          text: "O Cliente e uma pessoa jurídica adicione o CNPJ dele. OBRIGATORIO",
+          duration: 4000,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
+
+      if(formData.clieTpCl === "Pessoa Física" && formData.clieCpf === ""){
+          Toastify({
+          text: "O Cliente e uma Pessoa Física adicione o CPF dele. OBRIGATORIO",
+          duration: 4000,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
+
+     
+      const clieMail = formData.clieMail
       const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       if (!emailValido.test(clieMail)) {
@@ -576,18 +611,23 @@ async function fetchListClientes() {
         checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
         checkboxCell.appendChild(checkbox);
 
+        const validDoc  = cliente.cliecnpj || cliente.cliecpf
+        const formatDoc = formatarCampo(  'documento',validDoc)
+        const telefoneFormatado = formatarCampo("telefone", cliente.cliecelu);
+       const cepFormatado = formatarCampo("cep", cliente.cliecep);
+
         // Dados do cliente
         const dados = [
           cliente.cliecode,
           cliente.clienome,
-          cliente.cliecpcn,
+          formatDoc,
           formatDate(cliente.cliedtcd),
           formatDate(cliente.cliedtnc),
-          cliente.cliecelu,
+          telefoneFormatado ,
           cliente.cliecity,
           cliente.clieestd,
           cliente.clierua,
-          cliente.cliecep,
+          cepFormatado,
           cliente.cliemail,
           cliente.clietpcl,
           cliente.cliebanc,
@@ -787,12 +827,14 @@ function editarCliente() {
 
     try {
       const clientSelecionado = JSON.parse(clientData);
-     
+
+    
       const campos = [
         { id: "editClieCode", valor: clientSelecionado.cliecode },
         { id: "editClieName", valor: clientSelecionado.clienome },
         { id: "EditClieTiCli", valor: clientSelecionado.clietpcl },
-        { id: "editCliecpfCnpj", valor: clientSelecionado.cliecpcn },
+        { id: "editClieCpf", valor: clientSelecionado.cliecpf },
+        { id: "editClieCnpj", valor: clientSelecionado.cliecnpj },
         { id: "editClieDtCad", valor: formatDate(clientSelecionado.cliedtcd) },
         { id: "editClieDtNasc", valor: formatDate(clientSelecionado.cliedtnc) },
         { id: "editClieCelu", valor: clientSelecionado.cliecelu },
@@ -963,7 +1005,8 @@ function editarCliente() {
         cliecode: document.getElementById("editClieCode").value,
         clienome: document.getElementById("editClieName").value,
         clietpcl: document.getElementById('EditClieTiCli').value,
-        cliecpcn: document.getElementById("editCliecpfCnpj").value,
+        cliecpf: document.getElementById("editClieCpf").value || null,
+        cliecnpj: document.getElementById("editClieCnpj").value || null,
         cliedtcd: document.getElementById("editClieDtCad").value || null,
         cliedtnc: document.getElementById("editClieDtNasc").value || null,
         cliecelu: document.getElementById("editClieCelu").value,

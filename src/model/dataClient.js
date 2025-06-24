@@ -9,7 +9,8 @@ export const clientRegister = {
         clieCode,
         clieName,
         clieTpCl,
-        cpfAndCnpj,
+        clieCpf,
+        clieCnpj,
         dtCad,
         dtNasc,
         clieCelu,
@@ -24,13 +25,14 @@ export const clientRegister = {
         cliePix
       } = data;
 
-      const insert = `INSERT INTO cadclie( cliecode, clienome,clietpcl, cliecpcn, cliedtcd, cliedtnc, cliecelu, cliecity, clieestd, clierua, cliecep, cliemail, cliebanc, clieagen , cliecont , cliepix ) VALUES( $1 , $2 , $3 , $4 , $5 ,$6 , $7 , $8 , $9 , $10 , $11 , $12 , $13 , $14 ,$15 , $16) RETURNING *`;
+      const insert = `INSERT INTO cadclie( cliecode, clienome,clietpcl, cliecpf, cliecnpj, cliedtcd, cliedtnc, cliecelu, cliecity, clieestd, clierua, cliecep, cliemail, cliebanc, clieagen , cliecont , cliepix ) VALUES( $1 , $2 , $3 , $4 , $5 ,$6 , $7 , $8 , $9 , $10 , $11 , $12 , $13 , $14 ,$15 , $16 , $17) RETURNING *`;
 
       const values = [
         clieCode,
         clieName,
         clieTpCl,
-        cpfAndCnpj,
+        clieCpf,
+        clieCnpj,
         dtCad,
         dtNasc,
         clieCelu,
@@ -56,7 +58,19 @@ export const clientRegister = {
       throw error;
     }
   },
-
+  
+  getAllClientCredenci: async()=>{
+        try {
+           const query = "SELECT cliecpf , cliecnpj FROM cadclie"
+           const result = await dataClient.query(query)
+           if(result){
+             return result.rows
+           }
+        } catch (error) {
+            console.error('Erro na busca' , error)
+            throw error
+        }
+  },
     getAllClientId: async()=>{
     try {
       const query = "SELECT cliecode FROM cadclie";

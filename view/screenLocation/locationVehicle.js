@@ -135,8 +135,8 @@ async function locationTheVehicle() {
     document.querySelector("#numeroLocation").value = numericLocation;
     const nameClient = document.querySelector("#nameClient").value;
     const cpfClient = document.querySelector("#cpfClient").value;
-
-    const userClientValidade = [nameClient, cpfClient];
+    const cpfOrCnpj = cpfClient.replace(/\D/g, '')
+    const userClientValidade = [nameClient, cpfOrCnpj];
     const dataLocStr = document.getElementById("dataLoc")?.value || null;
     const dataDevoStr = document.getElementById("DataDevo")?.value || null;
     const pagament = document.getElementById("pagament")?.value || null;
@@ -296,7 +296,7 @@ async function locationTheVehicle() {
       localization: dateSave,
       clloclno:userClientValidade[0],
       clloresi: residuo,
-      cllocpf: userClientValidade[1]
+      cllocpcn: userClientValidade[1]
     };
 
     const veiculos = [];
@@ -573,7 +573,6 @@ async function frontLocationVeiculos() {
           idClient: locacao.clloid,
           numeroLocacao: locacao.cllonmlo || "Não definido",
           nomeCliente: locacao.clloclno || "Não definido",
-          cpfCliente: locacao.cllocpf || "Não definido",
           dataLocacao: formatDate(locacao.cllodtlo),
           dataDevolucao: formatDate(locacao.cllodtdv),
           formaPagamento: locacao.cllopgmt || "Não definido",
@@ -640,7 +639,6 @@ function renderTableVeiculos(data) {
     "Número de Locação",
     "Status",
     "Nome do Cliente",
-    "CPF do Cliente",
     "Data da Locação",
     "Data de Devolução",
     "Forma de Pagamento",
@@ -680,7 +678,6 @@ function renderTableVeiculos(data) {
       "numeroLocacao",
       "velostat",
       "nomeCliente",
-      "cpfCliente",
       "dataLocacao",
       "dataDevolucao",
       "formaPagamento",

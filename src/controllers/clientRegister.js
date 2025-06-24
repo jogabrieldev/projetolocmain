@@ -12,17 +12,18 @@ export const movementClient = {
           .json({ message: "Campos obrigatórios não preenchidos." });
       }
 
-      // Função para normalizar CPF (remover tudo que não for número)
-      // const formatCPF = cpf => cpf.trim();
+    
+      const validCpfSystem = await clientRegister.getAllClientCredenci();
 
-    //   const validCpfSystem = await clientRegister.getAllClientcpf();
-    //   const resuntConsult = validCpfSystem.map(item => formatCPF(item.cliecpf));
-    //   const cpfToCheck = formatCPF(dataClientSubmit.cpf);
+      const resuntConsult = validCpfSystem.map(item => (item.cliecpf || item.cliecnpj));
 
-    //  if (resuntConsult.includes(cpfToCheck)) {
-    //     return res.status(400).json({ message: "CPF já cadastrado no sistema, valide com o cliente" });
-    //   }
+      const cpfToCheck = (dataClientSubmit.clieCpf || dataClientSubmit.clieCnpj || "").replace(/\D/g, "");
 
+      const jaCadastrado = resuntConsult.some(doc => (doc || "").replace(/\D/g, "") === cpfToCheck);
+
+       if (jaCadastrado) {
+         return res.status(400).json({ message: "CPF ou CNPJ já cadastrado no sistema. Valide com o cliente." });
+      }
 
       const { dtCad, dtNasc } = dataClientSubmit;
 

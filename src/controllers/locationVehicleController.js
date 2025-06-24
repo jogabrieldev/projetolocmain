@@ -10,6 +10,7 @@ async dataLocacaoVehicle(req ,res){
  try {
           
     const isLocacaoVeiculo = req.body;
+    console.log('locação veiculo' , isLocacaoVeiculo)
 
      const veiculo = isLocacaoVeiculo.veiculos
 
@@ -25,16 +26,23 @@ async dataLocacaoVehicle(req ,res){
         return res.status(400).json({ error: "CPF do cliente é obrigatório." });
       }
 
-      const client = dateClient.client
-      
-      const cpfClient = client[1];
-     
-      const cliente = await LocacaoModel.buscarClientePorCPF(cpfClient);
-    
-      if (!cliente) {
-        return res.status(404).json({ error: "Cliente não encontrado." });
-      }
+        const ClientDate = dateClient.client[1].replace(/\D/g, ''); 
+
+     let cliente = null;
+
+if (ClientDate.length === 11) {
   
+  cliente = await LocacaoModel.buscarClientePorCPF(ClientDate);
+} else if (ClientDate.length === 14) {
+ 
+  cliente = await LocacaoModel.buscarClientePorCnpj(ClientDate);
+} else {
+  return res.status(400).json({ error: "Formato de CPF ou CNPJ inválido." });
+}
+
+if (!cliente) {
+  return res.status(404).json({ error: "Cliente não encontrado no banco de dados." });
+}
     //   // Verificações de data
       if (!dateClient.cllodtlo || !dateClient.cllodtdv) {
         return res.status(400).json({ error: "Data de locação e devolução são obrigatórias." });
@@ -87,8 +95,8 @@ async dataLocacaoVehicle(req ,res){
         cllodtlo: dateClient.cllodtlo,
         cllopgmt: dateClient.cllopgmt,
         clloclno: cliente.clienome,
-        cllocpf: cpfClient,
-        clloresi: cliente.clloresi,
+        cllocpcn: cliente.cliecpf || cliente.cliecnpj,
+        clloresi: dateClient.clloresi,
         cllorua:localization.localizationRua,
         cllobair:localization.localizationBairro,
         cllocida:localization.localizationCida,

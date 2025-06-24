@@ -133,9 +133,6 @@ function validationFormClient(){
             clieTiCli:{
               required:true
             },
-            cpfAndCnpj:{
-                required: true,
-            },
             dtCad:{
                 required:true ,
                 date: true

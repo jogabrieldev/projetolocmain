@@ -17,20 +17,20 @@ export const LocacaoModel = {
 
     return numero;
   },
-  async criarLocacao({cllonmlo, clloidcl, cllodtdv, cllodtlo, cllopgmt,cllorua ,cllocep, clloclno, cllobair, cllocida,cllorefe, clloqdlt, clloresi , cllocpf}) {
+  async criarLocacao({cllonmlo, clloidcl, cllodtdv, cllodtlo, cllopgmt,cllorua ,cllocep, clloclno, cllobair, cllocida,cllorefe, clloqdlt, clloresi , cllocpcn}) {
     try {
-      // if (!cllonmlo|| !clloidcl||!cllodtdv||!cllodtlo|| !cllopgmt|| !cllorua|| !cllobair|| !cllocida|| !clloresi|| !clloclno|| !cliecpcn){
-      //   throw new Error("Erro: Algum valor está indefinido na inserção do cliente que locou!");
-      // }
+      if (!cllonmlo|| !clloidcl||!cllodtdv||!cllodtlo|| !cllopgmt|| !cllorua|| !cllobair|| !cllocida|| !clloresi|| !clloclno|| !cllocpcn){
+        throw new Error("Erro: Algum valor está indefinido na inserção do cliente que locou!");
+      }
 
       const insertQuery = `
-  INSERT INTO clieloc(cllonmlo, clloidcl, cllodtdv, cllodtlo, cllopgmt,cllorua ,cllocep, clloclno, cllobair, cllocida,cllorefe, clloqdlt, clloresi , cllocpf)
+  INSERT INTO clieloc(cllonmlo, clloidcl, cllodtdv, cllodtlo, cllopgmt,cllorua ,cllocep, clloclno, cllobair, cllocida,cllorefe, clloqdlt, clloresi , cllocpcn)
   VALUES ($1, $2, $3, $4, $5, $6 , $7 ,$8 ,$9 , $10 , $11 , $12 , $13 , $14)
   RETURNING clloid;
 `;
 
       const values = [
-        cllonmlo, clloidcl, cllodtdv, cllodtlo, cllopgmt,cllorua ,cllocep, clloclno, cllobair, cllocida,cllorefe, clloqdlt, clloresi , cllocpf
+        cllonmlo, clloidcl, cllodtdv, cllodtlo, cllopgmt,cllorua ,cllocep, clloclno, cllobair, cllocida,cllorefe, clloqdlt, clloresi , cllocpcn
       ];
 
       const result = await dataLocation.query(insertQuery, values);
@@ -88,7 +88,7 @@ export const LocacaoModel = {
 
   async getClientByCPF(cpf) {
     try {
-      const query = "SELECT clienome FROM cadclie WHERE cliecpcn = $1";
+      const query = "SELECT clienome FROM cadclie WHERE cliecpf = $1";
       const values = [cpf];
 
       const result = await dataLocation.query(query, values);
@@ -100,8 +100,13 @@ export const LocacaoModel = {
   },
 
   async buscarClientePorCPF(cpf) {
-    const query = `SELECT cliecode, clienome FROM cadclie WHERE cliecpcn = $1; `;
+    const query = `SELECT cliecode, clienome , cliecpf FROM cadclie WHERE cliecpf = $1; `;
     const { rows } = await dataLocation.query(query, [cpf]);
+    return rows[0];
+  },
+  async buscarClientePorCnpj(cnpj) {
+    const query = `SELECT cliecode, clienome , cliecnpj FROM cadclie WHERE cliecnpj = $1; `;
+    const { rows } = await dataLocation.query(query, [cnpj]);
     return rows[0];
   },
 
@@ -124,7 +129,7 @@ export const LocacaoModel = {
   c.cllodtlo, 
   c.cllopgmt, 
   c.clloclno, 
-  c.cllocpf,
+  c.cllocpcn,
   c.cllorua,
   c.cllocep,
   c.cllobair,
@@ -160,7 +165,7 @@ ORDER BY c.clloid;`
         cllodtlo: row.cllodtlo,
         cllopgmt: row.cllopgmt,
         clloclno: row.clloclno,
-        cllocpf: row.cllocpf,
+        cllocpcn: row.cllocpcn,
         cllorua: row.cllorua,
         cllocep: row.cllocep,
         cllobair: row.cllobair,

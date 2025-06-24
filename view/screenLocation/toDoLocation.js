@@ -422,7 +422,7 @@ function searchClientForLocation() {
 
       if (!inputSearchClient) {
         Toastify({
-          text: "Por favor, digite o nome ou CPF do cliente.",
+          text: "Por favor, digite o nome, CPF ou CNPJ do cliente.",
           duration: 3000,
           close: true,
           gravity: "top",
@@ -458,21 +458,31 @@ function searchClientForLocation() {
             : "";
         };
 
-        const normalizeCPF = (cpf) => (cpf ? cpf.replace(/\D/g, "") : "");
+        const normalizeNumber = (number) => (number ? number.replace(/\D/g, "") : "");
 
         const inputNormalized = normalizeText(inputSearchClient);
-        const inputCpfNormalized = normalizeCPF(inputSearchClient);
+        const inputCpfCnpjNormalized = normalizeNumber(inputSearchClient);
 
         // Filtrando clientes
-        const clienteEncontrado = clientes.filter((cliente) => {
-          const nomeNormalizado = normalizeText(cliente.clienome);
-          const cpfNormalizado = normalizeCPF(cliente.cliecpf);
+  const clienteEncontrado = clientes.filter((cliente) => {
+  const nomeNormalizado = normalizeText(cliente.clienome);
+  const cpfNormalizado = normalizeNumber(cliente.cliecpf);
+  const cnpjNormalizado = normalizeNumber(cliente.cliecnpj);
 
-          return (
-            nomeNormalizado.includes(inputNormalized) ||
-            cpfNormalizado === inputCpfNormalized
-          );
-        });
+  const pesquisaPorNome =
+    inputNormalized.length >= 3 && nomeNormalizado.startsWith(inputNormalized);
+
+  const pesquisaPorCpf =
+    inputCpfCnpjNormalized.length === 11 &&
+    cpfNormalizado === inputCpfCnpjNormalized;
+
+  const pesquisaPorCnpj =
+    inputCpfCnpjNormalized.length === 14 &&
+    cnpjNormalizado === inputCpfCnpjNormalized;
+
+  return pesquisaPorNome || pesquisaPorCpf || pesquisaPorCnpj;
+});
+
 
         const resultDiv = document.querySelector(".searchClient");
         resultDiv.innerHTML = "";
@@ -480,11 +490,14 @@ function searchClientForLocation() {
         if (clienteEncontrado.length === 1) {
           const cliente = clienteEncontrado[0];
 
+          const formatDoc = formatarCampo('documento' , cliente.cliecpf || cliente.cliecnpj)
+          const formatCep = formatarCampo('cep', cliente.cliecep)
+
           document.querySelector("#nameClient").value = cliente.clienome || "";
-          document.querySelector("#cpfClient").value = cliente.cliecpcn || "";
-          document.querySelector("#ruaClient").value = cliente.clierua || "";
+          document.querySelector("#cpfClient").value = formatDoc || "";
+          document.querySelector("#tpClient").value = cliente.clietpcl || "";
           document.querySelector("#cityClient").value = cliente.cliecity || "";
-          document.querySelector("#cepClient").value = cliente.cliecep || "";
+          document.querySelector("#cepClient").value = formatCep || "";
           document.querySelector("#mailClient").value = cliente.cliemail || "";
 
           resultDiv.style.display = "none";
@@ -500,7 +513,12 @@ function searchClientForLocation() {
             backgroundColor: "green",
           }).showToast();
         } else if (clienteEncontrado.length > 1) {
+
+          
           clienteEncontrado.forEach((cliente) => {
+
+             const formatDoc = formatarCampo('documento' , cliente.cliecpf || cliente.cliecnpj)
+          const formatCep = formatarCampo('cep', cliente.cliecep)
             const checkboxSelect = document.createElement("input");
             checkboxSelect.type = "checkbox";
             checkboxSelect.name = "selectClient";
@@ -522,16 +540,16 @@ function searchClientForLocation() {
             const infoDiv = document.createElement("div");
             infoDiv.innerHTML = `
           <p><strong>Nome:</strong> ${cliente.clienome || "N/A"}</p>
-          <p><strong>CPF:</strong> ${cliente.cliecpcn || "N/A"}</p>
-          <p><strong>Rua:</strong> ${cliente.clierua || "N/A"}</p>
+          <p><strong>CPF ou CNPJ:</strong> ${formatDoc || "N/A"}</p>
+          <p><strong>Tipo de cliente:</strong> ${cliente.clietpcl|| "N/A"}</p>
           <p><strong>Cidade:</strong> ${cliente.cliecity || "N/A"}</p>
-          <p><strong>CEP:</strong> ${cliente.cliecep || "N/A"}</p>
+          <p><strong>CEP:</strong> ${formatCep || "N/A"}</p>
           <p><strong>Email:</strong> ${cliente.cliemail || "N/A"}</p>
         `;
 
             const buttonOutContainerSearch = document.createElement("button");
             buttonOutContainerSearch.className =
-              "btn btn-outline-secondary d-flex align-items-center";
+            "btn btn-outline-secondary d-flex align-items-center";
             buttonOutContainerSearch.textContent = "Voltar";
             buttonOutContainerSearch.style.cursor = "pointer";
             buttonOutContainerSearch.addEventListener("click", () => {
@@ -540,6 +558,8 @@ function searchClientForLocation() {
 
             checkboxSelect.addEventListener("change", (event) => {
               if (event.target.checked) {
+                const formatDoc = formatarCampo('documento' , cliente.cliecpf || cliente.cliecnpj)
+                const formatCep = formatarCampo('cep', cliente.cliecep)
                 document
                   .querySelectorAll('input[name="selectClient"]')
                   .forEach((cb) => {
@@ -550,13 +570,13 @@ function searchClientForLocation() {
                 document.querySelector("#nameClient").value =
                   cliente.clienome || "";
                 document.querySelector("#cpfClient").value =
-                  cliente.cliecpcn || "";
-                document.querySelector("#ruaClient").value =
-                  cliente.clierua || "";
+                  formatDoc || ""
+                document.querySelector("#tpClient").value =
+                  cliente.clietpcl || "";
                 document.querySelector("#cityClient").value =
                   cliente.cliecity || "";
                 document.querySelector("#cepClient").value =
-                  cliente.cliecep || "";
+                  formatCep || "";
                 document.querySelector("#mailClient").value =
                   cliente.cliemail || "";
 
@@ -928,13 +948,15 @@ async function handleSubmit() {
     const nameClient = document.querySelector("#nameClient").value;
     const cpfClient = document.querySelector("#cpfClient").value;
 
-    const userClientValidade = [nameClient, cpfClient];
+    const cpfOrCnpj =  cpfClient.replace(/\D/g, '');
+
+    const userClientValidade = [nameClient, cpfOrCnpj];
     const dataLocStr = document.getElementById("dataLoc")?.value || null;
     const dataDevoStr = document.getElementById("DataDevo")?.value || null;
     const pagament = document.getElementById("pagament")?.value || null;
     const residuo = document.getElementById("residuoSelect").value;
 
-    console.log("residuoSelect", residuo);
+    console.log("residuoSelect", userClientValidade);
     if (!residuo) {
       Toastify({
         text: "Selecione o residuo envolvido nessa Locação",

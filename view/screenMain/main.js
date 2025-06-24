@@ -139,6 +139,51 @@ if (btnStartRegister) {
   });
 }
 
+function formatarCampo(tipo, valor) {
+  if (!valor) return "";
+
+  switch (tipo) {
+    case "documento":
+      if (valor.length === 11) {
+        // CPF
+        return valor.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+      } else if (valor.length === 14) {
+        // CNPJ
+        return valor.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
+      } else {
+        return valor; // Se não for CPF nem CNPJ
+      }
+
+    case "cep":
+      if (valor.length === 8) {
+        return valor.replace(/(\d{5})(\d{3})/, "$1-$2");
+      } else {
+        return valor;
+      }
+
+  case "telefone":
+    if (valor.length === 10) {
+    // Se vier com 10 dígitos, adiciona o 9 depois do DDD
+    // Exemplo: 6299999999 → (62) 9 9999-9999
+    valor = valor.replace(/(\d{2})(\d{4})(\d{4})/, "$1$2$3"); // Junta tudo
+    valor = valor.replace(/(\d{2})(\d{8})/, "$1" + "9" + "$2"); // Insere o 9 depois do DDD
+   }
+
+   if (valor.length === 11) {
+    // Formata o número com o DDD e o 9
+    return valor.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, "($1) $2 $3-$4");
+   }
+
+  return valor;
+
+
+    default:
+      return valor;
+  }
+}
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
    const mainContent = document.getElementById("mainContent");
 

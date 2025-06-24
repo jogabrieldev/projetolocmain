@@ -299,14 +299,14 @@ function registerNewDriver(){
           motoCode: document.querySelector('#motoCode').value.trim(),     // Código
           motoNome: document.querySelector('#motoNome').value.trim(),     // Nome
           motoDtnc: document.querySelector('#motoDtnc').value,     // Data de nascimento
-          motoCpf: document.querySelector('#motoCpf').value.trim(),       // CPF
+          motoCpf: document.querySelector('#motoCpf').value.trim().replace(/\D/g, ''),       // CPF
           motoDtch: document.querySelector('#motoDtch').value.trim(),     // Data de emissão da CNH
           motoctch: document.querySelector('#motoctch').value.trim(),     // Categoria da CNH
           motoDtvc: document.querySelector('#motoDtvc').value,     // Data de vencimento
           motoRest: document.querySelector('#motoRest').value.trim(),     // Restrições
           motoOrem: document.querySelector('#motoOrem').value.trim(),     // Órgão emissor
-          motoCelu: document.querySelector('#motoCelu').value.trim(),     // Celular
-          motoCep: document.querySelector('#motoCep').value.trim(),       // CEP
+          motoCelu: document.querySelector('#motoCelu').value.trim().replace(/\D/g, ''),     // Celular
+          motoCep: document.querySelector('#motoCep').value.trim().replace(/\D/g, ''),       // CEP
           motoRua: document.querySelector('#motoRua').value.trim(),       // Rua
           motoCity: document.querySelector('#motoCity').value.trim(),     // Cidade
           motoEstd: document.querySelector('#motoEstd').value.trim(),     // Estado
@@ -533,6 +533,10 @@ async function fetchListMotorista() {
         checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
         checkboxCell.appendChild(checkbox);
 
+        const formatCep = formatarCampo('cep' , m.motocep)
+        const formatCnpj = formatarCampo('documento' ,  m.motocpf)
+        const formatPhone = formatarCampo('telefone', m.motocelu)
+
         // Dados
         const dados = [
           m.motocode,
@@ -540,14 +544,14 @@ async function fetchListMotorista() {
           m.motonome,
           m.motositu,
           formatDate(m.motodtnc),
-          m.motocpf,
+          formatCnpj,
           formatDate(m.motodtch),
           m.motoctch,
           formatDate(m.motodtvc),
           m.motorest,
           m.motoorem,
-          m.motocelu,
-          m.motocep,
+          formatPhone,
+          formatCep,
           m.motorua,
           m.motocity,
           m.motoestd,

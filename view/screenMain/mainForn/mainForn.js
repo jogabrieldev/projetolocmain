@@ -321,12 +321,12 @@ function registerNewFornecedor() {
         fornCode: document.querySelector("#fornCode").value.trim(), // Código
         fornName: document.querySelector("#fornName").value.trim(), // Nome
         nomeFan: document.querySelector("#nomeFan").value.trim(), // Nome Fantasia
-        fornCnpj: document.querySelector("#fornCnpj").value.trim(), // CNPJ
-        fornCep: document.querySelector("#fornCep").value.trim(), // CEP
+        fornCnpj: document.querySelector("#fornCnpj").value.trim().replace(/\D/g, ''), // CNPJ
+        fornCep: document.querySelector("#fornCep").value.trim().replace(/\D/g, ''), // CEP
         fornRua: document.querySelector("#fornRua").value.trim(), // Rua
         fornCity: document.querySelector("#fornCity").value.trim(), // Cidade
         fornEstd: document.querySelector("#fornEstd").value.trim(), // Estado
-        fornCelu: document.querySelector("#fornCelu").value.trim(), // Celular
+        fornCelu: document.querySelector("#fornCelu").value.trim().replace(/\D/g, ''), // Celular
         fornMail: document.querySelector("#fornMail").value.trim(), // E-mail
         fornBank: document.querySelector("#fornBank").value.trim(), // Banco
         fornAge: document.querySelector("#fornAge").value.trim(), // Agência
@@ -507,16 +507,21 @@ async function fetchListFornecedores() {
         checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
         checkboxCell.appendChild(checkbox);
 
+        
+        const formatCep = formatarCampo('cep' , fornecedor.forncep)
+        const formatCnpj = formatarCampo('documento' , fornecedor.forncnpj)
+        const formatPhone = formatarCampo('telefone' , fornecedor.forncelu)
+
         const dados = [
           fornecedor.forncode,
           fornecedor.fornnome,
           fornecedor.fornnoft,
-          fornecedor.forncnpj,
-          fornecedor.forncep,
+          formatCnpj,
+          formatCep,
           fornecedor.fornrua,
           fornecedor.forncity,
           fornecedor.fornestd,
-          fornecedor.forncelu,
+          formatPhone,
           fornecedor.fornmail,
           fornecedor.fornbanc,
           fornecedor.fornagen,

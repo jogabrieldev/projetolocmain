@@ -20,7 +20,6 @@ export const location = {
   async dataLocacao(req, res) {
     const { userClientValidade, numericLocation, dataLoc, localization, resi, dataDevo, pagament, bens } = req.body;
 
-    
     try {
     
       if (!bens || bens.length === 0) {
@@ -28,17 +27,28 @@ export const location = {
       }
 
       if (!userClientValidade || userClientValidade.length < 2) {
-        return res.status(400).json({ error: "CPF do cliente é obrigatório." });
+        return res.status(400).json({ error: "CPF e Nome do cliente é obrigatório." });
       }
   
-      const cpfClient = userClientValidade[1];
-      
-      const cliente = await LocacaoModel.buscarClientePorCPF(cpfClient);
-     
-      if (!cliente) {
-        return res.status(404).json({ error: "Cliente não encontrado." });
-      }
+     const ClientDate = userClientValidade[1].replace(/\D/g, ''); 
+
+let cliente = null;
+
+if (ClientDate.length === 11) {
   
+  cliente = await LocacaoModel.buscarClientePorCPF(ClientDate);
+} else if (ClientDate.length === 14) {
+ 
+  cliente = await LocacaoModel.buscarClientePorCnpj(ClientDate);
+} else {
+  return res.status(400).json({ error: "Formato de CPF ou CNPJ inválido." });
+}
+
+if (!cliente) {
+  return res.status(404).json({ error: "Cliente não encontrado no banco de dados." });
+}
+
+
       // Verificações de data
       if (!dataLoc || !dataDevo) {
         return res.status(400).json({ error: "Data de locação e devolução são obrigatórias." });
@@ -121,7 +131,7 @@ export const location = {
         cllodtlo: dataLoc,
         cllopgmt: pagament,
         clloclno: cliente.clienome,
-        cllocpf: cpfClient,
+        cllocpcn: cliente.cliecpf || cliente.cliecnpj,
         clloresi: resi,
         cllorua:localization.localizationRua,
         cllobair:localization.localizationBairro,
@@ -130,8 +140,8 @@ export const location = {
         cllorefe:localization.localizationRefe,
         clloqdlt:localization.localizationQdLt
       });
-
-     
+      
+  
       await LocacaoModel.inserirBens(bens, locationClient);
       
       const listAllLocation = await LocacaoModel.buscarTodasLocacoes();
