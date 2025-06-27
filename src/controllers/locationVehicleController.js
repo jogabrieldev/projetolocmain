@@ -10,8 +10,7 @@ async dataLocacaoVehicle(req ,res){
  try {
           
     const isLocacaoVeiculo = req.body;
-    console.log('locação veiculo' , isLocacaoVeiculo)
-
+  
      const veiculo = isLocacaoVeiculo.veiculos
 
      const dateClient = isLocacaoVeiculo.client
@@ -21,6 +20,11 @@ async dataLocacaoVehicle(req ,res){
        if(!localization){
          return res.status(400).json({error: 'Insira um endereço para a locação'})
        }
+
+       if(!isLocacaoVeiculo.contrato|| null){
+         return res.status(400).json({error:'Erro para enviar o contrato'})
+       }
+       const contrato = isLocacaoVeiculo.contrato
      
        if (!dateClient||dateClient.client.length < 2) {
         return res.status(400).json({ error: "CPF do cliente é obrigatório." });
@@ -105,7 +109,7 @@ if (!cliente) {
         clloqdlt:localization.localizationQdLt
       }); 
 
-        await modelsLocationAuto.registerLocationAuto(veiculo, locationClient)
+        await modelsLocationAuto.registerLocationAuto(veiculo, contrato, locationClient)
     
         return res.status(200).json({message: 'Locaçaõ do veiculo veita' , success:true })
     } catch (error) {

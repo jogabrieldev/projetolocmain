@@ -4,9 +4,27 @@ function isDataValida(data) {
 
   return (
     !isNaN(date.getTime()) && // Verifica se o Date é válido
-    ano >= 1960 && ano <= 2027 // Define limites plausíveis para ano
+    ano >= 1950 && ano <= 2028 // Define limites plausíveis para ano
   );
 }
+
+function validLocationHours(){
+   const socket = io()
+
+   socket.on("locacaoPendenteHaMaisDe1h", ({ numero, clloid, desde }) => {
+  Toastify({
+    text: `⚠️ Locação #${numero} está pendente há mais de 1h! desde:${desde}`,
+    duration: 6000,
+    close: true,
+    gravity: "top",
+    position: "center",
+    backgroundColor: "orange",
+  }).showToast();
+
+  console.warn(`Locação ${numero} (ID ${clloid}) pendente desde ${(desde)}`);
+});
+}
+
 
 function isDataVencimento(data) {
   const date = new Date(data);
@@ -14,7 +32,7 @@ function isDataVencimento(data) {
 
   return (
     !isNaN(date.getTime()) && 
-    ano >= 2025 && ano <= 2035 
+    ano >= 2025 && ano <= 2050 
   );
 }
 

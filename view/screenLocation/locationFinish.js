@@ -59,6 +59,12 @@ async function frontLocation() {
             dataLocacao: formatDate(locacao.cllodtlo),
             dataDevolucao: formatDate(locacao.cllodtdv),
             formaPagamento: locacao.cllopgmt || "Não definido",
+            cidade:locacao.cllocida|| "__",
+            bairro:locacao.cllobair || "__",
+            refere:locacao.cllorefe || "__",
+            rua:locacao.cllorua || "__", 
+            qdlt:locacao.clloqdlt || "__" ,   
+            residuo:locacao.clloresi || "__" ,
             codigoBem: bem.bencodb || "-",
             belocode:bem.belocode,
             produto: bem.beloben || "Nenhum bem associado",
@@ -137,6 +143,7 @@ function renderTable(data) {
     "Observação",
     "Data Início",
     "Data Final",
+    "Visualizar"
   ];
 
   headers.forEach((text) => {
@@ -181,6 +188,19 @@ function renderTable(data) {
       row.appendChild(td);
     });
 
+     const visualizarTd = document.createElement("td");
+    const visualizarBtn = document.createElement("button");
+    visualizarBtn.classList.add("btn", "btn-sm", "btn-success");
+    visualizarBtn.textContent = "Visualizar";
+    if(visualizarBtn){
+       visualizarBtn.addEventListener("click", () => {
+      showContratoLocationGoods(locacao)
+     
+       });
+    }
+    visualizarTd.appendChild(visualizarBtn);
+  row.appendChild(visualizarTd);
+
     tbody.appendChild(row);
   });
 
@@ -216,6 +236,171 @@ function renderTable(data) {
   document.querySelector(".searchloc").addEventListener("click", () => {
     document.querySelector(".searchLocation").style.display = "flex";
   });
+}
+
+async function showContratoLocationGoods(locacao) {
+     const contratoDiv = document.querySelector(".contrato");
+  if (!contratoDiv) return;
+
+  contratoDiv.innerHTML = ""; // Limpa o conteúdo anterior
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "-";
+    const d = new Date(dateStr);
+    return isNaN(d) ? "-" : d.toLocaleDateString("pt-BR");
+  };
+
+  const container = document.createElement("div");
+  container.className = "text-dark p-4 rounded";
+
+  const h2 = document.createElement("h2");
+  h2.className = "text-center mb-4";
+  h2.textContent = "Contrato de Locação de Bens";
+  container.appendChild(h2);
+
+  container.innerHTML += `
+    <hr class="border-light">
+    <p><strong>Número da locação:</strong> ${locacao.numeroLocacao}</p>
+    <p><strong>Nome do Cliente:</strong> ${locacao.nomeCliente}</p>
+    <p><strong>Forma de Pagamento:</strong> ${locacao.formaPagamento || "-"}</p>
+    <p><strong>Data da Locação:</strong> ${formatDate(locacao.dataLocacao)}</p>
+    <p><strong>Data de Devolução:</strong> ${formatDate(locacao.dataDevolucao)}</p>
+    <p><strong>Observação:</strong> ${locacao.observacao || "-"}</p>
+    <hr class="border-light">
+  `;
+
+  const enderecoDiv = document.createElement("div");
+  enderecoDiv.className = "border rounded p-3 mb-3 bg-dark-subtle text-white";
+
+  const enderecoTitulo = document.createElement("p");
+  enderecoTitulo.className = "mb-1";
+  enderecoTitulo.innerHTML = `<strong>Endereço da Locação:</strong>`;
+  enderecoDiv.appendChild(enderecoTitulo);
+
+  const row1 = document.createElement("div");
+  row1.className = "row";
+
+  const ruaDiv = document.createElement("div");
+  ruaDiv.className = "col-md-4 text-dark";
+  ruaDiv.innerHTML = `<strong>Rua:</strong> ${locacao?.rua || "-"}`;
+  row1.appendChild(ruaDiv);
+
+  const bairroDiv = document.createElement("div");
+  bairroDiv.className = "col-md-4 text-dark";
+  bairroDiv.innerHTML = `<strong>Bairro:</strong> ${locacao?.bairro || "-"}`;
+  row1.appendChild(bairroDiv);
+
+  const cidadeDiv = document.createElement("div");
+  cidadeDiv.className = "col-md-4 text-dark";
+  cidadeDiv.innerHTML = `<strong>Cidade:</strong> ${locacao?.cidade || "-"}`;
+  row1.appendChild(cidadeDiv);
+
+  enderecoDiv.appendChild(row1);
+
+  const row2 = document.createElement("div");
+  row2.className = "row";
+
+  const cepDiv = document.createElement("div");
+  cepDiv.className = "col-md-4 text-dark";
+  cepDiv.innerHTML = `<strong>CEP:</strong> ${locacao.localization?.cep || "-"}`;
+  row2.appendChild(cepDiv);
+
+  const refDiv = document.createElement("div");
+  refDiv.className = "col-md-4 text-dark";
+  refDiv.innerHTML = `<strong>Referência:</strong> ${locacao.refere || "-"}`;
+  row2.appendChild(refDiv);
+
+  const qdrDiv = document.createElement("div");
+  qdrDiv.className = "col-md-4 text-dark";
+  qdrDiv.innerHTML = `<strong>Quadra/Lote:</strong> ${locacao.qdlt || "-"}`;
+  row2.appendChild(qdrDiv);
+
+  enderecoDiv.appendChild(row2);
+
+  container.appendChild(enderecoDiv);
+
+  const pResiduo = document.createElement("p");
+  pResiduo.innerHTML = `<strong>Residuo Envolvido:</strong> ${locacao.residuo || "-"}`;
+  container.appendChild(pResiduo);
+
+  const BemLocado = document.createElement('P')
+  BemLocado.innerHTML = `<strong>Bem Locado</strong>`
+  container.appendChild(BemLocado)
+
+
+  const tableResponsive = document.createElement("div");
+  tableResponsive.className = "table-responsive";
+
+  const table = document.createElement("table");
+  table.className = "table table-bordered table-dark table-sm";
+
+  const thead = document.createElement("thead");
+  thead.className = "table-light";
+
+  const trHead = document.createElement("tr");
+  ["Código do Bem", "Descrição", "Quantidade", "Data Início", "Data Final"].forEach(text => {
+    const th = document.createElement("th");
+    th.textContent = text;
+    trHead.appendChild(th);
+  });
+  thead.appendChild(trHead);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+  const tr = document.createElement("tr");
+
+  ["codigoBem", "produto", "quantidade", "dataInicio", "dataFim"].forEach(field => {
+    const td = document.createElement("td");
+    td.textContent = locacao[field] || "-";
+    tr.appendChild(td);
+  });
+
+  tbody.appendChild(tr);
+  table.appendChild(tbody);
+  tableResponsive.appendChild(table);
+  container.appendChild(tableResponsive);
+
+  // Botão voltar
+  const divBtn = document.createElement("div");
+  divBtn.className = "text-center mt-4 d-flex justify-content-center gap-2";
+
+  const btnVoltar = document.createElement("button");
+  btnVoltar.className = "btn btn-light";
+  btnVoltar.textContent = "Voltar";
+
+  btnVoltar.addEventListener("click", () => {
+    contratoDiv.style.display = "none";
+
+    const table = document.querySelector(".tableLocation");
+    if (table) {
+      table.classList.remove("hidden");
+      table.classList.add("flex");
+    }
+
+    const containerBtn = document.querySelector(".btnInitPageMainLoc");
+    if (containerBtn) {
+      containerBtn.classList.remove("hidden");
+      containerBtn.classList.add("flex");
+    }
+  });
+
+  divBtn.appendChild(btnVoltar);
+  container.appendChild(divBtn);
+
+  contratoDiv.appendChild(container);
+  contratoDiv.style.display = "block";
+
+  const tableList = document.querySelector(".tableLocation");
+  if (tableList) {
+    tableList.classList.remove("flex");
+    tableList.classList.add("hidden");
+  }
+
+  const containerBtn = document.querySelector(".btnInitPageMainLoc");
+  if (containerBtn) {
+    containerBtn.classList.remove("flex");
+    containerBtn.classList.add("hidden");
+  }
 }
 
 //Filtar locação

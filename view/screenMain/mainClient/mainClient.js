@@ -9,7 +9,7 @@ function isTokenExpired(token) {
 }
 
 function maskFieldClient() {
- 
+   
   $("#clieCpf").mask("000.000.000-00");
   $("#clieCnpj").mask("00.000.000/0000-00");
   $("#clieCelu").mask("(00) 00000-0000");

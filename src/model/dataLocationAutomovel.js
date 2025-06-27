@@ -3,11 +3,11 @@ const locationAuto = client;
 
 export const modelsLocationAuto = {
       
-   async registerLocationAuto(veiculo, clloid){
+   async registerLocationAuto(veiculo, contrato, clloid){
            
     const query = `
-      INSERT INTO autoloc (veloidau, veloplac, velomode, velotime, velotpca, velostat, veloclie)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      INSERT INTO autoloc (veloidau, veloplac, velomode, velotime, velotpca, velostat, veloclie , velocontr)
+      VALUES ($1, $2, $3, $4, $5, $6, $7 , $8)
       RETURNING velocode;
     `;
 
@@ -21,7 +21,7 @@ export const modelsLocationAuto = {
       placa,
       horario,
       carga,
-      status
+      status,
       } of veiculo) {
         const valoresVeiculo = [
             code,
@@ -31,6 +31,7 @@ export const modelsLocationAuto = {
            carga,
            status,
           clloid,
+          contrato
         ];
         
         const resultado = await locationAuto.query(query, valoresVeiculo);
@@ -75,7 +76,7 @@ export const modelsLocationAuto = {
       a.velotpca,
       a.velostat
     FROM clieloc c
-    LEFT JOIN autoloc a ON c.clloid = a.veloclie
+    INNER JOIN autoloc a ON c.clloid = a.veloclie
     ORDER BY c.clloid;
   `;
 
@@ -155,6 +156,10 @@ async deleteLocationVehicles(numeroLocacao){
       console.error("Erro no model:", error.message);
       throw error;
     }
+},
+
+async updateStatusLocationVehicles(){
+     
 }
 
 }

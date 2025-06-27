@@ -1,5 +1,6 @@
 // const database = require("../database/dataBaseSgt");
 import { client } from "../database/userDataBase.js";
+import cron from "node-cron"
 const dataLocation = client;
 
 export const LocacaoModel = {
@@ -17,6 +18,7 @@ export const LocacaoModel = {
 
     return numero;
   },
+
   async criarLocacao({cllonmlo, clloidcl, cllodtdv, cllodtlo, cllopgmt,cllorua ,cllocep, clloclno, cllobair, cllocida,cllorefe, clloqdlt, clloresi , cllocpcn}) {
     try {
       if (!cllonmlo|| !clloidcl||!cllodtdv||!cllodtlo|| !cllopgmt|| !cllorua|| !cllobair|| !cllocida|| !clloresi|| !clloclno|| !cllocpcn){
@@ -44,8 +46,8 @@ export const LocacaoModel = {
 
   async inserirBens(bens, clloid) {
     const query = `
-      INSERT INTO bensloc (bencodb, beloben, belodtin, belodtfi, beloqntd, beloobsv, belostat, beloidcl)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      INSERT INTO bensloc (bencodb, beloben, belodtin, belodtfi, beloqntd, beloobsv, belostat, beloidcl , belocontr)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8 , $9)
       RETURNING belocode;
     `;
 
@@ -61,6 +63,7 @@ export const LocacaoModel = {
         quantidade,
         observacao,
         status,
+        contrato
       } of bens) {
         const valoresBens = [
           codeBen,
@@ -71,6 +74,7 @@ export const LocacaoModel = {
           observacao,
           status,
           clloid,
+          contrato?.trim() || null
         ];
 
         const resultado = await dataLocation.query(query, valoresBens);
@@ -98,6 +102,8 @@ export const LocacaoModel = {
       throw error;
     }
   },
+
+  
 
   async buscarClientePorCPF(cpf) {
     const query = `SELECT cliecode, clienome , cliecpf FROM cadclie WHERE cliecpf = $1; `;
@@ -404,4 +410,46 @@ ORDER BY c.clloid;`
       throw error;
     }
   },
+
+async verificarLocacoesComBens(io) {
+
+  // executa no minuto zero de cada hora
+  cron.schedule("0 * * * *", async () => {
+    console.log("⏰ Verificando locações pendentes há > 1h...");
+
+    const query = `
+      SELECT DISTINCT 
+        b.beloidcl   AS clloid,
+        c.cllonmlo   AS numerolocacao,
+        TO_CHAR(MIN(c.cllohrat) , 'HH24:MI:SS') AS primeiroinicio
+      FROM bensloc b
+      JOIN clieloc c ON c.clloid = b.beloidcl
+      WHERE b.belostat = 'Pendente'
+        AND b.belodtin <= NOW() - INTERVAL '1 hour'
+      GROUP BY b.beloidcl, c.cllonmlo
+    `;
+
+    try {
+      const { rows } = await client.query(query);
+
+      if (rows.length > 0) {
+        for (const loc of rows) {
+          // envia para todos os clientes conectados
+            console.log("Dados recebidos do banco:", loc);
+          io.emit("locacaoPendenteHaMaisDe1h", {
+            clloid: loc.clloid,
+            numero: loc.numerolocacao,
+            desde: loc.primeiroinicio
+          });
+          console.log(`⚠️ Locação ${loc.numerolocacao} pendente há mais de 1h`);
+        }
+      } else {
+        console.log("✅ Nenhuma locação pendente há > 1h");
+      }
+    } catch (err) {
+      console.error("Erro ao verificar locações pendentes:", err);
+    }
+  });
+}
+
 };

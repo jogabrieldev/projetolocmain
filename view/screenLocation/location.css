@@ -150,84 +150,17 @@
   }
 
 /* Contrato finalizado  */
-#contrato {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  width: 94%;
-  height: 510px;
-  margin-top: 1%;
-  margin-left: 1.5%;
-  padding: 16px;
-  border: 2px solid #ffffff;
-  border-radius: 12px;
-  background: linear-gradient(to right, #ece9e6, #ffffff);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  font-family: "Segoe UI", sans-serif;
-  color: #2c3e50;
-  overflow-y: auto;
-  overflow-x: hidden;
-  transition: all 0.3s ease-in-out;
-}
-
-#contrato h2 {
-  text-align: center;
-  color: #2c3e50;
-  margin-bottom: 12px;
-  font-size: 24px;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-#contrato p {
-  margin: 6px 0;
-  line-height: 1.6;
-  font-size: 15px;
-  color: #4a4a4a;
-}
-
-.itensLocados {
-  width: 100%;
-  margin-bottom: 2rem;
-}
-
-#contrato h3 {
-  margin-top: 14px;
-  color: #34495e;
-  font-size: 18px;
-  border-bottom: 2px solid #bbb;
-  padding-bottom: 6px;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-
-#contrato hr {
-  border: none;
-  border-top: 1px solid #ccc;
-  margin: 12px 0;
-}
-
-#contrato button {
-  display: block;
-  margin: 12px auto;
-  background-color: #2980b9;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 30%;
-  height: 36px;
-}
-
-#contrato button:hover {
-  background-color: #1f618d;
-}
 
 .tableContrato {
   overflow: auto;
+}
+.contratoLocationVehicle{
+  overflow: auto;
+  border: 1px solid white;
+}
+.contrato{
+   overflow: auto;
+  border: 1px solid white;
 }
 
 /* Responsivo */

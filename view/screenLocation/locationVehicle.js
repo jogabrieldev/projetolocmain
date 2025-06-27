@@ -86,7 +86,7 @@ async function loadVehicles() {
     const veiculoMap = new Map();
 
     // Filtro apenas veículos ativos e disponíveis para locação
-    const veiculosFiltrados = veiculos.filter(item => item.caaustat === 'Ativo' && item.caauloca === 'Sim');
+    const veiculosFiltrados = veiculos.filter(item => item.caaustat === 'Disponivel' && item.caauloca === 'Sim');
 
     // Preenche os dois selects
     ['veiculo1', 'veiculo2'].forEach(selectId => {
@@ -126,6 +126,9 @@ async function loadVehicles() {
     console.error('Erro ao carregar veículos:', error);
   }
 }
+
+// Contrato locação 
+
 
 async function locationTheVehicle() {
 
@@ -298,7 +301,12 @@ async function locationTheVehicle() {
       clloresi: residuo,
       cllocpcn: userClientValidade[1]
     };
-
+     
+    await gerarContratoVeiculos();
+    const contratoHTML = document.querySelector(".contratoLocationVehicle").innerHTML.trim();
+    if(!contratoHTML){
+       return;
+    }
     const veiculos = [];
 
     const veiculo1 = document.getElementById("veiculo1");
@@ -339,7 +347,10 @@ async function locationTheVehicle() {
       tipo: "veiculo",
       client: dateLocation,
       veiculos: veiculos,
+      contrato: contratoHTML
     };
+
+    
 
     console.log("body", payloadLocationVehicle);
 
@@ -353,19 +364,44 @@ async function locationTheVehicle() {
 
     const errorData = await res.json();
   
-    if (res.ok) {
-      Toastify({
-        text: "Locaçaõ de Veiculo feita com sucesso",
-        duration: 4000,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "green",
-      }).showToast();
-         
-      gerarContratoVeiculos();
-      clearFields();
+   if (res.ok) {
+    Toastify({
+      text: "Locação de Veículo feita com sucesso",
+      duration: 4000,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "green",
+    }).showToast();
 
-    }  else {
+
+    const codeVehicles = veiculos.map(v => v.code);
+
+    // Atualiza todos os veículos em paralelo
+    const updateRequests = codeVehicles.map(code =>
+      fetch(`/api/automo/${code}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ caaustat: "Veiculo Locado" }),
+      }).then(res => res.json())
+        .catch(error => ({ error: true, code, message: error.message }))
+    );
+
+    const updateResults = await Promise.all(updateRequests);
+
+    updateResults.forEach(result => {
+      if (result.error) {
+        console.error(`Erro ao atualizar veículo ${result.code}: ${result.message}`);
+        Toastify({
+          text: `Erro ao atualizar status do veículo ${result.code}`,
+          duration: 4000,
+          backgroundColor: "red",
+        }).showToast();
+      }
+    });
+
+     gerarContratoVeiculos()// espera breve para garantir leitura do DOM
+     clearFields();
+  }else {
       Toastify({
         text: errorData.error || "Erro na locação de veiculo!",
         duration: 3000,
@@ -388,9 +424,7 @@ async function locationTheVehicle() {
   }
 }
 
-// Contrato locação 
-
-async function gerarContratoVeiculos() {
+ async function gerarContratoVeiculos() {
   const cpfCliente = document.getElementById("cpfClient")?.value || "Não informado";
   const nomeCliente = document.getElementById("nameClient")?.value || "Não informado";
   const dataLocacao = document.getElementById("dataLoc")?.value || "Não informado";
@@ -429,14 +463,14 @@ async function gerarContratoVeiculos() {
   const dadosInputsLoc = localStorage.getItem("dadosInputs");
   const enderecoLocacao = dadosInputsLoc ? JSON.parse(dadosInputsLoc) : {};
 
-  const contratoDiv = document.getElementById("contrato");
+  const contratoDiv = document.querySelector(".contratoLocationVehicle");
   contratoDiv.innerHTML = `
-    <div class="text-white p-4 rounded">
-      <h2 class="text-center mb-4">Contrato de Locação de Veículos</h2>
+    <div class="text-dark p-4 rounded bg-secundary">
+      <h2 class="text-center mb-4 text-dark"> <b>Contrato de Locação de Veículos</b></h2>
       <hr class="border-light">
       <p><strong>Número da locação:</strong> ${numericLocation}</p>
       <p><strong>Nome do Cliente:</strong> ${nomeCliente}</p>
-      <p><strong>CPF do Cliente:</strong> ${cpfCliente}</p>
+      <p><strong>CPF/CNPJ do Cliente:</strong> ${cpfCliente}</p>
       
       <div class="border rounded p-3 mb-3 bg-dark-subtle text-white">
         <p class="mb-1"><strong>Endereço da Locação:</strong></p>
@@ -508,10 +542,10 @@ async function gerarContratoVeiculos() {
     });
   };
 
-  const btnBaixarPdf = document.getElementById("baixarPdf");
+ const btnBaixarPdf = document.getElementById("baixarPdf");
   if (btnBaixarPdf) {
     btnBaixarPdf.addEventListener("click", () => {
-      const element = document.getElementById("contrato");
+      const element = document.querySelector(".contratoLocationVehicle");
       const opt = {
         margin: 0.5,
         filename: `contrato-locacao-veiculos-${numericLocation}.pdf`,
@@ -523,6 +557,8 @@ async function gerarContratoVeiculos() {
     });
   };
 };
+
+
 
 async function frontLocationVeiculos() {
   const token = localStorage.getItem("token");
@@ -576,6 +612,15 @@ async function frontLocationVeiculos() {
           dataLocacao: formatDate(locacao.cllodtlo),
           dataDevolucao: formatDate(locacao.cllodtdv),
           formaPagamento: locacao.cllopgmt || "Não definido",
+          localization: {
+            cep:locacao.cllocep,
+            rua:locacao.cllorua,
+            cid:locacao.cllocida,
+            ref:locacao.cllorefe || '-',
+            bai:locacao.cllobair,
+            qdr:locacao.clloqdlt || "-"
+          },
+          residuo: locacao.clloresi,
           veloidau: veiculo.veloidau || "-",
           veloplac: veiculo.veloplac || "-",
           velomode: veiculo.velomode || "-",
@@ -647,6 +692,7 @@ function renderTableVeiculos(data) {
     "Modelo",
     "Horário",
     "Tipo Carga",
+    "Visualizar"
   ];
 
   headers.forEach((text) => {
@@ -662,7 +708,7 @@ function renderTableVeiculos(data) {
 
   data.forEach((locacao) => {
     const row = document.createElement("tr");
-
+     
     const checkboxTd = document.createElement("td");
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -673,6 +719,7 @@ function renderTableVeiculos(data) {
     checkbox.value = JSON.stringify(locacao);
     checkboxTd.appendChild(checkbox);
     row.appendChild(checkboxTd);
+    
 
     [
       "numeroLocacao",
@@ -691,6 +738,21 @@ function renderTableVeiculos(data) {
       td.textContent = locacao[key];
       row.appendChild(td);
     });
+
+    const visualizarTd = document.createElement("td");
+    const visualizarBtn = document.createElement("button");
+    visualizarBtn.classList.add("btn", "btn-sm", "btn-success");
+    visualizarBtn.textContent = "Visualizar";
+    if(visualizarBtn){
+       visualizarBtn.addEventListener("click", () => {
+      showContratoLocacao(locacao)
+     
+       });
+    }
+    
+
+  visualizarTd.appendChild(visualizarBtn);
+  row.appendChild(visualizarTd);
 
     tbody.appendChild(row);
   });
@@ -726,4 +788,208 @@ function renderTableVeiculos(data) {
     document.querySelector(".searchLocation").style.display = "flex";
   });
 }
+
+function showContratoLocacao(locacao) {
+  const contratoDiv = document.querySelector(".contratoLocationVehicle");
+  if (!contratoDiv) return;
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "-";
+    
+    if (dateStr.includes("/")) {
+      const [ano, mes, dia] = dateStr.split("/");
+      return `${dia}/${mes}/${ano}`;
+    } else {
+      const d = new Date(dateStr);
+      return isNaN(d) ? "-" : d.toLocaleDateString("pt-BR");
+    }
+  };
+
+  const container = document.createElement("div");
+  container.className = "text-dark p-4 rounded";
+
+  const h2 = document.createElement("h2");
+  h2.className = "text-center mb-4";
+  h2.textContent = "Contrato de Locação de Veículos";
+  container.appendChild(h2);
+
+  const hr1 = document.createElement("hr");
+  hr1.className = "border-light";
+  container.appendChild(hr1);
+
+  const pNumero = document.createElement("p");
+  pNumero.innerHTML = `<strong>Número da locação:</strong> ${locacao.numeroLocacao}`;
+  container.appendChild(pNumero);
+
+  const pNome = document.createElement("p");
+  pNome.innerHTML = `<strong>Nome do Cliente:</strong> ${locacao.nomeCliente}`;
+  container.appendChild(pNome);
+
+  const enderecoDiv = document.createElement("div");
+  enderecoDiv.className = "border rounded p-3 mb-3 bg-dark-subtle text-white";
+
+  const enderecoTitulo = document.createElement("p");
+  enderecoTitulo.className = "mb-1";
+  enderecoTitulo.innerHTML = `<strong>Endereço da Locação:</strong>`;
+  enderecoDiv.appendChild(enderecoTitulo);
+
+  const row1 = document.createElement("div");
+  row1.className = "row";
+
+  const ruaDiv = document.createElement("div");
+  ruaDiv.className = "col-md-4 text-dark";
+  ruaDiv.innerHTML = `<strong>Rua:</strong> ${locacao.localization?.rua || "-"}`;
+  row1.appendChild(ruaDiv);
+
+  const bairroDiv = document.createElement("div");
+  bairroDiv.className = "col-md-4 text-dark";
+  bairroDiv.innerHTML = `<strong>Bairro:</strong> ${locacao.localization?.bai || "-"}`;
+  row1.appendChild(bairroDiv);
+
+  const cidadeDiv = document.createElement("div");
+  cidadeDiv.className = "col-md-4 text-dark";
+  cidadeDiv.innerHTML = `<strong>Cidade:</strong> ${locacao.localization?.cid || "-"}`;
+  row1.appendChild(cidadeDiv);
+
+  enderecoDiv.appendChild(row1);
+
+  const row2 = document.createElement("div");
+  row2.className = "row";
+
+  const cepDiv = document.createElement("div");
+  cepDiv.className = "col-md-4 text-dark";
+  cepDiv.innerHTML = `<strong>CEP:</strong> ${locacao.localization?.cep || "-"}`;
+  row2.appendChild(cepDiv);
+
+  const refDiv = document.createElement("div");
+  refDiv.className = "col-md-4 text-dark";
+  refDiv.innerHTML = `<strong>Referência:</strong> ${locacao.localization?.ref || "-"}`;
+  row2.appendChild(refDiv);
+
+  const qdrDiv = document.createElement("div");
+  qdrDiv.className = "col-md-4 text-dark";
+  qdrDiv.innerHTML = `<strong>Quadra/Lote:</strong> ${locacao.localization?.qdr || "-"}`;
+  row2.appendChild(qdrDiv);
+
+  enderecoDiv.appendChild(row2);
+
+  container.appendChild(enderecoDiv);
+
+  const pResiduo = document.createElement("p");
+  pResiduo.innerHTML = `<strong>Residuo Envolvido:</strong> ${locacao.residuo || "-"}`;
+  container.appendChild(pResiduo);
+
+  const pDataLoc = document.createElement("p");
+  pDataLoc.innerHTML = `<strong>Data da Locação:</strong> ${formatDate(locacao.dataLocacao)}`;
+  container.appendChild(pDataLoc);
+
+  const pDataDev = document.createElement("p");
+  pDataDev.innerHTML = `<strong>Data de Devolução:</strong> ${formatDate(locacao.dataDevolucao)}`;
+  container.appendChild(pDataDev);
+
+  const pPagamento = document.createElement("p");
+  pPagamento.innerHTML = `<strong>Forma de Pagamento:</strong> ${locacao.formaPagamento || "-"}`;
+  container.appendChild(pPagamento);
+
+  const hr2 = document.createElement("hr");
+  hr2.className = "border-light";
+  container.appendChild(hr2);
+
+  const pVeiculos = document.createElement("p");
+  pVeiculos.innerHTML = `<strong>Veículos Locados:</strong>`;
+  container.appendChild(pVeiculos);
+
+  const tableResponsive = document.createElement("div");
+  tableResponsive.className = "table-responsive";
+
+  const table = document.createElement("table");
+  table.className = "table table-bordered table-dark table-sm";
+
+  const thead = document.createElement("thead");
+  thead.className = "table-light";
+
+  const trHead = document.createElement("tr");
+  ["Código", "Modelo", "Placa", "Horário", "Tipo de Carga"].forEach(headerText => {
+    const th = document.createElement("th");
+    th.textContent = headerText;
+    trHead.appendChild(th);
+  });
+  thead.appendChild(trHead);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+
+  // Itera sobre o array de veículos, se existir
+ 
+      const trVeiculo = document.createElement("tr");
+
+      const tdCodigo = document.createElement("td");
+      tdCodigo.textContent = locacao.veloidau || "-";
+      trVeiculo.appendChild(tdCodigo);
+
+      const tdModelo = document.createElement("td");
+      tdModelo.textContent = locacao.velomode || "-";
+      trVeiculo.appendChild(tdModelo);
+
+      const tdPlaca = document.createElement("td");
+      tdPlaca.textContent = locacao.veloplac || "-";
+      trVeiculo.appendChild(tdPlaca);
+
+      const tdHorario = document.createElement("td");
+      tdHorario.textContent = locacao.velotime || "-";
+      trVeiculo.appendChild(tdHorario);
+
+      const tdTipoCarga = document.createElement("td");
+      tdTipoCarga.textContent = locacao.velotpca || "-";
+      trVeiculo.appendChild(tdTipoCarga);
+
+      tbody.appendChild(trVeiculo);
+   
+  table.appendChild(tbody);
+  tableResponsive.appendChild(table);
+  container.appendChild(tableResponsive);
+
+  // Botões de ação
+  const divBtn = document.createElement("div");
+  divBtn.className = "text-center mt-4 d-flex justify-content-center gap-2";
+
+  const btnVoltar = document.createElement("button");
+  btnVoltar.id = "voltar";
+  btnVoltar.className = "btn btn-light";
+  btnVoltar.textContent = "Voltar";
+
+  btnVoltar.addEventListener("click", () => {
+    contratoDiv.style.display = "none";
+    const table = document.querySelector(".tableLocation");
+    if (table) {
+      table.classList.remove("hidden");
+      table.classList.add("flex");
+    }
+    const containerBtn = document.querySelector(".btnInitPageMainLoc");
+    if (containerBtn) {
+      containerBtn.classList.remove("hidden");
+      containerBtn.classList.add("flex");
+    }
+  });
+
+  divBtn.appendChild(btnVoltar);
+  container.appendChild(divBtn);
+
+  contratoDiv.appendChild(container);
+
+  contratoDiv.style.display = "block";
+
+  const table1 = document.querySelector(".tableLocation");
+  if (table1) {
+    table1.classList.remove("flex");
+    table1.classList.add("hidden");
+  }
+  const containerBtn = document.querySelector(".btnInitPageMainLoc");
+  if (containerBtn) {
+    containerBtn.classList.remove("flex");
+    containerBtn.classList.add("hidden");
+  }
+}
+
+
 

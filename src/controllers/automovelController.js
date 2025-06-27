@@ -142,4 +142,29 @@ export const movementAuto = {
       res.status(500).json({ message: "Erro ao atualizar o registro", error });
     }
   },
+
+  async updateStatusVehicle(req , res){
+      try {
+           const {id} = req.params
+           const {caaustat} = req.body
+
+           console.log('id' , id)
+           console.log('corpo' , caaustat)
+
+
+           if(!id || !caaustat){
+             return res.status(400).json({message: 'faltar informações'})
+           }
+
+           const update = await autoRegister.updateStatus(id , caaustat)
+           if(!update){
+             return res.status(400).json({message:'Erro em atualizar'})
+           }
+
+           return  res.status(200).json({success: true  , update: update})
+      } catch (error) {
+         console.log('Erro na atualização do status do veiculo' ,error)
+          return res.status(500).json({message:'Erro no server na atualização do status do veiculo', success:false})
+      }
+  }
 };

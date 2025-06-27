@@ -12,6 +12,8 @@ export const movementClient = {
           .json({ message: "Campos obrigatórios não preenchidos." });
       }
 
+      console.log('dados' , dataClientSubmit)
+
     
       const validCpfSystem = await clientRegister.getAllClientCredenci();
 

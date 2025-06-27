@@ -19,7 +19,8 @@ export const location = {
 
   async dataLocacao(req, res) {
     const { userClientValidade, numericLocation, dataLoc, localization, resi, dataDevo, pagament, bens } = req.body;
-
+     
+    console.log('bens', bens)
     try {
     
       if (!bens || bens.length === 0) {
@@ -27,27 +28,26 @@ export const location = {
       }
 
       if (!userClientValidade || userClientValidade.length < 2) {
-        return res.status(400).json({ error: "CPF e Nome do cliente é obrigatório." });
+        return res.status(400).json({ error: "CPF/CNPJ e Nome do cliente é obrigatório." });
       }
   
      const ClientDate = userClientValidade[1].replace(/\D/g, ''); 
 
-let cliente = null;
+     let cliente = null;
 
-if (ClientDate.length === 11) {
+    if (ClientDate.length === 11) {
   
-  cliente = await LocacaoModel.buscarClientePorCPF(ClientDate);
-} else if (ClientDate.length === 14) {
+     cliente = await LocacaoModel.buscarClientePorCPF(ClientDate);
+    } else if (ClientDate.length === 14) {
  
-  cliente = await LocacaoModel.buscarClientePorCnpj(ClientDate);
-} else {
-  return res.status(400).json({ error: "Formato de CPF ou CNPJ inválido." });
-}
+    cliente = await LocacaoModel.buscarClientePorCnpj(ClientDate);
+     } else {
+       return res.status(400).json({ error: "Formato de CPF ou CNPJ inválido." });
+     }
 
 if (!cliente) {
   return res.status(404).json({ error: "Cliente não encontrado no banco de dados." });
 }
-
 
       // Verificações de data
       if (!dataLoc || !dataDevo) {

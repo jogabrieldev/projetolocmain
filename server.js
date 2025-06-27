@@ -6,6 +6,7 @@ import { Server } from "socket.io";
 import http from "http";
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import { LocacaoModel } from './src/model/location.js';
 
 dotenv.config();
 
@@ -96,6 +97,9 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
     });
 });
+await LocacaoModel.verificarLocacoesComBens(io)
+
+
 
 // Agora o servidor HTTP inicia corretamente
 server.listen(3000, () => {

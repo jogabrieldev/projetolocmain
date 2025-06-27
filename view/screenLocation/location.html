@@ -385,18 +385,10 @@
   </div>
 </div>
 
- 
-<div class="contratoLocationVehicle d-none">
-   <!-- locação de veiculos -->
-</div>
-
 
     <!-- Seção de Bens para locação -->
   <div class="containerGoodsloc d-none p-3 rounded shadow-sm mb-3 border">
-      <div
-       class="p-2 bg-secondary rounded shadow-sm"
-    style="overflow-x: auto;"
-      >
+     <div class="p-2 bg-secondary rounded shadow-sm" style="overflow-x: auto;">
         <!-- Cabeçalhos -->
         <div class="row gx-2 gy-1 mb-2 flex-nowrap align-items-center">
           <div class="col-2">
@@ -682,6 +674,14 @@
       </div>
     </div>
   </main>
+
+<div class="contrato" style="display: none;">
+
+</div>
+
+<div class="contratoLocationVehicle" style="display: none;">
+   <!-- locação de veiculos -->
+</div>
 
   <!-- EDITAR LOCATION -->
   <div class="containerEditLocation container d-flex flex-column gap-3 d-none">
@@ -1078,150 +1078,113 @@
   <!-- CADASTRAR CLIENTE -->
   <div class="LocRegisterClient container overflow-auto" style="display: none">
     <form id="formRegisterClientLoc" class="row g-3">
-      <div class="col-md-4">
-        <label for="clieCodeLoc" class="form-label">Código</label>
-        <input
-          type="text"
-          class="form-control"
-          id="clieCodeLoc"
-          name="clieCodeLoc"
-          placeholder="Código"
-          maxlength="15"
-        />
-      </div>
-
-      <div class="col-md-8">
-        <label for="clieNameLoc" class="form-label">Nome</label>
-        <input
-          type="text"
-          class="form-control"
-          id="clieNameLoc"
-          name="clieNameLoc"
-          placeholder="Nome"
-          maxlength="80"
-        />
-      </div>
-
-      <div class="col-md-6">
-        <label for="cpfClientLoc" class="form-label">CPF</label>
-        <input
-          type="text"
-          class="form-control"
-          id="cpfClientLoc"
-          name="cpfClientLoc"
-          placeholder="CPF"
-          maxlength="14"
-        />
-      </div>
-
-      <div class="col-md-6">
-        <label for="clieCeluLoc" class="form-label">Celular</label>
-        <input
-          type="text"
-          class="form-control"
-          id="clieCeluLoc"
-          name="clieCeluLoc"
-          placeholder="Celular"
-          maxlength="11"
-        />
-      </div>
-
-      <div class="col-md-6">
-        <label for="dtCadLoc" class="form-label">Data do Cadastro</label>
-        <input type="date" class="form-control" id="dtCadLoc" name="dtCadLoc" />
-      </div>
-
-      <div class="col-md-6">
-        <label for="dtNascLoc" class="form-label">Data de Nascimento</label>
-        <input
-          type="date"
-          class="form-control"
-          id="dtNascLoc"
-          name="dtNascLoc"
-        />
-      </div>
-
-      <div class="col-md-6">
-        <label for="clieCityLoc" class="form-label">Cidade</label>
-        <input
-          type="text"
-          class="form-control"
-          id="clieCityLoc"
-          name="clieCityLoc"
-          placeholder="Cidade"
-          maxlength="25"
-
-        />
-      </div>
-
-      <div class="col-md-6">
-        <label for="clieEstdLoc" class="form-label">Estado</label>
-        <input
-          type="text"
-          class="form-control"
-          id="clieEstdLoc"
-          name="clieEstdLoc"
-          placeholder="Estado"
-          maxlength="20"
-        />
-      </div>
-
-      <div class="col-md-6">
-        <label for="clieRuaLoc" class="form-label">Rua</label>
-        <input
-          type="text"
-          class="form-control"
-          id="clieRuaLoc"
-          name="clieRuaLoc"
-          placeholder="RUA"
-          maxlength="40"
-        />
-      </div>
-
-      <div class="col-md-6">
-        <label for="clieCepLoc" class="form-label">CEP</label>
-        <input
-          type="text"
-          class="form-control"
-          id="clieCepLoc"
-          name="clieCepLoc"
-          placeholder="CEP"
-          maxlength="10"
-        />
-      </div>
-
-      <div class="col-12">
-        <label for="clieMailLoc" class="form-label">E-mail</label>
-        <input
-          type="email"
-          class="form-control"
-          id="clieMailLoc"
-          name="clieMailLoc"
-          placeholder="E-mail"
-          maxlength="35"
-        />
-      </div>
-
-      <div class="col-12 d-flex justify-content-center gap-2 mt-3">
-        <button type="button" class="btn btn-success btnRegisterClientLoc px-5"><i class="bi bi-check-circle me-2"></i>
-          Cadastrar
-        </button>
-        <button
-          type="button"
-          class="btn btn-secondary btnOutPageRegisterClientLoc"
-        ><i class="bi bi-arrow-left me-2"></i>
-          Voltar
-        </button>
-      </div>
-    </form>
+  <!-- Código, Nome, Tipo de Cliente -->
+  <div class="col-sm-4 col-md-3">
+    <label for="clieCodeLoc" class="form-label">Código</label>
+    <input type="text" class="form-control" name="clieCodeLoc" id="clieCodeLoc" placeholder="Ex: 001" maxlength="15" />
   </div>
 
-  <div id="contrato" style="display: none">
-    <!-- Contrato de locação front-->
-   
+  <div class="col-sm-8 col-md-6">
+    <label for="clieNameLoc" class="form-label">Nome Completo</label>
+    <input type="text" class="form-control" name="clieNameLoc" id="clieNameLoc" placeholder="Nome completo" maxlength="80" />
   </div>
-  
+
+  <div class="col-sm-12 col-md-3">
+    <label for="clieTiCliLoc" class="form-label">Tipo de Cliente</label>
+    <select name="clieTiCliLoc" id="clieTiCliLoc" class="form-select form-select-sm">
+      <option value="">Selecione...</option>
+      <option value="Pessoa Jurídica">Pessoa Jurídica</option>
+      <option value="Pessoa Física">Pessoa Física</option>
+    </select>
+  </div>
+
+  <!-- CPF, CNPJ e Celular -->
+  <div class="col-sm-6 col-md-3">
+    <label for="cpfClientLoc" class="form-label">CPF</label>
+    <input type="text" class="form-control" name="cpfClientLoc" id="cpfClientLoc" placeholder="Digite o CPF" maxlength="14" />
+  </div>
+
+  <div class="col-sm-6 col-md-3">
+    <label for="cnpjClientLoc" class="form-label">CNPJ</label>
+    <input type="text" class="form-control" name="cnpjClientLoc" id="cnpjClientLoc" placeholder="Digite o CNPJ" maxlength="18" />
+  </div>
+
+  <div class="col-sm-12 col-md-3">
+    <label for="clieCeluLoc" class="form-label">Celular</label>
+    <input type="text" class="form-control" name="clieCeluLoc" id="clieCeluLoc" placeholder="(00) 00000-0000" minlength="15" maxlength="15" />
+  </div>
+
+  <!-- Datas -->
+  <div class="col-sm-6 col-md-3">
+    <label for="dtNascLoc" class="form-label">Data de Nascimento</label>
+    <input type="date" class="form-control" name="dtNascLoc" id="dtNascLoc" />
+  </div>
+
+  <div class="col-sm-6 col-md-3">
+    <label for="dtCadLoc" class="form-label">Data de Cadastro</label>
+    <input type="date" class="form-control" name="dtCadLoc" id="dtCadLoc"  />
+  </div>
+
+  <!-- Endereço -->
+  <div class="col-sm-6 col-md-3">
+    <label for="clieCepLoc" class="form-label">CEP</label>
+    <input type="text" class="form-control" name="clieCepLoc" id="clieCepLoc" placeholder="00000-000" minlength="9" maxlength="9" />
+  </div>
+
+  <div class="col-sm-12 col-md-6">
+    <label for="clieRuaLoc" class="form-label">Rua</label>
+    <input type="text" class="form-control" name="clieRuaLoc" id="clieRuaLoc" placeholder="RUA / QD / LT" maxlength="40" readonly />
+  </div>
+
+  <div class="col-sm-6 col-md-3">
+    <label for="clieCityLoc" class="form-label">Cidade</label>
+    <input type="text" class="form-control" name="clieCityLoc" id="clieCityLoc" placeholder="Cidade" maxlength="25" readonly />
+  </div>
+
+  <div class="col-sm-6 col-md-3">
+    <label for="clieEstdLoc" class="form-label">Estado</label>
+    <input type="text" class="form-control" name="clieEstdLoc" id="clieEstdLoc" placeholder="Estado" maxlength="20" readonly />
+  </div>
+
+  <!-- Contato e Banco -->
+  <div class="col-sm-12 col-md-6">
+    <label for="clieMailLoc" class="form-label">E-mail</label>
+    <input type="email" class="form-control" name="clieMailLoc" id="clieMailLoc" placeholder="email@exemplo.com" maxlength="35" />
+  </div>
+
+  <div class="col-sm-6 col-md-4">
+    <label for="clieBancLoc" class="form-label">Banco</label>
+    <input type="text" class="form-control" name="clieBancLoc" id="clieBancLoc" placeholder="Banco" maxlength="20" />
+  </div>
+
+  <div class="col-sm-6 col-md-2">
+    <label for="clieAgenLoc" class="form-label">Agência</label>
+    <input type="number" class="form-control" name="clieAgenLoc" id="clieAgenLoc" placeholder="Agência" max="99999" />
+  </div>
+
+  <div class="col-sm-6 col-md-2">
+    <label for="clieContLoc" class="form-label">Conta</label>
+    <input type="number" class="form-control" name="clieContLoc" id="clieContLoc" placeholder="Conta" max="9999999999" />
+  </div>
+
+  <div class="col-sm-12 col-md-4">
+    <label for="cliePixLoc" class="form-label">Pix</label>
+    <input type="text" class="form-control" name="cliePixLoc" id="cliePixLoc" placeholder="Chave Pix" maxlength="50" />
+  </div>
+
+  <!-- Botões -->
+  <div class="col-12 d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-4">
+    <button type="button" class="btn btn-success btnRegisterClientLoc px-5">
+      <i class="bi bi-check-circle me-2"></i>Cadastrar
+    </button>
+
+    <button type="button" class="btn btn-secondary btnOutPageRegisterClientLoc px-5">
+      <i class="bi bi-arrow-left me-2"></i>Voltar
+    </button>
+  </form>
+</div>
 </section>
-<script src="locationFinish.js"></script>
-<script src="localization.js"></script>
+<!-- <script src="locationFinish.js"></script>
+<script src="localization.js"></script> -->
+<!-- <script src="locationVehicle.js"></script> -->
 

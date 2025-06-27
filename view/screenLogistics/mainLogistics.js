@@ -13,12 +13,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const mainContent = document.querySelector("#mainContent");
         if (mainContent) {
           mainContent.innerHTML = html;
-
+    
           locationPendente();
           needVsAvaible();
           validateFamilyBensPending();
           loadingDriver();
           filterLocation();
+          validLocationHours();
         } else {
           console.error("#mainContent não encontrado no DOM");
           return;
@@ -845,86 +846,6 @@ async function loadingDriver() {
   }
 }
 
-// VERIFICA SE O MOTORISTA TEM VEICULO
-// async function VerifiqueSeTemVeiculo(Motorista) {
-//   const token = localStorage.getItem("token");
-
-//   if (!token || isTokenExpired(token)) {
-//     Toastify({
-//       text: "Sessão expirada. Faça login novamente.",
-//       duration: 3000,
-//       close: true,
-//       gravity: "top",
-//       position: "center",
-//       backgroundColor: "red",
-//     }).showToast();
-
-//     localStorage.removeItem("token");
-//     setTimeout(() => {
-//       window.location.href = "/index.html";
-//     }, 2000);
-//     return;
-//   }
-
-//   try {
-//     const result = await fetch("/api/listauto", {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${token}`,
-//       },
-//     });
-
-//     const response = await result.json(); 
-
-//     const veiculoEncontrado = response.find((veiculo) =>
-//       Motorista.includes(veiculo.caaumoto)
-//     );
-
-//     if (veiculoEncontrado) {
-//       if (veiculoEncontrado.caaustat === "Ativo") {
-//         return true;
-//       } else {
-//         console.log("Motorista tem veículo, mas está inativo.");
-//         // Mostrar toast avisando, se quiser
-//         Toastify({
-//           text: "Veículo do motorista está inativo.",
-//           duration: 3000,
-//           close: true,
-//           gravity: "top",
-//           position: "center",
-//           backgroundColor: "orange",
-//         }).showToast();
-//         return false;
-//       }
-//     } else {
-//       console.log("Motorista não possui veículo cadastrado.");
-//       Toastify({
-//         text: "Motorista não possui veículo cadastrado.",
-//         duration: 3000,
-//         close: true,
-//         gravity: "top",
-//         position: "center",
-//         backgroundColor: "red",
-//       }).showToast();
-//       return false;
-//     }
-//   } catch (error) {
-//     console.error(
-//       "ERRO TOTAL NA VERIFICAÇÃO DO MOTORISTA SE TEM VEICULO NO NOME DELE"
-//     );
-//     Toastify({
-//       text: "ERRO TOTAL NA VERIFICAÇÃO DO MOTORISTA SE TEM VEICULO NO NOME DELE.",
-//       duration: 3000,
-//       close: true,
-//       gravity: "top",
-//       position: "center",
-//       backgroundColor: "red",
-//     }).showToast();
-//     return false;
-//   }
-// }
-
 // MODAL PARA VINCULAR
 async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
   const token = localStorage.getItem("token");
@@ -939,10 +860,6 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
       backgroundColor: "red",
     }).showToast();
 
-    localStorage.removeItem("token");
-    setTimeout(() => {
-      window.location.href = "/index.html";
-    }, 2000);
     return;
   }
   let motoristasSelecionados = Array.from(
@@ -960,11 +877,6 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
     }).showToast();
     return;
   }
-
-  // const motoristaValido = await VerifiqueSeTemVeiculo(motoristasSelecionados);
-  // if (!motoristaValido) {
-  //   return;
-  // }
 
   const motoId = motoristasSelecionados[0];
 
@@ -1052,7 +964,7 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
 
         const tdAcao = document.createElement("td");
         const btn = document.createElement("button");
-        btn.classList.add("vincular-bem");
+        btn.classList.add("vincular-bem btn btn-success");
         btn.dataset.id = bem.benscode;
         btn.dataset.code = codigo;
         btn.textContent = "Vincular";
@@ -1304,8 +1216,7 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
       loc.bens?.some((b) => String(b.belocode) === codeLocation)
     );
 
-    console.log('Encontrada' ,  locacaoEncontrada)
-
+   
     if (!locacaoEncontrada) {
       Toastify({
         text: `Locação não encontrada na base de dados.`,
@@ -1345,8 +1256,6 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
            cidade: locacaoEncontrada.cllocida
         }
     }
-
-    console.log('payload' ,payloadLogistcs)
 
     // Envio dos dados da locação
     const response = await fetch("/logistics", {

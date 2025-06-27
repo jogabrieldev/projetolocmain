@@ -278,6 +278,9 @@ let motoris = []
          wrapper.style.display = 'wrap'
          wrapper.style.gap = "20px";
          wrapper.style.height = "auto"
+
+         const formatDoc = formatarCampo("documento"  , cliente.cliecpf || cliente.cliecnpj)
+         const formatPhone = formatarCampo('telefone' , cliente.cliecelu)
          
          // Div de Detalhes da Locação
          const locacaoDiv = document.createElement("div");
@@ -308,8 +311,8 @@ let motoris = []
              ? `
              <h3>Detalhes do Cliente</h3>
              <p><strong>Nome:</strong> ${cliente.clienome}</p>
-             <p><strong>CPF:</strong> ${cliente.cliecpcn}</p>
-             <p><strong>Celular:</strong> ${cliente.cliecelu}</p>
+             <p><strong>CPF:</strong> ${formatDoc || ''} </p>
+             <p><strong>Celular:</strong> ${formatPhone || ""}</p>
              <p><strong>Região:</strong> ${item.lofibair ||cliente.cliecity}</p>
              <p><strong>Rua:</strong> ${item.lofirua || cliente.clierua}</p>
              <p><strong>CEP:</strong> ${item.loficep || cliente.cliecep}</p>

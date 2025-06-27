@@ -629,6 +629,7 @@ function editVehicles() {
 
     try {
       const autoSelecionado = JSON.parse(autoData);
+      console.log('veiculo' , autoSelecionado)
 
       const campos = [
         { id: "codeAutoEdit", valor: autoSelecionado.caaucode },

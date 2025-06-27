@@ -17,7 +17,7 @@ function maskFieldClientPageLocation() {
   $("#clieCepLoc").mask("00000-000");
 
   $("#clieCeluLoc").mask("(00) 00000-0000");
-
+  $("#cnpjClientLoc").mask("00.000.000/0000-00");
   $("#cpfClientLoc").mask("000.000.000-00");
 }
 
@@ -96,6 +96,30 @@ function verificarPreenchimentoCliente() {
   });
 }
 
+function readOnlyFieldChange(){
+
+    document.getElementById('clieTiCliLoc').addEventListener('change', function () {
+       const tipoCliente = this.value;
+       const cpfField = document.getElementById('cpfClientLoc');
+       const cnpjField = document.getElementById('cnpjClientLoc');
+
+      if (tipoCliente === "Pessoa Jurídica") {
+         cpfField.value = "";
+         cpfField.readOnly = true;
+         cnpjField.readOnly = false;
+
+      } else if (tipoCliente === "Pessoa Física") {
+        cnpjField.value = "";
+        cnpjField.readOnly = true;
+        cpfField.readOnly = false;
+
+      } else {
+       cpfField.readOnly = false;
+       cnpjField.readOnly = false;
+      }
+  });
+}
+
 const socketContainerLocation = io();
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -115,8 +139,11 @@ document.addEventListener("DOMContentLoaded", () => {
             interationSystemLocation();
             preencheraResiduo("residuoSelect");
             interationSystemLocationVehicle();
-            
-             
+            for (let i = 1; i <= 5; i++) {
+               atualizarData(`dataInicio${i}`);
+             }
+           
+            validLocationHours();
             localStorage.removeItem("dadosInputs");
             const aguardarElementos = () => {
               const select1 = document.getElementById("family1");
@@ -126,14 +153,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 searchClientForLocation();
                 carregarFamilias();
                 atualizarData("dataLoc");
-                loadVehicles()
+                atualizarData("dtCadLoc")
+                atualizarData("dtCadLoc")
+                loadVehicles();
                 registerClientPageLocation();
                 saveLocalizationInCache();
                 maskFieldClientPageLocation();
                 editLocation();
                 isDataValida();
-                hoursField('time1')
-                hoursField('time2')
+                hoursField("time1");
+                hoursField("time2");
+                readOnlyFieldChange()
                 const buttonSubmitLocationFinish =
                   document.querySelector(".finish");
                 if (buttonSubmitLocationFinish) {
@@ -218,9 +248,9 @@ document.addEventListener("DOMContentLoaded", () => {
               dataInicio: formatDate(bem.belodtin),
               dataFim: formatDate(bem.belodtfi),
             }));
-          } else{
-            return []
-         }
+          } else {
+            return [];
+          }
         })
         .flat();
 
@@ -458,31 +488,32 @@ function searchClientForLocation() {
             : "";
         };
 
-        const normalizeNumber = (number) => (number ? number.replace(/\D/g, "") : "");
+        const normalizeNumber = (number) =>
+          number ? number.replace(/\D/g, "") : "";
 
         const inputNormalized = normalizeText(inputSearchClient);
         const inputCpfCnpjNormalized = normalizeNumber(inputSearchClient);
 
         // Filtrando clientes
-  const clienteEncontrado = clientes.filter((cliente) => {
-  const nomeNormalizado = normalizeText(cliente.clienome);
-  const cpfNormalizado = normalizeNumber(cliente.cliecpf);
-  const cnpjNormalizado = normalizeNumber(cliente.cliecnpj);
+        const clienteEncontrado = clientes.filter((cliente) => {
+          const nomeNormalizado = normalizeText(cliente.clienome);
+          const cpfNormalizado = normalizeNumber(cliente.cliecpf);
+          const cnpjNormalizado = normalizeNumber(cliente.cliecnpj);
 
-  const pesquisaPorNome =
-    inputNormalized.length >= 3 && nomeNormalizado.startsWith(inputNormalized);
+          const pesquisaPorNome =
+            inputNormalized.length >= 3 &&
+            nomeNormalizado.startsWith(inputNormalized);
 
-  const pesquisaPorCpf =
-    inputCpfCnpjNormalized.length === 11 &&
-    cpfNormalizado === inputCpfCnpjNormalized;
+          const pesquisaPorCpf =
+            inputCpfCnpjNormalized.length === 11 &&
+            cpfNormalizado === inputCpfCnpjNormalized;
 
-  const pesquisaPorCnpj =
-    inputCpfCnpjNormalized.length === 14 &&
-    cnpjNormalizado === inputCpfCnpjNormalized;
+          const pesquisaPorCnpj =
+            inputCpfCnpjNormalized.length === 14 &&
+            cnpjNormalizado === inputCpfCnpjNormalized;
 
-  return pesquisaPorNome || pesquisaPorCpf || pesquisaPorCnpj;
-});
-
+          return pesquisaPorNome || pesquisaPorCpf || pesquisaPorCnpj;
+        });
 
         const resultDiv = document.querySelector(".searchClient");
         resultDiv.innerHTML = "";
@@ -490,8 +521,11 @@ function searchClientForLocation() {
         if (clienteEncontrado.length === 1) {
           const cliente = clienteEncontrado[0];
 
-          const formatDoc = formatarCampo('documento' , cliente.cliecpf || cliente.cliecnpj)
-          const formatCep = formatarCampo('cep', cliente.cliecep)
+          const formatDoc = formatarCampo(
+            "documento",
+            cliente.cliecpf || cliente.cliecnpj
+          );
+          const formatCep = formatarCampo("cep", cliente.cliecep);
 
           document.querySelector("#nameClient").value = cliente.clienome || "";
           document.querySelector("#cpfClient").value = formatDoc || "";
@@ -513,12 +547,12 @@ function searchClientForLocation() {
             backgroundColor: "green",
           }).showToast();
         } else if (clienteEncontrado.length > 1) {
-
-          
           clienteEncontrado.forEach((cliente) => {
-
-             const formatDoc = formatarCampo('documento' , cliente.cliecpf || cliente.cliecnpj)
-          const formatCep = formatarCampo('cep', cliente.cliecep)
+            const formatDoc = formatarCampo(
+              "documento",
+              cliente.cliecpf || cliente.cliecnpj
+            );
+            const formatCep = formatarCampo("cep", cliente.cliecep);
             const checkboxSelect = document.createElement("input");
             checkboxSelect.type = "checkbox";
             checkboxSelect.name = "selectClient";
@@ -541,7 +575,7 @@ function searchClientForLocation() {
             infoDiv.innerHTML = `
           <p><strong>Nome:</strong> ${cliente.clienome || "N/A"}</p>
           <p><strong>CPF ou CNPJ:</strong> ${formatDoc || "N/A"}</p>
-          <p><strong>Tipo de cliente:</strong> ${cliente.clietpcl|| "N/A"}</p>
+          <p><strong>Tipo de cliente:</strong> ${cliente.clietpcl || "N/A"}</p>
           <p><strong>Cidade:</strong> ${cliente.cliecity || "N/A"}</p>
           <p><strong>CEP:</strong> ${formatCep || "N/A"}</p>
           <p><strong>Email:</strong> ${cliente.cliemail || "N/A"}</p>
@@ -549,7 +583,7 @@ function searchClientForLocation() {
 
             const buttonOutContainerSearch = document.createElement("button");
             buttonOutContainerSearch.className =
-            "btn btn-outline-secondary d-flex align-items-center";
+              "btn btn-outline-secondary d-flex align-items-center";
             buttonOutContainerSearch.textContent = "Voltar";
             buttonOutContainerSearch.style.cursor = "pointer";
             buttonOutContainerSearch.addEventListener("click", () => {
@@ -558,8 +592,11 @@ function searchClientForLocation() {
 
             checkboxSelect.addEventListener("change", (event) => {
               if (event.target.checked) {
-                const formatDoc = formatarCampo('documento' , cliente.cliecpf || cliente.cliecnpj)
-                const formatCep = formatarCampo('cep', cliente.cliecep)
+                const formatDoc = formatarCampo(
+                  "documento",
+                  cliente.cliecpf || cliente.cliecnpj
+                );
+                const formatCep = formatarCampo("cep", cliente.cliecep);
                 document
                   .querySelectorAll('input[name="selectClient"]')
                   .forEach((cb) => {
@@ -569,14 +606,12 @@ function searchClientForLocation() {
                 // Preenche os campos
                 document.querySelector("#nameClient").value =
                   cliente.clienome || "";
-                document.querySelector("#cpfClient").value =
-                  formatDoc || ""
+                document.querySelector("#cpfClient").value = formatDoc || "";
                 document.querySelector("#tpClient").value =
                   cliente.clietpcl || "";
                 document.querySelector("#cityClient").value =
                   cliente.cliecity || "";
-                document.querySelector("#cepClient").value =
-                  formatCep || "";
+                document.querySelector("#cepClient").value = formatCep || "";
                 document.querySelector("#mailClient").value =
                   cliente.cliemail || "";
 
@@ -750,7 +785,7 @@ function clearFields() {
   document.getElementById("dataLoc").value = "";
   document.getElementById("DataDevo").value = "";
   document.getElementById("pagament").value = "";
-  document.getElementById("ruaClient").value = "";
+  document.getElementById("tpClient").value = "";
   document.getElementById("cityClient").value = "";
   document.getElementById("cepClient").value = "";
   document.getElementById("mailClient").value = "";
@@ -802,7 +837,8 @@ async function handleSubmit() {
   const bens = [];
 
   const codigosUsados = new Set();
-
+   
+  let grupoPrincipalEncontrado = false;
   // Capturar dados dos grupos
   for (let i = 1; i <= totalGrups; i++) {
     const codeBen = document.getElementById(`family${i}`)?.value || "";
@@ -822,6 +858,13 @@ async function handleSubmit() {
       quantidade;
 
     if (isParcial) {
+
+       if (!grupoPrincipalEncontrado) {
+         grupoPrincipalEncontrado = true; 
+        } else {
+           break; 
+        }
+ 
       if (codigosUsados.has(codeBen)) {
         Toastify({
           text: `Grupo ${i}: O código "${codeBen}" já foi selecionado em outro grupo.`,
@@ -918,6 +961,9 @@ async function handleSubmit() {
         }).showToast();
         return;
       }
+   
+      await gerarContrato()
+      const contratoHTML = document.querySelector(".contrato").innerHTML.trim();
       bens.push({
         codeBen,
         observacao,
@@ -926,8 +972,10 @@ async function handleSubmit() {
         quantidade,
         produto,
         status: "Pendente",
+        contrato: contratoHTML
       });
-    }
+      
+      }
   }
 
   if (bens.length === 0) {
@@ -948,7 +996,7 @@ async function handleSubmit() {
     const nameClient = document.querySelector("#nameClient").value;
     const cpfClient = document.querySelector("#cpfClient").value;
 
-    const cpfOrCnpj =  cpfClient.replace(/\D/g, '');
+    const cpfOrCnpj = cpfClient.replace(/\D/g, "");
 
     const userClientValidade = [nameClient, cpfOrCnpj];
     const dataLocStr = document.getElementById("dataLoc")?.value || null;
@@ -1168,6 +1216,9 @@ async function gerarContrato() {
   const pagamento =
     document.getElementById("pagament")?.value || "Não informado";
 
+  const residuoSelect = document.getElementById('residuoSelect');
+    const residuo = residuoSelect?.options[residuoSelect.selectedIndex]?.text || "Não informado";
+
   const gruposBens = [];
   for (let i = 1; i <= 4; i++) {
     const codeBen =
@@ -1212,14 +1263,15 @@ async function gerarContrato() {
   const enderecoLocacao = dadosInputsLoc ? JSON.parse(dadosInputsLoc) : {};
 
   // Gerar conteúdo do contrato
-  const contratoDiv = document.getElementById("contrato");
+  const contratoDiv = document.querySelector(".contrato");
   contratoDiv.innerHTML = `
-    <div class=" text-white p-4 rounded">
-      <h2 class="text-center mb-4">Contrato de Locação</h2>
+    <div class=" text-dark p-4 rounded">
+      <h2 class="text-center mb-4 text-dark">Contrato de Locação</h2>
       <hr class="border-light">
       <p><strong>Número da locação:</strong> ${numericLocation}</p>
       <p><strong>Nome do Cliente:</strong> ${nomeCliente}</p>
-      <p><strong>CPF do Cliente:</strong> ${cpfCliente}</p>
+      <p><strong>CPF/CNPJ do Cliente:</strong> ${cpfCliente}</p>
+      <p><strong>residuo Envolvido:</strong> ${residuo}</p>
       <div class="border rounded p-3 mb-3 bg-dark-subtle text-white">
       <p class="mb-1"><strong>Endereço da Locação:</strong></p>
       <div class="row">
@@ -1303,7 +1355,7 @@ async function gerarContrato() {
   const btnBaixarPdf = document.getElementById("baixarPdf");
   if (btnBaixarPdf) {
     btnBaixarPdf.addEventListener("click", () => {
-      const element = document.getElementById("contrato");
+      const element = document.querySelector(".contrato");
       const opt = {
         margin: 0.5,
         filename: `contrato-locacao-${numericLocation}.pdf`,
@@ -1402,18 +1454,49 @@ function registerClientPageLocation() {
       }
 
       const formDataLocation = {
-        clieCode: document.querySelector("#clieCodeLoc").value.trim(), // Codigo
-        clieName: document.querySelector("#clieNameLoc").value.trim(), // Nome
-        cpf: document.querySelector("#cpfClientLoc").value.trim(), // CPF
-        dtCad: document.querySelector("#dtCadLoc").value, // Data de Cadastro
+        clieCode: document.querySelector("#clieCodeLoc").value.trim(), // Código
+        clieName: document.querySelector("#clieNameLoc").value.trim(), // Nome Completo
+        clieTpCl: document.querySelector("#clieTiCliLoc").value, // Tipo de Cliente
+        clieCpf: document.querySelector("#cpfClientLoc").value.trim().replace(/\D/g, ''), // CPF
+        clieCnpj: document.querySelector("#cnpjClientLoc").value.trim().replace(/\D/g, ''), // CNPJ
+        clieCelu: document.querySelector("#clieCeluLoc").value.trim().replace(/\D/g, ''), // Celular
         dtNasc: document.querySelector("#dtNascLoc").value, // Data de Nascimento
-        clieCelu: document.querySelector("#clieCeluLoc").value.trim(), // Celular
+        dtCad: document.querySelector("#dtCadLoc").value, // Data de Cadastro
+        clieCep: document.querySelector("#clieCepLoc").value.trim().replace(/\D/g, ''), // CEP
+        clieRua: document.querySelector("#clieRuaLoc").value.trim(), // Rua
         clieCity: document.querySelector("#clieCityLoc").value.trim(), // Cidade
         clieEstd: document.querySelector("#clieEstdLoc").value.trim(), // Estado
-        clieRua: document.querySelector("#clieRuaLoc").value.trim(), // Rua
-        clieCep: document.querySelector("#clieCepLoc").value.trim(), // Cep
         clieMail: document.querySelector("#clieMailLoc").value.trim(), // E-mail
+        clieBanc: document.querySelector("#clieBancLoc").value.trim(), // Banco
+        clieAgen: document.querySelector("#clieAgenLoc").value.trim(), // Agência
+        clieCont: document.querySelector("#clieContLoc").value.trim(), // Conta
+        cliePix: document.querySelector("#cliePixLoc").value.trim(), // Chave Pix
       };
+
+      
+
+      if(formDataLocation.clieTpCl === "Pessoa Jurídica" && formDataLocation.cnpj === ""){
+          Toastify({
+          text: "O Cliente e uma pessoa jurídica adicione o CNPJ dele. OBRIGATORIO",
+          duration: 4000,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
+
+      if(formDataLocation.clieTpCl === "Pessoa Física" && formDataLocation.cpf === ""){
+          Toastify({
+          text: "O Cliente e uma Pessoa Física adicione o CPF dele. OBRIGATORIO",
+          duration: 4000,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
+
 
       const clieMail = formDataLocation.clieMail;
       const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -1525,17 +1608,20 @@ function registerClientPageLocation() {
           }).showToast();
 
           document.querySelector("#formRegisterClientLoc").reset();
-        } else if (response.status === 409) {
+          
+        } else {
           Toastify({
-            text: result.message,
+            text: result?.message || "Erro ao cadastrar Cliente.",
             duration: 3000,
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "orange",
+            backgroundColor: response.status === 409 ? "orange" : "red",
           }).showToast();
-        } else {
-          Toastify({
+        } 
+      } catch (error) {
+        console.error("Erro ao enviar formulário:", error);
+         Toastify({
             text: "Erro ao cadastrar Cliente",
             duration: 3000,
             close: true,
@@ -1543,10 +1629,6 @@ function registerClientPageLocation() {
             position: "center",
             backgroundColor: "red",
           }).showToast();
-        }
-      } catch (error) {
-        console.error("Erro ao enviar formulário:", error);
-        alert("Erro ao enviar os dados para o server.");
       }
     });
   }

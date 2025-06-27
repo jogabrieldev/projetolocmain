@@ -221,10 +221,10 @@ function validationFormClientPageLocation(){
             required: true,
             minlength: 4
           },
-          cpfClientLoc:{
-              required: true,
-              
+          clieTiCliLoc:{
+            required:true
           },
+          
           dtCadLoc:{
               required:true ,
               date: true
@@ -255,6 +255,10 @@ function validationFormClientPageLocation(){
               clieNameLoc: {
                 required: "OBRIGATORIO",
                 minlength: "O nome deve ter no mínimo 4 caracteres."
+              },
+
+              clieTiCliLoc:{
+                required:"OBRIGATORIO"
               },
               cpfClientLoc: {
                   required: "OBRIGATORIO"

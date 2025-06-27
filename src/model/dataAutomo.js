@@ -105,4 +105,23 @@ export const autoRegister = {
       throw error;
     }
   },
+
+  updateStatus: async (Id, caaustat) => {
+    try {
+      const query = `
+      UPDATE cadauto
+      SET caaustat = $1
+      WHERE caaucode = $2
+      RETURNING *;
+  `;
+
+      const values = [caaustat, Id];
+      const result = await dataClient.query(query, values);
+
+      return result.rows[0];
+    } catch (error) {
+      console.error("erro a atualizar status do veiculo " ,error);
+      throw error;
+    }
+  },
 };

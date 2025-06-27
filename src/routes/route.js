@@ -200,6 +200,10 @@ route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
   movementAuto.deleteOfAuto(req , res)
  }); 
 
+ route.put('/api/automo/:id' , (req ,res)=>{
+   movementAuto.updateStatusVehicle(req , res)
+ })
+
  //locação Bens
 
  route.get('/api/generateNumber' , (req , res)=>{
