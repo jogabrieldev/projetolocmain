@@ -1,22 +1,18 @@
-<section
-  class="containerAppLocation d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded"
-  style="
-    display: none;
-    width: 76%;
-    height: 550px;
-    margin-left: 22%;
-    margin-top: 1%;
-    padding: 5px;
-    border: 2px solid white;
-  "
->
+<section class="containerAppLocation d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded position-relative"
+  style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid white; ">
+
+   <button type="button" 
+       class="btn btn-outline-danger btn-sm p-0 position-absolute top-0 end-0 mt-2 me-1 rounded-circle d-flex  align-items-center justify-content-center" 
+       aria-label="Fechar" style="width: 32px; height: 32px;" id="buttonExitLocation">
+       <i class="bi bi-x fs-5"></i>
+   </button>
+
+
   <div class="tableLocation d-flex flex-column flex-grow-1 overflow-auto mb-3">
     <!-- Informações de locação -->
   </div>
 
-  <div
-    class="btnInitPageMainLoc d-flex flex-wrap justify-content-center align-items-center gap-3 mb-3"
-  >
+  <div class="btnInitPageMainLoc d-flex flex-wrap justify-content-center align-items-center gap-3 mb-3">
     <button class="registerLocation btn btn-primary text-dark fw-semibold">
       Incluir
     </button>
@@ -27,9 +23,9 @@
       Editar
     </button>
     <button
-      class="buttonExitLocation btn btn-light text-dark fw-semibold border"
-    >
-      Voltar
+      class="searchloc btn btn-light text-dark fw-semibold "
+    > <i class="bi bi-search me-2"></i>
+      Buscar
     </button>
 
      <button class="registerLocation btn btn-primary text-dark fw-semibold buttonLoadLocationVihicle">
@@ -41,9 +37,9 @@
     <div class="searchClient mb-4" style="display: none"></div>
 
     <!-- Formulário do cliente -->
-    <form id="formClient" class="p-4 rounded shadow mb-4  border">
-  <div class="row g-3 align-items-end">
-    <div class="col-md-5">
+  <form id="formClient" class="p-4 rounded shadow mb-4  border">
+     <div class="row g-3 align-items-end">
+     <div class="col-md-5">
   <label for="client" class="form-label fw-bold">Pesquise o Cliente</label>
   <div class="input-group shadow-sm " style="height: 50px;">
     <input
@@ -59,11 +55,6 @@
     </button>
   </div>
 </div>
-
-<!-- <button class="btnExitAddLoc btn btn-sm btn-danger">
-      <i class="bi bi-x-lg"></i>
-    </button> -->
-
 
     <div class="col-md-2">
       <label for="numeroLocation" class="form-label fw-bold">Locação</label>

@@ -9,6 +9,7 @@ input{
     height: 23px;
 }
 
+
 /* Cabeçalho */
 .containerHeader{
     height: 117px;
@@ -79,6 +80,29 @@ input{
   z-index: 1040;
 }
 
+.workButton button {
+    transition: all 0.3s ease-in-out;
+  }
+
+  .workButton button:hover {
+    transform: translateX(5px);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Remove margens e padding dos itens do submenu */
+#cadastrosMenu .nav-item {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#cadastrosMenu .btn-submenu {
+  margin: 0 !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  line-height: 1.2;
+}
+
+
 /* Botão de recarregar */
 .sync-icon {
   font-size: 28px;
@@ -112,8 +136,11 @@ input{
 
   .btn-submenu {
     font-size: 0.9rem;
+    padding-left: 1.5rem;
   }
 }
+
+
  #cadastrosMenu.collapse,
   #cadastrosMenu.collapsing {
     transition: none !important;

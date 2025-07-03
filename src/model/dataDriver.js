@@ -1,6 +1,5 @@
 // const dataBaseM = require('../database/dataBaseSgt')
-import { client } from "../database/userDataBase.js";
-const userDbDriver = client;
+import { client as userDbDriver} from "../database/userDataBase.js";
 
 export const crudRegisterDriver = {
   registerDriver: async (data) => {
@@ -22,10 +21,11 @@ export const crudRegisterDriver = {
         motoEstd,
         motoMail,
         motoStat,
-        motoSitu
+        motoSitu,
+        motoPasw
       } = data;
 
-      const insert = `INSERT INTO cadmoto( motocode, motonome, motodtnc, motocpf, motodtch, motoctch , motodtvc, motorest, motoorem, motocelu, motocep, motorua, motocity, motoestd, motomail,motostat,motositu  ) VALUES( $1 , $2 , $3 , $4 , $5 ,$6 , $7, $8, $9, $10, $11, $12, $13, $14, $15, $16 , $17) RETURNING *`;
+      const insert = `INSERT INTO cadmoto( motocode, motonome, motodtnc, motocpf, motodtch, motoctch , motodtvc, motorest, motoorem, motocelu, motocep, motorua, motocity, motoestd, motomail,motostat,motositu, motopasw  ) VALUES( $1 , $2 , $3 , $4 , $5 ,$6 , $7, $8, $9, $10, $11, $12, $13, $14, $15, $16 , $17 , $18) RETURNING *`;
 
       const values = [
         motoCode,
@@ -44,7 +44,8 @@ export const crudRegisterDriver = {
         motoEstd,
         motoMail,
         motoStat,
-        motoSitu
+        motoSitu,
+        motoPasw
       ];
 
       const result = await userDbDriver.query(insert, values);
@@ -84,10 +85,55 @@ export const crudRegisterDriver = {
       }
       
     } catch (error) {
-      console.error("Erro em listar ID Fornecedor:", error.message);
+      console.error("Erro em listar ID dos motoristas:", error.message);
       throw error;
     }
   },
+
+  async getdriverById(motocode, status , situacao) {
+  try {
+    let query = "SELECT * FROM cadmoto WHERE 1=1";
+    const values = [];
+
+    if (motocode) {
+      values.push(motocode.trim());
+      query += ` AND motocode = $${values.length}`;
+    }
+
+    if (status) {
+      values.push(status.trim());
+      query += ` AND motostat ILIKE $${values.length}`; 
+    }
+     if (situacao) {
+      values.push(situacao.trim());
+      query += ` AND motositu ILIKE $${values.length}`; 
+    }
+
+    const result = await userDbDriver.query(query, values);
+    return result.rows; // retorna array, mesmo que só 1 bem
+  } catch (error) {
+    console.error("Erro ao buscar motorista por filtros:", error.message);
+    throw error;
+  }
+},
+
+  getAllDriverForDelivery: async (id) => {
+  try {
+    const query = "SELECT * FROM cadmoto WHERE motocode = $1"; 
+
+    const result = await userDbDriver.query(query, [id]);
+
+    if (result && result.rows.length > 0) {
+      return result.rows[0]; // retorna um único motorista
+    }
+
+    return null; // caso não encontre
+  } catch (error) {
+    console.error("Erro em listar motorista por ID:", error.message);
+    throw error;
+  }
+},
+
 
   listingDriver: async () => {
     try {
@@ -193,4 +239,5 @@ export const crudRegisterDriver = {
       throw error;
     }
   },
+
 };

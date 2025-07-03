@@ -69,41 +69,45 @@
     </div>
     <ul class="nav flex-column mt-3 mt-md-5">
 
-      <li class="nav-item mb-2">
-        <button class="btn btn-outline-light w-100" data-bs-toggle="collapse" data-bs-target="#cadastrosMenu" aria-expanded="false" aria-controls="cadastrosMenu" id="btnStartRegister">
-          Cadastros
-        </button>
-      </li>
+     <li class="nav-item mb-2">
+      <button class="btn btn-outline-light w-100 d-flex align-items-center justify-content-between" 
+              data-bs-toggle="collapse" data-bs-target="#cadastrosMenu" 
+              aria-expanded="false" aria-controls="cadastrosMenu" id="btnStartRegister">
+        <span><i class="bi bi-folder-fill me-2"></i>Cadastros</span>
+        <i class="bi bi-caret-down-fill"></i>
+      </button>
+    </li>
 
       <div class="collapse" id="cadastrosMenu">
-        <ul class="nav flex-column ms-2 w-100">
-          <li class="nav-item my-1">
-            <button class="btn btn-submenu btn-outline-light w-100 btnLoadBens">Bens</button>
-          </li>
+        <ul class="nav flex-column w-100">
 
-          <li class="nav-item my-1">
-            <button class="btn btn-submenu btn-outline-light w-100 btnCadClie ">
-              Clientes
-            </button>
-          </li>
-
-          <li class="nav-item my-1"><button class="btn btn-submenu btn-outline-light w-100 btnCadForn">Fornecedor</button></li>
-          <li class="nav-item my-1"><button class="btn btn-submenu btn-outline-light w-100 btnCadProd">Produto</button></li>
-          <li class="nav-item my-1"><button class="btn btn-submenu btn-outline-light w-100 btnCadFabri">Família de Bens</button></li>
-          <li class="nav-item my-1"><button class="btn btn-submenu btn-outline-light w-100 btnCadTypeProd">Tipo do Produto</button></li>
-          <li class="nav-item my-1"><button class="btn btn-submenu btn-outline-light w-100 btnCadMotorista">Motorista</button></li>
-          <li class="nav-item my-1"><button class="btn btn-submenu btn-outline-light w-100 btnCadAutomo">Veículos</button></li>
-          <li class="nav-item my-1"><button class="btn btn-submenu btn-outline-light w-100 btnCadResiduo">Residuo</button></li>
-        </ul>
-      </div>
+        <li class="nav-item mb-0"><button class="btn btn-submenu btn-outline-light w-100 btnLoadBens"><i class="bi bi-box-seam me-2"></i>Bens</button></li>
+        <br>
+        <li class="nav-item mb-0"><button class="btn btn-submenu btn-outline-light w-100  btnCadClie"><i class="bi bi-person-lines-fill me-2"></i>Clientes</button></li>
+         <br>
+        <li class="nav-item mb-0"><button class="btn btn-submenu btn-outline-light w-100  btnCadForn"><i class="bi bi-truck me-2"></i>Fornecedor</button></li>
+          <br>
+        <li class="nav-item mb-0"><button class="btn btn-submenu btn-outline-light w-100  btnCadProd"><i class="bi bi-bag-check me-2"></i>Produto</button></li>
+         <br>
+        <li class="nav-item mb-0"><button class="btn btn-submenu btn-outline-light w-100  btnCadFabri"><i class="bi bi-tags me-2"></i>Família de Bens</button></li>
+          <br>
+        <li class="nav-item mb-0"><button class="btn btn-submenu btn-outline-light w-100  btnCadTypeProd"><i class="bi bi-ui-checks me-2"></i>Tipo do Produto</button></li>
+          <br>
+        <li class="nav-item mb-0"><button class="btn btn-submenu btn-outline-light w-100 btnCadMotorista"><i class="bi bi-person-badge me-2"></i>Motorista</button></li>
+         <br>
+        <li class="nav-item mb-0"><button class="btn btn-submenu btn-outline-light w-100  btnCadAutomo"><i class="bi bi-truck-front me-2"></i>Veículos</button></li>
+         <br>
+        <li class="nav-item mb-0"><button class="btn btn-submenu btn-outline-light w-100  btnCadResiduo"><i class="bi bi-recycle me-2"></i>Resíduo</button></li>
+      </ul>
+    </div>
        
-     
-      <li class="nav-item mb-2 "><button class="btn btn-outline-light w-100 btnRegisterLocation">Locação</button></li>
+    <li class="nav-item mb-2"><button class="btn btn-outline-light w-100 btnRegisterLocation"><i class="bi bi-journal-plus me-2"></i>Locação</button></li>
 
-      <li class="nav-item mb-2 btn-logistica"><button class="btn btn-outline-light w-100 btnLogistic" onclick="locationPendente()">Logística</button></li>
+    <li class="nav-item mb-2"><button class="btn btn-outline-light w-100 btnLogistic" onclick="locationPendente()"><i class="bi bi-map-fill me-2"></i>Logística</button></li>
 
-      <li class="nav-item mb-2 "><button class="btn btn-outline-light w-100 delivery">Entrega</button></li>
-      <li class="nav-item mb-2 "><button class="btn btn-outline-light w-100 btnDevolution">Devoluções</button></li>
+    <li class="nav-item mb-2"><button class="btn btn-outline-light w-100 delivery"><i class="bi bi-box-arrow-down me-2"></i>Entrega</button></li>
+
+    <li class="nav-item mb-2"><button class="btn btn-outline-light w-100 btnDevolution"><i class="bi bi-box-arrow-up me-2"></i>Devoluções</button></li>
      
     </ul>
 

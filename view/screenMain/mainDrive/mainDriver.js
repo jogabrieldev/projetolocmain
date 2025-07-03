@@ -41,11 +41,12 @@ document.addEventListener('DOMContentLoaded' , ()=>{
               const mainContent = document.querySelector('#mainContent');
               if (mainContent) {
                 mainContent.innerHTML = html;
-                maskFieldDriver()
-                interationSystemDriver()
-                registerNewDriver()
-                deleteMotista()
-                editDriver()
+                maskFieldDriver();
+                interationSystemDriver();
+                registerNewDriver();
+                deleteMotista();
+                searchDriverForId();
+                editDriver();
                 editAndUpdateOfDriver();
 
               }else{
@@ -138,7 +139,7 @@ if(registerDriver){
 }
 
 
-const btnOutSectionDriver = document.querySelector('.buttonExitDriver')
+const btnOutSectionDriver = document.getElementById('buttonExitDriver')
 if(btnOutSectionDriver){
   btnOutSectionDriver.addEventListener('click', ()=>{
 
@@ -312,7 +313,8 @@ function registerNewDriver(){
           motoEstd: document.querySelector('#motoEstd').value.trim(),     // Estado
           motoMail: document.querySelector('#motoMail').value.trim(),      // E-mail
           motoStat: document.querySelector("#motoStat").value.trim(),
-          motoSitu: document.querySelector('#motoSitu').value.trim()      // status
+          motoSitu: document.querySelector('#motoSitu').value.trim(),      // status
+          motoPasw: document.querySelector('#motoPasw').value.trim()
       };
 
       const datas = [
@@ -589,7 +591,263 @@ async function fetchListMotorista() {
   }
 }
 
+// buscar motorista
+async function searchDriverForId() {
 
+  const btnForSearch = document.getElementById('searchDriver');
+  const popUpSearch = document.querySelector('.searchIdDriver');
+  const driverListDiv = document.querySelector(".listingDriver");
+  const btnOutPageSearch = document.querySelector('.outPageSearchDriver')
+
+  if(btnForSearch && popUpSearch){
+     btnForSearch.addEventListener('click' , ()=>{
+       popUpSearch.style.display = 'flex'
+     })
+  }
+
+   if(popUpSearch || btnOutPageSearch){
+     btnOutPageSearch.addEventListener('click' , ()=>{
+       popUpSearch.style.display = 'none'
+     })
+  }
+
+  let btnClearFilter = document.getElementById('btnClearFilter');
+  if (!btnClearFilter) {
+    btnClearFilter = document.createElement('button');
+    btnClearFilter.id = 'btnClearFilter';
+    btnClearFilter.textContent = 'Limpar filtro';
+    btnClearFilter.className = 'btn btn-secondary w-25 aling align-items: center;';
+    btnClearFilter.style.display = 'none'; // fica oculto até uma busca ser feita
+    driverListDiv.parentNode.insertBefore(btnClearFilter, driverListDiv);
+
+    btnClearFilter.addEventListener('click', () => {
+     
+      btnClearFilter.style.display = 'none';
+      
+         document.getElementById('codeDriver').value = ""
+         document.getElementById('statusInDriver').value = ""
+          document.getElementById('situationInDriver').value = ""
+    
+      fetchListMotorista();
+    });
+  }
+
+  const btnSubmitSearchClient =  document.querySelector('.submitSearchDriver')
+  if(btnSubmitSearchClient){
+     btnSubmitSearchClient.addEventListener('click' , async ()=>{
+           
+         const motocode = document.getElementById('codeDriver').value.trim()
+         const valueStat = document.getElementById('statusInDriver').value.trim()
+         const valueSitu = document.getElementById('situationInDriver').value.trim()
+
+       const preenchidos = [motocode, valueStat, valueSitu].filter(valor => valor !== "");
+
+       if (preenchidos.length === 0) {
+       Toastify({
+        text: "Preencha pelo menos um campo para buscar!",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+       }).showToast();
+      return;
+    }
+
+      if (preenchidos.length > 1) {
+      Toastify({
+      text: "Preencha apenas um campo por vez para buscar!",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "orange",
+     }).showToast();
+     return;
+    }
+
+
+      const params = new URLSearchParams();
+      if (motocode) params.append('motocode', motocode);
+      if (valueStat) params.append('status', valueStat);
+      if(valueSitu) params.append('situacao' , valueSitu);
+
+    try {
+      const result =  await fetch(`/api/driver/search?${params}` , {
+        method:'GET',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+      })
+       
+      const data = await result.json()
+
+      if(result.ok && data.driver.length > 0){
+           
+          Toastify({
+          text: "O motorista foi encontrado com sucesso!.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "green",
+          }).showToast();
+          // Exibe botão limpar filtro
+          btnClearFilter.style.display = 'inline-block';
+          
+          renderMotoristasTable(data.driver)
+ 
+          if (popUpSearch) popUpSearch.style.display = 'none';
+
+      }else{
+        Toastify({
+          text: data.message || "Nenhum motorista encontrado nessa pesquisa",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+          }).showToast();
+      }
+
+     } catch (error) {
+         console.error('Erro ao buscar motorista' , error)
+          Toastify({
+          text: "Erro a buscar motorista tente novamente",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+          }).showToast();
+     };
+    });
+  };
+};
+
+// RENDERIZAR A TABELA
+function renderMotoristasTable(motoristas) {
+  const motoristaListDiv = document.querySelector(".listingDriver");
+  motoristaListDiv.innerHTML = "";
+
+  if (!motoristas || motoristas.length === 0) {
+    motoristaListDiv.innerHTML = "<p class='text-light'>Nenhum motorista cadastrado.</p>";
+    return;
+  }
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "table-responsive";
+
+  const tabela = document.createElement("table");
+  tabela.className = "table table-sm table-hover table-striped table-bordered tableDriver";
+
+  const colunas = [
+    "Selecionar",
+    "Código",
+    "Status",
+    "Nome",
+    "Situação",
+    "Data de Nascimento",
+    "CPF",
+    "Data de Emissão",
+    "Categoria da CNH",
+    "Data de Vencimento",
+    "Restrições",
+    "Orgão Emissor",
+    "Celular",
+    "CEP",
+    "Rua",
+    "Cidade",
+    "Estado",
+    "E-mail",
+  ];
+
+  // Cabeçalho
+  const cabecalho = tabela.createTHead();
+  const linhaCabecalho = cabecalho.insertRow();
+
+  colunas.forEach((coluna) => {
+    const th = document.createElement("th");
+    th.textContent = coluna;
+    th.classList.add("align-middle");
+
+    if (["Selecionar", "Código", "Status", "CPF", "Estado", "CEP"].includes(coluna)) {
+      th.classList.add("text-center", "px-2", "py-1", "wh-nowrap");
+    } else {
+      th.classList.add("px-3", "py-2");
+    }
+
+    linhaCabecalho.appendChild(th);
+  });
+
+  // Corpo
+  const corpo = tabela.createTBody();
+
+  motoristas.forEach((moto) => {
+    const linha = corpo.insertRow();
+    linha.setAttribute("data-motocode", moto.motocode);
+
+    // Checkbox
+    const checkboxCell = linha.insertCell();
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.name = "selectDriver";
+    checkbox.value = moto.motocode;
+    checkbox.className = "form-check-input m-0";
+    checkbox.dataset.motorista = JSON.stringify(moto);
+    checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
+    checkboxCell.appendChild(checkbox);
+
+    // Formatadores
+    const docFormatado = formatarCampo("documento", moto.motocpf);
+    const telFormatado = formatarCampo("telefone", moto.motocelu);
+    const cepFormatado = formatarCampo("cep", moto.motocep);
+
+    const dados = [
+      moto.motocode,
+      moto.motostat,
+      moto.motonome,
+      moto.motositu,
+      formatDate(moto.motodtnc),
+      docFormatado,
+      formatDate(moto.motodtch),
+      moto.motoctch,
+      formatDate(moto.motodtvc),
+      moto.motorest,
+      moto.motoorem,
+      telFormatado,
+      cepFormatado,
+      moto.motorua,
+      moto.motocity,
+      moto.motoestd,
+      moto.motomail,
+    ];
+
+    dados.forEach((valor, index) => {
+      const td = linha.insertCell();
+      td.textContent = valor || "";
+      td.classList.add("align-middle", "text-break");
+
+      const coluna = colunas[index + 1]; // +1 por causa do checkbox
+      if (["Código", "Status", "CPF", "Estado", "CEP"].includes(coluna)) {
+        td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
+      } else {
+        td.classList.add("px-3", "py-2");
+      }
+
+      if (coluna === "Status") {
+        td.classList.add("status-moto");
+      }
+    });
+  });
+
+  wrapper.appendChild(tabela);
+  motoristaListDiv.appendChild(wrapper);
+};
+
+
+// deletar motorista
 function deleteMotista(){
   const btnDeleteDriver = document.querySelector(".buttonDeleteDriver");
   btnDeleteDriver.addEventListener("click", async () => {

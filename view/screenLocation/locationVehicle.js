@@ -81,11 +81,9 @@ async function loadVehicles() {
     });
 
     const veiculos = await res.json();
-    console.log('veiculos:', veiculos);
-
+   
     const veiculoMap = new Map();
 
-    // Filtro apenas veículos ativos e disponíveis para locação
     const veiculosFiltrados = veiculos.filter(item => item.caaustat === 'Disponivel' && item.caauloca === 'Sim');
 
     // Preenche os dois selects
@@ -127,9 +125,7 @@ async function loadVehicles() {
   }
 }
 
-// Contrato locação 
-
-
+// locação 
 async function locationTheVehicle() {
 
   try {
@@ -349,11 +345,6 @@ async function locationTheVehicle() {
       veiculos: veiculos,
       contrato: contratoHTML
     };
-
-    
-
-    console.log("body", payloadLocationVehicle);
-
     const res = await fetch("/api/locacaoveiculo", {
       method: "POST",
       headers: {
@@ -399,7 +390,7 @@ async function locationTheVehicle() {
       }
     });
 
-     gerarContratoVeiculos()// espera breve para garantir leitura do DOM
+     gerarContratoVeiculos()
      clearFields();
   }else {
       Toastify({
@@ -559,7 +550,7 @@ async function locationTheVehicle() {
 };
 
 
-
+//TABELA DE LOCAÇÃO
 async function frontLocationVeiculos() {
   const token = localStorage.getItem("token");
 
@@ -662,14 +653,9 @@ function renderTableVeiculos(data) {
   resetFilterBtn.style.display = "none";
   resetFilterBtn.textContent = "Remover Filtro";
 
-  const searchBtn = document.createElement("button");
-  searchBtn.classList.add("searchloc");
-  searchBtn.textContent = "Buscar Locação";
-
   container.appendChild(title);
   container.appendChild(messageFilter);
   container.appendChild(resetFilterBtn);
-  container.appendChild(searchBtn);
 
   tableDiv.appendChild(container);
 

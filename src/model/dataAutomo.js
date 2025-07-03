@@ -1,6 +1,4 @@
-import { client } from "../database/userDataBase.js";
-const dataClient = client;
-import { crudRegisterDriver } from "./dataDriver.js";
+import { client as dataClient } from "../database/userDataBase.js";
 
 export const autoRegister = {
 
@@ -53,6 +51,29 @@ export const autoRegister = {
       throw error;
     }
   },
+
+ async getVehicleById(caaucode, placa) {
+   try {
+     let query = "SELECT * FROM cadauto WHERE 1=1";
+     const values = [];
+
+    if (caaucode) {
+      values.push(caaucode.trim());
+      query += ` AND caaucode = $${values.length}`;
+    }
+
+    if (placa) {
+      values.push(placa.trim());
+      query += ` AND caauplac ILIKE $${values.length}`; 
+    }
+
+    const result = await dataClient.query(query, values);
+    return result.rows; 
+  } catch (error) {
+    console.error("Erro ao buscar veiculos por filtros:", error.message);
+    throw error;
+  }
+},
 
   listAutos: async () => {
     try {

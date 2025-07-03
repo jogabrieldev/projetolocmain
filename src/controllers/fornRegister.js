@@ -1,5 +1,4 @@
-import { crudRegisterForn } from "../model/dataForn.js";
-const fornRegister = crudRegisterForn;
+import { crudRegisterForn as fornRegister } from "../model/dataForn.js";
 
 export const movementForne = {
   async registerForn(req, res) {
@@ -118,6 +117,33 @@ export const movementForne = {
       res.status(500).json({ success: false, message: error.message });
     }
   },
+
+  async getfornecedorByCode(req, res) {
+      const { fornCode, fornCnpj } = req.query;
+      console.log('log' , req.query)
+     
+    try {
+      if (!fornCode && !fornCnpj) {
+        return res.status(400).json({ message: "Informe o código ou CNPJ para a busca." });
+      }
+
+      const cnpj = fornCnpj?.replace(/\D/g, "")
+      if(fornCnpj && !cnpj){
+        return res.status(400).json({message: 'O CNPJ esta no formato errado verifique por favor!.'})
+      }
+
+      const fornecedor = await fornRegister.getFornecedorById(fornCode , cnpj);
+  
+      if (!fornecedor || fornecedor.length === 0) {
+        return res.status(404).json({ message: "Nenhum bem encontrado." });
+      }
+  
+      return res.status(200).json({ success: true, fornecedor });
+    } catch (error) {
+      console.error("Erro ao buscar fornecedo :", error);
+      return res.status(500).json({ message: "Erro ao buscar fornecedor." });
+    }
+ },
 
   async listOfForn(req, res) {
     try {

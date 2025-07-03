@@ -1,10 +1,17 @@
 
-<section id="containerAppBens"  class="d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded"
+<section id="containerAppBens"  class="d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded position-relative"
 style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid white;">
     
     
+   <button type="button" 
+        class="btn btn-outline-danger btn-sm p-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center" 
+        aria-label="Fechar" style="width: 32px; height: 32px;" id="buttonExit">
+      <i class="bi bi-x fs-5"></i>
+   </button>
+
+
     <!-- Lista de Bens -->
-    <div id="listingBens" class="mb-3 overflow-auto bg-darkgray">
+    <div id="listingBens" class="mb-3 overflow-auto bg-darkgray mt-4">
 
       <!-- Conteúdo JS será inserido aqui -->
     </div>
@@ -14,10 +21,47 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
         <button class="btn btn-primary text-dark fw-semibold" id="registerGoods">Incluir</button>
         <button class="btn btn-danger text-dark fw-semibold" id="buttonDelete">Excluir</button>
         <button class="btn btn-warning text-dark fw-semibold" id="buttonEdit">Editar</button>
-        <button class="btn btn-light text-dark fw-semibold border" id="buttonExit">Voltar</button>
+        <button class="btn btn-light text-dark fw-semibold border" id="searchGoods"><i class="bi bi-search me-2"></i>Buscar</button>
       </div>
-      
-  
+
+  <!-- POPUP DE PESQUISA -->
+<div class="searchIdGoods position-fixed top-50 start-50 translate-middle bg-white border rounded-4 p-4 shadow-lg w-100 mx-3 flex-column" style="display: none; max-width: 500px; z-index: 1055;">
+
+  <!-- Cabeçalho -->
+  <div class="text-center mb-4">
+    <h5 class="fw-bold text-dark">
+      <i class="bi bi-search text-primary me-2"></i>Pesquise por Caçambas
+    </h5>
+    <p class="text-muted mb-0 small">Filtre por código ou status da caçamba</p>
+  </div>
+
+  <!-- Campo Código -->
+  <div class="form-floating mb-3 position-relative">
+    <input type="text" name="codeBem" id="codeBem" class="form-control ps-5" placeholder="Código da Caçamba" maxlength="15"/>
+    <label for="codeBem"><i class="bi bi-hash me-1"></i> Código da Caçamba</label>
+  </div>
+
+  <!-- Campo Status -->
+  <div class="form-floating mb-4 position-relative">
+    <select name="statusInBem" id="statusInBem" class="form-select ps-5">
+      <option value="" selected>Selecione...</option>
+      <option value="Disponivel">Disponível</option>
+      <option value="Locado">Locado</option>
+    </select>
+    <label for="statusInBem"><i class="bi bi-ui-checks me-1"></i> Status</label>
+  </div>
+
+  <!-- Botões -->
+  <div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+    <button class="btn btn-primary w-100 w-sm-50 submitSearchGoods">
+      <i class="bi bi-search me-1"></i> Pesquisar
+    </button>
+    <button class="btn btn-light w-100 w-sm-50 outPageSearchGoods">
+      <i class="bi bi-arrow-left me-1"></i> Voltar
+    </button>
+  </div>
+</div>
+
     <!-- Formulário de Edição -->
     <div class="editForm container mt-4" style="display: none;">
         <form id="formEditBens">
@@ -81,12 +125,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
               <label for="statusEdit" class="form-label">Status</label>
               <select class="form-select form-select-sm" id="statusEdit" name="statusEdit" disabled>
                 <option value="Disponivel">Disponivel</option>
-                <option value="Em Locação">Em Locação</option>
-                <option value="Saida do cliente">Saída do Cliente</option>
-                <option value="Saida do aterro">Saída do Aterro</option>
-                <option value="Saida do aterro para o cliente">Saída do aterro para o cliente</option>
-                <option value="Transito para o cliente">Trânsito para o cliente</option>
-                <option value="Cliente para o aterro">Cliente para o aterro</option>
+                <option value="Locado">Locado</option>
               </select>
               <input type="hidden" name="statusEdit" id="statusEditHidden" />
             </div>

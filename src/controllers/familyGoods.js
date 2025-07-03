@@ -1,5 +1,4 @@
-import { crudRegisterFamilyGoods } from "../model/dataFamilyGoods.js";
-const fabriRegister = crudRegisterFamilyGoods;
+import { crudRegisterFamilyGoods as fabriRegister } from "../model/dataFamilyGoods.js";
 
 export const movementOfFamilyGoods = {
   async registerOfFabri(req, res) {
@@ -39,6 +38,27 @@ export const movementOfFamilyGoods = {
     }
   },
 
+  async getfamilygoodsByCode(req, res) {
+     const { fabeCode } = req.query;
+     
+      try {
+        if (!fabeCode) {
+          return res.status(400).json({ message: "Informe o código da familia de bem." });
+        }
+  
+        const familyGoods = await fabriRegister.getFamilyGoodsById(fabeCode);
+    
+        if (!familyGoods) {
+          return res.status(404).json({ message: "Nenhuma familia encontrado com esse codigo." });
+        }
+    
+        return res.status(200).json({ success: true, familyGoods });
+      } catch (error) {
+        console.error("Erro ao buscar familia de bem :", error);
+        return res.status(500).json({ message: "Erro ao buscar familia de bem." });
+      }
+   },
+
   async listingOfFabri(req, res) {
     try {
       const fabricante = await fabriRegister.listingFabri();
@@ -58,8 +78,8 @@ export const movementOfFamilyGoods = {
 
   async deleteOfFabri(req, res) {
     const { id } = req.params;
-    try {
-      const temDependencia =
+     try {
+       const temDependencia =
         await fabriRegister.verificarDependenciaDaFamiliaBens(id);
  
       if (temDependencia) {

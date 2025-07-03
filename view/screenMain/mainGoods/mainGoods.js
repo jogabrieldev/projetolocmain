@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           interationSystemGoods()
           aplicarMascaras()
+          searchGoodsForId()
           registerGoodsSystem()
           dateAtualInFieldAndHours("dtStatus" , "hrStatus")
           deleteGoodsSystem()
@@ -418,7 +419,7 @@ for (const { key, label } of datas) {
     );
 
     try {
-      const response = await fetch("http://localhost:3000/api/bens/submit", {
+      const response = await fetch("/api/bens/submit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -632,6 +633,237 @@ async function fetchBens() {
   }
 }
 
+// BUSCAR POR CAÇAMBA
+async function searchGoodsForId() {
+
+  const btnForSearch = document.getElementById('searchGoods');
+  const popUpSearch = document.querySelector('.searchIdGoods');
+  const bensListDiv = document.querySelector("#listingBens");
+  const btnOutPageSearch = document.querySelector('.outPageSearchGoods')
+
+  if (btnForSearch && popUpSearch) {
+    btnForSearch.addEventListener('click', () => {
+      popUpSearch.style.display = 'flex';
+    });
+  }
+
+  if(popUpSearch || btnOutPageSearch){
+     btnOutPageSearch.addEventListener('click' , ()=>{
+       popUpSearch.style.display = 'none'
+     })
+  }
+
+  // Cria o botão limpar filtro e adiciona antes da lista, se não existir
+  let btnClearFilter = document.getElementById('btnClearFilter');
+  if (!btnClearFilter) {
+    btnClearFilter = document.createElement('button');
+    btnClearFilter.id = 'btnClearFilter';
+    btnClearFilter.textContent = 'Limpar filtro';
+    btnClearFilter.className = 'btn btn-secondary w-25 aling align-items: center;';
+    btnClearFilter.style.display = 'none'; // fica oculto até uma busca ser feita
+    bensListDiv.parentNode.insertBefore(btnClearFilter, bensListDiv);
+
+    btnClearFilter.addEventListener('click', () => {
+     
+      btnClearFilter.style.display = 'none';
+      
+      document.getElementById('codeBem').value = '';
+      document.getElementById('statusInBem').value = '';
+    
+      fetchBens();
+    });
+  }
+
+  const btnSearchGoods = document.querySelector('.submitSearchGoods');
+  if (btnSearchGoods) {
+    btnSearchGoods.addEventListener('click', async () => {
+
+      const codeInput = document.getElementById('codeBem').value.trim();
+      const status = document.getElementById('statusInBem').value.trim();
+
+      const fieldFilled = [codeInput , status].filter((valor)=> valor !== "")
+
+       if (fieldFilled.length === 0) {
+       Toastify({
+        text: "Preencha pelo menos um campo para buscar!",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+       }).showToast();
+      return;
+    }
+
+      if (fieldFilled.length > 1) {
+      Toastify({
+      text: "Preencha apenas um campo por vez para buscar!",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "orange",
+     }).showToast();
+     return;
+    }
+
+      const params = new URLSearchParams();
+      if (codeInput) params.append('benscode', codeInput);
+      if (status) params.append('status', status);
+
+      try {
+        const response = await fetch(`/api/codebens/search?${params.toString()}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.bens?.length > 0) {
+          
+          Toastify({
+          text: "O Bem foi encontrado com sucesso!.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "green",
+          }).showToast();
+          // Exibe botão limpar filtro
+          btnClearFilter.style.display = 'inline-block';
+          // Atualiza a tabela com os bens filtrados
+          renderBensTable(data.bens);
+
+          // Fecha o pop-up após a busca (opcional)
+          if (popUpSearch) popUpSearch.style.display = 'none';
+
+        } else {
+          Toastify({
+          text: data.message || "Nenhum Bem encontrado nessa pesquisa",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+          }).showToast();
+        }
+      } catch (error) {
+        console.error("Erro ao buscar bens:", error);
+        Toastify({
+          text: "Erro a buscar caçamba tente novamente",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+          }).showToast();
+      }
+    });
+  }
+}
+
+// Função que cria a tabela com os bens,
+function renderBensTable(bens) {
+  const bensListDiv = document.querySelector("#listingBens");
+  bensListDiv.innerHTML = ""; // limpa conteúdo atual
+
+  if (bens.length === 0) {
+    bensListDiv.innerHTML = "<p class='text-light'>Nenhum bem encontrado.</p>";
+    return;
+  }
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "table-responsive";
+
+  const tabela = document.createElement("table");
+  tabela.className = "table table-sm table-hover table-striped table-bordered tableBens";
+
+  // Cabeçalho
+  const cabecalho = tabela.createTHead();
+  const linhaCabecalho = cabecalho.insertRow();
+  const colunas = [
+    "Selecionar", "Código", "Nome do Bem", "Familia do Bem", "Status", "Número de Série",
+    "Ano do Modelo", "Data da compra", "valor de Compra", "Nota Fiscal",
+    "Código Fornecedor", "Modelo", "Data do Status",
+    "Hora Status",  "Cor", "Ativo",
+    "Alugado", "Valor Alugado", "Fabricante"
+  ];
+
+  colunas.forEach((coluna) => {
+    const th = document.createElement("th");
+    th.textContent = coluna;
+    if (["Selecionar", "Código", "Status", "Ativo", "Alugado", "Ano do Modelo", "Hora Status"].includes(coluna)) {
+      th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+    } else {
+      th.classList.add("px-3", "py-2", "align-middle");
+    }
+    linhaCabecalho.appendChild(th);
+  });
+
+  const corpo = tabela.createTBody();
+
+  bens.forEach((bem) => {
+    const linha = corpo.insertRow();
+    linha.setAttribute("data-benscode", bem.benscode);
+
+    const checkboxCell = linha.insertCell();
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.name = "selectBem";
+    checkbox.value = bem.benscode;
+
+    const bemData = JSON.stringify(bem);
+    if (bemData) checkbox.dataset.bem = bemData;
+
+    checkbox.className = "form-check-input m-0";
+    checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
+    checkboxCell.appendChild(checkbox);
+
+    const dados = [
+      bem.benscode,
+      bem.bensnome,
+      bem.benscofa,
+      bem.bensstat,
+      bem.bensnuse,
+      formatDate(bem.bensanmo),
+      formatDate(bem.bensdtcp),
+      bem.bensvacp,
+      bem.bensnunf,
+      bem.benscofo,
+      bem.bensmode,
+      formatDate(bem.bensdtus),
+      bem.benshrus,
+      bem.benscore,
+      bem.bensativ,
+      bem.bensalug,
+      bem.bensvaal,
+      bem.bensfabr,
+    ];
+
+    dados.forEach((valor, index) => {
+      const td = linha.insertCell();
+      td.textContent = valor || "";
+      td.classList.add("align-middle", "text-break");
+
+      const coluna = colunas[index + 1];
+      if (["Código", "Status", "Ativo", "Alugado", "Ano do Modelo", "Hora Status"].includes(coluna)) {
+        td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
+      } else {
+        td.classList.add("px-3", "py-2", "text-break");
+      }
+
+      if (coluna === "Status") {
+        td.classList.add("status-bem");
+      }
+    });
+  });
+
+  wrapper.appendChild(tabela);
+  bensListDiv.appendChild(wrapper);
+}
 
 // DELETAR BEM
 async function deleteGoodsSystem() {
@@ -688,7 +920,7 @@ async function deleteBem(id, bemItem) {
     return;
   }
   try {
-    const response = await fetch(`/api/delete/${id}`, {
+    const response = await fetch(`/api/bens/delete/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -951,7 +1183,7 @@ async function editAndUpdateOfBens() {
       );
       if (!confirmedEdition) return;
 
-      const response = await fetch(`/api/update/${bemIdParsed}`, {
+      const response = await fetch(`/api/bens/update/${bemIdParsed}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

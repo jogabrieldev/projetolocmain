@@ -1,6 +1,5 @@
 // const dataBaseM = require('../database/dataBaseSgt')
-import {client} from '../database/userDataBase.js';
-const userDbTypeProd = client
+import {client as userDbTypeProd} from '../database/userDataBase.js';
 
  export const crudRegisterTypeProd = {
      
@@ -39,6 +38,24 @@ const userDbTypeProd = client
        throw error;
     } 
  },
+
+  async getTypeProductById(tiprcode) {
+   try {
+    let query = "SELECT * FROM cadtipr WHERE 1=1";
+    const values = [];
+
+    if (tiprcode) {
+      values.push(tiprcode.trim());
+      query += ` AND tiprcode = $${values.length}`;
+    }
+
+    const result = await userDbTypeProd.query(query, values);
+    return result.rows; // retorna array, mesmo que só 1 bem
+  } catch (error) {
+    console.error("Erro ao buscar tipo de produto por filtros:", error.message);
+    throw error;
+  }
+},
 
    getCodeIdtypeP: async()=>{
            try {

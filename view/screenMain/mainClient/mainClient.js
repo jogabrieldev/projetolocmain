@@ -11,7 +11,9 @@ function isTokenExpired(token) {
 function maskFieldClient() {
    
   $("#clieCpf").mask("000.000.000-00");
+  $("#searchCpf").mask("000.000.000-00");
   $("#clieCnpj").mask("00.000.000/0000-00");
+   $("#searchCnpj").mask("00.000.000/0000-00");
   $("#clieCelu").mask("(00) 00000-0000");
   $("#clieCep").mask("00000-000");
   $("#editCliecpfCnpj").mask("000.000.000-00");
@@ -93,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
           maskFieldClient();
           readOnlyFieldChange();
           interationSystemClient();
+          searchClient();
           registerNewClient();
           dateAtualInField('dtCad')
           deleteClient();
@@ -240,7 +243,7 @@ async function interationSystemClient() {
     });
   }
 
-  const buttonToBack = document.querySelector(".buttonExitClient");
+  const buttonToBack = document.getElementById("buttonExitClient");
   if (buttonToBack) {
     buttonToBack.addEventListener("click", () => {
       const containerAppClient = document.querySelector(".containerAppClient");
@@ -361,8 +364,6 @@ async function registerNewClient() {
         cliePix: document.querySelector('#cliePix').value.trim()
       };
 
-      console.log('data' , formData.clieCnpj , formData.clieCpf)
-       
       if(formData.clieTpCl === "Pessoa Jurídica" && formData.clieCnpj === ""){
           Toastify({
           text: "O Cliente e uma pessoa jurídica adicione o CNPJ dele. OBRIGATORIO",
@@ -666,8 +667,253 @@ async function fetchListClientes() {
     }).showToast();
     document.querySelector(".listClient").innerHTML =
       "<p>Erro ao carregar clientes.</p>";
+  };
+};
+
+// BUSCAR CLIENTE ESPECIFICO
+async function searchClient() {
+  const btnForSearch = document.getElementById('searchClient');
+  const popUpSearch = document.querySelector('.searchIdClient');
+  const bensListDiv = document.querySelector(".listClient");
+  const btnOutPageSearch = document.querySelector('.outPageSearchClient')
+
+  if(btnForSearch && popUpSearch){
+     btnForSearch.addEventListener('click' , ()=>{
+       popUpSearch.style.display = 'flex'
+     })
   }
-}
+
+   if(popUpSearch || btnOutPageSearch){
+     btnOutPageSearch.addEventListener('click' , ()=>{
+       popUpSearch.style.display = 'none'
+     })
+  }
+
+  let btnClearFilter = document.getElementById('btnClearFilter');
+  if (!btnClearFilter) {
+    btnClearFilter = document.createElement('button');
+    btnClearFilter.id = 'btnClearFilter';
+    btnClearFilter.textContent = 'Limpar filtro';
+    btnClearFilter.className = 'btn btn-secondary w-25 aling align-items: center;';
+    btnClearFilter.style.display = 'none'; // fica oculto até uma busca ser feita
+    bensListDiv.parentNode.insertBefore(btnClearFilter, bensListDiv);
+
+    btnClearFilter.addEventListener('click', () => {
+     
+      btnClearFilter.style.display = 'none';
+      
+         document.getElementById('codeClient').value = ""
+         document.getElementById('searchCpf').value = ""
+          document.getElementById('searchCnpj').value = ""
+    
+      fetchListClientes();
+    });
+  }
+
+  const btnSubmitSearchClient =  document.querySelector('.submitSearchClient')
+  if(btnSubmitSearchClient){
+     btnSubmitSearchClient.addEventListener('click' , async ()=>{
+           
+         const cliecode = document.getElementById('codeClient').value.trim()
+         const valueCpf = document.getElementById('searchCpf').value.trim()
+         const valueCnpj = document.getElementById('searchCnpj').value.trim()
+
+       const preenchidos = [cliecode, valueCpf, valueCnpj].filter(valor => valor !== "");
+
+       if (preenchidos.length === 0) {
+       Toastify({
+        text: "Preencha pelo menos um campo para buscar!",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+       }).showToast();
+      return;
+    }
+
+      if (preenchidos.length > 1) {
+      Toastify({
+      text: "Preencha apenas um campo por vez para buscar!",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "orange",
+     }).showToast();
+     return;
+    }
+
+
+      const params = new URLSearchParams();
+      if (cliecode) params.append('cliecode', cliecode);
+      if (valueCpf) params.append('valueCpf', valueCpf);
+      if(valueCnpj) params.append('valueCnpj' , valueCnpj);
+
+    try {
+      const result =  await fetch(`/api/cliente/search?${params}` , {
+        method:'GET',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+      })
+       
+      const data = await result.json()
+
+      if(result.ok || data.cliente.length > 0){
+           
+          Toastify({
+          text: "O Cliente foi encontrado com sucesso!.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "green",
+          }).showToast();
+          // Exibe botão limpar filtro
+          btnClearFilter.style.display = 'inline-block';
+          
+          renderClientesTable(data.cliente)
+ 
+          if (popUpSearch) popUpSearch.style.display = 'none';
+
+      }else{
+        Toastify({
+          text: data.message || "Nenhum Cliente encontrado nessa pesquisa",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+          }).showToast();
+      }
+
+     } catch (error) {
+         console.error('Erro ao buscar cliente' , error)
+          Toastify({
+          text: "Erro a buscar Cliente tente novamente",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+          }).showToast();
+     };
+    });
+  };
+};
+
+//RENDERIZAR TABELA PATHERS 
+function renderClientesTable(clientes) {
+  const clientesListDiv = document.querySelector(".listClient");
+  clientesListDiv.innerHTML = "";
+
+  if (!clientes || clientes.length === 0) {
+    clientesListDiv.innerHTML = "<p class='text-light'>Nenhum cliente cadastrado.</p>";
+    return;
+  }
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "table-responsive";
+
+  const tabela = document.createElement("table");
+  tabela.className = "table table-sm table-hover table-striped table-bordered tableClient";
+
+  const cabecalho = tabela.createTHead();
+  const linhaCabecalho = cabecalho.insertRow();
+
+  const colunas = [
+    "Selecionar",
+    "Código",
+    "Nome",
+    "CPF/CNPJ",
+    "Data de Cadastro",
+    "Data de Nascimento",
+    "Celular",
+    "Cidade",
+    "Estado",
+    "Rua",
+    "CEP",
+    "E-mail",
+    "Tipo de Cliente",
+    "Banco",
+    "Agencia",
+    "Conta"
+  ];
+
+  colunas.forEach((coluna) => {
+    const th = document.createElement("th");
+    th.textContent = coluna;
+    th.classList.add("align-middle");
+
+    if (["Selecionar", "Código", "CPF/CNPJ", "Estado", "CEP"].includes(coluna)) {
+      th.classList.add("text-center", "px-2", "py-1", "wh-nowrap");
+    } else {
+      th.classList.add("px-3", "py-2");
+    }
+
+    linhaCabecalho.appendChild(th);
+  });
+
+  const corpo = tabela.createTBody();
+
+  clientes.forEach((cliente) => {
+    const linha = corpo.insertRow();
+    linha.setAttribute("data-cliecode", cliente.cliecode);
+
+    // Checkbox
+    const checkboxCell = linha.insertCell();
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.name = "selectCliente";
+    checkbox.value = cliente.cliecode;
+    checkbox.className = "form-check-input m-0";
+    checkbox.dataset.cliente = JSON.stringify(cliente);
+    checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
+    checkboxCell.appendChild(checkbox);
+
+    // Dados formatados
+    const doc = cliente.cliecnpj || cliente.cliecpf;
+    const docFormatado = formatarCampo("documento", doc);
+    const telFormatado = formatarCampo("telefone", cliente.cliecelu);
+    const cepFormatado = formatarCampo("cep", cliente.cliecep);
+
+    const dados = [
+      cliente.cliecode,
+      cliente.clienome,
+      docFormatado,
+      formatDate(cliente.cliedtcd),
+      formatDate(cliente.cliedtnc),
+      telFormatado,
+      cliente.cliecity,
+      cliente.clieestd,
+      cliente.clierua,
+      cepFormatado,
+      cliente.cliemail,
+      cliente.clietpcl,
+      cliente.cliebanc,
+      cliente.clieagen,
+      cliente.cliecont
+    ];
+
+    dados.forEach((valor, index) => {
+      const td = linha.insertCell();
+      td.textContent = valor || "";
+      td.classList.add("align-middle", "text-break");
+
+      const coluna = colunas[index + 1]; // +1 por causa do "Selecionar"
+      if (["Código", "CPF/CNPJ", "Estado", "CEP"].includes(coluna)) {
+        td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
+      } else {
+        td.classList.add("px-3", "py-2");
+      }
+    });
+  });
+
+  wrapper.appendChild(tabela);
+  clientesListDiv.appendChild(wrapper);
+};
 
 // //deletar cliente
 function deleteClient() {

@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
           mainContent.innerHTML = html;
           interationSystemFamilyBens();
           registerNewFamilyBens();
+          searchFamilyGoodsForId();
           deleteFamilyGoods();
           editFamilyGoods();
         } else {
@@ -167,7 +168,7 @@ function interationSystemFamilyBens() {
     });
   }
 
-  const btnExitFamilygoods = document.querySelector(".buttonExitFabri");
+  const btnExitFamilygoods = document.getElementById("buttonExitFabri");
   if(btnExitFamilygoods){
     btnExitFamilygoods.addEventListener("click", (event) => {
       event.preventDefault();
@@ -254,7 +255,7 @@ function registerNewFamilyBens() {
       };
 
       try {
-        const response = await fetch("http://localhost:3000/api/fabri/submit", {
+        const response = await fetch("/api/fabri/submit", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -439,8 +440,208 @@ async function fetchListFabricante() {
     document.querySelector(".listingFabri").innerHTML =
       "<p>Erro ao carregar fornecedores.</p>";
   }
-}
+};
 
+// buscar family bens
+async function searchFamilyGoodsForId() {
+    
+  const btnFamilySearch = document.getElementById('searchFamylyGoods');
+  const popUpSearch = document.querySelector('.popUpsearchIdFamilyGoods');
+  const familyGoodsListDiv = document.querySelector(".listingFabri");
+  const btnOutPageSearch = document.querySelector('.outPageSearchFamilyGoods')
+
+  if (btnFamilySearch && popUpSearch) {
+    btnFamilySearch.addEventListener('click', () => {
+      popUpSearch.style.display = 'flex';
+    });
+  }
+
+  if(popUpSearch || btnOutPageSearch){
+     btnOutPageSearch.addEventListener('click' , ()=>{
+       popUpSearch.style.display = 'none'
+     })
+  }
+ 
+  let btnClearFilter = document.getElementById('btnClearFilter');
+  if (!btnClearFilter) {
+    btnClearFilter = document.createElement('button');
+    btnClearFilter.id = 'btnClearFilter';
+    btnClearFilter.textContent = 'Limpar filtro';
+    btnClearFilter.className = 'btn btn-secondary w-25 aling align-items: center;';
+    btnClearFilter.style.display = 'none'; 
+    familyGoodsListDiv.parentNode.insertBefore(btnClearFilter, familyGoodsListDiv);
+
+    btnClearFilter.addEventListener('click', () => {
+     
+      btnClearFilter.style.display = 'none';
+      
+      document.getElementById('codeFamilyBens').value = '';
+      fetchListFabricante();
+    });
+  }
+
+ const btnSearchFamilyGoods = document.querySelector('.submitSearchFamilyGoods');
+  if (btnSearchFamilyGoods) {
+    btnSearchFamilyGoods.addEventListener('click', async () => {
+
+      const codeInput = document.getElementById('codeFamilyBens').value.trim();
+
+       if (!codeInput) {
+       Toastify({
+        text: "Preencha com o codigo para fazer a pesquisa!",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+       }).showToast();
+      return;
+    }
+
+      const params = new URLSearchParams();
+      if (codeInput) params.append('fabeCode', codeInput);
+      try {
+        const response = await fetch(`/api/family/search?${params}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.familyGoods?.length > 0) {
+          console.log("Resultados encontrados:", data.produto);
+          
+          Toastify({
+          text: "O tipo de familia de bem foi encontrado com sucesso!.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "green",
+          }).showToast();
+          // Exibe botão limpar filtro
+          btnClearFilter.style.display = 'inline-block';
+          // Atualiza a tabela com os bens filtrados
+          renderFamilyGoodsTable(data.familyGoods);
+
+          // Fecha o pop-up após a busca (opcional)
+          if (popUpSearch) popUpSearch.style.display = 'none';
+
+        } else {
+          Toastify({
+          text: data.message || "Nenhuma familia de bem encontrado nessa pesquisa",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+          }).showToast();
+        }
+      } catch (error) {
+        console.error("Erro ao buscar familia de bem:", error);
+        Toastify({
+          text: "Erro a buscar tente novamente",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+          }).showToast();
+      }
+    });
+  };
+};
+
+function renderFamilyGoodsTable(familyGoods) {
+  const familyGoodsListDiv = document.querySelector(".listingFabri");
+  familyGoodsListDiv.innerHTML = "";
+
+  if (familyGoods.length === 0) {
+    familyGoodsListDiv.innerHTML = "<p class='text-light'>Nenhum fornecedor cadastrado.</p>";
+    return;
+  }
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "table-responsive";
+
+  const tabela = document.createElement("table");
+  tabela.className = "table table-sm table-hover table-striped table-bordered tableFamilyBens";
+
+  const colunas = [
+    "Selecionar",
+    "Código",
+    "Descrição",
+    "Categoria",
+    "Capacidade",
+    "Observação",
+    "Centro de custo",
+  ];
+
+  // Cabeçalho
+  const cabecalho = tabela.createTHead();
+  const linhaCabecalho = cabecalho.insertRow();
+
+  colunas.forEach((coluna) => {
+    const th = document.createElement("th");
+    th.textContent = coluna;
+
+    if (["Selecionar", "Código"].includes(coluna)) {
+      th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+    } else {
+      th.classList.add("px-3", "py-2", "align-middle");
+    }
+
+    linhaCabecalho.appendChild(th);
+  });
+
+  // Corpo
+  const corpo = tabela.createTBody();
+
+  familyGoods.forEach((fabricante) => {
+    const linha = corpo.insertRow();
+    linha.setAttribute("data-fabecode", fabricante.fabecode);
+
+    // Checkbox
+    const checkboxCell = linha.insertCell();
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.name = "selectfamilyGoods";
+    checkbox.value = fabricante.fabecode;
+    checkbox.dataset.familyGoods = JSON.stringify(fabricante);
+    checkbox.className = "form-check-input m-0";
+    checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
+    checkboxCell.appendChild(checkbox);
+
+    // Dados
+    const dados = [
+      fabricante.fabecode,
+      fabricante.fabedesc,
+      fabricante.fabecate,
+      fabricante.fabecapa,
+      fabricante.fabeobse,
+      fabricante.fabectct,
+    ];
+
+    dados.forEach((valor, index) => {
+      const td = linha.insertCell();
+      td.textContent = valor || "";
+      td.classList.add("align-middle", "text-break");
+
+      const coluna = colunas[index + 1]; // Ignora "Selecionar"
+      if (["Código"].includes(coluna)) {
+        td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
+      } else {
+        td.classList.add("px-3", "py-2");
+      }
+    });
+  });
+
+  wrapper.appendChild(tabela);
+  familyGoodsListDiv.appendChild(wrapper);
+};
 
 // //deletar fabricante
 function deleteFamilyGoods(){
@@ -545,9 +746,9 @@ async function deleteFabri(id, fabeRow) {
       position: "center",
       backgroundColor: "red",
     }).showToast();
-  }
- }
-}
+  };
+ };
+};
 
 // Edição do familia de ben
 function editFamilyGoods(){

@@ -964,7 +964,7 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
 
         const tdAcao = document.createElement("td");
         const btn = document.createElement("button");
-        btn.classList.add("vincular-bem btn btn-success");
+        btn.classList.add("vincular-bem");
         btn.dataset.id = bem.benscode;
         btn.dataset.code = codigo;
         btn.textContent = "Vincular";

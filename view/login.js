@@ -16,73 +16,97 @@ function showPassword() {
 }
 
 //to-enter-page main /valid login
- function submitFormLogin(){
-  const form = document.querySelector("#formLogin")
-  if(form){
+function loginUserCenter() {
+  const form = document.querySelector("#formLogin");
+  if (form) {
     form.addEventListener("submit", async (event) => {
+      event.preventDefault();
 
-      event.preventDefault()
-    const username = document.querySelector("#user").value.trim();
-    const password = document.querySelector("#pin").value.trim();
-  
-    
-         await fetch('/autenticar' , {
-          method: 'POST',
-          headers: {"Content-Type":"application/json"},
-          body: JSON.stringify({username , password})
-         })
-         .then((responseData)=> responseData.json())
-         .then((response)=>{
-          if(response.token) {
-            localStorage.setItem('token' ,  response.token )
-            Toastify({
-              text: "Login com sucesso",
-              duration: 3000,
-              destination: "https://github.com/apvarun/toastify-js",
-              newWindow: true,
-              close: true,
-              gravity: "top", 
-              position: "center", 
-              stopOnFocus: true, 
-              style: {
-                background: "green",
-              },
-              onClick: function(){} 
-            }).showToast();
-           
-            setTimeout(()=>{
-            window.location.href = "screenMain/main.html"
-            },2000)
-            
-            return;
-            
+      const username = document.querySelector("#user").value.trim();
+      const password = document.querySelector("#pin").value.trim();
+
+      try {
+        // Tenta primeiro como funcionário
+        let responseData = await fetch("/autenticar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+
+        let response = await responseData.json();
+
+        console.log('resposta' ,response)
+
+        if (!response.token) {
+          // Se falhou, tenta como motorista
+          responseData = await fetch("/api/drive/auth", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+          });
+          response = await responseData.json();
+        }
+
+        if (response.token) {
+          localStorage.setItem("token", response.token);
+          localStorage.setItem("tipoUsuario", response.tipo);
+
+
+          if(response.tipo === 'motorista'){
+            localStorage.setItem('user' , response.user)
+          }else{
+            localStorage.setItem('user' , response.user)
+          }
+          // localStorage.setItem("user" , response.user)
+            console.log('resposta' ,response)
+
+            console.log('res' , localStorage.getItem('user'))
+
+          Toastify({
+            text: "Login com sucesso",
+            duration: 3000,
+            gravity: "top",
+            position: "center",
+            style: { background: "green" }
+          }).showToast();
+
+          setTimeout(() => {
+            if (response.tipo === "motorista") {
+              window.location.href = "screenDriverMobile/driverPage.html";
+            } else {
+              window.location.href = "screenMain/main.html";
+            }
+          }, 300);
+
         } else {
           Toastify({
-            text: "Usuario invalido",
+            text: response.message || "Usuário ou senha inválidos",
             duration: 3000,
-            destination: "https://github.com/apvarun/toastify-js",
-            newWindow: true,
-            close: true,
             gravity: "top",
-            position: "center", 
-            stopOnFocus: true, 
-            style: {
-              background: "red",
-            },
-            onClick: function(){} 
+            position: "center",
+            style: { background: "red" }
           }).showToast();
-         return;
         }
-         })
-     })
- }
+      } catch (error) {
+        console.error("Erro no login:", error);
+        Toastify({
+          text: "Erro no servidor, tente novamente",
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          style: { background: "red" }
+        }).showToast();
+      }
+    });
+  }
 }
 
+document.addEventListener("DOMContentLoaded", loginUserCenter);
+
+
+
  
-const buttonSubmitLogin = document.getElementById('buttonLogin')
-if(buttonSubmitLogin){
-   buttonSubmitLogin.addEventListener('click', submitFormLogin())
-}
+
   
 
 

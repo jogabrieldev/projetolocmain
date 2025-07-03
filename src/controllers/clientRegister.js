@@ -1,3 +1,4 @@
+
 import { clientRegister } from "../model/dataClient.js";
 import fetch from "node-fetch";
 
@@ -12,10 +13,8 @@ export const movementClient = {
           .json({ message: "Campos obrigatórios não preenchidos." });
       }
 
-      console.log('dados' , dataClientSubmit)
-
-    
-      const validCpfSystem = await clientRegister.getAllClientCredenci();
+  
+      const validCpfSystem = await clientRegister.verifyCredenciClient();
 
       const resuntConsult = validCpfSystem.map(item => (item.cliecpf || item.cliecnpj));
 
@@ -135,6 +134,38 @@ export const movementClient = {
       res.status(500).json({ success: false, message: error.message });
     }
   },
+
+   async getClientByCode(req, res) {
+    const { cliecode , valueCpf , valueCnpj } = req.query;
+    try {
+      if (!cliecode && !valueCpf && !valueCnpj ) {
+        return res.status(400).json({ message: "Dados do cliente e obrigatorio para pesquisa." });
+      }
+
+      const cpf = valueCpf?.replace(/\D/g, "")
+      const cnpj = valueCnpj?.replace(/\D/g, "")
+
+      if(valueCpf && !cpf){
+         return res.status(400).json({ message: "O CPF do cliente está em formato inválido." });
+       }
+
+      if (valueCnpj && !cnpj) {
+      return res.status(400).json({ message: "O CNPJ do cliente está em formato inválido." });
+      }
+
+      const cliente = await clientRegister.getClientById(cliecode , cpf , cnpj);
+
+      if (!cliente || cliente.length === 0) {
+        return res.status(404).json({ message: "Cliente não encontrado valide os dados de pesquisa." });
+      }
+
+      return res.status(200).json({success:true , cliente});
+    } catch (error) {
+      console.error("Erro ao buscar cliente por código:", error);
+      return res.status(500).json({ message: "Erro ao buscar cliente." });
+    }
+  },
+
 
   async listingOfClient(req, res) {
     try {

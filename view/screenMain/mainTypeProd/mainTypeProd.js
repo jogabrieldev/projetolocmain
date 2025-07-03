@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded' , ()=>{
                     registerNewTypeProduct();
                     deleteTypeProduct();
                     interationSystemTypeProduct();
+                    searchTypeProduct();
                     EditTypeProduct();
                   }else{
                     console.error("#mainContent não encontrado no DOM");
@@ -136,7 +137,7 @@ if(btnOutInitTp){
 }
 
 
-const btnExitSectionTypeProd = document.querySelector(".buttonExitTipoProd");
+const btnExitSectionTypeProd = document.getElementById("buttonExitTipoProd");
 if(btnExitSectionTypeProd){
     
   btnExitSectionTypeProd.addEventListener("click", () => {
@@ -402,7 +403,209 @@ async function fetchListTypeProduct() {
   }
 }
 
+// pesquisar por tipo de produto
 
+async function searchTypeProduct(){
+      
+  const btnTypeProdSearch = document.getElementById('searchTypeProd');
+  const popUpSearch = document.querySelector('.popUpsearchIdTypeProd');
+  const typeProdListDiv = document.querySelector(".listingTipoProd");
+  const btnOutPageSearch = document.querySelector('.outPageSearchTypeProd')
+
+  if (btnTypeProdSearch && popUpSearch) {
+    btnTypeProdSearch.addEventListener('click', () => {
+      popUpSearch.style.display = 'flex';
+    });
+  }
+
+  if(popUpSearch || btnOutPageSearch){
+     btnOutPageSearch.addEventListener('click' , ()=>{
+       popUpSearch.style.display = 'none'
+     })
+  }
+ 
+  let btnClearFilter = document.getElementById('btnClearFilter');
+  if (!btnClearFilter) {
+    btnClearFilter = document.createElement('button');
+    btnClearFilter.id = 'btnClearFilter';
+    btnClearFilter.textContent = 'Limpar filtro';
+    btnClearFilter.className = 'btn btn-secondary w-25 aling align-items: center;';
+    btnClearFilter.style.display = 'none'; // fica oculto até uma busca ser feita
+    typeProdListDiv.parentNode.insertBefore(btnClearFilter, typeProdListDiv);
+
+    btnClearFilter.addEventListener('click', () => {
+     
+      btnClearFilter.style.display = 'none';
+      
+      document.getElementById('codeTypeProduct').value = '';
+       fetchListTypeProduct();
+    });
+  }
+
+ const btnSearchTypeProd = document.querySelector('.submitSearchTypeProduct');
+  if (btnSearchTypeProd) {
+    btnSearchTypeProd.addEventListener('click', async () => {
+
+      const codeInput = document.getElementById('codeTypeProduct').value.trim();
+
+       if (!codeInput) {
+       Toastify({
+        text: "Preencha com o codigo para fazer a pesquisa!",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+       }).showToast();
+      return;
+    }
+
+      const params = new URLSearchParams();
+      if (codeInput) params.append('tiprCode', codeInput);
+      try {
+        const response = await fetch(`/api/typeprod/search?${params}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.typeProduct?.length > 0) {
+          console.log("Resultados encontrados:", data.produto);
+          
+          Toastify({
+          text: "O tipo de produto foi encontrado com sucesso!.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "green",
+          }).showToast();
+          // Exibe botão limpar filtro
+          btnClearFilter.style.display = 'inline-block';
+          // Atualiza a tabela com os bens filtrados
+          renderTypeProdTable(data.typeProduct);
+
+          // Fecha o pop-up após a busca (opcional)
+          if (popUpSearch) popUpSearch.style.display = 'none';
+
+        } else {
+          Toastify({
+          text: data.message || "Nenhum tipo encontrado nessa pesquisa",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+          }).showToast();
+        }
+      } catch (error) {
+        console.error("Erro ao buscar tipo de produto:", error);
+        Toastify({
+          text: "Erro a buscar tente novamente",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+          }).showToast();
+      }
+    });
+  };
+};
+
+// renderizar tabela 
+
+function renderTypeProdTable(tipoProduto) {
+  const tableWrapper = document.querySelector(".listingTipoProd");
+  tableWrapper.innerHTML = ""; // Limpa antes de adicionar a nova tabela
+
+  if (tipoProduto.length === 0) {
+    tableWrapper.innerHTML = "<p class='text-light'>Nenhum tipo de produto cadastrado.</p>";
+    return;
+  }
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "table-responsive";
+
+  const tabela = document.createElement("table");
+  tabela.className = "table table-sm table-hover table-striped table-bordered tableTypeProd";
+
+  const colunas = [
+    "Selecionar",
+    "Código",
+    "Descrição",
+    "Categoria",
+    "Subcategoria",
+    "Observação",
+    "Centro de custo",
+  ];
+
+  // Cabeçalho
+  const cabecalho = tabela.createTHead();
+  const linhaCabecalho = cabecalho.insertRow();
+
+  colunas.forEach((coluna) => {
+    const th = document.createElement("th");
+    th.textContent = coluna;
+
+    if (["Selecionar", "Código"].includes(coluna)) {
+      th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+    } else {
+      th.classList.add("px-3", "py-2", "align-middle");
+    }
+
+    linhaCabecalho.appendChild(th);
+  });
+
+  // Corpo
+  const corpo = tabela.createTBody();
+
+  tipoProduto.forEach((typeProd) => {
+    const linha = corpo.insertRow();
+    linha.setAttribute("data-typecode", typeProd.tiprcode);
+
+    // Checkbox
+    const checkboxCell = linha.insertCell();
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.name = "selectTypeProd";
+    checkbox.value = typeProd.tiprcode;
+    checkbox.dataset.typeProd = JSON.stringify(typeProd);
+    checkbox.className = "form-check-input m-0";
+    checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
+    checkboxCell.appendChild(checkbox);
+
+    // Dados da linha
+    const dados = [
+      typeProd.tiprcode,
+      typeProd.tiprdesc,
+      typeProd.tiprcate,
+      typeProd.tiprsuca,
+      typeProd.tiprobs,
+      typeProd.tiprctct,
+    ];
+
+    dados.forEach((valor, index) => {
+      const td = linha.insertCell();
+      td.textContent = valor || "";
+      td.classList.add("align-middle", "text-break");
+
+      const coluna = colunas[index + 1]; // Ignora "Selecionar"
+      if (["Código"].includes(coluna)) {
+        td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
+      } else {
+        td.classList.add("px-3", "py-2");
+      }
+    });
+  });
+
+  wrapper.appendChild(tabela);
+  tableWrapper.appendChild(wrapper);
+};
 
 //delete tipo do produto
 function deleteTypeProduct(){

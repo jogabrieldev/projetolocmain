@@ -10,7 +10,9 @@ function isTokenExpired(token) {
 
 function masksFieldForne() {
   $("#fornCnpj").mask("00.000.000/0000-00");
-
+    
+  $("#inputCnpj").mask("00.000.000/0000-00");
+  
   $("#fornCelu").mask("(00) 00000-0000");
 
   $("#fornCep").mask("00000-000");
@@ -59,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
           masksFieldForne();
           interationSystemForne();
           registerNewFornecedor();
+          searchFornecedorForId();
           dateAtualInField("fornDtcd");
           deleteFornecedor();
           editFornecedor();
@@ -196,7 +199,7 @@ function interationSystemForne() {
     });
   }
 
-  const btnOutSectionForn = document.querySelector(".buttonExitForn");
+  const btnOutSectionForn = document.getElementById("buttonExitForn");
   if (btnOutSectionForn) {
     btnOutSectionForn.addEventListener("click", (event) => {
       event.preventDefault();
@@ -397,6 +400,233 @@ function registerNewFornecedor() {
       }
     });
   validationFormForne();
+}
+
+// BUSCAR O FORNECEDOR
+async function searchFornecedorForId() {
+
+  const btnForSearch = document.getElementById('searchFornecedor');
+  const popUpSearch = document.querySelector('.searchIdForne');
+  const forneListDiv = document.querySelector(".listingForn");
+  const btnOutPageSearch = document.querySelector('.outPageSearchForn')
+
+  if (btnForSearch && popUpSearch) {
+    btnForSearch.addEventListener('click', () => {
+      popUpSearch.style.display = 'flex';
+    });
+  }
+
+  if(popUpSearch || btnOutPageSearch){
+     btnOutPageSearch.addEventListener('click' , ()=>{
+       popUpSearch.style.display = 'none'
+     })
+  }
+
+  // Cria o botão limpar filtro e adiciona antes da lista, se não existir
+  let btnClearFilter = document.getElementById('btnClearFilter');
+  if (!btnClearFilter) {
+    btnClearFilter = document.createElement('button');
+    btnClearFilter.id = 'btnClearFilter';
+    btnClearFilter.textContent = 'Limpar filtro';
+    btnClearFilter.className = 'btn btn-secondary w-25 aling align-items: center;';
+    btnClearFilter.style.display = 'none'; // fica oculto até uma busca ser feita
+    forneListDiv.parentNode.insertBefore(btnClearFilter, forneListDiv);
+
+    btnClearFilter.addEventListener('click', () => {
+     
+      btnClearFilter.style.display = 'none';
+      
+      document.getElementById('codeForn').value = '';
+      document.getElementById('inputCnpj').value = '';
+    
+     fetchListFornecedores();
+    });
+  }
+
+  const btnSearchFornecedor = document.querySelector('.submitSearchForne');
+  if (btnSearchFornecedor) {
+    btnSearchFornecedor.addEventListener('click', async () => {
+
+      const codeInput = document.getElementById('codeForn').value.trim();
+      const cnpjInput = document.getElementById('inputCnpj').value.trim();
+
+      const fieldFilled = [codeInput , cnpjInput].filter((valor)=> valor !== "")
+
+       if (fieldFilled.length === 0) {
+       Toastify({
+        text: "Preencha pelo menos um campo para buscar!",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+       }).showToast();
+      return;
+    }
+
+      if (fieldFilled.length > 1) {
+      Toastify({
+      text: "Preencha apenas um campo por vez para buscar!",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "orange",
+     }).showToast();
+     return;
+    }
+
+      const params = new URLSearchParams();
+      if (codeInput) params.append('fornCode', codeInput);
+      if (cnpjInput) params.append('fornCnpj', cnpjInput);
+
+      try {
+        const response = await fetch(`/api/forne/search?${params.toString()}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.fornecedor?.length > 0) {
+          console.log("Resultados encontrados:", data.fornecedor);
+          
+          Toastify({
+          text: "O Fornecedor foi encontrado com sucesso!.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "green",
+          }).showToast();
+          // Exibe botão limpar filtro
+          btnClearFilter.style.display = 'inline-block';
+          // Atualiza a tabela com os bens filtrados
+         renderFornecedorTable(data.fornecedor);
+
+          // Fecha o pop-up após a busca (opcional)
+          if (popUpSearch) popUpSearch.style.display = 'none';
+
+        } else {
+          Toastify({
+          text: data.message || "Nenhum Bem encontrado nessa pesquisa",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+          }).showToast();
+        }
+      } catch (error) {
+        console.error("Erro ao buscar fornecedor:", error);
+        Toastify({
+          text: "Erro a buscar tente novamente",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+          }).showToast();
+      }
+    });
+  };
+};
+
+// tabela padão
+function renderFornecedorTable(fornecedores) {
+  const fornecedoresListDiv = document.querySelector(".listingForn");
+  fornecedoresListDiv.innerHTML = "";
+
+  if (fornecedores.length === 0) {
+    fornecedoresListDiv.innerHTML = "<p class='text-light'>Nenhum fornecedor cadastrado.</p>";
+    return;
+  }
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "table-responsive";
+
+  const tabela = document.createElement("table");
+  tabela.className = "table table-sm table-hover table-striped table-bordered tableFornecedor";
+
+  const colunas = [
+    "Selecionar", "Código", "Nome", "Nome Fantasia", "CNPJ", "CEP", "Rua",
+    "Cidade", "Estado", "Celular", "E-mail", "Banco", "Agência",
+    "Conta", "Pix", "Data do cadastro", "Discrição"
+  ];
+
+  // Cabeçalho
+  const cabecalho = tabela.createTHead();
+  const linhaCabecalho = cabecalho.insertRow();
+  colunas.forEach(coluna => {
+    const th = document.createElement("th");
+    th.textContent = coluna;
+
+    if (["Selecionar", "Código", "CNPJ", "CEP", "Estado", "Agência", "Conta"].includes(coluna)) {
+      th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+    } else {
+      th.classList.add("px-3", "py-2", "align-middle");
+    }
+
+    linhaCabecalho.appendChild(th);
+  });
+
+  // Corpo
+  const corpo = tabela.createTBody();
+
+  fornecedores.forEach(fornecedor => {
+    const linha = corpo.insertRow();
+    linha.setAttribute("data-forncode", fornecedor.forncode);
+
+    // Checkbox
+    const checkboxCell = linha.insertCell();
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.name = "selectFornecedor";
+    checkbox.value = fornecedor.forncode;
+    checkbox.dataset.fornecedor = JSON.stringify(fornecedor);
+    checkbox.className = "form-check-input m-0";
+    checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
+    checkboxCell.appendChild(checkbox);
+
+    // Dados formatados
+    const dados = [
+      fornecedor.forncode,
+      fornecedor.fornnome,
+      fornecedor.fornnoft,
+      formatarCampo("documento", fornecedor.forncnpj),
+      formatarCampo("cep", fornecedor.forncep),
+      fornecedor.fornrua,
+      fornecedor.forncity,
+      fornecedor.fornestd,
+      formatarCampo("telefone", fornecedor.forncelu),
+      fornecedor.fornmail,
+      fornecedor.fornbanc,
+      fornecedor.fornagen,
+      fornecedor.forncont,
+      fornecedor.fornpix,
+      formatDate(fornecedor.forndtcd),
+      fornecedor.fornptsv,
+    ];
+
+    dados.forEach((valor, index) => {
+      const td = linha.insertCell();
+      td.textContent = valor || "";
+      td.classList.add("align-middle", "text-break");
+
+      const coluna = colunas[index + 1];
+      if (["Código", "CNPJ", "CEP", "Estado", "Agência", "Conta"].includes(coluna)) {
+        td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
+      } else {
+        td.classList.add("px-3", "py-2");
+      }
+    });
+  });
+
+  wrapper.appendChild(tabela);
+  fornecedoresListDiv.appendChild(wrapper);
 }
 
 // lista de fornecedor

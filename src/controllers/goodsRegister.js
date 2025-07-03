@@ -1,6 +1,5 @@
 import { goodsRegister } from "../model/dataGoods.js";
-import { crudRegisterForn } from "../model/dataForn.js";
-const infoForn = crudRegisterForn
+import { crudRegisterForn as infoForn } from "../model/dataForn.js";
 
 export const movementGoods = {
 
@@ -94,6 +93,27 @@ export const movementGoods = {
       return res.status(409).json({ success: false, message: error.message });
     }
     return res.status(500).json({ success: false, message: error.message });
+  }
+},
+
+async getbensByCode(req, res) {
+    const { benscode, status } = req.query;
+   
+  try {
+    if (!benscode && !status) {
+      return res.status(400).json({ message: "Informe o código ou status para a busca." });
+    }
+
+    const bens = await goodsRegister.getGoodsById(benscode, status);
+
+    if (!bens || bens.length === 0) {
+      return res.status(404).json({ message: "Nenhum bem encontrado." });
+    }
+
+    return res.status(200).json({ success: true, bens });
+  } catch (error) {
+    console.error("Erro ao buscar bens:", error);
+    return res.status(500).json({ message: "Erro ao buscar bens." });
   }
 },
 

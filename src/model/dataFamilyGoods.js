@@ -1,8 +1,8 @@
 // const dataBaseM = require('../database/dataBaseSgt')
-import { client } from "../database/userDataBase.js";
-const dbFamilyGoods = client;
+import { client as dbFamilyGoods} from "../database/userDataBase.js";
 
 export const crudRegisterFamilyGoods = {
+
   registerOfFabri: async (data) => {
     try {
       const { fabeCode, fabeDesc, fabeCate, fabeCapa, fabeObs, fabeCtct } =
@@ -31,6 +31,24 @@ export const crudRegisterFamilyGoods = {
       throw error;
     }
   },
+
+  async getFamilyGoodsById(fabecode) {
+   try {
+    let query = "SELECT * FROM cadfabe WHERE 1=1";
+    const values = [];
+
+    if (fabecode) {
+      values.push(fabecode.trim());
+      query += ` AND fabecode = $${values.length}`;
+    }
+
+    const result = await dbFamilyGoods.query(query, values);
+    return result.rows; // retorna array, mesmo que só 1 bem
+  } catch (error) {
+    console.error("Erro ao buscar familia de bem por filtros:", error.message);
+    throw error;
+  }
+},
 
   getCodeIdFamilyBens: async () => {
     try {

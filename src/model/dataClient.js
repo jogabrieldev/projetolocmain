@@ -1,6 +1,4 @@
-
-import { client } from "../database/userDataBase.js";
-const dataClient = client;
+import { client as dataClient } from "../database/userDataBase.js";
 
 export const clientRegister = {
   registerOfClient: async (data) => {
@@ -22,7 +20,7 @@ export const clientRegister = {
         clieBanc,
         clieAgen,
         clieCont,
-        cliePix
+        cliePix,
       } = data;
 
       const insert = `INSERT INTO cadclie( cliecode, clienome,clietpcl, cliecpf, cliecnpj, cliedtcd, cliedtnc, cliecelu, cliecity, clieestd, clierua, cliecep, cliemail, cliebanc, clieagen , cliecont , cliepix ) VALUES( $1 , $2 , $3 , $4 , $5 ,$6 , $7 , $8 , $9 , $10 , $11 , $12 , $13 , $14 ,$15 , $16 , $17) RETURNING *`;
@@ -44,34 +42,22 @@ export const clientRegister = {
         clieBanc,
         clieAgen,
         clieCont,
-        cliePix
+        cliePix,
       ];
 
       const result = await dataClient.query(insert, values);
       return result.rows[0];
     } catch (error) {
-
-      if (error.code === "23505") { // Código de erro para chave duplicada no PostgreSQL
+      if (error.code === "23505") {
+        // Código de erro para chave duplicada no PostgreSQL
         throw new Error("Código de cliente já cadastrado. Tente outro.");
       }
       console.error("Erro no registro do cliente");
       throw error;
     }
   },
-  
-  getAllClientCredenci: async()=>{
-        try {
-           const query = "SELECT cliecpf , cliecnpj FROM cadclie"
-           const result = await dataClient.query(query)
-           if(result){
-             return result.rows
-           }
-        } catch (error) {
-            console.error('Erro na busca' , error)
-            throw error
-        }
-  },
-    getAllClientId: async()=>{
+
+  getAllClientForId: async()=>{
     try {
       const query = "SELECT cliecode FROM cadclie";
 
@@ -82,6 +68,47 @@ export const clientRegister = {
       
     } catch (error) {
       console.error("Erro em listar ID Cliente:", error.message);
+      throw error;
+    }
+  },
+
+  verifyCredenciClient: async () => {
+    try {
+      const query = "SELECT cliecpf , cliecnpj FROM cadclie";
+      const result = await dataClient.query(query);
+      if (result) {
+        return result.rows;
+      }
+    } catch (error) {
+      console.error("Erro na busca", error);
+      throw error;
+    }
+  },
+
+  async getClientById(cliecode, cpf, cnpj) {
+    try {
+      let query = "SELECT * FROM cadclie WHERE 1=1";
+      const values = [];
+
+      if (cliecode) {
+        values.push(cliecode.trim());
+        query += ` AND cliecode = $${values.length}`;
+      }
+
+      if (cpf) {
+        values.push(cpf.trim());
+        query += ` AND cliecpf ILIKE $${values.length}`;
+      }
+
+      if (cnpj) {
+        values.push(cnpj.trim());
+        query += ` AND cliecnpj ILIKE $${values.length}`;
+      }
+
+      const result = await dataClient.query(query, values);
+      return result.rows; // retorna array, mesmo que só 1 bem
+    } catch (error) {
+      console.error("Erro ao buscar bens por filtros:", error.message);
       throw error;
     }
   },
@@ -109,7 +136,7 @@ export const clientRegister = {
       throw error;
     }
   },
-  
+
   deleteClient: async (id) => {
     try {
       const deleteCadclie =
@@ -141,7 +168,7 @@ export const clientRegister = {
         updateClient.cliemail || null,
         updateClient.cliebanc || null,
         updateClient.clieagen || null,
-        updateClient.cliecont|| null,
+        updateClient.cliecont || null,
         updateClient.cliepix || null,
         id,
       ];

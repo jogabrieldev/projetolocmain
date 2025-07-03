@@ -1,7 +1,4 @@
 import { autoRegister } from "../model/dataAutomo.js";
-import { crudRegisterDriver } from "../model/dataDriver.js";
-
-const driver = crudRegisterDriver
 
 export const movementAuto = {
 
@@ -64,6 +61,27 @@ export const movementAuto = {
     }
 
     res.status(500).json({ success: false, message: "Erro interno no servidor." });
+  }
+},
+
+async getAutomovelByCode(req, res) {
+    const { caaucode, caauplac } = req.query;
+   
+  try {
+    if (!caaucode && !caauplac) {
+      return res.status(400).json({ message: "Informe o código ou placa para a busca." });
+    }
+
+    const veiculo = await autoRegister.getVehicleById(caaucode , caauplac) ;
+
+    if (!veiculo || veiculo.length === 0) {
+      return res.status(404).json({ message: "Nenhum veiculo encontrado." });
+    }
+
+    return res.status(200).json({ success: true, veiculo });
+  } catch (error) {
+    console.error("Erro ao buscar veiculo:", error);
+    return res.status(500).json({ message: "Erro ao buscar veiculo." });
   }
 },
 

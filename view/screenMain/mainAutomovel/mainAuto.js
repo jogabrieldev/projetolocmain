@@ -59,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
           registerNewVehicles();
           dateAtualInField('dtCadAuto');
           deleteVehicles();
+          searchVehicles();
           editVehicles();
           maskFieldveicu();
         } else {
@@ -197,7 +198,7 @@ function interationSystemVehicles() {
     });
   }
 
-  const buttonExitAuto = document.querySelector(".buttonExitAuto");
+  const buttonExitAuto = document.getElementById("buttonExitAuto");
   if (buttonExitAuto) {
     buttonExitAuto.addEventListener("click", () => {
       const containerAppAutomo = document.querySelector(".containerAppAutomo");
@@ -466,6 +467,233 @@ async function listarVeiculos() {
   }
 }
 
+// PESQUISAR VEICULO
+
+async function searchVehicles() {
+
+  const btnSearch = document.getElementById('searchVehicle');
+  const popUpSearch = document.querySelector('.popUpsearchIdVehicles');
+  const vehicleListDiv = document.querySelector(".listingAutomo");
+  const btnOutPageSearch = document.querySelector('.outPageSearchVehicle')
+
+  if (btnSearch && popUpSearch) {
+    btnSearch.addEventListener('click', () => {
+      popUpSearch.style.display = 'flex';
+    });
+  }
+
+  if(popUpSearch || btnOutPageSearch){
+     btnOutPageSearch.addEventListener('click' , ()=>{
+       popUpSearch.style.display = 'none'
+     })
+  }
+ 
+  let btnClearFilter = document.getElementById('btnClearFilter');
+  if (!btnClearFilter) {
+    btnClearFilter = document.createElement('button');
+    btnClearFilter.id = 'btnClearFilter';
+    btnClearFilter.textContent = 'Limpar filtro';
+    btnClearFilter.className = 'btn btn-secondary w-25 aling align-items: center;';
+    btnClearFilter.style.display = 'none'; 
+    vehicleListDiv.parentNode.insertBefore(btnClearFilter, vehicleListDiv);
+
+    btnClearFilter.addEventListener('click', () => {
+     
+      btnClearFilter.style.display = 'none';
+      
+      document.getElementById('codeVehicle').value = '';
+      document.getElementById('placVehicles').value = '';
+      listarVeiculos();
+    });
+  }
+
+ const btnSearchVehicle = document.querySelector('.submitSearchVehicle');
+  if (btnSearchVehicle) {
+     btnSearchVehicle.addEventListener('click', async () => {
+      const codeInput = document.getElementById('codeVehicle').value.trim();
+      const placInput = document.getElementById('placVehicles').value.trim();
+
+      const filterField = [codeInput , placInput].filter((value)=> value !== "")
+
+       if (filterField.length === 0 ) {
+       Toastify({
+        text: "Preencha um campo para a pesquisa!",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+       }).showToast();
+      return;
+    }
+    if (filterField.length > 1 ) {
+       Toastify({
+        text: "Preencha apenas 1 campo para a pesquisa!",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+       }).showToast();
+      return;
+    }
+
+      const params = new URLSearchParams();
+      if (codeInput) params.append('caaucode', codeInput);
+      if (placInput) params.append('caauplac', placInput);
+
+      try {
+        const response = await fetch(`/api/automovel/search?${params}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.veiculo?.length > 0) {
+          console.log("Resultados encontrados:", data.produto);
+          
+          Toastify({
+          text: "O tipo de familia de bem foi encontrado com sucesso!.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "green",
+          }).showToast();
+          // Exibe botão limpar filtro
+          btnClearFilter.style.display = 'inline-block';
+          // Atualiza a tabela com os bens filtrados
+          renderVeiculosTable(data.veiculo);
+
+          // Fecha o pop-up após a busca (opcional)
+          if (popUpSearch) popUpSearch.style.display = 'none';
+
+        } else {
+          Toastify({
+          text: data.message || "Nenhum veiculo encontrado nessa pesquisa",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+          }).showToast();
+        }
+      } catch (error) {
+        console.error("Erro ao buscar veiculo:", error);
+        Toastify({
+          text: "Erro a buscar tente novamente",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+          }).showToast();
+      }
+    });
+  };
+};
+
+// renderizar tabela 
+function renderVeiculosTable(veiculos) {
+  const veiculosListDiv = document.querySelector(".listingAutomo");
+  veiculosListDiv.innerHTML = "";
+
+  if (!veiculos || veiculos.length === 0) {
+    veiculosListDiv.innerHTML = "<p class='text-light'>Nenhum veículo cadastrado.</p>";
+    return;
+  }
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "table-responsive";
+
+  const tabela = document.createElement("table");
+  tabela.className = "table table-sm table-hover table-striped table-bordered tableVehicles";
+
+  const colunas = [
+    "Selecionar",
+    "Código",
+    "Placa",
+    "Chassi",
+    "Modelo",
+    "Marca",
+    "Ano",
+    "Cor",
+    "Tipo de combustível",
+    "Km Atual",
+    "Pode ser Locado",
+    "Status",
+    "Data de Cadastro",
+  ];
+
+  // Cabeçalho
+  const cabecalho = tabela.createTHead();
+  const linhaCabecalho = cabecalho.insertRow();
+
+  colunas.forEach((coluna) => {
+    const th = document.createElement("th");
+    th.textContent = coluna;
+    th.classList.add("px-3", "py-2", "align-middle");
+
+    if (["Selecionar", "Código", "Placa", "Status"].includes(coluna)) {
+      th.classList.add("text-center", "wh-nowrap");
+    }
+
+    linhaCabecalho.appendChild(th);
+  });
+
+  // Corpo
+  const corpo = tabela.createTBody();
+
+  veiculos.forEach((v) => {
+    const linha = corpo.insertRow();
+    linha.setAttribute("data-caaucode", v.caaucode);
+
+    // Checkbox
+    const checkboxCell = linha.insertCell();
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.name = "selectVeiculo";
+    checkbox.value = v.caaucode;
+    checkbox.dataset.veiculo = JSON.stringify(v);
+    checkbox.className = "form-check-input m-0";
+    checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
+    checkboxCell.appendChild(checkbox);
+
+    // Dados
+    const dados = [
+      v.caaucode,
+      v.caauplac,
+      v.caauchss,
+      v.caaumode,
+      v.caaumaca,
+      v.caaurena,
+      v.caaucor,
+      v.caautico,
+      v.caaukmat,
+      v.caauloca,
+      v.caaustat,
+      formatDate(v.caaudtca),
+    ];
+
+    dados.forEach((valor, index) => {
+      const td = linha.insertCell();
+      td.textContent = valor || "";
+      td.classList.add("align-middle", "text-break", "px-3", "py-2");
+
+      const coluna = colunas[index + 1]; // Ignora "Selecionar"
+      if (["Código", "Placa", "Status"].includes(coluna)) {
+        td.classList.add("text-center", "wh-nowrap");
+      }
+    });
+  });
+
+  wrapper.appendChild(tabela);
+  veiculosListDiv.appendChild(wrapper);
+};
 
 
 // DELETAR VEICULOS

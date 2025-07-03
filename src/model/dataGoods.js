@@ -84,6 +84,29 @@ export const goodsRegister = {
     }
   },
 
+ async getGoodsById(benscode, status) {
+  try {
+    let query = "SELECT * FROM cadbens WHERE 1=1";
+    const values = [];
+
+    if (benscode) {
+      values.push(benscode.trim());
+      query += ` AND benscode = $${values.length}`;
+    }
+
+    if (status) {
+      values.push(status.trim());
+      query += ` AND bensstat ILIKE $${values.length}`; // ILIKE ignora maiúsculas
+    }
+
+    const result = await dbGoods.query(query, values);
+    return result.rows; // retorna array, mesmo que só 1 bem
+  } catch (error) {
+    console.error("Erro ao buscar bens por filtros:", error.message);
+    throw error;
+  }
+},
+
   listingBens: async () => {
     try {
       const query = "SELECT * FROM cadbens";

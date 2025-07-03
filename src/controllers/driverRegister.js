@@ -1,6 +1,6 @@
-import { crudRegisterDriver } from "../model/dataDriver.js";
+import { crudRegisterDriver as driverRegister } from "../model/dataDriver.js";
 import fetch from "node-fetch";
-const driverRegister = crudRegisterDriver;
+import bcrypt from "bcrypt";
 
 export const movementOfDriver = {
 
@@ -14,7 +14,6 @@ export const movementOfDriver = {
           .json({ message: "Campos obrigatórios não preenchidos." });
       }
 
-      
             const validCpfSystem = await driverRegister.getAllDriverIdCpf();
             const resuntConsult = validCpfSystem.map(item =>(item.motocpf));
             const cpfToCheck = data.motoCpf;
@@ -115,6 +114,18 @@ export const movementOfDriver = {
       data.motoCity = data.motoCity || cepData.localidade;
       data.motoEstd = data.motoEstd || cepData.uf;
 
+      const saltRounds = 10;
+
+      if (!data.motoPasw || data.motoPasw.length < 6) {
+         return res.status(400).json({
+          success: false,
+          message: "A senha é obrigatória e deve ter pelo menos 6 caracteres.",
+        });
+      }
+
+     data.motoPasw = await bcrypt.hash(data.motoPasw, saltRounds);
+
+
       // Prossegue com o cadastro
       const newDriver = await driverRegister.registerDriver(data);
       const listDriver = await driverRegister.listingDriver();
@@ -136,6 +147,49 @@ export const movementOfDriver = {
     }
   },
 
+  async getAllDriverForDelivery(req ,res){
+       
+    try {
+      const {motoristaid} = req.params
+      if(!motoristaid){
+        return res.status(400).json({message:"Parametro não passado"})
+      }
+
+      console.log('motorista' , motoristaid)
+
+      const success = await driverRegister.getAllDriverForDelivery(motoristaid)
+      if(!success){
+        return res.status(400).json({message:"Erro ao buscar"})
+      }
+
+      return res.status(200).json({success:true , user:success})
+    } catch (error) {
+       console.error('Erro ao buscar motorista')
+       return res.status(500).json({message:"Erro no server ao buscar motorista" , success:false})
+    }
+  },
+
+  async getDriverByCode(req, res) {
+
+    const { motocode, status , situacao } = req.query;
+     
+    try {
+      if (!motocode && !status && !situacao ) {
+        return res.status(400).json({ message: "Informe o código, status ou situação para a busca." });
+      }
+  
+      const driver = await driverRegister.getdriverById(motocode , status , situacao);
+  
+      if (!driver || driver.length === 0) {
+        return res.status(404).json({ message: "Nenhum motorista encontrado." });
+      }
+  
+      return res.status(200).json({ success: true, driver });
+    } catch (error) {
+      console.error("Erro ao buscar motorista:", error);
+      return res.status(500).json({ message: "Erro ao buscar motorista." });
+    }
+  },
 
   async listingOfDriver(req, res) {
     try {
@@ -268,4 +322,5 @@ export const movementOfDriver = {
       res.status(500).json({ message: "Erro no servidor" });
     }
   },
+
 };

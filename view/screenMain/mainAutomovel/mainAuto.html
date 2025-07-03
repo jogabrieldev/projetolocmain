@@ -1,8 +1,15 @@
-<section class="containerAppAutomo d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded"
+<section class="containerAppAutomo d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded position-relative"
 style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid white;">
+
+     <button type="button" 
+        class="btn btn-outline-danger btn-sm p-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center" 
+        aria-label="Fechar" style="width: 32px; height: 32px;" id="buttonExitAuto">
+       <i class="bi bi-x fs-5"></i>
+     </button>
+
     
       <!-- Exibição da listagem de automóveis -->
-      <div class="listingAutomo mb-3">
+      <div class="listingAutomo mb-3 mt-4">
         <!-- informações -->
       </div>
   
@@ -11,10 +18,43 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
         <button class="btn btn-primary text-dark fw-semibold registerAuto">Incluir</button>
         <button class="btn btn-danger text-dark fw-semibold buttonDeleteAuto">Excluir</button>
         <button class="btn btn-warning text-dark fw-semibold buttonEditAuto">Editar</button>
-        <button class="btn btn-light text-dark fw-semibold border buttonExitAuto">Voltar</button>
+        <button class="btn btn-light text-dark fw-semibold border" id="searchVehicle"><i class="bi bi-search me-2"></i>Buscar</button>
       </div>
+
+    <!--POP UP DE PESQUISA -->
+     <div class="popUpsearchIdVehicles position-fixed top-50 start-50 translate-middle bg-white border rounded-4 p-4 shadow-lg w-100 mx-3 flex-column" style="display: none; max-width: 500px; z-index: 1055;">
+
+  <!-- Cabeçalho -->
+  <div class="text-center mb-4">
+    <h5 class="fw-bold text-dark">
+      <i class="bi bi-search text-primary me-2"></i>Pesquise por veiculos
+    </h5>
+    <p class="text-muted mb-0 small">Filtre por código e placa</p>
+  </div>
+
+  <!-- Campo Código -->
+  <div class="form-floating mb-3 position-relative">
+    <input type="text" name="codeVehicle" id="codeVehicle" class="form-control ps-5" placeholder="Código do veiculo" maxlength="15" />
+    <label for="codeVehicle"><i class="bi bi-hash me-1"></i> Código do veiculo</label>
+  </div>
+
+  <div class="form-floating mb-3 position-relative">
+    <input type="text" name="placVehicles" id="placVehicles" class="form-control ps-5" placeholder="Código da familia do bem"  />
+    <label for="placVehicles"><i class="bi bi-hash me-1"></i>Placa do veiculo</label>
+  </div>
+
+
+  <!-- Botões -->
+  <div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+    <button class="btn btn-primary w-100 w-sm-50 submitSearchVehicle">
+      <i class="bi bi-search me-1"></i> Pesquisar
+    </button>
+    <button class="btn btn-light w-100 w-sm-50 outPageSearchVehicle">
+      <i class="bi bi-arrow-left me-1"></i> Voltar
+    </button>
+  </div>
+</div>
     
-  
     <!-- Formulário de Cadastro -->
     <div class="formCadAuto container py-4" style="display: none;">
       <form class="foorm border border-secondary-subtle rounded-4 p-4 shadow-sm">

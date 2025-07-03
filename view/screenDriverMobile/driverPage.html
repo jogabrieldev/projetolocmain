@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caçamba mobile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js@1.12.0/src/toastify.min.css">
+
+</head>
+<body>
+      
+<div class="container py-3">
+
+  <!-- Tela de Seleção -->
+  <div id="telaSelecao">
+    <div class="text-center mb-4">
+      <h4 class="fw-bold">Início da Jornada</h4>
+      <p class="text-muted small">Selecione o caminhão e informe o KM atual</p>
+    </div>
+
+    <div class="container py-3 bg-warning-subtle rounded shadow-sm">
+      <div class="showDelivery row g-3"></div>
+    </div>
+
+    <form id="formInicio">
+      <div class="mb-3">
+        <label for="caminhao" class="form-label">Caminhão</label>
+        <select class="form-select" id="caminhao" required>
+          <option value="" disabled selected>Selecione</option>
+          <!-- <option value="CAM001">CAM001 - Volvo</option>
+          <option value="CAM002">CAM002 - Scania</option> -->
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="km" class="form-label">KM atual</label>
+        <input type="number" class="form-control" id="km" placeholder="Digite o KM atual" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Ver Entregas</button>
+    </form>
+  </div>
+
+  <!-- Tela de Entregas (inicialmente oculta) -->
+  <div id="telaEntregas" style="display: none;">
+    <div class="text-center mb-4">
+      <h4 class="fw-bold">Entregas Pendentes</h4>
+      <p class="text-muted small">Painel do Motorista</p>
+    </div>
+
+    <!-- Lista de entregas -->
+    <div class="d-grid gap-3">
+
+      <!-- Card de entrega -->
+      <div class="card entrega-card shadow-sm">
+        <div class="card-body">
+          <h6 class="card-title mb-1">Entrega #12345</h6>
+          <p class="card-text mb-2 text-muted small">
+            Cliente: João da Silva <br>
+            Endereço: Rua das Acácias, 321 - Goiânia/GO
+          </p>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="status-tag bg-warning text-dark">Pendente</span>
+            <div class="btn-group btn-group-sm">
+              <button class="btn btn-success"><i class="bi bi-check-circle"></i> Aceitar</button>
+              <button class="btn btn-danger"><i class="bi bi-x-circle"></i> Recusar</button>
+              <button class="btn btn-secondary"><i class="bi bi-info-circle"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Outro card de exemplo -->
+      <div class="card entrega-card shadow-sm">
+        <div class="card-body">
+          <h6 class="card-title mb-1">Entrega #12346</h6>
+          <p class="card-text mb-2 text-muted small">
+            Cliente: Maria Oliveira <br>
+            Endereço: Av. Brasil, 999 - Aparecida/GO
+          </p>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="status-tag bg-warning text-dark">Pendente</span>
+            <div class="btn-group btn-group-sm">
+              <button class="btn btn-success"><i class="bi bi-check-circle"></i> Aceitar</button>
+              <button class="btn btn-danger"><i class="bi bi-x-circle"></i> Recusar</button>
+              <button class="btn btn-secondary"><i class="bi bi-info-circle"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.js"></script>
+  <script src="loginDriver.js"></script>
+</body>
+</html>

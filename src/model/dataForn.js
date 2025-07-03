@@ -1,6 +1,5 @@
 // const dataBaseM = require('../database/dataBaseSgt')
-import { client } from "../database/userDataBase.js";
-const userDbFo = client;
+import { client as userDbFo  } from "../database/userDataBase.js";
 
 export const crudRegisterForn = {
   registerOfForn: async (data) => {
@@ -57,9 +56,30 @@ export const crudRegisterForn = {
       throw error;
     }
   },
+   
+  async getFornecedorById(forncode, cnpj) {
+   try {
+    let query = "SELECT * FROM cadforn WHERE 1=1";
+    const values = [];
 
+    if (forncode) {
+      values.push(forncode.trim());
+      query += ` AND forncode = $${values.length}`;
+    }
+
+    if(cnpj) {
+      values.push(cnpj.trim());
+      query += ` AND forncnpj = $${values.length}`;
+    }
+
+    const result = await userDbFo.query(query, values);
+    return result.rows; // retorna array, mesmo que só 1 bem
+  } catch (error) {
+    console.error("Erro ao buscar fornecedor por filtros:", error.message);
+    throw error;
+  }
+},
  
-
   listingForn: async () => {
     try {
       const query = "SELECT * FROM cadforn";

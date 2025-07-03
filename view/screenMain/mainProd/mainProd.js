@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded' , ()=>{
                 interationSystemProduto()
                 dateAtualInField('prodData')
                  registerNewProduto()
+                 searchProduto()
                  deleteProduto()
                  editProduto()
             }else{
@@ -148,7 +149,7 @@ function interationSystemProduto(){
  }
  
 
-const btnExitProd = document.querySelector(".buttonExitProd");
+const btnExitProd = document.getElementById("buttonExitProd");
 if(btnExitProd){
   btnExitProd.addEventListener("click", () => {
 
@@ -367,7 +368,7 @@ function registerNewProduto(){
     });
   validationFormProd();
 }
-  
+
 // Listagens de produtos
 async function fetchListProdutos() {
   const token = localStorage.getItem("token");
@@ -516,6 +517,212 @@ async function fetchListProdutos() {
   }
 }
 
+// pesquisar por produtos
+async function searchProduto() {
+    
+  const btnProdutoSearch = document.getElementById('searchProd');
+  const popUpSearch = document.querySelector('.popUpsearchIdProd');
+  const produtoListDiv = document.querySelector(".listingProd");
+  const btnOutPageSearch = document.querySelector('.outPageSearchProd')
+
+  if (btnProdutoSearch && popUpSearch) {
+    btnProdutoSearch.addEventListener('click', () => {
+      popUpSearch.style.display = 'flex';
+    });
+  }
+
+  if(popUpSearch || btnOutPageSearch){
+     btnOutPageSearch.addEventListener('click' , ()=>{
+       popUpSearch.style.display = 'none'
+     })
+  }
+ 
+  let btnClearFilter = document.getElementById('btnClearFilter');
+  if (!btnClearFilter) {
+    btnClearFilter = document.createElement('button');
+    btnClearFilter.id = 'btnClearFilter';
+    btnClearFilter.textContent = 'Limpar filtro';
+    btnClearFilter.className = 'btn btn-secondary w-25 aling align-items: center;';
+    btnClearFilter.style.display = 'none'; // fica oculto até uma busca ser feita
+    produtoListDiv.parentNode.insertBefore(btnClearFilter, produtoListDiv);
+
+    btnClearFilter.addEventListener('click', () => {
+     
+      btnClearFilter.style.display = 'none';
+      
+      document.getElementById('codeProd').value = '';
+      fetchListProdutos();
+    });
+  }
+
+ const btnSearchProduto = document.querySelector('.submitSearchProd');
+  if (btnSearchProduto) {
+    btnSearchProduto.addEventListener('click', async () => {
+
+      const codeInput = document.getElementById('codeProd').value.trim();
+
+       if (!codeInput) {
+       Toastify({
+        text: "Preencha com o codigo para fazer a pesquisa!",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+       }).showToast();
+      return;
+    }
+
+      const params = new URLSearchParams();
+      if (codeInput) params.append('prodCode', codeInput);
+      try {
+        const response = await fetch(`/api/prod/search?${params}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.produto?.length > 0) {
+          console.log("Resultados encontrados:", data.produto);
+          
+          Toastify({
+          text: "O Produto foi encontrado com sucesso!.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "green",
+          }).showToast();
+          // Exibe botão limpar filtro
+          btnClearFilter.style.display = 'inline-block';
+          // Atualiza a tabela com os bens filtrados
+          renderProdutoTable(data.produto);
+
+          // Fecha o pop-up após a busca (opcional)
+          if (popUpSearch) popUpSearch.style.display = 'none';
+
+        } else {
+          Toastify({
+          text: data.message || "Nenhum Bem encontrado nessa pesquisa",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+          }).showToast();
+        }
+      } catch (error) {
+        console.error("Erro ao buscar fornecedor:", error);
+        Toastify({
+          text: "Erro a buscar tente novamente",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+          }).showToast();
+      }
+    });
+  };
+};
+
+// renderizar tabela
+function renderProdutoTable(produtos) {
+  const produtosListDiv = document.querySelector(".listingProd");
+  produtosListDiv.innerHTML = "";
+
+  if (produtos.length === 0) {
+    produtosListDiv.innerHTML = "<p class='text-light'>Nenhum produto cadastrado.</p>";
+    return;
+  }
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "table-responsive";
+
+  const tabela = document.createElement("table");
+  tabela.className = "table table-sm table-hover table-striped table-bordered tableProduto";
+
+  const colunas = [
+    "Selecionar",
+    "Código",
+    "Descrição",
+    "Tipo",
+    "Unidade",
+    "Data da Compra",
+    "Valor",
+    "Preço Líquido",
+    "Preço Bruto",
+    "Ativo",
+  ];
+
+  // Cabeçalho
+  const cabecalho = tabela.createTHead();
+  const linhaCabecalho = cabecalho.insertRow();
+  colunas.forEach((coluna) => {
+    const th = document.createElement("th");
+    th.textContent = coluna;
+
+    if (["Selecionar", "Código", "Unidade", "Ativo"].includes(coluna)) {
+      th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+    } else {
+      th.classList.add("px-3", "py-2", "align-middle");
+    }
+
+    linhaCabecalho.appendChild(th);
+  });
+
+  // Corpo
+  const corpo = tabela.createTBody();
+
+  produtos.forEach((produto) => {
+    const linha = corpo.insertRow();
+    linha.setAttribute("data-prodcode", produto.prodcode);
+
+    // Checkbox
+    const checkboxCell = linha.insertCell();
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.name = "selectProduto";
+    checkbox.value = produto.prodcode;
+    checkbox.dataset.produto = JSON.stringify(produto);
+    checkbox.className = "form-check-input m-0";
+    checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
+    checkboxCell.appendChild(checkbox);
+
+    // Dados do produto
+    const dados = [
+      produto.prodcode,
+      produto.proddesc,
+      produto.prodtipo,
+      produto.produnid,
+      formatDate(produto.proddtuc),
+      produto.prodvluc,
+      produto.prodpeli,
+      produto.prodpebr,
+      produto.prodativ,
+    ];
+
+    dados.forEach((valor, index) => {
+      const td = linha.insertCell();
+      td.textContent = valor || "";
+      td.classList.add("align-middle", "text-break");
+
+      const coluna = colunas[index + 1]; // Ignora "Selecionar"
+      if (["Código", "Unidade", "Ativo"].includes(coluna)) {
+        td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
+      } else {
+        td.classList.add("px-3", "py-2");
+      }
+    });
+  });
+
+  wrapper.appendChild(tabela);
+  produtosListDiv.appendChild(wrapper);
+};
 
 // deletar produto
 function deleteProduto(){

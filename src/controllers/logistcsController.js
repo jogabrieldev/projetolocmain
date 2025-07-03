@@ -1,11 +1,9 @@
 import logistcsModel from "../model/logisticsModel.js";
 import{mecanismDelivey} from "../model/deliveryModel.js"
-import { crudRegisterDriver } from "../model/dataDriver.js";
-import { goodsRegister } from "../model/dataGoods.js";
-import { clientRegister } from "../model/dataClient.js";
-const authClient = clientRegister
-const authGoods = goodsRegister
-const authDriver = crudRegisterDriver
+import { crudRegisterDriver as authDriver } from "../model/dataDriver.js";
+import { goodsRegister as authGoods} from "../model/dataGoods.js";
+import { clientRegister as authClient } from "../model/dataClient.js";
+
 
 class logistcgController {
 
@@ -18,7 +16,7 @@ class logistcgController {
       }
 
       if(!payloadLogistcs.bemId || !payloadLogistcs.idClient || !payloadLogistcs.driver || !payloadLogistcs.devolution || !payloadLogistcs.locationId ){
-          return res.status(400).json({ message: "Falta informações para conclusão" });
+          return res.status(400).json({ message: "Falta informações para conclusão verifique!" });
       }
 
       const drive = await authDriver.getAllDriverId();
@@ -35,7 +33,7 @@ class logistcgController {
         return res.status(400).json({ message: "Código do Bem inválido." });
         }
       
-      const client = await authClient.getAllClientId()
+      const client = await authClient.getAllClientForId()
       const codeValidClient = client.map(item=> item.cliecode)
 
       if(!codeValidClient.includes(payloadLogistcs.idClient)){

@@ -1,8 +1,8 @@
 // const dataBaseM = require('../database/dataBaseSgt')
-import { client } from "../database/userDataBase.js";
-const userDbProd = client;
+import { client as userDbProd } from "../database/userDataBase.js";
 
 export const crudRegisterProd = {
+  
   registerOfProd: async (data) => {
     try {
       const {
@@ -42,6 +42,26 @@ export const crudRegisterProd = {
       throw error;
     }
   },
+
+   
+  async getProdutoById(prodcode) {
+   try {
+    let query = "SELECT * FROM cadprod WHERE 1=1";
+    const values = [];
+
+    if (prodcode) {
+      values.push(prodcode.trim());
+      query += ` AND prodcode = $${values.length}`;
+    }
+
+    const result = await userDbProd.query(query, values);
+    return result.rows; 
+  } catch (error) {
+    console.error("Erro ao buscar produto por filtros:", error.message);
+    throw error;
+  }
+},
+ 
 
   getCodeProd: async()=>{
      try {

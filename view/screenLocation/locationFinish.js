@@ -112,14 +112,14 @@ function renderTable(data) {
   resetFilterBtn.style.display = "none";
   resetFilterBtn.textContent = "Remover Filtro";
 
-  const searchBtn = document.createElement("button");
-  searchBtn.classList.add("searchloc");
-  searchBtn.textContent = "Buscar Locação";
+  // const searchBtn = document.createElement("button");
+  // searchBtn.classList.add("searchloc");
+  // searchBtn.innerHTML = `<i class="bi bi-search me-2"></i>Buscar Locação`
 
   container.appendChild(title);
   container.appendChild(messageFilter);
   container.appendChild(resetFilterBtn);
-  container.appendChild(searchBtn);
+  // container.appendChild(searchBtn);
 
   tableDiv.appendChild(container);
 

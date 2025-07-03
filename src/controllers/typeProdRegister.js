@@ -1,5 +1,4 @@
-import { crudRegisterTypeProd } from "../model/dataTypeProd.js";
-const typeProdRegister = crudRegisterTypeProd;
+import { crudRegisterTypeProd as typeProdRegister } from "../model/dataTypeProd.js";
 
 export const movementOfTypeProd = {
   async registerTyperProd(req, res) {
@@ -35,6 +34,28 @@ export const movementOfTypeProd = {
       res.status(500).json({ success: false, message: error.message });
     }
   },
+
+  async getTypeProductByCode(req, res) {
+    const { tiprCode } = req.query;
+       
+      try {
+        if (!tiprCode) {
+          return res.status(400).json({ message: "Informe o código do tipo de produto." });
+        }
+    
+        const typeProduct = await typeProdRegister.getTypeProductById(tiprCode);
+      
+        if (!typeProduct) {
+          return res.status(404).json({ message: "Nenhum tipo encontrado com esse codigo." });
+        }
+      
+        return res.status(200).json({ success: true, typeProduct });
+        } catch (error) {
+          console.error("Erro ao buscar tipo de produto :", error);
+          return res.status(500).json({ message: "Erro ao buscar tipo de produto." });
+        }
+     },
+  
 
   async listingOfTypeProd(req, res) {
     try {

@@ -110,10 +110,25 @@ let clientData = [];
 // Função para buscar locações
 async function getAllDelivery() {
     try {
-        const response = await fetch('/api/getdelivery');
-        deliveryData = await response.json();
+        const token = localStorage.getItem('token')
+        if(!token){
+           return
+        }
+        const response = await fetch('/api/getdelivery' , {
+          method:'GET',
+          headers:{"Content-type": "aplication/json",
+               Authorization:`Bearer ${token}`
+          }
+
+        });
+         deliveryData = await response.json();
 
         console.log('entrega' , deliveryData)
+        if (!Array.isArray(deliveryData)) {
+     console.error("deliveryData não está definido corretamente:", deliveryData);
+   return;
+}
+
 
         await getAllClients(); // Buscar clientes antes de preencher a tabela
 

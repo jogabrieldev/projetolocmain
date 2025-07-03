@@ -130,7 +130,7 @@ function interationSystemResiduo(){
       })
     }
 
-    const exitSectionResiduo = document.querySelector('.buttonExitResiduo')
+    const exitSectionResiduo = document.getElementById('buttonExitResiduo')
     if(exitSectionResiduo){
         exitSectionResiduo.addEventListener('click', ()=>{
               

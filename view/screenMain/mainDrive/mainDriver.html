@@ -1,7 +1,13 @@
-<section class="containerAppDriver  d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded"
+<section class="containerAppDriver  d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded position-relative"
 style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid white;">
 
-    <div class="listingDriver mb-3">
+    <button type="button" 
+        class="btn btn-outline-danger btn-sm p-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center" 
+        aria-label="Fechar" style="width: 32px; height: 32px;" id="buttonExitDriver">
+      <i class="bi bi-x fs-5"></i>
+   </button>
+
+    <div class="listingDriver mb-3 mt-4">
       <!-- informações -->
     </div>
   
@@ -9,8 +15,57 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       <button class="registerDriver text-dark fw-semibold btn btn-primary">Incluir</button>
       <button class="buttonDeleteDriver btn btn-danger text-dark fw-semibold">Excluir</button>
       <button class="buttonEditDriver btn btn-warning text-dark fw-semibold">Editar</button>
-      <button class="buttonExitDriver btn btn-light text-dark fw-semibold">Voltar</button>
+      <button class="btn btn-light text-dark fw-semibold" id="searchDriver"><i class="bi bi-search me-2"></i>Buscar</button>
     </div>
+
+    <!-- POP UP DE PESQUISA -->
+
+ <div class="searchIdDriver position-fixed top-50 start-50 translate-middle bg-white border rounded-4 p-4 shadow-lg w-100 mx-3 flex-column" style="display: none; max-width: 500px; z-index: 1055;">
+
+  <!-- Cabeçalho -->
+    <div class="text-center mb-4">
+      <h5 class="fw-bold text-dark">
+       <i class="bi bi-search text-primary me-2"></i>Pesquise por Motorista
+     </h5>
+     <p class="text-muted mb-0 small">Filtre por código , situação ou status</p>
+   </div>
+
+  <!-- Campo Código -->
+  <div class="form-floating mb-3 position-relative">
+    <input type="text" name="codeDriver" id="codeDriver" class="form-control ps-5" placeholder="Código do cliente" maxlength="15" />
+    <label for="codeDriver"><i class="bi bi-hash me-1"></i> Código do Motorista</label>
+  </div>
+
+  <!-- Campo Status -->
+  <div class="form-floating mb-4 position-relative">
+    <select name="statusInDriver" id="statusInDriver" class="form-select ps-5">
+      <option value="" selected>Selecione...</option>
+      <option value="Disponivel">Disponível</option>
+      <option value="Indisponivel">Indisponivel</option>
+      <option value="Entrega destinada">Entrega Destinada</option>
+    </select>
+    <label for="statusInDriver"><i class="bi bi-ui-checks me-1"></i>Status</label>
+  </div>
+
+  <div class="form-floating mb-4 position-relative">
+    <select name="situationInDriver" id="situationInDriver" class="form-select ps-5">
+      <option value="" selected>Selecione...</option>
+      <option value="Interno">Interno</option>
+      <option value="Externo">Externo</option>
+    </select>
+    <label for="situationInDriver"><i class="bi bi-ui-checks me-1"></i>Situação</label>
+  </div>
+
+  <!-- Botões -->
+  <div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+    <button class="btn btn-primary w-100 w-sm-50 submitSearchDriver">
+      <i class="bi bi-search me-1"></i> Pesquisar
+    </button>
+    <button class="btn btn-light w-100 w-sm-50 outPageSearchDriver">
+      <i class="bi bi-arrow-left me-1"></i> Voltar
+    </button>
+  </div>
+</div>
   
 <div class="RegisterDriver container py-4 rounded-3 shadow-sm" style="display: none;">
   <form class="formRegisterDriver  rounded-4 p-4 ">
@@ -125,6 +180,11 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
         <option value="Interno">Interno</option>
         <option value="Externo">Externo</option>
       </select>
+    </div>
+
+    <div class="col-md-4">
+      <label for="motoPasw" class="form-label">Criar Senha</label>
+      <input type="text" name="motoPasw" id="motoPasw" class="form-control form-control-sm" placeholder="Cidade" maxlength="80" required />
     </div>
 
     <!-- Botões -->

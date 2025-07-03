@@ -278,7 +278,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function interationSystemLocation() {
-  const btnOutPageLocation = document.querySelector(".buttonExitLocation");
+  const btnOutPageLocation = document.getElementById("buttonExitLocation");
   if (btnOutPageLocation) {
     btnOutPageLocation.addEventListener("click", () => {
       const containerAppLocation = document.querySelector(
