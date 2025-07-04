@@ -19,10 +19,8 @@ export const autoRegister = {
         caaudtca,
       } = data;
 
-      const insert = `INSERT INTO cadauto (caaucode, caauplac, caauchss, caaurena, caaumaca,
-                                                caaumode, caaucor, caautico, caauloca, caaukmat,
-                                                caaustat, caaudtca) 
-                            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 , $12) RETURNING *`;
+      const insert = `INSERT INTO cadauto (caaucode, caauplac, caauchss, caaurena, caaumaca, caaumode, caaucor, caautico, caauloca, caaukmat, caaustat, caaudtca) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 , $12) RETURNING *`;
 
       const values = [
         caaucode,

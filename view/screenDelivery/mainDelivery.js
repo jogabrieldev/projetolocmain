@@ -1,391 +1,400 @@
-
-const socketUpdateTableDelivey = io(); 
-document.addEventListener('DOMContentLoaded' , ()=>{
-
-    const buttonLoadDelivery = document.querySelector('.delivery')
-    if(buttonLoadDelivery){
-       buttonLoadDelivery.addEventListener('click' , async ()=>{
-         
-        try {
-
-          const responseDelivery = await fetch('/delivery' , {
-            method:'GET'
-           })
-           if (!responseDelivery.ok) throw new Error(`Erro HTTP: ${responseDelivery.status}`);
-           const html = await responseDelivery.text();
-           const mainContent = document.querySelector('#mainContent');
-           if (mainContent) {
-             mainContent.innerHTML = html;
-             interationDelivey();
-             await getAllDelivery();
-              await getAllClients();
-             renderTableDelivery();
-             showDetails();
-             
-           }else{
-            console.error('#mainContent não encontrado no DOM');
-            return;
-           }
-        } catch (error) {
-            console.error('Erro no carregamento DELIVERY')
+const socketUpdateTableDelivey = io();
+document.addEventListener("DOMContentLoaded", () => {
+  const buttonLoadDelivery = document.querySelector(".delivery");
+  if (buttonLoadDelivery) {
+    buttonLoadDelivery.addEventListener("click", async () => {
+      try {
+        const responseDelivery = await fetch("/delivery", {
+          method: "GET",
+        });
+        if (!responseDelivery.ok)
+          throw new Error(`Erro HTTP: ${responseDelivery.status}`);
+        const html = await responseDelivery.text();
+        const mainContent = document.querySelector("#mainContent");
+        if (mainContent) {
+          mainContent.innerHTML = html;
+          interationDelivey();
+          await getAllDelivery();
+          await getAllClients();
+          renderTableDelivery();
+          showDetails();
+        } else {
+          console.error("#mainContent não encontrado no DOM");
+          return;
         }
-         
-        const informative = document.querySelector(".information");
-        informative.style.display = "block";
-        informative.textContent = "SEÇÃO ENTREGA ";
+      } catch (error) {
+        console.error("Erro no carregamento DELIVERY");
+      }
 
-        const deliveryFinish = document.querySelector('.deliveryFinish')
-        if(deliveryFinish){
-           deliveryFinish.classList.remove('hidden')
-           deliveryFinish.classList.add('flex')
-        }
-  
-        const containerAppLocation = document.querySelector(".containerAppLocation");
-        if(containerAppLocation){
-          containerAppLocation.classList.remove('flex')
-          containerAppLocation.classList.add('hidden')
-        }
-       
-  
-        const containerLogistica = document.querySelector(".containerLogistica");
-        if(containerLogistica){
-          containerLogistica.classList.remove('flex')
-          containerLogistica.classList.add('hidden')
-        }
-       
-       })
-    }
+      const informative = document.querySelector(".information");
+      informative.style.display = "block";
+      informative.textContent = "SEÇÃO ENTREGA ";
 
-    socketUpdateTableDelivey.on("updateRunTimeRegisterLinkGoodsLocation", async () => {
-  
-      await getAllDelivery(); 
-      renderTableDelivery();  
-  });
-})
+      const deliveryFinish = document.querySelector(".deliveryFinish");
+      if (deliveryFinish) {
+        deliveryFinish.classList.remove("hidden");
+        deliveryFinish.classList.add("flex");
+      }
 
-function interationDelivey(){
-    
- 
-  const outPageDelivery = document.querySelector('.outPageDelivey')
-  if(outPageDelivery){
-     outPageDelivery.addEventListener('click' , ()=>{
+      const containerAppLocation = document.querySelector(
+        ".containerAppLocation"
+      );
+      if (containerAppLocation) {
+        containerAppLocation.classList.remove("flex");
+        containerAppLocation.classList.add("hidden");
+      }
 
-        const mainDelivery  = document.querySelector('.deliveryFinish')
-        if(mainDelivery){
-          mainDelivery.classList.remove('flex')
-          mainDelivery.classList.add('hidden')
-        }
-     })
+      const containerLogistica = document.querySelector(".containerLogistica");
+      if (containerLogistica) {
+        containerLogistica.classList.remove("flex");
+        containerLogistica.classList.add("hidden");
+      }
+    });
   }
 
-  const detalhes = document.querySelector('.detalhes')
-  if(detalhes){
-    detalhes.addEventListener('click' , ()=>{
-      const containerDetalhes = document.querySelector('.containerDelivery')
-      if(containerDetalhes){
-         containerDetalhes.classList.remove('hidden')
-         containerDetalhes.classList.add('flex')
+  socketUpdateTableDelivey.on(
+    "updateRunTimeRegisterLinkGoodsLocation",
+    async () => {
+      await getAllDelivery();
+      renderTableDelivery();
+    }
+  );
+});
+
+function interationDelivey() {
+  const outPageDelivery = document.getElementById("outPageDelivey");
+  if (outPageDelivery) {
+    outPageDelivery.addEventListener("click", () => {
+      const mainDelivery = document.querySelector(".deliveryFinish");
+      if (mainDelivery) {
+        mainDelivery.classList.remove("flex");
+        mainDelivery.classList.add("hidden");
       }
-      
-      const tableDelivery = document.querySelector('.containerTableDelivery')
-      if(tableDelivery){
-        tableDelivery.classList.remove('flex')
-        tableDelivery.classList.add('hidden')
+    });
+  }
+
+  const detalhes = document.querySelector(".detalhes");
+  if (detalhes) {
+    detalhes.addEventListener("click", () => {
+      const containerDetalhes = document.querySelector(".containerDelivery");
+      if (containerDetalhes) {
+        containerDetalhes.classList.remove("hidden");
+        containerDetalhes.classList.add("flex");
       }
 
-      const btnOut = document.querySelector('.outPageDelivey')
-      if(btnOut){
-        btnOut.classList.remove('flex')
-        btnOut.classList.add('hidden')
+      const tableDelivery = document.querySelector(".containerTableDelivery");
+      if (tableDelivery) {
+        tableDelivery.classList.remove("flex");
+        tableDelivery.classList.add("hidden");
       }
-    })
-    
+
+      const btnOut = document.getElementById("outPageDelivey");
+      if (btnOut) {
+        btnOut.classList.remove("flex");
+        btnOut.classList.add("hidden");
+      }
+    });
   }
 }
-
 
 let deliveryData = [];
 let clientData = [];
 
 // Função para buscar locações
 async function getAllDelivery() {
-    try {
-        const token = localStorage.getItem('token')
-        if(!token){
-           return
-        }
-        const response = await fetch('/api/getdelivery' , {
-          method:'GET',
-          headers:{"Content-type": "aplication/json",
-               Authorization:`Bearer ${token}`
-          }
-
-        });
-         deliveryData = await response.json();
-
-        console.log('entrega' , deliveryData)
-        if (!Array.isArray(deliveryData)) {
-     console.error("deliveryData não está definido corretamente:", deliveryData);
-   return;
-}
-
-
-        await getAllClients(); // Buscar clientes antes de preencher a tabela
-
-    } catch (error) {
-        console.error("Erro ao buscar as locações:", error);
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      return;
     }
+    const response = await fetch("/api/getdelivery", {
+      method: "GET",
+      headers: {
+        "Content-type": "aplication/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    deliveryData = await response.json();
+
+    console.log("entrega", deliveryData);
+    if (!Array.isArray(deliveryData)) {
+      console.error(
+        "deliveryData não está definido corretamente:",
+        deliveryData
+      );
+      return;
+    }
+
+    await getAllClients(); // Buscar clientes antes de preencher a tabela
+  } catch (error) {
+    console.error("Erro ao buscar as locações:", error);
+  }
 }
 
 // Função para buscar clientes
 async function getAllClients() {
+  const token = localStorage.getItem("token");
 
-      const token = localStorage.getItem('token'); 
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+      text: "Sessão expirada. Faça login novamente.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
 
-      if (!token || isTokenExpired(token)) {
-        Toastify({
-            text: "Sessão expirada. Faça login novamente.",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "red",
-        }).showToast();
-    
-        localStorage.removeItem("token"); 
-        setTimeout(() => {
-            window.location.href = "/index.html"; 
-        }, 2000); 
-        return;
-    }
-    try {
-        const response = await fetch('/api/listclient' , {
-            method:"GET",
-            headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${token}`
-              }
-        });
-        clientData = await response.json();
-           
-        renderTableDelivery(); 
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      window.location.href = "/index.html";
+    }, 2000);
+    return;
+  }
+  try {
+    const response = await fetch("/api/listclient", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    clientData = await response.json();
 
-    } catch (error) {
-        console.error("Erro ao buscar os clientes:", error);
-    }
+    renderTableDelivery();
+  } catch (error) {
+    console.error("Erro ao buscar os clientes:", error);
+  }
 }
 
 // Função para renderizar a tabela com dados combinados
 function renderTableDelivery() {
-    const tbody = document.querySelector("#tableDelivery tbody");
-    const thead = document.querySelector("#tableDelivery thead");
-    const table = document.querySelector("#tableDelivery");
-    const messageContainer = document.querySelector("#noDeliveriesMessage");
+  const tbody = document.querySelector("#tableDelivery tbody");
+  const thead = document.querySelector("#tableDelivery thead");
+  const table = document.querySelector("#tableDelivery");
+  const messageContainer = document.querySelector("#noDeliveriesMessage");
 
-    if (!tbody || !thead || !table) {
-      console.warn("Tabela de entregas ainda não está no DOM.");
-      return;
+  if (!tbody || !thead || !table) {
+    console.warn("Tabela de entregas ainda não está no DOM.");
+    return;
   }
 
-    tbody.innerHTML = ""; 
+  tbody.innerHTML = "";
 
-    if (deliveryData.length > 0 && clientData.length > 0) {
-        thead.style.display = "table-header-group"; 
-        table.style.display = "table"; 
+  if (deliveryData.length > 0 && clientData.length > 0) {
+    thead.style.display = "table-header-group";
+    table.style.display = "table";
 
-        if (messageContainer) {
-            messageContainer.remove();
-        }
+    if (messageContainer) {
+      messageContainer.remove();
+    }
 
-        deliveryData.forEach(item => {
-            const cliente = clientData.find(c => c.cliecode === item.lofiidcl);
-            const tr = document.createElement("tr");
+    deliveryData.forEach((item) => {
+      const cliente = clientData.find((c) => c.cliecode === item.lofiidcl);
+      const tr = document.createElement("tr");
 
-            tr.innerHTML = `
+      tr.innerHTML = `
                 <td>${item.loficode}</td>
                 <td>${item.lofiidbe}</td>
                 <td>${cliente ? cliente.clienome : "Desconhecido"}</td>
                 <td>${item.lofiidlo}</td>
                 <td>${new Date(item.lofidtlo).toLocaleString()}</td>
-                <td><button class="detalhes" onclick="showDetails(${item.loficode})">Detalhes</button></td>
+                <td><button class="detalhes" onclick="showDetails(${
+                  item.loficode
+                })">Detalhes</button></td>
             `;
 
-            tbody.appendChild(tr);
-        });
+      tbody.appendChild(tr);
+    });
 
-        // Adiciona evento para esconder a tabela ao clicar em "Detalhes"
-        document.querySelectorAll(".detalhes").forEach(button => {
-            button.addEventListener("click", function () {
-                table.style.display = "none";
-            });
-        });
+    // Adiciona evento para esconder a tabela ao clicar em "Detalhes"
+    document.querySelectorAll(".detalhes").forEach((button) => {
+      button.addEventListener("click", function () {
+        table.style.display = "none";
+      });
+    });
+  } else {
+    // Esconde o thead e a tabela
+    thead.style.display = "none";
+    table.style.display = "none";
 
-    } else {
-        // Esconde o thead e a tabela
-        thead.style.display = 'none'
-        table.style.display = 'none'
-       
-
-        if (!document.querySelector("#noDeliveriesMessage")) {
-            const message = document.createElement("p");
-            message.id = "noDeliveriesMessage";
-            message.textContent = "Nenhuma entrega para ser feita.";
-            message.style.textAlign = "center";
-            message.style.fontSize = "18px";
-            message.style.fontWeight = "bold";
-            message.style.color = "#666";
-            table.parentNode.appendChild(message); // Adiciona após a tabela
-        }
+    if (!document.querySelector("#noDeliveriesMessage")) {
+      const message = document.createElement("p");
+      message.id = "noDeliveriesMessage";
+      message.textContent = "Nenhuma entrega para ser feita.";
+      message.style.textAlign = "center";
+      message.style.fontSize = "18px";
+      message.style.fontWeight = "bold";
+      message.style.color = "#666";
+      table.parentNode.appendChild(message); // Adiciona após a tabela
     }
+  }
 }
 
-let motoris = []
- async function showDetails(codigo) {
+let motoris = [];
+async function showDetails(codigo) {
+  const token = localStorage.getItem("token");
 
-    const token = localStorage.getItem('token'); 
-
-    if (!token || isTokenExpired(token)) {
-      Toastify({
-          text: "Sessão expirada. Faça login novamente.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-      }).showToast();
-  
-      localStorage.removeItem("token"); 
-      setTimeout(() => {
-          window.location.href = "/index.html"; 
-      }, 2000); 
-      return;
+  if (!token || isTokenExpired(token)) {
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      window.location.href = "/index.html";
+    }, 2000);
+    return;
   }
 
-      try {
-        const response  = await fetch ("/api/listingdriver" , {
-            method: "GET",
-            headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${token}`
-              }
-      }) 
+  try {
+    const response = await fetch("/api/listingdriver", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-       if(!response){throw error('erro ao buscar motorista para entrega') }
-         motoris = await response.json()
+    if (!response) {
+      throw error("erro ao buscar motorista para entrega");
+    }
+    motoris = await response.json();
 
-         const item = deliveryData.find(d => d.loficode === codigo);
-         if (!item) return;
+    const item = deliveryData.find((d) => d.loficode === codigo);
+    if (!item) return;
 
-         console.log('item')
+    console.log("item");
 
-         const cliente = clientData.find(c => c.cliecode === item.lofiidcl);
-   
-         const motorista = motoris.find(m => m.motocode === item.lofiidmt); 
+    const cliente = clientData.find((c) => c.cliecode === item.lofiidcl);
 
-         const dateD = new Date(item.lofidtdv); 
-         const dataFormat = dateD.toLocaleDateString('pt-BR');
+    const motorista = motoris.find((m) => m.motocode === item.lofiidmt);
 
-         const container = document.querySelector(".containerDelivery");
-   
-         // Criando os elementos
-         const wrapper = document.createElement("div");
-         wrapper.style.display = "flex";
-         wrapper.style.display = 'wrap'
-         wrapper.style.gap = "20px";
-         wrapper.style.height = "auto"
+    const dateD = new Date(item.lofidtdv);
+    const dataFormat = dateD.toLocaleDateString("pt-BR");
 
-         const formatDoc = formatarCampo("documento"  , cliente.cliecpf || cliente.cliecnpj)
-         const formatPhone = formatarCampo('telefone' , cliente.cliecelu)
-         
-         // Div de Detalhes da Locação
-         const locacaoDiv = document.createElement("div");
-         locacaoDiv.style.flex = "1";
-         locacaoDiv.style.padding = "10px";
-         locacaoDiv.style.height = '85%'
-         locacaoDiv.style.border = "1px solid #ddd";
-         locacaoDiv.style.borderRadius = "5px";
-         locacaoDiv.style.marginBottomn = '20%';
-         locacaoDiv.innerHTML = `
-             <h3>Detalhes da Locação</h3>
-             <p><strong>ID do Bem:</strong> ${item.lofiidbe}</p>
-             <p><strong>ID locação:</strong> ${item.lofiidlo}</p>
-             <p><strong>Motorista:</strong> ${motorista ? motorista.motonome : "Nenhum"}</p>
-             <p><strong>Data e Hora da locação:</strong> ${new Date(item.lofidtlo).toLocaleString()}</p>
-             <p><strong>Data de devolução:</strong> ${dataFormat}</p>
-             <p><strong>Forma de Pagamento:</strong> ${item.lofipgmt}</p>
-         `;
-         
-         // Div de Detalhes do Cliente
-         const clienteDiv = document.createElement("div");
-         clienteDiv.style.flex = "1";
-         clienteDiv.style.padding = "10px";
-         clienteDiv.style.height = '85%'
-         clienteDiv.style.border = "1px solid #ddd";
-         clienteDiv.style.borderRadius = "5px";
-         clienteDiv.innerHTML = cliente
-             ? `
-             <h3>Detalhes do Cliente</h3>
-             <p><strong>Nome:</strong> ${cliente.clienome}</p>
-             <p><strong>CPF:</strong> ${formatDoc || ''} </p>
-             <p><strong>Celular:</strong> ${formatPhone || ""}</p>
-             <p><strong>Região:</strong> ${item.lofibair ||cliente.cliecity}</p>
-             <p><strong>Rua:</strong> ${item.lofirua || cliente.clierua}</p>
-             <p><strong>CEP:</strong> ${item.loficep || cliente.cliecep}</p>
-             <p><strong>Referencia:</strong> ${item.lofirefe || 'Não tem referencia '}</p>
-             <p><strong>Cidade:</strong> ${item.loficida || cliente.clieestd}</p>
-             `
-             : `<p><strong>Cliente não encontrado.</strong></p>`;
-          
-            const containerBtnpage = document.createElement("div");
-             containerBtnpage.style.display = "flex";
-             containerBtnpage.style.padding = "8px";
-             containerBtnpage.style.gap = '20px';
-             containerBtnpage.style.justifyContent = 'start'
+    const container = document.querySelector(".containerDelivery");
+    container.innerHTML = "";
+    // Criando os elementos
+    const wrapper = document.createElement("div");
+    wrapper.className = "row g-4";
 
-         const voltarBtn = document.createElement("button");
-         voltarBtn.textContent = "Voltar";
-         voltarBtn.style.marginTop = "10px";
-         voltarBtn.classList.add('btnOutDelivery')
+    const formatDoc = formatarCampo(
+      "documento",
+      cliente.cliecpf || cliente.cliecnpj
+    );
+    const formatPhone = formatarCampo("telefone", cliente.cliecelu);
 
-         voltarBtn.addEventListener('click', ()=>{
-              const containerDelivery = document.querySelector('.containerDelivery');
-              containerDelivery.style.display = 'none'
+    // Div de Detalhes da Locação
+    const locacaoDiv = document.createElement("div");
+    locacaoDiv.className = "col-md-6";
+    locacaoDiv.innerHTML = `
+    <div class="card shadow-sm h-100">
+     <div class="card-header bg-primary text-white d-flex align-items-center gap-2">
+       <i class="bi bi-truck"></i>
+      <h5 class="mb-0">Detalhes da Locação</h5>
+    </div>
+    <div class="card-body">
+      <p><strong><i class="bi bi-box-seam"></i> ID do Bem:</strong> ${
+        item.lofiidbe
+      }</p>
+      <p><strong><i class="bi bi-hash"></i> ID Locação:</strong> ${
+        item.lofiidlo
+      }</p>
+      <p><strong><i class="bi bi-person"></i> Motorista:</strong> ${
+        motorista?.motonome || "Nenhum"
+      }</p>
+      <p><strong><i class="bi bi-calendar-event"></i> Data/Hora Locação:</strong> ${new Date(
+        item.lofidtlo
+      ).toLocaleString()}</p>
+      <p><strong><i class="bi bi-calendar-check"></i> Devolução:</strong> ${dataFormat}</p>
+      <p><strong><i class="bi bi-cash-stack"></i> Pagamento:</strong> ${
+        item.lofipgmt
+      }</p>
+    </div>
+  </div>
+`;
 
-             renderTableDelivery()
-             
-        })
+    // Detalhes do Cliente
+    const clienteDiv = document.createElement("div");
+    clienteDiv.className = "col-md-6";
+    clienteDiv.innerHTML = `
+  <div class="card shadow-sm h-100">
+    <div class="card-header bg-secondary text-white d-flex align-items-center gap-2">
+      <i class="bi bi-person-vcard"></i>
+      <h5 class="mb-0">Detalhes do Cliente</h5>
+    </div>
+    <div class="card-body">
+      <p><strong><i class="bi bi-person-circle"></i> Nome:</strong> ${
+        cliente.clienome
+      }</p>
+      <p><strong><i class="bi bi-credit-card-2-front"></i> CPF/CNPJ:</strong> ${
+        formatDoc || ""
+      }</p>
+      <p><strong><i class="bi bi-phone"></i> Celular:</strong> ${
+        formatPhone || ""
+      }</p>
+      <p><strong><i class="bi bi-geo-alt"></i> Região:</strong> ${
+        item.lofibair || cliente.cliecity
+      }</p>
+      <p><strong><i class="bi bi-signpost-2"></i> Rua:</strong> ${
+        item.lofirua || cliente.clierua
+      }</p>
+      <p><strong><i class="bi bi-mailbox"></i> CEP:</strong> ${
+        item.loficep || cliente.cliecep
+      }</p>
+      <p><strong><i class="bi bi-info-circle"></i> Referência:</strong> ${
+        item.lofirefe || "Não tem referência"
+      }</p>
+      <p><strong><i class="bi bi-buildings"></i> Cidade:</strong> ${
+        item.loficida || cliente.clieestd
+      }</p>
+    </div>
+  </div>
+`;
+    const containerBtnpage = document.createElement("div");
+    containerBtnpage.style.display = "flex";
+    containerBtnpage.style.padding = "8px";
+    containerBtnpage.style.gap = "20px";
+    containerBtnpage.style.justifyContent = "start";
 
-         const imprimir = document.createElement("button");
-         imprimir.textContent = "Imprimir";
-         imprimir.style.marginTop = "10px";
-         imprimir.classList.add('btnImprimirDelivery')
+    const voltarBtn = document.createElement("button");
+    voltarBtn.innerHTML = `<i class="bi bi-arrow-left-circle"></i> Voltar`;
+    voltarBtn.className =
+      "btn btn-outline-secondary d-flex align-items-center gap-1 mt-2 text-white";
+    voltarBtn.classList.add("btnOutDelivery");
 
+    voltarBtn.addEventListener("click", () => {
+      const containerDelivery = document.querySelector(".containerDelivery");
+      containerDelivery.style.display = "none";
 
-         imprimir.addEventListener('click', ()=>{
-            printDelivery(wrapper);
-        })
+      renderTableDelivery();
+    });
 
-         // Adicionando os elementos ao wrapper e container
-         containerBtnpage.appendChild(voltarBtn)
-         containerBtnpage.appendChild(imprimir)
-         wrapper.appendChild(locacaoDiv);
-         wrapper.appendChild(clienteDiv);
-         container.innerHTML = ""; 
-         container.appendChild(wrapper);
-         container.appendChild(containerBtnpage)
-         container.style.display = "block";
-       
-      } catch (error) {
-          console.error('ERRO A MOSTRAR A TELA DE DETALHES DE ENTREGA:', error)
-      }
-      
-  };
-   
-  // Pagina para imprimir a OS
-  function printDelivery(element) {
-    const printWindow = window.open('', '', 'width=800,height=600');
-  
-    printWindow.document.write(`
+    const imprimir = document.createElement("button");
+    imprimir.innerHTML = `<i class="bi bi-printer"></i> Imprimir`;
+    imprimir.className = "btn btn-success d-flex align-items-center gap-1 mt-2";
+    imprimir.classList.add("btnImprimirDelivery");
+
+    imprimir.addEventListener("click", () => {
+      printDelivery(wrapper);
+    });
+
+    // Adicionando os elementos ao wrapper e container
+    containerBtnpage.appendChild(voltarBtn);
+    containerBtnpage.appendChild(imprimir);
+    wrapper.appendChild(locacaoDiv);
+    wrapper.appendChild(clienteDiv);
+    container.innerHTML = "";
+    container.appendChild(wrapper);
+    container.appendChild(containerBtnpage);
+    container.style.display = "block";
+  } catch (error) {
+    console.error("ERRO A MOSTRAR A TELA DE DETALHES DE ENTREGA:", error);
+  }
+}
+
+// Pagina para imprimir a OS
+function printDelivery(element) {
+  const printWindow = window.open("", "", "width=800,height=600");
+
+  printWindow.document.write(`
       <html>
       <head>
         <title>Detalhes para entrega</title>
@@ -475,23 +484,19 @@ let motoris = []
       </body>
       </html>
     `);
-  
-    printWindow.document.close();
-  }
 
+  printWindow.document.close();
+}
 
 function formatContentForPrint(innerHTML) {
-    return innerHTML
-      .replace(/delivery-section/g, 'section')
-      .replace(/delivery-grid/g, 'grid');
-  }
+  return innerHTML
+    .replace(/delivery-section/g, "section")
+    .replace(/delivery-grid/g, "grid");
+}
 
-  const btnDevolution = document.querySelector('.DevolutionDay');
-  if (btnDevolution) {
-    btnDevolution.addEventListener('click', () => {
-      getdeliveryForDevolution();
-    });
-  }
-  
-  
-  
+const btnDevolution = document.querySelector(".DevolutionDay");
+if (btnDevolution) {
+  btnDevolution.addEventListener("click", () => {
+    getdeliveryForDevolution();
+  });
+}

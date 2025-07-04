@@ -1,5 +1,5 @@
 // const dataBaseM = require('../database/dataBaseSgt')
-import { client as userDbDriver} from "../database/userDataBase.js";
+import { client as userDbDriver } from "../database/userDataBase.js";
 
 export const crudRegisterDriver = {
   registerDriver: async (data) => {
@@ -22,7 +22,7 @@ export const crudRegisterDriver = {
         motoMail,
         motoStat,
         motoSitu,
-        motoPasw
+        motoPasw,
       } = data;
 
       const insert = `INSERT INTO cadmoto( motocode, motonome, motodtnc, motocpf, motodtch, motoctch , motodtvc, motorest, motoorem, motocelu, motocep, motorua, motocity, motoestd, motomail,motostat,motositu, motopasw  ) VALUES( $1 , $2 , $3 , $4 , $5 ,$6 , $7, $8, $9, $10, $11, $12, $13, $14, $15, $16 , $17 , $18) RETURNING *`;
@@ -45,14 +45,13 @@ export const crudRegisterDriver = {
         motoMail,
         motoStat,
         motoSitu,
-        motoPasw
+        motoPasw,
       ];
 
       const result = await userDbDriver.query(insert, values);
       return result.rows[0];
     } catch (error) {
-
-      if (error.code === "23505") { 
+      if (error.code === "23505") {
         throw new Error("Código do motorista ja cadastrado. Tente outro.");
       }
       console.error("Erro ao registrar motorista");
@@ -60,80 +59,75 @@ export const crudRegisterDriver = {
     }
   },
 
-   getAllDriverIdCpf: async()=>{
+  getAllDriverIdCpf: async () => {
     try {
       const query = "SELECT motocpf FROM cadmoto";
-
       const result = await userDbDriver.query(query);
-      if(result){
-        return result.rows;
-      }
       
+      return result.rows;
     } catch (error) {
       console.error("Erro em listar ID Fornecedor:", error.message);
       throw error;
     }
   },
 
-  getAllDriverId: async()=>{
+  getAllDriverId: async () => {
     try {
       const query = "SELECT motocode FROM cadmoto";
 
       const result = await userDbDriver.query(query);
-      if(result){
+      if (result) {
         return result.rows;
       }
-      
     } catch (error) {
       console.error("Erro em listar ID dos motoristas:", error.message);
       throw error;
     }
   },
 
-  async getdriverById(motocode, status , situacao) {
-  try {
-    let query = "SELECT * FROM cadmoto WHERE 1=1";
-    const values = [];
+  async getdriverById(motocode, status, situacao) {
+    try {
+      let query = "SELECT * FROM cadmoto WHERE 1=1";
+      const values = [];
 
-    if (motocode) {
-      values.push(motocode.trim());
-      query += ` AND motocode = $${values.length}`;
-    }
+      if (motocode) {
+        values.push(motocode.trim());
+        query += ` AND motocode = $${values.length}`;
+      }
 
-    if (status) {
-      values.push(status.trim());
-      query += ` AND motostat ILIKE $${values.length}`; 
-    }
-     if (situacao) {
-      values.push(situacao.trim());
-      query += ` AND motositu ILIKE $${values.length}`; 
-    }
+      if (status) {
+        values.push(status.trim());
+        query += ` AND motostat ILIKE $${values.length}`;
+      }
+      if (situacao) {
+        values.push(situacao.trim());
+        query += ` AND motositu ILIKE $${values.length}`;
+      }
 
-    const result = await userDbDriver.query(query, values);
-    return result.rows; // retorna array, mesmo que só 1 bem
-  } catch (error) {
-    console.error("Erro ao buscar motorista por filtros:", error.message);
-    throw error;
-  }
-},
+      const result = await userDbDriver.query(query, values);
+      return result.rows; // retorna array, mesmo que só 1 bem
+    } catch (error) {
+      console.error("Erro ao buscar motorista por filtros:", error.message);
+      throw error;
+    }
+  },
 
   getAllDriverForDelivery: async (id) => {
-  try {
-    const query = "SELECT * FROM cadmoto WHERE motocode = $1"; 
+    try {
+      const query = "SELECT * FROM cadmoto WHERE motocode = $1";
 
-    const result = await userDbDriver.query(query, [id]);
+      const result = await userDbDriver.query(query, [id]);
 
-    if (result && result.rows.length > 0) {
-      return result.rows[0]; // retorna um único motorista
+      if (result && result.rows.length > 0) {
+        return result.rows[0]; // retorna um único motorista
+      }
+
+      return null; // caso não encontre
+    } catch (error) {
+      console.error("Erro em listar motorista por ID:", error.message);
+      throw error;
     }
-
-    return null; // caso não encontre
-  } catch (error) {
-    console.error("Erro em listar motorista por ID:", error.message);
-    throw error;
-  }
-},
-
+  },
 
   listingDriver: async () => {
     try {
@@ -159,14 +153,17 @@ export const crudRegisterDriver = {
     }
   },
 
-  verificarEntregaComMotorista:async (id)=>{
+  verificarEntregaComMotorista: async (id) => {
     try {
       const checkQuery = "SELECT COUNT(*) FROM locafim WHERE lofiidmt = $1";
       const checkResult = await userDbDriver.query(checkQuery, [id]);
 
       return parseInt(checkResult.rows[0].count) > 0;
     } catch (error) {
-      console.error("Erro ao verificar dependências do Motorista com entrega:", error);
+      console.error(
+        "Erro ao verificar dependências do Motorista com entrega:",
+        error
+      );
       throw error;
     }
   },
@@ -239,5 +236,4 @@ export const crudRegisterDriver = {
       throw error;
     }
   },
-
 };

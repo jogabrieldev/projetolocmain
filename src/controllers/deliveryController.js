@@ -1,4 +1,4 @@
-import { mecanismDelivey } from "../model/deliveryModel.js";
+import { mecanismDelivey } from "../model/modelsDelivery.js";
 
 
 const controllerDelivery = {

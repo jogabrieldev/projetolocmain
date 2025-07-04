@@ -1,6 +1,6 @@
 
-import {modelsLocationAuto} from '../model/dataLocationAutomovel.js'
-import { LocacaoModel } from "../model/location.js";
+import {modelsLocationAuto} from '../model/modelsLocationVehicle.js'
+import { LocacaoModel } from "../model/modelsLocationGoods.js";
 
 export const controllerLocationVehicle = {
 

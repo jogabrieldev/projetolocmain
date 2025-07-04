@@ -1,98 +1,98 @@
 
-$(document).ready(function () {
+// $(document).ready(function () {
   
-  // $("#cpf").mask("000.000.000-00")
+//   // $("#cpf").mask("000.000.000-00")
     
-  $("#clieCelu").mask("(00) 00000-0000");
+//   $("#clieCelu").mask("(00) 00000-0000");
 
-  $("#clieCep").mask("00000-000");
+//   $("#clieCep").mask("00000-000");
 
-  $("#editCliecpf").mask("000.000.000-00")
+//   $("#editCliecpf").mask("000.000.000-00")
     
-  $("#editClieCelu").mask("(00) 00000-0000");
+//   $("#editClieCelu").mask("(00) 00000-0000");
 
-  $("#editClieCep").mask("00000-000");
+//   $("#editClieCep").mask("00000-000");
 
-  $("#clieCepLoc").mask("00000-000");
+//   $("#clieCepLoc").mask("00000-000");
 
-  $("#clieCeluLoc").mask("(00) 00000-0000");
+//   $("#clieCeluLoc").mask("(00) 00000-0000");
 
-  $("#cpfClientLoc").mask("000.000.000-00")
+//   $("#cpfClientLoc").mask("000.000.000-00")
   
-});
+// });
 
-$(document).ready(function () {
+// $(document).ready(function () {
 
    
-    $("#fornCnpj").mask('00.000.000/0000-00')
+//     $("#fornCnpj").mask('00.000.000/0000-00')
    
-    $("#fornCelu").mask("(00) 00000-0000");
+//     $("#fornCelu").mask("(00) 00000-0000");
   
-    $("#fornCep").mask("00000-000");
+//     $("#fornCep").mask("00000-000");
 
-    $("#editFornCnpj").mask('00.000.000/0000-00')
+//     $("#editFornCnpj").mask('00.000.000/0000-00')
    
-    $("#editFornCelu").mask("(00) 00000-0000");
+//     $("#editFornCelu").mask("(00) 00000-0000");
   
-    $("#editFornCep").mask("00000-000");
+//     $("#editFornCep").mask("00000-000");
   
   
-});
+// });
 
-$(document).ready(function () {
+// $(document).ready(function () {
 
- $("#clemcnpj").mask('00.000.000/0000-00')
+//  $("#clemcnpj").mask('00.000.000/0000-00')
    
-  $("#clemcelu").mask("(00)00000-0000");
+//   $("#clemcelu").mask("(00)00000-0000");
   
-$("#clemcep").mask("00000-000");
+// $("#clemcep").mask("00000-000");
 
-});
+// });
 
 
-$(document).ready(function () {
+// $(document).ready(function () {
 
-    $("#prodValor").mask('R$ 000.000.000,00',{ reverse: true,  } )
+//     $("#prodValor").mask('R$ 000.000.000,00',{ reverse: true,  } )
    
-    $("#prodPeli").mask('R$ 000.000.000,00',{ reverse: true,  } );
+//     $("#prodPeli").mask('R$ 000.000.000,00',{ reverse: true,  } );
   
-    $("#prodPebr").mask('R$ 000.000.000,00', { reverse: true,  });
+//     $("#prodPebr").mask('R$ 000.000.000,00', { reverse: true,  });
 
-    $("#editProdValor").mask('R$ 000.000.000,00',{ reverse: true,  } )
+//     $("#editProdValor").mask('R$ 000.000.000,00',{ reverse: true,  } )
    
-    $("#editProdPeli").mask('R$ 000.000.000,00',{ reverse: true,  } );
+//     $("#editProdPeli").mask('R$ 000.000.000,00',{ reverse: true,  } );
   
-    $("#editProdPebr").mask('R$ 000.000.000,00', { reverse: true,  });
+//     $("#editProdPebr").mask('R$ 000.000.000,00', { reverse: true,  });
   
-});
+// });
 
-$(document).ready(function () {
+// $(document).ready(function () {
 
-    $("#valorCpEdit").mask('R$ 000.000.000,00',{ reverse: true,  } )
+//     $("#valorCpEdit").mask('R$ 000.000.000,00',{ reverse: true,  } )
    
-    $("#valorAlugEdit").mask('R$ 000.000.000,00',{ reverse: true,  } );
+//     $("#valorAlugEdit").mask('R$ 000.000.000,00',{ reverse: true,  } );
 
-    $("#valorCpMain").mask('R$ 000.000.000,00',{ reverse: true,  } )
+//     $("#valorCpMain").mask('R$ 000.000.000,00',{ reverse: true,  } )
    
-    $("#valorAlugMain").mask('R$ 000.000.000,00',{ reverse: true,  } );
+//     $("#valorAlugMain").mask('R$ 000.000.000,00',{ reverse: true,  } );
   
-});
+// });
 
-$(document).ready(function () {
+// $(document).ready(function () {
   
-    $("#motoCpf").mask("000.000.000-00");
+//     $("#motoCpf").mask("000.000.000-00");
       
-    $("#motoCelu").mask("(00) 00000-0000");
+//     $("#motoCelu").mask("(00) 00000-0000");
   
-    $("#motoCep").mask("00000-000");
+//     $("#motoCep").mask("00000-000");
 
-    $("#editMotoCpf").mask("000.000.000-00")
+//     $("#editMotoCpf").mask("000.000.000-00")
       
-    $("#editMotoCelu").mask("(00) 00000-0000");
+//     $("#editMotoCelu").mask("(00) 00000-0000");
   
-    $("#editMotoCep").mask("00000-000");
+//     $("#editMotoCep").mask("00000-000");
   
-  });
+//   });
 
 
   

@@ -1,5 +1,5 @@
 
-import { clientRegister } from "../model/dataClient.js";
+import { clientRegister } from "../model/modelsClient.js";
 import fetch from "node-fetch";
 
 export const movementClient = {
@@ -135,7 +135,7 @@ export const movementClient = {
     }
   },
 
-   async getClientByCode(req, res) {
+ async getClientByCode(req, res) {
     const { cliecode , valueCpf , valueCnpj } = req.query;
     try {
       if (!cliecode && !valueCpf && !valueCnpj ) {
@@ -153,7 +153,7 @@ export const movementClient = {
       return res.status(400).json({ message: "O CNPJ do cliente está em formato inválido." });
       }
 
-      const cliente = await clientRegister.getClientById(cliecode , cpf , cnpj);
+      const cliente = await clientRegister.getClientByFilter(cliecode , cpf , cnpj);
 
       if (!cliente || cliente.length === 0) {
         return res.status(404).json({ message: "Cliente não encontrado valide os dados de pesquisa." });
@@ -166,6 +166,26 @@ export const movementClient = {
     }
   },
 
+  getClientId: async (req, res) => {
+    const { cliecode } = req.params;
+
+    if(!cliecode){
+       return res.status(400).json({message: 'E preciso passar o parametro para a busca'})
+    }
+
+    try {
+      const cliente = await clientRegister.getClientForId(cliecode);
+
+      if (!cliente || cliente.length === 0) {
+        return res.status(404).json({ message: "Cliente não encontrado verifique a credencial." });
+      }
+
+      res.status(200).json(cliente);
+    } catch (error) {
+      console.error("Erro ao buscar cliente:", error.message);
+      res.status(500).json({ message: "Erro interno ao buscar cliente." });
+    }
+  },
 
   async listingOfClient(req, res) {
     try {
@@ -177,7 +197,7 @@ export const movementClient = {
       }
       res.status(200).json(client);
     } catch (error) {
-      console.error("erro no controller", error.message);
+      console.error("erro no controller para listar o cliente", error.message);
       res.status(500).json({
         success: false,
         message: "erro interno no server",
@@ -218,22 +238,21 @@ export const movementClient = {
     const clientId = req.params.id;
     const updateClient = req.body;
 
+    if(!clientId || !updateClient){
+       return res.status(400).json({message: 'Falta informações para atualização do cliente'})
+    }
+
     Object.keys(updateClient).forEach((key) => {
       if (updateClient[key] === "") {
         updateClient[key] = null;
       }
     });
 
-    if (!clientId) {
-      return res.status(400).json({ message: "ID client não fornecido" });
+    const clientExists = await clientRegister.getClientByFilter(clientId);
+      if (!clientExists) {
+       return res.status(400).json({ message: "Código do cliente é inválido." });
     }
 
-    const idClient = await clientRegister.getAllClientId();
-    const codeValid = idClient.map((item) => item.cliecode);
-
-    if (!codeValid.includes(clientId)) {
-      return res.status(400).json({ message: "Código do client e inválido." });
-    }
 
     const { cliemail} = updateClient;
 

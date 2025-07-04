@@ -376,7 +376,7 @@ async function fetchListFabricante() {
         th.textContent = coluna;
 
         if (["Selecionar", "Código"].includes(coluna)) {
-          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+         th.classList.add("text-center", "px-2", "py-1", "align-middle", "text-break");
         } else {
           th.classList.add("px-3", "py-2", "align-middle");
         }
@@ -423,7 +423,7 @@ async function fetchListFabricante() {
 
           const coluna = colunas[index + 1];
           if (["Código"].includes(coluna)) {
-            td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
+            td.classList.add("text-center", "px-2", "py-1", "align-middle", "text-break");
           } else {
             td.classList.add("px-3", "py-2");
           }

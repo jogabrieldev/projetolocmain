@@ -26,10 +26,8 @@ const formatDate = (isoDate) => {
 };
 
 function dateAtualInFieldAndHours(date , hours){
-  
-   const dtCadInput = document.getElementById(date);
-   
-  
+
+  const dtCadInput = document.getElementById(date);
   const hrCadInput = document.getElementById(hours); 
 
   const hoje = new Date();
@@ -298,8 +296,6 @@ if (buttonOutGoods) {
     if (!$("#formRegisterBens").valid()) {
       return;
     }
-
-    const time = new Date()
 
     const formData = {
       code: document.querySelector("#code").value.trim(),

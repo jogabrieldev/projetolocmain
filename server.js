@@ -6,7 +6,7 @@ import { Server } from "socket.io";
 import http from "http";
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import { LocacaoModel } from './src/model/location.js';
+import { LocacaoModel } from "./src/model/modelsLocationGoods.js";
 
 dotenv.config();
 

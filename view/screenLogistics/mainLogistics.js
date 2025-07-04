@@ -175,117 +175,116 @@ async function locationPendente() {
     );
 
     if (filterStatusPendente.length > 0) {
-      const table = document.createElement("table");
-      table.id = "tabelaLocacoesPendentes"
-      table.className = "table table-sm table-bordered table-hover table-striped text-center mb-0 w-100";
+  const wrapper = document.createElement("div");
+  wrapper.className = "table-responsive"; // Scroll em telas pequenas
 
-      const thead = document.createElement("thead");
-      const headerRow = document.createElement("tr");
+  const table = document.createElement("table");
+  table.id = "tabelaLocacoesPendentes";
+  table.className = "table table-sm table-bordered table-hover table-striped text-center mb-0 w-100";
 
-      const headers = [
-        "Selecionar",
-        "Número de Locação",
-        "Status",
-        "Nome do Cliente",
-        "Data da Locação",
-        "Data de Devolução",
-        "Familia do bem",
-        "Descrição",
-        "Quantidade",
-      ];
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
 
-      headers.forEach((text) => {
-        const th = document.createElement("th");
-        th.textContent = text;
-        th.scope = "col";
-        th.className = "px-2 py-1";
-        headerRow.appendChild(th);
-      });
-      thead.appendChild(headerRow);
-      table.appendChild(thead);
+  const headers = [
+    "Selecionar",
+    "Número de Locação",
+    "Status",
+    "Nome do Cliente",
+    "Data da Locação",
+    "Data de Devolução",
+    "Familia do bem",
+    "Descrição",
+    "Quantidade",
+  ];
 
-      const tbody = document.createElement("tbody");
+  headers.forEach((text) => {
+    const th = document.createElement("th");
+    th.textContent = text;
+    th.scope = "col";
+    th.className = "px-1 py-1"; // padding reduzido
+    headerRow.appendChild(th);
+  });
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
 
-      const vinculacoesPendentes = new Map();
-      filterStatusPendente.forEach((locacao) => {
-        const row = document.createElement("tr");
-        // row.dataset.locacao = locacao.numeroLocacao;
+  const tbody = document.createElement("tbody");
+  const vinculacoesPendentes = new Map();
 
-        // Criar checkbox
-        const tdCheckbox = document.createElement("td");
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.classList.add("form-check-input", "select-location", "mx-auto", "d-block");
-        checkbox.value = locacao.numeroLocacao;
-        checkbox.dataset.quantidade = locacao.quantidade;
-        checkbox.dataset.familia = locacao.codigoBem;
-        checkbox.dataset.cliente = locacao.nomeCliente;
-        checkbox.dataset.belocode = locacao.codigoLoc;
+  filterStatusPendente.forEach((locacao) => {
+    const row = document.createElement("tr");
 
-        tdCheckbox.appendChild(checkbox);
-        row.appendChild(tdCheckbox);
+    const tdCheckbox = document.createElement("td");
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.classList.add("form-check-input", "select-location", "mx-auto", "d-block");
+    checkbox.value = locacao.numeroLocacao;
+    checkbox.dataset.quantidade = locacao.quantidade;
+    checkbox.dataset.familia = locacao.codigoBem;
+    checkbox.dataset.cliente = locacao.nomeCliente;
+    checkbox.dataset.belocode = locacao.codigoLoc;
 
-        // Criar células com os dados
-        const values = [
-          locacao.numeroLocacao,
-          locacao.status,
-          locacao.nomeCliente,
-          locacao.dataLocacao,
-          locacao.dataDevolucao,
-          locacao.codigoBem,
-          locacao.produto,
-          locacao.quantidade,
-        ];
+    tdCheckbox.appendChild(checkbox);
+    row.appendChild(tdCheckbox);
 
-        values.forEach((text) => {
-          const td = document.createElement("td");
-          td.textContent = text;
-           td.className = "px-2 py-1";
-          row.appendChild(td);
-        });
+    const values = [
+      locacao.numeroLocacao,
+      locacao.status,
+      locacao.nomeCliente,
+      locacao.dataLocacao,
+      locacao.dataDevolucao,
+      locacao.codigoBem,
+      locacao.produto,
+      locacao.quantidade,
+    ];
 
-        tbody.appendChild(row);
+    values.forEach((text) => {
+      const td = document.createElement("td");
+      td.textContent = text;
+      td.className = "px-1 py-1"; // padding reduzido
+      row.appendChild(td);
+    });
 
-        checkbox.addEventListener("change", (event) => {
-          const quantidade = parseInt(event.target.dataset.quantidade);
-          const isChecked = event.target.checked;
-          const numeroLocacao = event.target.value;
-          const familiaBem = event.target.dataset.familia;
-          const cliente = event.target.dataset.cliente;
-          const codeLoc = event.target.dataset.belocode;
+    tbody.appendChild(row);
 
-          // Chamar lógica visual/de atualização externa
-          needVsAvaible(cliente, quantidade, familiaBem, isChecked, codeLoc);
-          loadingDriver();
+    checkbox.addEventListener("change", (event) => {
+      const quantidade = parseInt(event.target.dataset.quantidade);
+      const isChecked = event.target.checked;
+      const numeroLocacao = event.target.value;
+      const familiaBem = event.target.dataset.familia;
+      const cliente = event.target.dataset.cliente;
+      const codeLoc = event.target.dataset.belocode;
 
-          // Atualizar estrutura de controle vinculacoesPendentes
-          if (isChecked) {
-            if (!vinculacoesPendentes.has(numeroLocacao)) {
-              vinculacoesPendentes.set(numeroLocacao, {});
-            }
+      needVsAvaible(cliente, quantidade, familiaBem, isChecked, codeLoc);
+      loadingDriver();
 
-            const familias = vinculacoesPendentes.get(numeroLocacao);
-            if (!familias[familiaBem]) {
-              familias[familiaBem] = {
-                solicitados: quantidade,
-                vinculados: 0,
-              };
-            }
-          } else {
-            vinculacoesPendentes.delete(numeroLocacao);
-          }
-        });
-      });
+      if (isChecked) {
+        if (!vinculacoesPendentes.has(numeroLocacao)) {
+          vinculacoesPendentes.set(numeroLocacao, {});
+        }
 
-      table.appendChild(tbody);
-      tableDiv.appendChild(table);
+        const familias = vinculacoesPendentes.get(numeroLocacao);
+        if (!familias[familiaBem]) {
+          familias[familiaBem] = {
+            solicitados: quantidade,
+            vinculados: 0,
+          };
+        }
+      } else {
+        vinculacoesPendentes.delete(numeroLocacao);
+      }
+    });
+  });
 
-    } else {
-      const msg = document.createElement("p");
-      msg.style.textAlign = "center";
-      msg.textContent = "Nenhuma locação pendente encontrada.";
-      tableDiv.appendChild(msg);
-    }
+  table.appendChild(tbody);
+  wrapper.appendChild(table);     // << Envolto no div responsivo
+  tableDiv.appendChild(wrapper); // << Adicionado ao DOM
+
+} else {
+  const msg = document.createElement("p");
+  msg.style.textAlign = "center";
+  msg.textContent = "Nenhuma locação pendente encontrada.";
+  tableDiv.appendChild(msg);
+}
   } catch (error) {
     console.error("Erro para gerar tabela locação!!", error);
   }
@@ -566,9 +565,10 @@ async function needVsAvaible(
 
       const tdAcao = document.createElement("td");
       if (statusText === "Suficiente") {
+
         const btn = document.createElement("button");
         btn.classList.add("openModal");
-        btn.textContent = "Vincular";
+        btn.innerHTML = `<i class="bi bi-link-45deg"></i> Vincular`
         btn.dataset.familia = familiaBem;
         btn.dataset.quantidade = quantidadeLocacao;
         btn.dataset.cliente = cliente;
@@ -642,7 +642,6 @@ async function validateFamilyBensPending() {
       },
     });
 
-    const result = await bensResponse.json();
     if (!bensResponse.ok) {
       Toastify({
         text: result?.message || "Erro ao carregar Bens para analise.",
@@ -654,7 +653,8 @@ async function validateFamilyBensPending() {
       }).showToast();
       return;
     }
-    const bens = result;
+
+     const result = await bensResponse.json();
 
     const listFamilyBens = await fetch("/api/listfabri", {
       method: "GET",
@@ -663,7 +663,7 @@ async function validateFamilyBensPending() {
         Authorization: `Bearer ${token}`,
       },
     });
-    const resultFamily = await listFamilyBens.json();
+
     if (!listFamilyBens.ok) {
       Toastify({
         text:
@@ -676,8 +676,8 @@ async function validateFamilyBensPending() {
       }).showToast();
       return;
     }
-    const familyBens = resultFamily;
-
+    const resultFamily = await listFamilyBens.json();
+  
     const locationResponse = await fetch("/api/locationFinish", {
       method: "GET",
       headers: {
@@ -686,7 +686,6 @@ async function validateFamilyBensPending() {
       },
     });
 
-    const resultLocation = await locationResponse.json();
     if (!locationResponse.ok) {
       Toastify({
         text: result?.message || "Erro ao carregar locações para analise.",
@@ -698,22 +697,26 @@ async function validateFamilyBensPending() {
       }).showToast();
       return;
     }
+    const resultLocation = await locationResponse.json();
+    
+    console.log('result' , resultLocation)
+    const bensLoc = resultLocation.locacoes?.flatMap((loc) => loc.bens) || [];
 
-    const locations = resultLocation;
-    const bensLoc = locations.locacoes?.flatMap((loc) => loc.bens) || [];
-
-    const resultadosPorFamilia = familyBens.reduce((acc, familia) => {
+    const resultadosPorFamilia = resultFamily.reduce((acc, familia) => {
       const codigoFamilia = familia.fabecode;
       const familiaDescrição = familia.fabedesc;
 
-      const bensDisponiveis = bens.filter(
+      const bensDisponiveis = result.filter(
         (bem) => bem.bensstat === "Disponivel" && bem.benscofa === codigoFamilia
       ).length;
 
       // Contar pedidos pendentes para essa família
-      const pedidosPendentes = bensLoc.filter(
-        (bem) => bem.belostat === "Pendente" && bem.bencodb === codigoFamilia
-      ).length;
+     const pedidosPendentes = bensLoc
+    .filter(
+      (bem) =>
+        bem.belostat === "Pendente" && bem.bencodb === codigoFamilia
+    )
+    .reduce((total, bem) => total + Number(bem.beloqntd || 0), 0);
 
       acc[codigoFamilia] = {
         familiaDescrição,
@@ -859,10 +862,10 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
       position: "center",
       backgroundColor: "red",
     }).showToast();
-
     return;
   }
-  let motoristasSelecionados = Array.from(
+
+  const motoristasSelecionados = Array.from(
     document.querySelectorAll(".checkbox-motorista:checked")
   ).map((cb) => cb.value);
 
@@ -880,200 +883,143 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
 
   const motoId = motoristasSelecionados[0];
 
-    const response = await fetch("/api/listbens", {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (!response.ok) throw new Error("Erro ao buscar bens.");
-    const bens = await response.json();
+  const response = await fetch("/api/listbens", {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
-    const bensFiltrados = bens.filter(
-      (bem) => bem.bensstat === "Disponivel" && bem.benscofa === familiaBem
-    );
+  if (!response.ok) throw new Error("Erro ao buscar bens.");
+  const bens = await response.json();
 
-    const modalWrapper = document.querySelector(".modal");
-    if (!modalWrapper) {
-      console.warn("Elemento não presente no html");
-    }
+  const bensFiltrados = bens.filter(
+    (bem) => bem.bensstat === "Disponivel" && bem.benscofa === familiaBem
+  );
 
-    // Limpar conteúdo anterior
-    modalWrapper.innerHTML = "";
+  const modalWrapper = document.querySelector(".modal");
+  if (!modalWrapper) {
+    console.warn("Elemento .modal não encontrado");
+    return;
+  }
 
-    const modalContent = document.createElement("div");
-    modalContent.classList.add("modal-content");
+  // Exibe os dados na modal HTML existente
+  document.getElementById("clienteModal").textContent = cliente;
+  document.getElementById("familiaBemModal").textContent = familiaBem;
+  document.getElementById("quantidadeModal").textContent = quantidadeLocacao;
+  document.getElementById("quantidadeTotalModal").textContent = quantidadeLocacao;
+  document.getElementById("contadorVinculados").textContent = "0";
 
-    // Título principal
-    const title = document.createElement("h2");
-    title.textContent = "Detalhes da Locação";
-    modalContent.appendChild(title);
+  const tabelaBody = document
+    .querySelector("#bensDisponiveis tbody");
 
-    // Cliente
-    const pCliente = document.createElement("p");
-    pCliente.innerHTML = `Cliente: <strong>${cliente}</strong>`;
-    modalContent.appendChild(pCliente);
+  tabelaBody.innerHTML = "";
 
-    // Família do bem
-    const pFamilia = document.createElement("p");
-    pFamilia.innerHTML = `Família do Bem: <strong>${familiaBem}</strong>`;
-    modalContent.appendChild(pFamilia);
-
-    // Quantidade solicitada
-    const pQuantidade = document.createElement("p");
-    pQuantidade.innerHTML = `Quantidade Solicitada: <strong>${quantidadeLocacao}</strong>`;
-    modalContent.appendChild(pQuantidade);
-
-    // Bens vinculados
-    const pVinculados = document.createElement("p");
-    pVinculados.innerHTML = `Bens Vinculados: <strong id="contadorVinculados">0</strong>/${quantidadeLocacao}`;
-    modalContent.appendChild(pVinculados);
-
-    // Título "Bens Disponíveis"
-    const titleBens = document.createElement("h2");
-    titleBens.textContent = "Bens Disponíveis";
-    modalContent.appendChild(titleBens);
-
-    // Tabela
-    const table = document.createElement("table");
-    table.id = "bensDisponiveis";
-
-    // Cabeçalho da tabela
-    const thead = document.createElement("thead");
-    const headerRow = document.createElement("tr");
-    ["Código", "Descrição", "Ação"].forEach((header) => {
-      const th = document.createElement("th");
-      th.textContent = header;
-      headerRow.appendChild(th);
-    });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
-
-    // Corpo da tabela
-    const tbody = document.createElement("tbody");
-
-    if (bensFiltrados.length > 0) {
-      bensFiltrados.forEach((bem) => {
-        const tr = document.createElement("tr");
-
-        const tdCodigo = document.createElement("td");
-        tdCodigo.textContent = bem.benscode;
-
-        const tdDescricao = document.createElement("td");
-        tdDescricao.textContent = bem.bensnome;
-
-        const tdAcao = document.createElement("td");
-        const btn = document.createElement("button");
-        btn.classList.add("vincular-bem");
-        btn.dataset.id = bem.benscode;
-        btn.dataset.code = codigo;
-        btn.textContent = "Vincular";
-        tdAcao.appendChild(btn);
-
-        tr.appendChild(tdCodigo);
-        tr.appendChild(tdDescricao);
-        tr.appendChild(tdAcao);
-
-        tbody.appendChild(tr);
-      });
-    } else {
+  if (bensFiltrados.length > 0) {
+    bensFiltrados.forEach((bem) => {
       const tr = document.createElement("tr");
-      const td = document.createElement("td");
-      td.colSpan = 3;
-      td.textContent = "Nenhum bem disponível.";
-      td.style.textAlign = "center";
-      tr.appendChild(td);
-      tbody.appendChild(tr);
-    }
 
-    table.appendChild(tbody);
-    modalContent.appendChild(table);
-    modalWrapper.appendChild(modalContent);
+      const tdCodigo = document.createElement("td");
+      tdCodigo.textContent = bem.benscode;
 
-    // Botão voltar
-    const btnVoltar = document.createElement("button");
-    btnVoltar.classList.add("OutScreenLinkGoods");
-    btnVoltar.textContent = "Volta";
-    modalContent.appendChild(btnVoltar);
+      const tdDescricao = document.createElement("td");
+      tdDescricao.textContent = bem.bensnome;
 
-    modalWrapper.classList.remove("hidden");
-    modalWrapper.classList.add("flex");
+      const tdAcao = document.createElement("td");
+      const btn = document.createElement("button");
+      btn.className = "btn btn-sm btn-success vincular-bem";
+      btn.dataset.id = bem.benscode;
+      btn.dataset.code = codigo;
+      btn.innerHTML = `<i class="bi bi-link-45deg"></i> Vincular`;
+      tdAcao.appendChild(btn);
 
-    if (modalContent) {
-      const conteiner = document.querySelector(".containerLogistica");
-      if (conteiner) {
-        conteiner.classList.remove("flex");
-        conteiner.classList.add("hidden");
-      }
-    }
+      tr.appendChild(tdCodigo);
+      tr.appendChild(tdDescricao);
+      tr.appendChild(tdAcao);
 
-    let quantidadeVinculada = 0;
-    const botoesVincular = document.querySelectorAll(".vincular-bem");
+      tabelaBody.appendChild(tr);
+    });
+  } else {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 3;
+    td.className = "text-center text-muted";
+    td.textContent = "Nenhum bem disponível.";
+    tr.appendChild(td);
+    tabelaBody.appendChild(tr);
+  }
 
-    botoesVincular.forEach((botao) => {
-      botao.addEventListener("click", async function () {
-        if (quantidadeVinculada >= quantidadeLocacao) return;
+  // Exibir modal e ocultar conteúdo principal
+  modalWrapper.classList.remove("hidden");
+  modalWrapper.classList.add("flex");
 
-        const bemId = botao.dataset.id;
-        const codeLocation = botao.dataset.code;
-        const codeLoc = botao.dataset.belocode;
+  const conteiner = document.querySelector(".containerLogistica");
+  if (conteiner) {
+    conteiner.classList.remove("flex");
+    conteiner.classList.add("hidden");
+  }
 
-        const sucesso = await vincularBem(
-          bemId,
-          familiaBem,
-          motoId,
-          codeLocation
-        );
+  // Lógica de vinculação dos bens
+  let quantidadeVinculada = 0;
 
-        if (sucesso) {
-          quantidadeVinculada++;
-          contadorVinculados.textContent = quantidadeVinculada;
+  document.querySelectorAll(".vincular-bem").forEach((botao) => {
+    botao.addEventListener("click", async function () {
+      if (quantidadeVinculada >= quantidadeLocacao) return;
 
-          botao.closest("tr").remove();
+      const bemId = botao.dataset.id;
+      const codeLocation = botao.dataset.code;
 
-          if (vinculacoesPendentes.has(codigo)) {
-            const familias = vinculacoesPendentes.get(codigo);
-            if (familias[familiaBem]) {
-              familias[familiaBem].vinculados++;
-            }
-          }
+      const sucesso = await vincularBem(
+        bemId,
+        familiaBem,
+        motoId,
+        codeLocation
+      );
 
-          // Desativar botões caso atinja o limite
-          if (quantidadeVinculada >= quantidadeLocacao) {
-            document
-              .querySelectorAll(".vincular-bem")
-              .forEach((btn) => (btn.disabled = true));
+      if (sucesso) {
+        quantidadeVinculada++;
+        document.getElementById("contadorVinculados").textContent = quantidadeVinculada;
+        botao.closest("tr").remove();
 
-            Toastify({
-              text: "Todos os bens foram vinculados com sucesso!",
-              duration: 4000,
-              close: true,
-              gravity: "top",
-              position: "center",
-              backgroundColor: "green",
-            }).showToast();
+        if (vinculacoesPendentes.has(codigo)) {
+          const familias = vinculacoesPendentes.get(codigo);
+          if (familias[familiaBem]) {
+            familias[familiaBem].vinculados++;
           }
         }
-      });
-    });
 
-    // Evento para fechar a pagina de vinculo
-  document.querySelector(".OutScreenLinkGoods").addEventListener("click", async () => {
-  
-    if(modalWrapper){
-       modalWrapper.classList.remove("flex");
+        if (quantidadeVinculada >= quantidadeLocacao) {
+          document.querySelectorAll(".vincular-bem")
+            .forEach((btn) => (btn.disabled = true));
+
+          Toastify({
+            text: "Todos os bens foram vinculados com sucesso!",
+            duration: 4000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "green",
+          }).showToast();
+        }
+      }
+    });
+  });
+
+  // Evento para fechar a modal
+  document.querySelectorAll(".OutScreenLinkGoods").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      modalWrapper.classList.remove("flex");
       modalWrapper.classList.add("hidden");
-    }
-    
+
       const containerLogistica = document.querySelector(".containerLogistica");
       if (containerLogistica) {
         containerLogistica.classList.remove("hidden");
         containerLogistica.classList.add("flex");
       }
-  
-});
-
+    });
+  });
 }
+
 
 
 // pegar locações para logistica

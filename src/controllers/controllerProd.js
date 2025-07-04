@@ -1,5 +1,5 @@
-import { crudRegisterProd as prodRegister} from "../model/dataProd.js";
-import { crudRegisterTypeProd  as typePro} from "../model/dataTypeProd.js";
+import { crudRegisterProd as prodRegister} from "../model/modelsProd.js";
+import { crudRegisterTypeProd  as typePro} from "../model/modelsTypeProd.js";
 
 
 export const movementOfProd = {

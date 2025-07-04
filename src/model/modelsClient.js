@@ -57,7 +57,7 @@ export const clientRegister = {
     }
   },
 
-  getAllClientForId: async()=>{
+   getAllClientForId: async()=>{
     try {
       const query = "SELECT cliecode FROM cadclie";
 
@@ -72,6 +72,22 @@ export const clientRegister = {
     }
   },
 
+
+   getClientForId: async(cliecode)=>{
+    try {
+      const query = "SELECT * FROM cadclie WHERE cliecode = $1 ";
+      const values = [cliecode]
+      const result = await dataClient.query(query , values);
+      if(result){
+        return result.rows[0];
+      }
+      
+    } catch (error) {
+      console.error("Erro em listar ID do Cliente:", error.message);
+      throw error;
+    }
+  },
+
   verifyCredenciClient: async () => {
     try {
       const query = "SELECT cliecpf , cliecnpj FROM cadclie";
@@ -80,12 +96,12 @@ export const clientRegister = {
         return result.rows;
       }
     } catch (error) {
-      console.error("Erro na busca", error);
+      console.error("Erro na busca credencial do cliente", error);
       throw error;
     }
   },
 
-  async getClientById(cliecode, cpf, cnpj) {
+  async getClientByFilter(cliecode, cpf, cnpj) {
     try {
       let query = "SELECT * FROM cadclie WHERE 1=1";
       const values = [];
@@ -108,7 +124,7 @@ export const clientRegister = {
       const result = await dataClient.query(query, values);
       return result.rows; // retorna array, mesmo que só 1 bem
     } catch (error) {
-      console.error("Erro ao buscar bens por filtros:", error.message);
+      console.error("Erro ao buscar o cliente por filtros:", error.message);
       throw error;
     }
   },
@@ -116,11 +132,12 @@ export const clientRegister = {
   listingClient: async () => {
     try {
       const query = "SELECT * FROM cadclie";
-
       const result = await dataClient.query(query);
-      return result.rows;
+
+        return result.rows;
+
     } catch (error) {
-      console.error("Erro em listar cliente:", error.message);
+      console.error("Erro em listar todos os cliente:", error.message);
       throw error;
     }
   },
@@ -152,12 +169,13 @@ export const clientRegister = {
 
   updateClient: async (id, updateClient) => {
     try {
-      const query = ` UPDATE cadclie SET  clienome = $1, clietpcl = $2, cliecpcn = $3, cliedtcd = $4, cliedtnc = $5, cliecelu = $6, cliecity = $7, clieestd = $8, clierua = $9, cliecep = $10, cliemail = $11, cliebanc = $12, clieagen = $13 , cliecont = $14 , cliepix = $15 WHERE cliecode = $16 RETURNING * ;`;
+      const query = ` UPDATE cadclie SET  clienome = $1, clietpcl = $2, cliecpf = $3, cliecnpj = $4, cliedtcd = $5, cliedtnc = $6, cliecelu = $7, cliecity = $8, clieestd = $9, clierua = $10, cliecep = $11, cliemail = $12, cliebanc = $13, clieagen = $14 , cliecont = $15 , cliepix = $16 WHERE cliecode = $17 RETURNING * ;`;
 
       const values = [
         updateClient.clienome || null,
         updateClient.clietpcl || null,
-        updateClient.cliecpcn || null,
+        updateClient.cliecpf || null,
+        updateClient.cliecnpj || null,
         updateClient.cliedtcd || null,
         updateClient.cliedtnc || null,
         updateClient.cliecelu || null,

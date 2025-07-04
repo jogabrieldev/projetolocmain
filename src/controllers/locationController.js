@@ -1,4 +1,4 @@
-import { LocacaoModel } from "../model/location.js";
+import { LocacaoModel } from "../model/modelsLocationGoods.js";
 
 
 export const location = {

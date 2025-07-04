@@ -4,7 +4,7 @@ function isDataValida(data) {
 
   return (
     !isNaN(date.getTime()) && // Verifica se o Date é válido
-    ano >= 1950 && ano <= 2028 // Define limites plausíveis para ano
+    ano >= 1950 && ano <= 2030 // Define limites plausíveis para ano
   );
 }
 

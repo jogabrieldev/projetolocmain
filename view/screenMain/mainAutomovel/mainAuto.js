@@ -221,16 +221,6 @@ async function registerNewVehicles() {
  dateAtualInField('dtCadAuto')
   const token = localStorage.getItem("token");
 
-  const resunt = await fetch("/api/listauto", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  const res = await resunt.json();
-
   document
     .querySelector(".cadAutomo")
     .addEventListener("click", async (event) => {
@@ -261,8 +251,8 @@ async function registerNewVehicles() {
       // Captura os valores do formulário
       const formData = {
         caaucode: document.querySelector("#codeAuto").value.trim(),
-        caauplac: document.querySelector("#placAuto").value.toUpperCase().replace(/[^A-Z0-9-]/g, ""),
-        caauchss: document.querySelector("#chassAuto").value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 17),
+        caauplac: document.querySelector("#placAuto").value.toUpperCase(),
+        caauchss: document.querySelector("#chassAuto").value,
         caaurena: document.querySelector("#renaAuto").value.trim(),
         caaumaca: document.querySelector("#macaAuto").value.trim(),
         caaumode: document.querySelector("#modeAuto").value.trim(),
@@ -273,10 +263,9 @@ async function registerNewVehicles() {
         caaustat: document.querySelector("#statAuto").value.trim(),
         caaudtca: document.querySelector('#dtCadAuto').value,
       };
-
-
+      
       try {
-        const response = await fetch("http://localhost:3000/api/cadauto", {
+        const response = await fetch("/api/cadauto", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

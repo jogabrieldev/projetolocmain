@@ -1,4 +1,4 @@
-import { crudRegisterForn as fornRegister } from "../model/dataForn.js";
+import { crudRegisterForn as fornRegister } from "../model/modelsFornecedor.js";
 
 export const movementForne = {
   async registerForn(req, res) {

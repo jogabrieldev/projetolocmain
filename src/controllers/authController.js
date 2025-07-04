@@ -1,4 +1,4 @@
-import {modelsAuthenticateUser} from "../model/dataAuth.js"
+import {modelsAuthenticateUser} from "../model/modelsAuth.js"
 import jwt from 'jsonwebtoken';
 
 const secretKey = process.env.JWT_SECRET_KEY

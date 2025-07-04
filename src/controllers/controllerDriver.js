@@ -1,4 +1,4 @@
-import { crudRegisterDriver as driverRegister } from "../model/dataDriver.js";
+import { crudRegisterDriver as driverRegister } from "../model/modelsDriver.js";
 import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 

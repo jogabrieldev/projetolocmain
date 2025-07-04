@@ -9,7 +9,7 @@ A aplicação é uma **SPA (Single Page Application)** com **JavaScript puro no 
 ## 🛠️ Tecnologias Utilizadas
 
 - **Frontend:** HTML5, CSS3 (puro), JavaScript Vanilla , Bootstrap5
-- **Backend:** Node.js + Express.js
+- **Backend:** Node.js + Express.js 
 - **Banco de Dados:** PostgreSQL
 - **Segurança:** JWT (JSON Web Token), Bcrypt para criptografia de senhas
 - **Build/Dev Tools:** Webpack, Babel, Nodemon, Dotenv
@@ -18,12 +18,12 @@ A aplicação é uma **SPA (Single Page Application)** com **JavaScript puro no 
 
 ## 📁 Estrutura de Pastas
 
-├── public/ → Frontend (HTML, CSS, JS View)
-├── controller/ → Camada Controller (lógica das requisições)
-├── model/ → Modelos de dados e acesso ao banco
+├── View/ → Frontend (HTML, CSS, JS , jquery-validation , Jquery-Mask )
+├── controller/ → Camada Controller (lógica das requisições ,  e algumas validações para o processo)
+├── model/ → Modelos de dados e acesso ao banco (As query SQL estão nesta pasta)
 ├── routes/ → Endpoints da API
-├── middleware/ → Middlewares (ex: autenticação)
-├── config/ → Configurações globais e variáveis de ambiente
+├── middleware/ → Middlewares (autenticação)
+├── config/ → Configuração dos bancos de dados 
 ├── database/ → Conexão com o banco PostgreSQL
 ├── .env → Variáveis de ambiente (credenciais, configs)
 └── server.js → Inicialização da aplicação
@@ -45,9 +45,12 @@ A aplicação é uma **SPA (Single Page Application)** com **JavaScript puro no 
 ## 🌐 Frontend (View)
 
 - Estruturado como **SPA (Single Page Application)**.
-- Todas as telas (cadastro, locação, logística, entrega, devolução, etc) estão dentro de **uma única página principal (`main.html`)**, navegadas via manipulação de seções DOM com `display: none` / `display: block`.
+
+- Todas as telas (cadastros, locação, logística, entrega, devolução) estão dentro de **uma única página principal (`main.html`)**, navegadas via manipulação de seções DOM com `display: none` / `display: block` e funções auxiliares para (mostrarElemento , esconderElemento).
+
 - **CSS Modular:**  
-Cada seção tem seu próprio arquivo CSS, além de um CSS global `main.css` com estilos gerais da aplicação.
+Cada seção tem seu próprio arquivo CSS , além de um CSS global `main.css` com estilos gerais da aplicação e o arquivo do bootstrap juntamente com a CDN aplicada na (`main.html`) .
+
 - **Nomenclatura:**  
 Padrão **camelCase** aplicado em IDs, classes, variáveis e funções JavaScript.
 - Uso de **Bootstrap Icons** e **Google Fonts** para a interface.
@@ -56,18 +59,19 @@ Padrão **camelCase** aplicado em IDs, classes, variáveis e funções JavaScrip
 
 ---
 
-## 📜 Backend (Node.js + PostgreSQL + Express)
+## 📜 Backend (Node.js + PostgreSQL + Express + JWT)
 
 ### Controllers:
 - Recebem requisições da View.
 - Validam dados.
-- Chamam os Models.
+- Aplica validações com base na regra de negocio
+- Chamam os Models e valida se deu certo a chamada.
 - Retornam as respostas para o cliente.
 
 ### Models:
-- Todas as queries SQL (CRUD e relacionamentos).
+- Todas as queries SQL (CRUD ,relacionamentos , Joins).
 - Queries com **placeholders** para prevenir SQL Injection.
-- Estrutura por entidade/tabela (ex: `clientes`, `locacoes`, `bens`, `logisticas` , `Cadbens` etc).
+- Estrutura por entidade/tabela (ex: `cliente`, `locacoes`, `bens`, `logisticas` , `fornecedor` etc).
 - Joins em tabelas quando necessário (ex: consultar cliente + bens locados).
 - Exemplo:  
   - Validação de login usando **Bcrypt** para comparar a senha criptografada no banco com a senha digitada.
@@ -77,10 +81,10 @@ Padrão **camelCase** aplicado em IDs, classes, variáveis e funções JavaScrip
 Intercepta requisições privadas e valida o token de acesso antes de liberar a execução.
 
 ### Routes:
-- Definem todos os **endpoints REST da aplicação**, agrupados por módulo.
+- Definem todos os **endpoints RESTFULL da aplicação**, nesse modulo temos o arquivo que faz o roteamento da pagínas dinamicamente também 1 arquivo e meus endpoints da aplicação e no outro o roteamento das paginas HTML.
 - Exemplo de endpoints:
-  - `POST /api/login`
-  - `GET /api/locacao`
+  - `POST /api/client`
+  - `GET /api/listbens`
   - `DELETE /api/locacaoveiculo/:id`
   - ...
 
@@ -89,7 +93,7 @@ Intercepta requisições privadas e valida o token de acesso antes de liberar a 
 ## 🔐 Segurança
 
 - **Senhas criptografadas** com Bcrypt.
-- **Validação de tokens JWT** nas rotas privadas.
+- **Validação de tokens JWT** todas as rotas são privadas e preciso ter uma autenticação para acessar os serviços.
 - **Prevenção contra SQL Injection** com uso de queries parametrizadas.
 
 ---
@@ -137,11 +141,11 @@ Processo de locação envolve duas tabelas:
 
 Clientes: Dados de quem está locando.
 
-Bens Locados: Produtos/caçambas associados à locação ou veiculos.
+OqueFoiLocado: veiculos/caçambas associados a aquele cliente que locou 1:N.
 
-Geração automática de número de locação sequencial e único.
+Geração automática de número de locação com 6 digitos esse numero e gerado pelo o back-end analisando os numeros ja presente e não deixando repetir.
 
-Cadastro de localização (permitindo inclusão de novos endereços).
+adicionarLocalizaçãoNoMomentoDaLocação('No momento da locação deve adicionar uma localização').
 
 Associação de resíduos a cada locação.
 

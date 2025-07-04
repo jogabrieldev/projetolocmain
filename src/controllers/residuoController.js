@@ -1,4 +1,4 @@
-import { moduleResiduo } from "../model/dataResiduo.js";
+import { moduleResiduo } from "../model/modelsResiduo.js";
 
 export const movementResiduo =  {
     

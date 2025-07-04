@@ -1,8 +1,8 @@
-import logistcsModel from "../model/logisticsModel.js";
-import{mecanismDelivey} from "../model/deliveryModel.js"
-import { crudRegisterDriver as authDriver } from "../model/dataDriver.js";
-import { goodsRegister as authGoods} from "../model/dataGoods.js";
-import { clientRegister as authClient } from "../model/dataClient.js";
+import logistcsModel from "../model/modelsLogistics.js";
+import{mecanismDelivey} from "../model/modelsDelivery.js"
+import { crudRegisterDriver as authDriver } from "../model/modelsDriver.js";
+import { goodsRegister as authGoods} from "../model/modelsGoods.js";
+import { clientRegister as authClient } from "../model/modelsClient.js";
 
 
 class logistcgController {

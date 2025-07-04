@@ -7,7 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
          
         try {
               const responseDevol = await fetch('/devolution' , {
-                method: 'GET'
+                method: 'GET',
+                
               })
 
               if (!responseDevol.ok) throw new Error(`Erro HTTP: ${responseDevol.status}`);
@@ -15,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
            const mainContent = document.querySelector('#mainContent');
            if (mainContent) {
              mainContent.innerHTML = html;
-
+             interationSystemDevolution();
              getdeliveryForDevolution();
            }else{
              console.warn('#mainContent não encontrado no DOM')
@@ -33,13 +34,30 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   });
+
+  function interationSystemDevolution(){
+      const btnOutPageDevolution =  document.getElementById('outPageDevolution')
+      if(btnOutPageDevolution){
+         btnOutPageDevolution.addEventListener('click' , ()=>{
+             const sectiondevolutionDelivery = document.querySelector('.devolutionDelivery')
+             if(sectiondevolutionDelivery){
+               sectiondevolutionDelivery.classList.remove('flex')
+               sectiondevolutionDelivery.classList.add('hidden')
+             }
+         })
+      }
+  }
   
   async function getdeliveryForDevolution() {
     const token = localStorage.getItem('token'); 
     try {
       const [deliveryRes, clientsRes] = await Promise.all([
         fetch('/api/getdelivery', {
-          method: 'GET'
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
         }),
         fetch('/api/listclient', {
           method: 'GET',

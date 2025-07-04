@@ -1,4 +1,4 @@
-import { crudRegisterTypeProd as typeProdRegister } from "../model/dataTypeProd.js";
+import { crudRegisterTypeProd as typeProdRegister } from "../model/modelsTypeProd.js";
 
 export const movementOfTypeProd = {
   async registerTyperProd(req, res) {

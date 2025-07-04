@@ -40,7 +40,7 @@ async function getAllCar() {
     console.log('car' , carros)
 
     // Filtra apenas os veículos com status "Ativo"
-    const carrosAtivos = carros.filter((carro) => carro.caaustat === "Ativo");
+    const carrosAtivos = carros.filter((carro) => carro.caaustat === "Disponivel");
 
     console.log("Veículos ativos:", carrosAtivos);
 
@@ -62,6 +62,7 @@ async function getAllCar() {
 }
 
 async function listDeliveryForDriver() {
+
   try {
     const token = localStorage.getItem("token");
     const motoristaId = localStorage.getItem("user");
@@ -83,6 +84,8 @@ async function listDeliveryForDriver() {
     const entregas = await response.json();
     const entregasDoMotorista = entregas.filter(e => e.lofiidmt === motoristaId);
 
+    console.log('entregas' , entregasDoMotorista)
+
     if (entregasDoMotorista.length === 0) {
       container.innerHTML = `
         <div class="col-12 text-center">
@@ -92,34 +95,39 @@ async function listDeliveryForDriver() {
       `;
       return;
     }
-
-    // Cache para evitar requisições duplicadas
-    const clienteCache = {};
+     
+    let nomeClient = ''
+    let clientPhone = ''
 
     for (const entrega of entregasDoMotorista) {
       const cliecode = entrega.lofiidcl;
 
-      let clienteNome = "Desconhecido";
-      let clientPhone = "Não passado"
+      console.log('cliecode' , cliecode)
 
-      if (clienteCache[cliecode]) {
-        clienteNome = clienteCache[cliecode];
-        clientPhone = clienteCache[cliecode];
-      } else {
-        const clientRes = await fetch(`/api/cliente/${cliecode}`, {
+        const clientRes = await fetch(`/api/client/${cliecode}`, {
+          method:'GET',
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json"
           }
         });
-
+        
         if (clientRes.ok) {
-          const cliente = await clientRes.json();
-          clienteNome = cliente.clienome || "Sem nome";
-          clienteCache[cliecode] = clienteNome;
-          clientPhone = cliente.cliecelu || "Não passado"
+           const cliente = await clientRes.json();
+
+            if(Array.isArray(cliente) && clientRes.length > 0){
+
+              const client = cliente[0]
+              nomeClient = client.clienome || "Sem nome";
+              clientPhone = client.cliecelu || "Não passado"
+
+            }
+
+         
+            nomeClient = cliente.clienome || "Sem nome";
+            clientPhone = cliente.cliecelu || "Não passado"
         }
-      }
+      
 
       const card = document.createElement("div");
       card.className = "col-md-6 col-lg-4";
@@ -134,7 +142,7 @@ async function listDeliveryForDriver() {
             <p class="mb-1"><i class="bi bi-geo-alt-fill text-danger"></i> ${entrega.lofirua}, ${entrega.lofibair}, ${entrega.loficida}</p>
             <p class="mb-1"><i class="bi bi-calendar-check text-success"></i> Locação: ${formatarData(entrega.lofidtlo)}</p>
             <p class="mb-1"><i class="bi bi-calendar-check text-success"></i> Devolução: ${formatarData(entrega.lofidtdv)}</p>
-            <p class="mb-1"><i class="bi bi-person-fill text-info"></i> Cliente: ${clienteNome}</p>
+            <p class="mb-1"><i class="bi bi-person-fill text-info"></i> Cliente: ${nomeClient}</p>
             <p class="mb-1"><i class="bi bi-telephone-fill"></i> Telefone do Cliente:${clientPhone}</p>
             <p class="mb-0"><i class="bi bi-credit-card-fill text-warning"></i> Pagamento: ${entrega.lofipgmt}</p>
           </div>

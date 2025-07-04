@@ -838,7 +838,6 @@ async function handleSubmit() {
 
   const codigosUsados = new Set();
    
-  let grupoPrincipalEncontrado = false;
   // Capturar dados dos grupos
   for (let i = 1; i <= totalGrups; i++) {
     const codeBen = document.getElementById(`family${i}`)?.value || "";
@@ -848,22 +847,9 @@ async function handleSubmit() {
     const dataInicioStr =
       document.getElementById(`dataInicio${i}`)?.value || "";
     const dataFimStr = document.getElementById(`dataFim${i}`)?.value || "";
+     
 
-    const isParcial =
-      codeBen ||
-      dataInicioStr ||
-      dataFimStr ||
-      observacao ||
-      produto ||
-      quantidade;
-
-    if (isParcial) {
-
-       if (!grupoPrincipalEncontrado) {
-         grupoPrincipalEncontrado = true; 
-        } else {
-           break; 
-        }
+    if (!codeBen) continue
  
       if (codigosUsados.has(codeBen)) {
         Toastify({
@@ -962,8 +948,6 @@ async function handleSubmit() {
         return;
       }
    
-      await gerarContrato()
-      const contratoHTML = document.querySelector(".contrato").innerHTML.trim();
       bens.push({
         codeBen,
         observacao,
@@ -972,10 +956,9 @@ async function handleSubmit() {
         quantidade,
         produto,
         status: "Pendente",
-        contrato: contratoHTML
+        contrato: ""
       });
       
-      }
   }
 
   if (bens.length === 0) {
@@ -988,7 +971,14 @@ async function handleSubmit() {
       position: "center",
       backgroundColor: "red",
     }).showToast();
+    return
   }
+
+   await gerarContrato()
+    const contratoHTML = document.querySelector(".contrato").innerHTML.trim();
+    bens.forEach((bem) => {
+    bem.contrato = contratoHTML;
+   });
 
   try {
     const numericLocation = await obterNumeroLocacao();

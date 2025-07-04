@@ -31,7 +31,7 @@
 .tableFamilyBens td,
 .tableFamilyBens th{
   vertical-align: middle;
-  white-space: nowrap;
+  white-space: normal;
 }
   
 

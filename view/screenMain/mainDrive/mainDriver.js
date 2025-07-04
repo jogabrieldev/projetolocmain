@@ -469,7 +469,6 @@ async function fetchListMotorista() {
     }
 
     const motorista = result;
-    console.log('motorista' , motorista)
     const motoristaListDiv = document.querySelector(".listingDriver");
     motoristaListDiv.innerHTML = "";
 

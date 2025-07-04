@@ -1,4 +1,4 @@
-import { crudRegisterFamilyGoods as fabriRegister } from "../model/dataFamilyGoods.js";
+import { crudRegisterFamilyGoods as fabriRegister } from "../model/modelsFamilyGoods.js";
 
 export const movementOfFamilyGoods = {
   async registerOfFabri(req, res) {

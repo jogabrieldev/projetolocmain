@@ -50,21 +50,4 @@
 
 }
 
-.btnOutDelivery{
-    cursor: pointer;
-    width: 120px;
-    background-color: lightslategray;
-    border: none;
-    height: 27px;
-    margin-left: 3%;
-}
-
-.btnImprimirDelivery{
-    cursor: pointer;
-    width: 120px;
-    background-color: lightslategray;
-    border: none;
-    height: 27px;
-    margin-left: 3%;
-}
 

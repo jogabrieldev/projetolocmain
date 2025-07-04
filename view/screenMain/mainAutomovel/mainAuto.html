@@ -39,7 +39,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
   </div>
 
   <div class="form-floating mb-3 position-relative">
-    <input type="text" name="placVehicles" id="placVehicles" class="form-control ps-5" placeholder="Código da familia do bem"  />
+    <input type="text" name="placVehicles" id="placVehicles" class="form-control ps-5" placeholder="Placa do veiculo" maxlength="7"  />
     <label for="placVehicles"><i class="bi bi-hash me-1"></i>Placa do veiculo</label>
   </div>
 
@@ -66,7 +66,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
   
           <div class="col-md-3">
             <label for="placAuto" class="form-label">Placa</label>
-            <input type="text" class="form-control" name="placAuto" id="placAuto" maxlength="10" placeholder="Placa" />
+            <input type="text" class="form-control" name="placAuto" id="placAuto" maxlength="7" placeholder="Placa" />
           </div>
   
           <div class="col-md-3">
@@ -118,8 +118,6 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
               <option value="">Selecione...</option>
               <option value="Veiculo Locado">Veiculo Locado</option>
               <option value="Disponivel">Disponivel</option>
-              <!-- <option value="Desativo">Desativo</option>
-               <option value="Manutenção">manutenção</option> -->
             </select>
           </div>
 
@@ -159,7 +157,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       
             <div class="col-md-3">
               <label for="placAutoEdit" class="form-label">Placa</label>
-              <input type="text" class="form-control" id="placAutoEdit" name="placAutoEdit" placeholder="Placa" maxlength="10" readonly />
+              <input type="text" class="form-control" id="placAutoEdit" name="placAutoEdit" placeholder="Placa" maxlength="7" readonly />
             </div>
       
             <div class="col-md-3">

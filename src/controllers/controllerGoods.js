@@ -1,5 +1,5 @@
-import { goodsRegister } from "../model/dataGoods.js";
-import { crudRegisterForn as infoForn } from "../model/dataForn.js";
+import { goodsRegister } from "../model/modelsGoods.js";
+import { crudRegisterForn as infoForn } from "../model/modelsFornecedor.js";
 
 export const movementGoods = {
 

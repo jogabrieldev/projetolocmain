@@ -1,4 +1,4 @@
-import { autoRegister } from "../model/dataAutomo.js";
+import { autoRegister } from "../model/modelsVehicles.js";
 
 export const movementAuto = {
 
@@ -54,7 +54,7 @@ export const movementAuto = {
     res.status(201).json({ success: true, auto: newAuto });
 
   } catch (error) {
-    console.error("Erro no controller:", error);
+    console.error("Erro no controller para cadastrar veiculo:", error);
 
     if (error.message.includes("Código do veiculo já cadastrado. Tente outro.")) {
       return res.status(409).json({ success: false, message: error.message });
@@ -93,7 +93,7 @@ async getAutomovelByCode(req, res) {
       }
       res.status(200).json(autos);
     } catch (error) {
-      console.error("Erro no controller", error.message);
+      console.error("Erro no controller ao listar veiculo", error.message);
       res.status(500).json({
         success: false,
         message: "Erro interno no servidor",
@@ -121,7 +121,7 @@ async getAutomovelByCode(req, res) {
         auto: deletedAuto,
       });
     } catch (error) {
-      console.error("Erro ao apagar registro:", error);
+      console.error("Erro ao apagar registro do veiculo:", error);
       return res.status(500).json({ message: "Erro no servidor" });
     }
   },
@@ -130,20 +130,23 @@ async getAutomovelByCode(req, res) {
     const autoId = req.params.id;
     const updateAuto = req.body;
 
+    if(!updateAuto || ! autoId){
+       return res.status(400).json({message:'Falta de informações para atualizar verifique por favor'})
+    }
+
     Object.keys(updateAuto).forEach((key) => {
       if (updateAuto[key] === "") {
         updateAuto[key] = null;
       }
     });
 
-     
     try {
        
       const io = req.app.get("socketio");
       const updatedAuto = await autoRegister.updateAuto(autoId, updateAuto);
 
       if(!updateAuto){
-        return res.status(404).json({ message: "cliente não encontrado para atualização." });
+        return res.status(404).json({ message: "Erro para atualizar veiculo." });
       }
        
       if (io) {
@@ -166,17 +169,13 @@ async getAutomovelByCode(req, res) {
            const {id} = req.params
            const {caaustat} = req.body
 
-           console.log('id' , id)
-           console.log('corpo' , caaustat)
-
-
            if(!id || !caaustat){
-             return res.status(400).json({message: 'faltar informações'})
+             return res.status(400).json({message: 'falta informações para atualizar o status'})
            }
 
            const update = await autoRegister.updateStatus(id , caaustat)
            if(!update){
-             return res.status(400).json({message:'Erro em atualizar'})
+             return res.status(400).json({message:'Erro em atualizar o status'})
            }
 
            return  res.status(200).json({success: true  , update: update})
