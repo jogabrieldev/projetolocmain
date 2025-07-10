@@ -410,17 +410,20 @@ async function searchTypeProduct(){
   const btnTypeProdSearch = document.getElementById('searchTypeProd');
   const popUpSearch = document.querySelector('.popUpsearchIdTypeProd');
   const typeProdListDiv = document.querySelector(".listingTipoProd");
+  const backdrop = document.querySelector('.popupBackDrop')
   const btnOutPageSearch = document.querySelector('.outPageSearchTypeProd')
 
   if (btnTypeProdSearch && popUpSearch) {
     btnTypeProdSearch.addEventListener('click', () => {
       popUpSearch.style.display = 'flex';
+      backdrop.style.display = 'block'
     });
   }
 
   if(popUpSearch || btnOutPageSearch){
      btnOutPageSearch.addEventListener('click' , ()=>{
        popUpSearch.style.display = 'none'
+       backdrop.style.display = 'none'
      })
   }
  
@@ -491,6 +494,7 @@ async function searchTypeProduct(){
 
           // Fecha o pop-up após a busca (opcional)
           if (popUpSearch) popUpSearch.style.display = 'none';
+          if(backdrop)backdrop.style.display = 'none'
 
         } else {
           Toastify({

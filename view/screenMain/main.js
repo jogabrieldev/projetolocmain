@@ -234,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
    // Oculta ao clicar em qualquer botão de navegação
    const buttons = document.querySelectorAll(
-     "#btnLoadBens, .btnCadClie, .btnCadForn, .btnCadProd, .btnCadFabri, .btnCadTypeProd, .btnCadMotorista, .btnCadAutomo, .btnRegisterLocation, .btnLogistic, .delivery , .btnDevolution"
+     "#btnLoadBens, .btnCadClie, .btnCadForn, .btnCadProd, .btnCadFabri, .btnCadTypeProd, .btnCadMotorista, .btnCadAutomo, .btnRegisterLocation, .btnLogistic, .delivery , .btnDevolution" , "containerAppDestination"
    );
 
    buttons.forEach((btn) => {

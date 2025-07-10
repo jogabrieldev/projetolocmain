@@ -35,8 +35,6 @@ function loginUserCenter() {
 
         let response = await responseData.json();
 
-        console.log('resposta' ,response)
-
         if (!response.token) {
           // Se falhou, tenta como motorista
           responseData = await fetch("/api/drive/auth", {
@@ -58,9 +56,7 @@ function loginUserCenter() {
             localStorage.setItem('user' , response.user)
           }
           // localStorage.setItem("user" , response.user)
-            console.log('resposta' ,response)
 
-            console.log('res' , localStorage.getItem('user'))
 
           Toastify({
             text: "Login com sucesso",

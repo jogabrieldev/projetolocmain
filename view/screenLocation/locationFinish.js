@@ -233,9 +233,7 @@ function renderTable(data) {
   });
 
   // Adiciona o evento de busca ao botão "Buscar Locação"
-  document.querySelector(".searchloc").addEventListener("click", () => {
-    document.querySelector(".searchLocation").style.display = "flex";
-  });
+ 
 }
 
 async function showContratoLocationGoods(locacao) {
@@ -408,15 +406,6 @@ async function filterTable() {
   const token = localStorage.getItem("token");
 
   if (!token || isTokenExpired(token)) {
-    Toastify({
-      text: "Sessão expirada. Faça login novamente.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-
     localStorage.removeItem("token");
     setTimeout(() => {
       window.location.href = "/index.html";
@@ -550,7 +539,8 @@ async function filterTable() {
       .flat();
 
     renderTable(listaLocacoesFilter);
-
+    document.querySelector('.popupBackDrop').style.display = "none"
+    document.querySelector('.searchLocation').style.display = 'none'
     document.getElementById("resetFilterBtn").style.display = "inline-block";
     document.getElementById("messsageFilter").style.display = "inline-block";
     document.getElementById("messsageFilter").textContent =

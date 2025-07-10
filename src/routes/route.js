@@ -13,6 +13,7 @@ import {location} from '../controllers/locationController.js';
 import logistics from '../controllers/logistcsController.js'
 import { controllerDelivery } from "../controllers/deliveryController.js";
 import { movementResiduo } from "../controllers/residuoController.js";
+import { controllerDestination } from "../controllers/controllerDestination.js";
 import{controllerLocationVehicle} from "../controllers/locationVehicleController.js"
 
 const route = express.Router()
@@ -203,6 +204,23 @@ route.delete("/residuo/:id" , (req , res)=>{
    movementResiduo.deleteResiduo(req , res)
 });
 
+// destino
+
+route.post('/api/destination' , (req ,res)=>{
+  controllerDestination.insertDestination(req,res)
+})
+
+route.get('/api/destination' , (req ,res)=>{
+  controllerDestination.getDestination(req ,res)
+})
+
+route.delete('/api/destination/:id' , (req,res)=>{
+   controllerDestination.deleteDestination(req ,res)
+})
+
+route.put('/api/destination/:iddestination' , (req ,res)=>{
+  controllerDestination.updateDestination(req ,res)
+})
 
  //locação Bens
  route.get('/api/generateNumber' , (req , res)=>{

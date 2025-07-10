@@ -872,6 +872,62 @@ $(function () {
   validationFormAutomovel();
 });
 
+// destino de descarte
+function validationFormDestinationDescarte(){
+  $('#formRegisterDestination').validate({
+      rules: {
+          
+        nomeDest:{
+          required: true 
+        },
+        cepDest:{
+          required: true
+        },
+        
+        ativDest:{
+          required: true
+        },
+        tipoDest:{
+          required: true
+        },
+        
+    },
+         messages: {
+
+        nomeDest:{
+          required:"OBRIGATORIO"
+        },
+        cepDest:{
+          required:"OBRIGATORIO"
+        },
+
+        ativDest:{
+          required: "OBRIGATORIO"
+        },
+        tipoDest:{
+          required: "OBRIGATORIO"
+        },
+          },
+
+          errorPlacement: function (error, element) {
+              error.addClass('error-text');
+              error.insertAfter(element);
+            },
+            highlight: function (element) {
+              $(element).addClass('error-field');
+            },
+            unhighlight: function (element) {
+              $(element).removeClass('error-field');
+            },
+            submitHandler: function (form) {
+              form.submit();
+            }
+  })
+}
+$(function () {
+  validationFormDestinationDescarte();
+});
+
 
 
 

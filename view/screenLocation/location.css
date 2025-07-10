@@ -1,5 +1,4 @@
 
-
 .tableLocationAll {
   width: 100%;
   border-collapse: collapse;
@@ -41,14 +40,6 @@
   cursor: pointer;
 }
 
-.outPageSearchLocation {
-  cursor: pointer;
-  width: 80px;
-  margin-bottom: 2%;
-  background-color: lightslategray;
-  border: none;
-  height: 27px;
-}
 .btnRegisterLocation {
   width: 90%;
   height: 35px;
@@ -176,26 +167,6 @@
 .outLocationEdit{
   height: 30px;
   width: 35%;
-  background-color: rgb(100, 137, 189);
-  color: black;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-/* formulario de registro ao cliente */
-.btnOutInitLoc {
-  padding: 10px 20px;
-  background-color: rgb(100, 137, 189);
-  color: black;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  justify-content: space-between;
-}
-
-.btnRegisterClientLoc {
-  padding: 10px 20px;
   background-color: rgb(100, 137, 189);
   color: black;
   border: none;

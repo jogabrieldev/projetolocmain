@@ -20,7 +20,11 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
     </div>
     
     <!-- POPUP DE PESQUISA -->
-  <div class="searchIdClient position-fixed top-50 start-50 translate-middle bg-white border rounded-4 p-4 shadow-lg w-100 mx-3 flex-column" style="display: none; max-width: 500px; z-index: 1055;">
+
+
+  <div class="popupBackDrop position-fixed top-0 start-0 w-100 h-100 bg-dark opacity-50" style="display: none; z-index: 1050;"></div>
+
+  <div class="searchIdClient position-fixed  top-50 start-50 translate-middle bg-white border rounded-4 p-4 shadow-lg w-100 mx-3 flex-column" style="display: none; max-width: 500px; z-index: 1055;">
 
   <!-- Cabeçalho -->
     <div class="text-center mb-4">
@@ -38,7 +42,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
 
   <!-- Campo Status -->
   <div class="form-floating mb-4 position-relative">
-    <input type="text" name="searchCpf" id="searchCpf" class="form-control ps-5" placeholder="CPF">
+    <input type="text" name="searchCpf" id="searchCpf" class="form-control ps-5" placeholder="000.000.000-00">
     <label for="searchCpf"><i class="bi bi-ui-checks me-1"></i> CPF</label>
     
   </div>
@@ -57,10 +61,11 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       <i class="bi bi-arrow-left me-1"></i> Voltar
     </button>
   </div>
-</div>
+ </div>
+
 
     <!-- formulario de cadastro -->
-  <div class="containerOfForm container py-4" style="display: none">
+<div class="containerOfForm container py-4" style="display: none">
  <form id="formRegisterClient">
   <div class="row g-3">
 
@@ -86,13 +91,13 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
 
     <!-- CPF/CNPJ e Celular -->
     <div class="col-sm-6 col-md-3">
-      <label for="cpfInput" class="form-label">CPF</label>
-      <input type="text" class="form-control" name="cpfCnpj" id="clieCpf" placeholder="Digite o CPF" maxlength="14">
+      <label for="clieCpf" class="form-label">CPF</label>
+      <input type="text" class="form-control" name="clieCpf" id="clieCpf" placeholder="000.000.000-00" maxlength="14">
     </div>
 
     <div class="col-sm-6 col-md-3">
-      <label for="cnpjInput" class="form-label">CNPJ</label>
-      <input type="text" class="form-control" name="cpfCnpj" id="clieCnpj" placeholder="Digite o CNPJ" maxlength="18">
+      <label for="clieCnpj" class="form-label">CNPJ</label>
+      <input type="text" class="form-control" name="clieCnpj" id="clieCnpj" placeholder="00.000.000/0000-00" maxlength="18">
     </div>
 
     <div class="col-sm-12 col-md-3">
@@ -112,6 +117,8 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
     </div>
 
     <!-- Endereço: CEP, Rua, Cidade, Estado -->
+
+    
     <div class="col-sm-6 col-md-3">
       <label for="clieCep" class="form-label">CEP</label>
       <input type="text" class="form-control" name="clieCep" id="clieCep" placeholder="00000-000" minlength="9" maxlength="9">
@@ -138,6 +145,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       <input type="email" class="form-control" name="clieMail" id="clieMail" placeholder="email@exemplo.com" maxlength="35">
     </div>
 
+   
     <div class="col-sm-6 col-md-4">
       <label for="clieBanc" class="form-label">Banco</label>
       <input type="text" class="form-control" name="clieBanc" id="clieBanc" placeholder="Banco" maxlength="20">
@@ -145,18 +153,20 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
 
     <div class="col-sm-6 col-md-2">
       <label for="clieAgen" class="form-label">Agência</label>
-      <input type="number" class="form-control" name="clieAgen" id="clieAgen" placeholder="Agência" max="99999">
+      <input type="number" class="form-control" name="clieAgen" id="clieAgen" placeholder="Agência" maxlength="5">
     </div>
 
     <div class="col-sm-6 col-md-2">
       <label for="clieCont" class="form-label">Conta</label>
-      <input type="number" class="form-control" name="clieCont" id="clieCont" placeholder="Conta" max="9999999999">
+      <input type="number" class="form-control" name="clieCont" id="clieCont" placeholder="Conta" maxlength="8">
     </div>
 
     <div class="col-sm-12 col-md-4">
       <label for="cliePix" class="form-label">Pix</label>
       <input type="text" class="form-control" name="cliePix" id="cliePix" placeholder="Chave Pix" maxlength="50">
     </div>
+
+    
 
     <!-- Botões -->
     <div class="col-12 d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-4">
@@ -167,14 +177,76 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       <button type="button" class="btn btn-secondary btnOutInit px-5">
         <i class="bi bi-arrow-left me-2"></i>Voltar
       </button>
+
+       <button type="button" class="btn btn-sm btn-warning btnAddFili px-5" style="display: none;">
+        <i class="bi bi-house-add"></i> Adicionar Filial
+      </button>
     </div>
 
   </div>
-</form>
+ </form>
 
+ <!-- Contêiner absoluto para centralizar dentro do form -->
+<div class="popUpFilial position-fixed top-0 start-0 w-100 h-100 justify-content-center align-items-center"
+     style="background-color: rgba(0, 0, 0, 0.4); display: none; z-index: 1055;">
+
+  <!-- Popup com sombra leve -->
+  <div class="bg-white border rounded-4 p-4 shadow-sm w-100 mx-3" style="max-width: 500px;">
+        
+    <div class="text-center mb-4">
+      <h5 class="fw-bold text-dark">
+        <i class="bi bi-search text-primary me-2"></i>Cadastrar Filial
+      </h5>
+      <p class="text-muted mb-0 small">Coloque os seguintes dados</p>
+    </div>
+
+    <!-- Campo Código -->
+    <div class="form-floating mb-3 position-relative">
+      <input type="text" name="nameFili" id="nameFili" class="form-control ps-5" placeholder="Nome da Filial" maxlength="15" />
+      <label for="nameFili"><i class="bi bi-hash me-1"></i>Nome da Filial</label>
+    </div>
+
+    <!-- Campo CPF -->
+    <div class="form-floating mb-4 position-relative">
+      <input type="text" name="cnpjFili" id="cnpjFili" class="form-control ps-5" placeholder="CNPJ">
+      <label for="cnpjFili"><i class="bi bi-ui-checks me-1"></i>CNPJ</label>
+    </div>
+
+    <!-- Campo CNPJ -->
+    <div class="form-floating mb-4 position-relative">
+      <input type="text" name="cepFili" id="cepFili" class="form-control ps-5" placeholder="CEP">
+      <label for="cepFili"><i class="bi bi-ui-checks me-1"></i>CEP</label>
+    </div>
+
+     <div class="form-floating mb-4 position-relative">
+      <input type="text" name="ruaFili" id="ruaFili" class="form-control ps-5" placeholder="Rua">
+      <label for="ruaFili"><i class="bi bi-ui-checks me-1"></i>Rua</label>
+    </div>
+
+    <div class="form-floating mb-4 position-relative">
+      <input type="text" name="cidaFili" id="cidaFili" class="form-control ps-5" placeholder="Cidade">
+      <label for="cidaFili"><i class="bi bi-ui-checks me-1"></i>Cidade</label>
+    </div>
+
+    <div class="form-floating mb-4 position-relative">
+      <input type="text" name="bairFili" id="bairFili" class="form-control ps-5" placeholder="Cidade">
+      <label for="bairFili"><i class="bi bi-ui-checks me-1"></i>Bairro</label>
+    </div>
+
+    <!-- Botões -->
+    <div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+      <button class="btn btn-primary w-100 w-sm-50 saveFili">
+        <i class="bi bi-search me-1"></i> Salvar
+      </button>
+      <button class="btn btn-light w-100 w-sm-50 outPageRegisterClientFili">
+        <i class="bi bi-arrow-left me-1"></i> Voltar
+      </button>
+    </div>
+
+  </div>
 </div>
 
-      
+
     <!-- Formulário de edição -->
 <div class="formEditClient container py-4  " style="display: none; overflow:auto;">
   <form id="formEditRegisterClient" class="border border-secondary-subtle rounded-4 p-4 shadow-sm">
@@ -198,7 +270,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
          <option value="Pessoa Jurídica">Pessoa Jurídica</option>
          <option value="Pessoa Física">Pessoa Física</option>
        </select>
-        <input type="hidden" name="tipoClieEditHidden" id="tipoClieEditHidden" />
+        <input type="hidden" name="tipoClieEditHidden" id="tipoClieEditHidden"/>
       </div>
 
 

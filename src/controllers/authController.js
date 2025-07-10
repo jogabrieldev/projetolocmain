@@ -15,7 +15,6 @@ export const authSystemValidade = {
       }
 
          const user = await modelsAuthenticateUser.authenticateLogin(username, password);
-         console.log('usuario' , user)
       
       if (!user) {
         return res.status(401).json({ message: "Usuário ou senha inválidos" });
@@ -45,8 +44,6 @@ export const authSystemValidade = {
     try {
       const { username, password  } = req.body;
 
-      console.log(" corpo" , req.body)
-
       if (!username || !password) {
         return res.status(400).json({ message: "Usuário e senha obrigatórios" });
       }
@@ -63,8 +60,6 @@ export const authSystemValidade = {
       if(!idMoto){
         return res.status(400).json({message: 'Id do motorista não encontrado'})
       }
-
-      console.log('motorista' ,  idMoto)
 
       const token = jwt.sign(
         { user: motorista.motonome, id: motorista.motocode, tipo: "motorista" },

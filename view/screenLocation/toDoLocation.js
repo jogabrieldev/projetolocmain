@@ -301,8 +301,10 @@ function interationSystemLocation() {
   if (outPageSearchLocation) {
     outPageSearchLocation.addEventListener("click", () => {
       const containerSearch = document.querySelector(".searchLocation");
+      const backdrop = document.querySelector('.popupBackDrop')
       if (containerSearch) {
-        esconderElemento(containerSearch);
+        containerSearch.style.display = 'none';
+         backdrop.style.display = 'none'
       }
 
       const containerAppLocation = document.querySelector(
@@ -314,14 +316,18 @@ function interationSystemLocation() {
     });
   }
 
-  const searchLoc = document.querySelector(".searchLoc");
-  if (searchLoc) {
-    searchLoc.addEventListener("click", () => {
-      const containerSearch = document.querySelector(".searchLocation");
-      if (containerSearch) {
-        mostrarElemento(containerSearch);
-      }
-    });
+  const btnSearchLoc = document.querySelector(".searchloc")
+  if(btnSearchLoc){
+    btnSearchLoc.addEventListener("click", () => {
+     const containerSearch = document.querySelector(".searchLocation")
+     const backdrop = document.querySelector('.popupBackDrop')
+     if(containerSearch){
+        containerSearch.style.display = "flex";
+        backdrop.style.display = 'block'
+     }
+      
+  });
+
   }
 
   const btnAtivLocation = document.querySelector(".registerLocation");
@@ -438,6 +444,13 @@ function interationSystemLocation() {
         mostrarElemento(btnMainPage);
       }
     });
+  }
+
+  const btnSearchLocation = document.querySelector('.submitSearchLocation')
+  if(btnSearchLocation){
+      btnSearchLocation.addEventListener('click',()=>{
+         filterTable()
+      })
   }
 }
 

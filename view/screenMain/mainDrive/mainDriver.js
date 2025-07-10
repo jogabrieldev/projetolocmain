@@ -596,17 +596,20 @@ async function searchDriverForId() {
   const btnForSearch = document.getElementById('searchDriver');
   const popUpSearch = document.querySelector('.searchIdDriver');
   const driverListDiv = document.querySelector(".listingDriver");
+  const backdrop = document.querySelector('.popupBackDrop')
   const btnOutPageSearch = document.querySelector('.outPageSearchDriver')
 
   if(btnForSearch && popUpSearch){
      btnForSearch.addEventListener('click' , ()=>{
        popUpSearch.style.display = 'flex'
+       backdrop.style.display = 'block'
      })
   }
 
    if(popUpSearch || btnOutPageSearch){
      btnOutPageSearch.addEventListener('click' , ()=>{
        popUpSearch.style.display = 'none'
+       backdrop.style.display ='none'
      })
   }
 
@@ -698,6 +701,7 @@ async function searchDriverForId() {
           renderMotoristasTable(data.driver)
  
           if (popUpSearch) popUpSearch.style.display = 'none';
+          if(backdrop)backdrop.style.display ='none'
 
       }else{
         Toastify({

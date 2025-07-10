@@ -45,6 +45,10 @@ class Control {
   residuoView(req , res){
      res.sendFile(path.join(__dirname , '..' , '..' , 'view' , 'screenMain' , 'mainResiduo' , 'mainResiduo.html'))
   }
+
+   destination(req ,res){
+    res.sendFile(path.join(__dirname , '..' , '..' , 'view' , "screenMain" ,"mainDestination" ,"mainDestination.html"))
+  }
  
   
   location(req ,res){
@@ -66,6 +70,8 @@ class Control {
   devolution(req , res){
     res.sendFile(path.join(__dirname , '..' , '..' , 'view' , 'screenDevolution' , 'mainDevolution.html'))
   }
+
+ 
 
 }
 

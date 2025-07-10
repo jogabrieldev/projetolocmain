@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"/>
-    <link rel="stylesheet" href="main.css" />
-    <link rel="stylesheet" href="./mainGoods/mainGoods.css" />
-    <link rel="stylesheet" href="./mainClient/mainClient.css" />
+    <link rel="stylesheet" href="main.css"/>
+    <link rel="stylesheet" href="./mainGoods/mainGoods.css"/>
+    <link rel="stylesheet" href="./mainDestination/mainDestination.css">
+    <link rel="stylesheet" href="./mainClient/mainClient.css"/>
     <link rel="stylesheet" href="./mainForn/mainForn.css" />
     <link rel="stylesheet" href="./mainProd/mainProd.css" />
     <link rel="stylesheet" href="./mainFabe/mainFabri.css" />
@@ -30,7 +31,7 @@
 
     <title>Caçamba</title>
   </head>
-
+  
 <body>
 
     <section class="container-fluid bg-opacity-75 text-white d-flex flex-wrap align-items-center justify-content-between px-3 px-md-4 position-sticky top-0 rounded-3" style="min-height: 100px; z-index: 1030">
@@ -56,7 +57,7 @@
     <div class="text-center mb-3">
       <img src="../img/sgttec2.jpg" alt="Logo" class="img-fluid rounded-circle border border-white" style="width: 80px;" />
     </div>
-    <ul class="nav flex-column mt-3 mt-md-5">
+    <ul class="nav flex-column d-flex gap-2">
 
      <li class="nav-item mb-2">
       <button class="btn btn-outline-light w-100 d-flex align-items-center justify-content-between" 
@@ -68,26 +69,60 @@
     </li>
 
       <div class="collapse" id="cadastrosMenu">
-        <ul class="nav flex-column w-100">
+        <ul class="nav flex-column w-100 d-flex gap-3">
+ <li class="nav-item mb-2">
+    <button class="btn btn-submenu btn-outline-light w-100 btnLoadBens">
+      <i class="bi bi-box-seam me-2"></i>Bens
+    </button>
+  </li>
+  <li class="nav-item mb-2">
+    <button class="btn btn-submenu btn-outline-light w-100 btnCadClie">
+      <i class="bi bi-person-lines-fill me-2"></i>Clientes
+    </button>
+  </li>
+  <li class="nav-item mb-2">
+    <button class="btn btn-submenu btn-outline-light w-100 btnCadForn">
+      <i class="bi bi-truck me-2"></i>Fornecedor
+    </button>
+  </li>
+  <li class="nav-item mb-2">
+    <button class="btn btn-submenu btn-outline-light w-100 btnCadProd">
+      <i class="bi bi-bag-check me-2"></i>Produto
+    </button>
+  </li>
+  <li class="nav-item mb-2">
+    <button class="btn btn-submenu btn-outline-light w-100 btnCadFabri">
+      <i class="bi bi-tags me-2"></i>Família de Bens
+    </button>
+  </li>
+  <li class="nav-item mb-2">
+    <button class="btn btn-submenu btn-outline-light w-100 btnCadTypeProd">
+      <i class="bi bi-ui-checks me-2"></i>Tipo do Produto
+    </button>
+  </li>
+  <li class="nav-item mb-2">
+    <button class="btn btn-submenu btn-outline-light w-100 btnCadMotorista">
+      <i class="bi bi-person-badge me-2"></i>Motorista
+    </button>
+  </li>
+  <li class="nav-item mb-2">
+    <button class="btn btn-submenu btn-outline-light w-100 btnCadAutomo">
+      <i class="bi bi-truck-front me-2"></i>Veículos
+    </button>
+  </li>
+  <li class="nav-item mb-2">
+    <button class="btn btn-submenu btn-outline-light w-100 btnCadResiduo">
+      <i class="bi bi-recycle me-2"></i>Resíduo
+    </button>
+  </li>
 
-        <li class="nav-item mb-0"><button class="btn btn-submenu btn-outline-light w-100 btnLoadBens"><i class="bi bi-box-seam me-2"></i>Bens</button></li>
-        <br>
-        <li class="nav-item mb-0"><button class="btn btn-submenu btn-outline-light w-100  btnCadClie"><i class="bi bi-person-lines-fill me-2"></i>Clientes</button></li>
-         <br>
-        <li class="nav-item mb-0"><button class="btn btn-submenu btn-outline-light w-100  btnCadForn"><i class="bi bi-truck me-2"></i>Fornecedor</button></li>
-          <br>
-        <li class="nav-item mb-0"><button class="btn btn-submenu btn-outline-light w-100  btnCadProd"><i class="bi bi-bag-check me-2"></i>Produto</button></li>
-         <br>
-        <li class="nav-item mb-0"><button class="btn btn-submenu btn-outline-light w-100  btnCadFabri"><i class="bi bi-tags me-2"></i>Família de Bens</button></li>
-          <br>
-        <li class="nav-item mb-0"><button class="btn btn-submenu btn-outline-light w-100  btnCadTypeProd"><i class="bi bi-ui-checks me-2"></i>Tipo do Produto</button></li>
-          <br>
-        <li class="nav-item mb-0"><button class="btn btn-submenu btn-outline-light w-100 btnCadMotorista"><i class="bi bi-person-badge me-2"></i>Motorista</button></li>
-         <br>
-        <li class="nav-item mb-0"><button class="btn btn-submenu btn-outline-light w-100  btnCadAutomo"><i class="bi bi-truck-front me-2"></i>Veículos</button></li>
-         <br>
-        <li class="nav-item mb-0"><button class="btn btn-submenu btn-outline-light w-100  btnCadResiduo"><i class="bi bi-recycle me-2"></i>Resíduo</button></li>
-      </ul>
+  <li class="nav-item mb-2">
+    <button class="btn btn-submenu btn-outline-light w-100 btnLoadDestination">
+      <i class="bi bi-geo-alt me-2"></i>Destino Descarte
+    </button>
+  </li>
+
+</ul>
     </div>
        
     <li class="nav-item mb-2"><button class="btn btn-outline-light w-100 btnRegisterLocation"><i class="bi bi-journal-plus me-2"></i>Locação</button></li>
@@ -212,6 +247,7 @@
     <script src="../screenDevolution/mainReturn.js"></script>
     <script src="../screenLocation/localization.js"></script>
     <script src="../screenLocation/locationVehicle.js"></script>
+    <script src="../screenMain/mainDestination/mainDestination.js"></script>
     <script src="main.js"></script>
 
   </body>

@@ -1,0 +1,37 @@
+.listDestinationDescart{
+  max-height: 75vh;
+  overflow: auto;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+}
+.tableDest{
+    font-size: 0.85rem;
+  color: #000;
+}
+.tableDest td,
+.tableDest th{
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.tableDest th{
+  background-color:#1f2937;
+  color:#ffffff;
+}
+
+.tableDest td{
+    background-color:#f8f9fa;
+   color: #212529;
+   word-break: break-word;
+  white-space: normal;
+}
+.hidden {
+    display: none !important;
+  }
+
+  .flex {
+    display: flex !important;
+  }
+
+
+

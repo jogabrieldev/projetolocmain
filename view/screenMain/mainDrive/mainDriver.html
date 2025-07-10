@@ -19,7 +19,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
     </div>
 
     <!-- POP UP DE PESQUISA -->
-
+<div class="popupBackDrop position-fixed top-0 start-0 w-100 h-100 bg-dark opacity-50" style="display: none; z-index: 1050;"></div>
  <div class="searchIdDriver position-fixed top-50 start-50 translate-middle bg-white border rounded-4 p-4 shadow-lg w-100 mx-3 flex-column" style="display: none; max-width: 500px; z-index: 1055;">
 
   <!-- Cabeçalho -->
@@ -67,39 +67,43 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
   </div>
 </div>
   
+<!-- Cadastro de motorista form -->
 <div class="RegisterDriver container py-4 rounded-3 shadow-sm" style="display: none;">
-  <form class="formRegisterDriver  rounded-4 p-4 ">
-  <div class="row g-2">
-
-    <!-- Código e Nome -->
-    <div class="col-md-3">
+  <form class="formRegisterDriver" class="rounded-4 p-4">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-2">
+    
+    <!-- Código -->
+    <div class="col">
       <label for="motoCode" class="form-label">Código</label>
       <input type="text" name="motoCode" id="motoCode" class="form-control form-control-sm" placeholder="Código" maxlength="15" />
     </div>
 
-    <div class="col-md-9">
+    <!-- Nome -->
+    <div class="col">
       <label for="motoNome" class="form-label">Nome</label>
       <input type="text" name="motoNome" id="motoNome" class="form-control form-control-sm" placeholder="Nome" maxlength="80" />
     </div>
 
-    <!-- Data de Nascimento, CPF, Emissão -->
-    <div class="col-md-4">
+    <!-- Data de Nascimento -->
+    <div class="col">
       <label for="motoDtnc" class="form-label">Nascimento</label>
       <input type="date" name="motoDtnc" id="motoDtnc" class="form-control form-control-sm" />
     </div>
 
-    <div class="col-md-4">
+    <!-- CPF -->
+    <div class="col">
       <label for="motoCpf" class="form-label">CPF</label>
       <input type="text" name="motoCpf" id="motoCpf" class="form-control form-control-sm" placeholder="CPF" maxlength="14" />
     </div>
 
-    <div class="col-md-4">
+    <!-- Emissão CNH -->
+    <div class="col">
       <label for="motoDtch" class="form-label">Emissão CNH</label>
       <input type="date" name="motoDtch" id="motoDtch" class="form-control form-control-sm" />
     </div>
 
-    <!-- Categoria, Vencimento, Restrições -->
-    <div class="col-md-4">
+    <!-- Categoria CNH -->
+    <div class="col">
       <label for="motoctch" class="form-label">Categoria CNH</label>
       <select class="form-select form-select-sm" name="motoctch" id="motoctch">
         <option>Selecione...</option>
@@ -114,56 +118,62 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       </select>
     </div>
 
-    <div class="col-md-4">
+    <!-- Vencimento CNH -->
+    <div class="col">
       <label for="motoDtvc" class="form-label">Vencimento CNH</label>
       <input type="date" name="motoDtvc" id="motoDtvc" class="form-control form-control-sm" />
     </div>
 
-    <div class="col-md-4">
+    <!-- Restrições -->
+    <div class="col">
       <label for="motoRest" class="form-label">Restrições</label>
       <input type="text" name="motoRest" id="motoRest" class="form-control form-control-sm" placeholder="Restrições" maxlength="40" />
     </div>
 
-    <!-- Órgão Emissor e Celular -->
-    <div class="col-md-6">
+    <!-- Órgão Emissor -->
+    <div class="col">
       <label for="motoOrem" class="form-label">Órgão Emissor</label>
       <input type="text" name="motoOrem" id="motoOrem" class="form-control form-control-sm" placeholder="Órgão Emissor" maxlength="40" />
     </div>
 
-    <div class="col-md-6">
+    <!-- Celular -->
+    <div class="col">
       <label for="motoCelu" class="form-label">Celular</label>
       <input type="text" name="motoCelu" id="motoCelu" class="form-control form-control-sm" placeholder="Celular" maxlength="40" />
     </div>
 
-    <!-- CEP, Rua, Cidade -->
-    <div class="col-md-4">
+    <!-- CEP -->
+    <div class="col">
       <label for="motoCep" class="form-label">CEP</label>
       <input type="text" name="motoCep" id="motoCep" class="form-control form-control-sm" placeholder="CEP" maxlength="9" />
     </div>
 
-    <div class="col-md-4">
+    <!-- Rua -->
+    <div class="col">
       <label for="motoRua" class="form-label">Rua</label>
       <input type="text" name="motoRua" id="motoRua" class="form-control form-control-sm" placeholder="Rua" maxlength="50" readonly />
     </div>
 
-    <div class="col-md-4">
+    <!-- Cidade -->
+    <div class="col">
       <label for="motoCity" class="form-label">Cidade</label>
       <input type="text" name="motoCity" id="motoCity" class="form-control form-control-sm" placeholder="Cidade" maxlength="25" readonly />
     </div>
 
-    <!-- Estado e Email -->
-    <div class="col-md-6">
+    <!-- Estado -->
+    <div class="col">
       <label for="motoEstd" class="form-label">Estado</label>
       <input type="text" name="motoEstd" id="motoEstd" class="form-control form-control-sm" placeholder="Estado" maxlength="20" readonly />
     </div>
 
-    <div class="col-md-6">
+    <!-- E-mail -->
+    <div class="col">
       <label for="motoMail" class="form-label">E-mail</label>
       <input type="email" name="motoMail" id="motoMail" class="form-control form-control-sm" placeholder="E-mail" maxlength="35" />
     </div>
 
-    <!-- Status e Situação -->
-    <div class="col-md-6">
+    <!-- Status -->
+    <div class="col">
       <label for="motoStat" class="form-label">Status</label>
       <select name="motoStat" id="motoStat" class="form-select form-select-sm">
         <option value="">Selecione...</option>
@@ -173,7 +183,8 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       </select>
     </div>
 
-    <div class="col-md-6">
+    <!-- Situação -->
+    <div class="col">
       <label for="motoSitu" class="form-label">Situação</label>
       <select name="motoSitu" id="motoSitu" class="form-select form-select-sm">
         <option value="">Selecione...</option>
@@ -182,9 +193,10 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       </select>
     </div>
 
-    <div class="col-md-4">
+    <!-- Senha -->
+    <div class="col">
       <label for="motoPasw" class="form-label">Criar Senha</label>
-      <input type="text" name="motoPasw" id="motoPasw" class="form-control form-control-sm" placeholder="Cidade" maxlength="80" required />
+      <input type="text" name="motoPasw" id="motoPasw" class="form-control form-control-sm" placeholder="Senha" maxlength="80" required />
     </div>
 
     <!-- Botões -->
@@ -199,6 +211,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
 
   </div>
 </form>
+
 
 </div>
 

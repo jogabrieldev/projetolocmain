@@ -445,20 +445,23 @@ async function fetchListFabricante() {
 // buscar family bens
 async function searchFamilyGoodsForId() {
     
-  const btnFamilySearch = document.getElementById('searchFamylyGoods');
+  const btnFamilySearch = document.getElementById('searchFamilyGoods');
   const popUpSearch = document.querySelector('.popUpsearchIdFamilyGoods');
   const familyGoodsListDiv = document.querySelector(".listingFabri");
+  const backdrop = document.querySelector('.popupBackDrop')
   const btnOutPageSearch = document.querySelector('.outPageSearchFamilyGoods')
 
   if (btnFamilySearch && popUpSearch) {
     btnFamilySearch.addEventListener('click', () => {
       popUpSearch.style.display = 'flex';
+      backdrop.style.display = 'block'
     });
   }
 
   if(popUpSearch || btnOutPageSearch){
      btnOutPageSearch.addEventListener('click' , ()=>{
        popUpSearch.style.display = 'none'
+       backdrop.style.display = 'none'
      })
   }
  
@@ -529,6 +532,7 @@ async function searchFamilyGoodsForId() {
 
           // Fecha o pop-up após a busca (opcional)
           if (popUpSearch) popUpSearch.style.display = 'none';
+          if(backdrop)backdrop.style.display = 'none'
 
         } else {
           Toastify({

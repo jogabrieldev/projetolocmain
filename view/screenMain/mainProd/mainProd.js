@@ -523,17 +523,20 @@ async function searchProduto() {
   const btnProdutoSearch = document.getElementById('searchProd');
   const popUpSearch = document.querySelector('.popUpsearchIdProd');
   const produtoListDiv = document.querySelector(".listingProd");
+  const backdrop = document.querySelector('.popupBackDrop')
   const btnOutPageSearch = document.querySelector('.outPageSearchProd')
 
   if (btnProdutoSearch && popUpSearch) {
     btnProdutoSearch.addEventListener('click', () => {
       popUpSearch.style.display = 'flex';
+      backdrop.style.display = 'block'
     });
   }
 
   if(popUpSearch || btnOutPageSearch){
      btnOutPageSearch.addEventListener('click' , ()=>{
        popUpSearch.style.display = 'none'
+       backdrop.style.display = 'none'
      })
   }
  
@@ -587,8 +590,7 @@ async function searchProduto() {
         const data = await response.json();
 
         if (response.ok && data.produto?.length > 0) {
-          console.log("Resultados encontrados:", data.produto);
-          
+         
           Toastify({
           text: "O Produto foi encontrado com sucesso!.",
           duration: 3000,
@@ -604,6 +606,7 @@ async function searchProduto() {
 
           // Fecha o pop-up após a busca (opcional)
           if (popUpSearch) popUpSearch.style.display = 'none';
+          if(backdrop) backdrop.style.display = 'none'
 
         } else {
           Toastify({

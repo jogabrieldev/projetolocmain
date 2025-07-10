@@ -463,17 +463,20 @@ async function searchVehicles() {
   const btnSearch = document.getElementById('searchVehicle');
   const popUpSearch = document.querySelector('.popUpsearchIdVehicles');
   const vehicleListDiv = document.querySelector(".listingAutomo");
+  const backdrop = document.querySelector('.popupBackDrop')
   const btnOutPageSearch = document.querySelector('.outPageSearchVehicle')
 
   if (btnSearch && popUpSearch) {
     btnSearch.addEventListener('click', () => {
       popUpSearch.style.display = 'flex';
+      backdrop.style.display = 'block'
     });
   }
 
   if(popUpSearch || btnOutPageSearch){
      btnOutPageSearch.addEventListener('click' , ()=>{
        popUpSearch.style.display = 'none'
+       backdrop.style.display = 'none'
      })
   }
  
@@ -560,6 +563,7 @@ async function searchVehicles() {
 
           // Fecha o pop-up após a busca (opcional)
           if (popUpSearch) popUpSearch.style.display = 'none';
+          if(backdrop)backdrop.style.display = 'none'
 
         } else {
           Toastify({

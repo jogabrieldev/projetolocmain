@@ -22,7 +22,8 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       </div>
 
     <!--POP UP DE PESQUISA -->
-     <div class="popUpsearchIdVehicles position-fixed top-50 start-50 translate-middle bg-white border rounded-4 p-4 shadow-lg w-100 mx-3 flex-column" style="display: none; max-width: 500px; z-index: 1055;">
+  <div class="popupBackDrop position-fixed top-0 start-0 w-100 h-100 bg-dark opacity-50" style="display: none; z-index: 1050;"></div>
+<div class="popUpsearchIdVehicles position-fixed top-50 start-50 translate-middle bg-white border rounded-4 p-4 shadow-lg w-100 mx-3 flex-column" style="display: none; max-width: 500px; z-index: 1055;">
 
   <!-- Cabeçalho -->
   <div class="text-center mb-4">
@@ -61,12 +62,12 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
         <div class="row g-3">
           <div class="col-md-3">
             <label for="codeAuto" class="form-label">Código</label>
-            <input type="text" class="form-control" name="codeAuto" id="codeAuto" maxlength="15" placeholder="Código" />
+            <input type="text" class="form-control" name="codeAuto" id="codeAuto" maxlength="15" placeholder="EX:001" />
           </div>
   
           <div class="col-md-3">
             <label for="placAuto" class="form-label">Placa</label>
-            <input type="text" class="form-control" name="placAuto" id="placAuto" maxlength="7" placeholder="Placa" />
+            <input type="text" class="form-control" name="placAuto" id="placAuto" maxlength="7" placeholder="DDD2D22" />
           </div>
   
           <div class="col-md-3">

@@ -33,4 +33,6 @@ routeEscreen.get('/residuoview' , control.residuoView)
 
 routeEscreen.get('/localization' , control.localization)
 
+routeEscreen.get('/destination' , control.destination)
+
 export { routeEscreen };

@@ -25,7 +25,8 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       </div>
 
   <!-- POPUP DE PESQUISA -->
-<div class="searchIdGoods position-fixed top-50 start-50 translate-middle bg-white border rounded-4 p-4 shadow-lg w-100 mx-3 flex-column" style="display: none; max-width: 500px; z-index: 1055;">
+ <div class="popupBackDrop position-fixed top-0 start-0 w-100 h-100 bg-dark opacity-50" style="display: none; z-index: 1050;"></div>
+<div class="searchIdGoods position-fixed top-50 start-50 translate-middle bg-white border rounded-4 p-4 shadow-lg w-100 mx-3 flex-column" style=" background-color: rgba(0, 0, 0, 0.4); display: none; max-width: 500px; z-index: 1055;">
 
   <!-- Cabeçalho -->
   <div class="text-center mb-4">
@@ -192,7 +193,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       <!-- Campo: Código -->
       <div class="col">
         <label for="code" class="form-label">Código</label>
-        <input type="text" class="form-control form-control-sm" id="code" name="code" maxlength="15" placeholder="Código">
+        <input type="text" class="form-control form-control-sm" id="code" name="code" maxlength="15" placeholder="EX:001">
       </div>
 
       <!-- Campo: Nome -->

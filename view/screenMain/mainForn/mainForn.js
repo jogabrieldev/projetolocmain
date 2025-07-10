@@ -408,17 +408,20 @@ async function searchFornecedorForId() {
   const btnForSearch = document.getElementById('searchFornecedor');
   const popUpSearch = document.querySelector('.searchIdForne');
   const forneListDiv = document.querySelector(".listingForn");
+  const backdrop  = document.querySelector('.popupBackDrop')
   const btnOutPageSearch = document.querySelector('.outPageSearchForn')
 
   if (btnForSearch && popUpSearch) {
     btnForSearch.addEventListener('click', () => {
       popUpSearch.style.display = 'flex';
+      backdrop.style.display = 'block'
     });
   }
 
   if(popUpSearch || btnOutPageSearch){
      btnOutPageSearch.addEventListener('click' , ()=>{
        popUpSearch.style.display = 'none'
+       backdrop.style.display = 'none'
      })
   }
 
@@ -492,8 +495,7 @@ async function searchFornecedorForId() {
         const data = await response.json();
 
         if (response.ok && data.fornecedor?.length > 0) {
-          console.log("Resultados encontrados:", data.fornecedor);
-          
+     
           Toastify({
           text: "O Fornecedor foi encontrado com sucesso!.",
           duration: 3000,
@@ -509,6 +511,7 @@ async function searchFornecedorForId() {
 
           // Fecha o pop-up após a busca (opcional)
           if (popUpSearch) popUpSearch.style.display = 'none';
+          if(backdrop)backdrop.style.display = 'none'
 
         } else {
           Toastify({

@@ -23,7 +23,7 @@ export const clientRegister = {
         cliePix,
       } = data;
 
-      const insert = `INSERT INTO cadclie( cliecode, clienome,clietpcl, cliecpf, cliecnpj, cliedtcd, cliedtnc, cliecelu, cliecity, clieestd, clierua, cliecep, cliemail, cliebanc, clieagen , cliecont , cliepix ) VALUES( $1 , $2 , $3 , $4 , $5 ,$6 , $7 , $8 , $9 , $10 , $11 , $12 , $13 , $14 ,$15 , $16 , $17) RETURNING *`;
+      const insert = `INSERT INTO cadclie( cliecode, clienome,clietpcl, cliecpf, cliecnpj, cliedtcd, cliedtnc, cliecelu, cliecity, clieestd, clierua, cliecep, cliemail, cliebanc, clieagen , cliecont , cliepix) VALUES( $1 , $2 , $3 , $4 , $5 ,$6 , $7 , $8 , $9 , $10 , $11 , $12 , $13 , $14 ,$15 , $16 , $17 ) RETURNING *`;
 
       const values = [
         clieCode,
@@ -57,6 +57,8 @@ export const clientRegister = {
     }
   },
 
+
+
    getAllClientForId: async()=>{
     try {
       const query = "SELECT cliecode FROM cadclie";
@@ -71,7 +73,22 @@ export const clientRegister = {
       throw error;
     }
   },
-
+    
+  verifiqueFilial: async (cliecode)=>{
+   try {
+    const query = ` SELECT COUNT(*) AS total_filiais FROM clifili WHERE filiclid = $1`;
+     const values = [cliecode];
+     const result = await dataClient.query(query, values);
+     const total = parseInt(result.rows[0].total_filiais, 10);
+     if(total > 0){
+          return total;
+     }
+  
+      } catch (error) {
+         console.error('Erro na verificação de filiais')
+          throw error;
+    }
+  },
 
    getClientForId: async(cliecode)=>{
     try {

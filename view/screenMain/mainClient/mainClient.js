@@ -1,3 +1,5 @@
+
+
 function isTokenExpired(token) {
   try {
     const payload = JSON.parse(atob(token.split(".")[1]));
@@ -52,28 +54,87 @@ function dateAtualInField(date){
  
 }
 
-function readOnlyFieldChange(){
+function initTipoClienteHandler() {
+  const tipoInput = document.getElementById('clieTiCli');
+  const btnAddFili = document.querySelector(".btnAddFili");
+  const popUpFilial = document.querySelector('.popUpFilial');
+  const buttonExitPopUpFilial = document.querySelector('.outPageRegisterClientFili');
 
-    document.getElementById('clieTiCli').addEventListener('change', function () {
-       const tipoCliente = this.value;
-       const cpfField = document.getElementById('clieCpf');
-       const cnpjField = document.getElementById('clieCnpj');
+  if (!tipoInput || !btnAddFili) return;
 
-      if (tipoCliente === "Pessoa Jurídica") {
-         cpfField.value = "";
-         cpfField.readOnly = true;
-         cnpjField.readOnly = false;
+  tipoInput.addEventListener('change', function () {
+    const tipoCliente = this.value;
+    const cpfField = document.getElementById('clieCpf');
+    const cnpjField = document.getElementById('clieCnpj');
 
-      } else if (tipoCliente === "Pessoa Física") {
-        cnpjField.value = "";
-        cnpjField.readOnly = true;
-        cpfField.readOnly = false;
+    if (!cpfField || !cnpjField) return;
 
-      } else {
-       cpfField.readOnly = false;
-       cnpjField.readOnly = false;
-      }
+    if (tipoCliente === "Pessoa Jurídica") {
+      cpfField.value = "";
+      cpfField.readOnly = true;
+      cnpjField.readOnly = false;
+      btnAddFili.classList.remove('hidden');
+      btnAddFili.classList.add('flex');
+    } else if (tipoCliente === "Pessoa Física") {
+      cnpjField.value = "";
+      cnpjField.readOnly = true;
+      cpfField.readOnly = false;
+      btnAddFili.classList.add('hidden');
+      btnAddFili.classList.remove('flex');
+    } else {
+      cpfField.readOnly = false;
+      cnpjField.readOnly = false;
+      btnAddFili.classList.add('hidden');
+      btnAddFili.classList.remove('flex');
+    }
   });
+
+  // Abrir o pop-up ao clicar no botão de adicionar filial
+  btnAddFili.addEventListener('click', () => {
+    if (popUpFilial) {
+      popUpFilial.style.display = 'flex';
+    }
+  });
+
+  // Fechar o pop-up ao clicar no botão de saída
+  if (buttonExitPopUpFilial) {
+    buttonExitPopUpFilial.addEventListener('click', () => {
+      if (popUpFilial) {
+        popUpFilial.style.display = 'none';
+      }
+    });
+  }
+}
+
+function getFilialData() {
+  const nomeFili = document.getElementById('nameFili').value.trim();
+  const cnpjFili = document.getElementById('cnpjFili').value.trim();
+  const cepFili = document.getElementById('cepFili').value.trim();
+  const ruaFili = document.getElementById('ruaFili').value.trim();
+  const cidaFili = document.getElementById('cidaFili').value.trim();
+  const bairFili = document.getElementById('bairFili')?.value.trim() || '';
+
+  if (!nomeFili && !cnpjFili && !cepFili && !ruaFili && !cidaFili && !bairFili) {
+    return null; // Nenhuma filial foi preenchida
+  }
+
+  if (!nomeFili || !cnpjFili || !cepFili || !ruaFili || !cidaFili || !bairFili) {
+    Toastify({
+      text: "Faltam informações da filial!",
+      duration: 3000,
+      backgroundColor: "red",
+    }).showToast();
+    return null;
+  }
+
+  return {
+    nomeFili,
+    cnpjFili,
+    cepFili,
+    ruaFili,
+    cidaFili,
+    bairFili
+  };
 }
 
 const socketClient = io();
@@ -93,13 +154,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (mainContent) {
           mainContent.innerHTML = html;
           maskFieldClient();
-          readOnlyFieldChange();
+          initTipoClienteHandler()
           interationSystemClient();
           searchClient();
           registerNewClient();
           dateAtualInField('dtCad')
           deleteClient();
           editarCliente();
+
         } else {
           console.error("#mainContent não encontrado no DOM");
           return;
@@ -257,6 +319,22 @@ async function interationSystemClient() {
     });
     return;
   }
+
+  const btnAddFilial = document.querySelector('.btnAddFili')
+  if(btnAddFilial){
+     btnAddFilial.addEventListener('click' , ()=>{
+         const popUpBranch = document.querySelector('.popUpFilial')
+         if(popUpBranch){
+             popUpBranch.style.display = 'flex'
+               console.log('pop' , popUpBranch)
+         }
+           console.log('pop' , popUpBranch)
+           
+            
+     })
+     
+  }
+
 }
 
 async function registerNewClient() {
@@ -344,6 +422,7 @@ async function registerNewClient() {
       }
 
       // Captura os valores do formulário após o preenchimento
+      const dataFilial =getFilialData()
       const formData = {
         clieCode: document.querySelector("#clieCode").value.trim(),
         clieName: document.querySelector("#clieName").value.trim(),
@@ -361,9 +440,9 @@ async function registerNewClient() {
         clieBanc: document.querySelector('#clieBanc').value.trim(),
         clieAgen: document.querySelector('#clieAgen').value.trim(),
         clieCont: document.querySelector('#clieCont').value.trim(),
-        cliePix: document.querySelector('#cliePix').value.trim()
-      };
-
+        cliePix: document.querySelector('#cliePix').value.trim(),
+        filial: dataFilial
+      }
       if(formData.clieTpCl === "Pessoa Jurídica" && formData.clieCnpj === ""){
           Toastify({
           text: "O Cliente e uma pessoa jurídica adicione o CNPJ dele. OBRIGATORIO",
@@ -574,7 +653,6 @@ async function fetchListClientes() {
         "Banco",
         "Agencia",
         "Conta"
-        
       ];
 
       colunas.forEach((coluna) => {
@@ -672,20 +750,26 @@ async function fetchListClientes() {
 
 // BUSCAR CLIENTE ESPECIFICO
 async function searchClient() {
+
   const btnForSearch = document.getElementById('searchClient');
   const popUpSearch = document.querySelector('.searchIdClient');
   const bensListDiv = document.querySelector(".listClient");
+  const backdrop = document.querySelector('.popupBackDrop');
   const btnOutPageSearch = document.querySelector('.outPageSearchClient')
+ 
 
   if(btnForSearch && popUpSearch){
      btnForSearch.addEventListener('click' , ()=>{
        popUpSearch.style.display = 'flex'
+       backdrop.style.display = 'block'
+       
      })
   }
 
    if(popUpSearch || btnOutPageSearch){
      btnOutPageSearch.addEventListener('click' , ()=>{
        popUpSearch.style.display = 'none'
+        backdrop.style.display = 'none'
      })
   }
 
@@ -777,6 +861,7 @@ async function searchClient() {
           renderClientesTable(data.cliente)
  
           if (popUpSearch) popUpSearch.style.display = 'none';
+          if(backdrop)backdrop.style.display = 'none'
 
       }else{
         Toastify({
@@ -952,15 +1037,7 @@ function deleteClient() {
     const token = localStorage.getItem("token");
 
     if (!token || isTokenExpired(token)) {
-      Toastify({
-        text: "Sessão expirada. Faça login novamente.",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-
+    
       localStorage.removeItem("token");
       setTimeout(() => {
         window.location.href = "/index.html";
@@ -1060,8 +1137,8 @@ function editarCliente() {
 
     const containerEditForm = document.querySelector(".formEditClient");
     if (containerEditForm) {
-      containerEditForm.classList.remove("hidden");
-      containerEditForm.classList.add("flex");
+      containerEditForm.style.display = 'flex'
+    
     }
 
     const clientData = selectedCheckbox.getAttribute("data-cliente");
@@ -1070,11 +1147,11 @@ function editarCliente() {
       console.error("O atributo data-client está vazio ou indefinido.");
       return;
     }
+    console.log('cliente' , clientData)
 
     try {
       const clientSelecionado = JSON.parse(clientData);
 
-    
       const campos = [
         { id: "editClieCode", valor: clientSelecionado.cliecode },
         { id: "editClieName", valor: clientSelecionado.clienome },

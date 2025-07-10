@@ -635,17 +635,20 @@ async function searchGoodsForId() {
   const btnForSearch = document.getElementById('searchGoods');
   const popUpSearch = document.querySelector('.searchIdGoods');
   const bensListDiv = document.querySelector("#listingBens");
+  const backdrop = document.querySelector('.popupBackDrop');
   const btnOutPageSearch = document.querySelector('.outPageSearchGoods')
 
   if (btnForSearch && popUpSearch) {
     btnForSearch.addEventListener('click', () => {
       popUpSearch.style.display = 'flex';
+      backdrop.style.display = 'block'
     });
   }
 
   if(popUpSearch || btnOutPageSearch){
      btnOutPageSearch.addEventListener('click' , ()=>{
        popUpSearch.style.display = 'none'
+       backdrop.style.display = 'none'
      })
   }
 
@@ -735,6 +738,7 @@ async function searchGoodsForId() {
 
           // Fecha o pop-up após a busca (opcional)
           if (popUpSearch) popUpSearch.style.display = 'none';
+          if(backdrop)backdrop.style.display = 'none'
 
         } else {
           Toastify({

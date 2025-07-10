@@ -1,11 +1,14 @@
 
 import { clientRegister } from "../model/modelsClient.js";
+import { dateFilial as controllerFili } from "../model/modelsFilial.js";
 import fetch from "node-fetch";
 
 export const movementClient = {
   async registerClient(req, res) {
     try {
       const dataClientSubmit = req.body;
+
+     console.log('dataclient' , dataClientSubmit)
 
       if (!dataClientSubmit) {
         return res
@@ -116,6 +119,18 @@ export const movementClient = {
         return res.status(400).json({ message: "Erro ao inserir cliente" });
       }
 
+      if(dataClientSubmit.filial){
+
+          const filialData = dataClientSubmit.filial
+          console.log('filial'  , filialData)
+          try {
+               await controllerFili.registerFilial(newClient.cliecode , filialData)
+          } catch (error) {
+              console.log('ERRO AO INSERIR FILIAL' , error)
+          }
+         
+      }
+
       const io = req.app.get("socketio");
       if (io) {
         const clients = await clientRegister.listingClient();
@@ -125,7 +140,7 @@ export const movementClient = {
       res.status(201).json({ success: true, user: newClient });
       
     } catch (error) {
-      console.error("erro no controller client");
+      console.error("erro no controller client" , error);
 
       if (error.message.includes("Código de cliente já cadastrado")) {
         return res.status(409).json({ success: false, message: error.message });
@@ -218,6 +233,14 @@ export const movementClient = {
           message: "Não e possivel excluir. O cliente tem locação",
         });
       }
+
+      const verifiqueFilial = await clientRegister.verifiqueFilial(id)
+    
+      if(verifiqueFilial){
+        console.log('filial' , verifiqueFilial)
+        return res.status(400).json({message:'O cliente possui filiais no nosso sistema'})
+      }
+
       const deleteComponent = await clientRegister.deleteClient(id);
 
       if (deleteComponent) {
