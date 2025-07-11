@@ -48,13 +48,13 @@ document.addEventListener('DOMContentLoaded' , ()=>{
          const containerResiduo = document.querySelector(".containerAppResiduo");
         const btnMainPageClient = document.querySelector(".buttonsMainPage");
         const listingResiduo = document.querySelector(".listResiduo");
-        // const editFormClient = document.querySelector(".formEditClient");
+        
         const informative = document.querySelector(".information");
 
         if (containerResiduo) containerResiduo.style.display = "flex";
         if (btnMainPageClient) btnMainPageClient.style.display = "flex";
         if (listingResiduo) listingResiduo.style.display = "flex";
-        // if (editFormClient) editFormClient.style.display = "none";
+       
         if (informative) {
           informative.style.display = "block";
           informative.textContent = "SEÇÃO RESIDUO";

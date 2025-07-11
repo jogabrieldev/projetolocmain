@@ -47,6 +47,25 @@ export const movementResiduo =  {
           }
      },
 
+  async getIdResiduo(req , res){
+      try {
+         const {id} =  req.params
+         if(!id){
+          return res.status(400).json({message:'Tem que passar o ID do residuo'})
+         }
+
+         const resunt = await moduleResiduo.getIdResiduo(id)
+         if(!resunt){
+           return res.status(400).json({message:"não existe esse residuo no sistema"})
+         }
+         
+         return res.status(200).json({message:'Busca bem sucedida!', success:true , resunt})
+      } catch (error) {
+         console.error('Erro a buscar o indentificador do residuo')
+         return res.status(500).json({message:"Erro no server a buscar o ID residuo"})
+      }
+  },
+
       async deleteResiduo(req, res) {
        
         try {

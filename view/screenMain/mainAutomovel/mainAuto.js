@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ".btnInitAutoPageMain"
         );
         const listingVehicles = document.querySelector(".listingAutomo");
-        const editFormVehicles = document.querySelector(".formEditClient");
+        const editFormVehicles = document.querySelector(".editFormAuto");
         const informative = document.querySelector(".information");
 
         if (containerRegisterVehicles)

@@ -200,6 +200,10 @@ route.post('/residuo' , (req ,res)=>{
 route.get('/residuo' , (req ,res)=>{
   movementResiduo.listResiduo(req ,res)
 });
+
+route.get('/residuo/:id',(req ,res)=>{
+   movementResiduo.getIdResiduo(req ,res)
+})
 route.delete("/residuo/:id" , (req , res)=>{
    movementResiduo.deleteResiduo(req , res)
 });
@@ -212,6 +216,10 @@ route.post('/api/destination' , (req ,res)=>{
 
 route.get('/api/destination' , (req ,res)=>{
   controllerDestination.getDestination(req ,res)
+})
+
+route.get('/api/destination/:code' , (req ,res)=>{
+   controllerDestination.getDestinationByCode(req,res)
 })
 
 route.delete('/api/destination/:id' , (req,res)=>{

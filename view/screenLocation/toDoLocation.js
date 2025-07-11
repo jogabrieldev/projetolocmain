@@ -54,7 +54,7 @@ function atualizarData(date) {
 async function preencheraResiduo(id) {
   const fieldResi = document.getElementById(id);
   try {
-    const res = await fetch("/residuo", {
+     const res = await fetch( `/residuo`, {
       method: "GET",
     });
     const data = await res.json();
@@ -76,6 +76,35 @@ async function preencheraResiduo(id) {
     console.error("Erro na function AUXILIAR resi", error);
     return false;
   }
+}
+
+async function preencherFieldLocalDescarte(id) {
+    try {
+
+      const fieldLocalDescarte = document.getElementById(id);
+      if(fieldLocalDescarte){
+        const res = await fetch('/api/destination',{
+        method: "GET"
+       })
+       const data =  await res.json()
+       const destino =  await data.destino || []
+
+      if (Array.isArray(destino) && fieldLocalDescarte){
+         destino.forEach(({ dereid, derenome }) => {
+        const option = document.createElement("option");
+        option.value = dereid;
+        option.textContent = derenome;
+        fieldLocalDescarte.appendChild(option);
+       });
+      }
+
+        return true;
+    } 
+        
+    } catch (error) {
+      console.error('Erro ao preencher o campo de local de descarte' , error)
+      return false
+    }
 }
 
 // VERIFICA SE OS CAMPOS DOS CLIENTES ESTA OK
@@ -139,6 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
             interationSystemLocation();
             preencheraResiduo("residuoSelect");
             interationSystemLocationVehicle();
+            preencherFieldLocalDescarte("locDescarte");
             for (let i = 1; i <= 5; i++) {
                atualizarData(`dataInicio${i}`);
              }
@@ -190,7 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 setTimeout(aguardarElementos, 100);
               }
             };
-
+         
             aguardarElementos();
           })
           .catch((err) => console.error("Erro ao carregar /location", err));
@@ -811,15 +841,6 @@ async function handleSubmit() {
   const token = localStorage.getItem("token");
 
   if (!token || isTokenExpired(token)) {
-    Toastify({
-      text: "Sessão expirada. Faça login novamente.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-
     localStorage.removeItem("token");
     setTimeout(() => {
       window.location.href = "/index.html";
@@ -987,12 +1008,7 @@ async function handleSubmit() {
     return
   }
 
-   await gerarContrato()
-    const contratoHTML = document.querySelector(".contrato").innerHTML.trim();
-    bens.forEach((bem) => {
-    bem.contrato = contratoHTML;
-   });
-
+  
   try {
     const numericLocation = await obterNumeroLocacao();
     document.querySelector("#numeroLocation").value = numericLocation;
@@ -1006,20 +1022,8 @@ async function handleSubmit() {
     const dataDevoStr = document.getElementById("DataDevo")?.value || null;
     const pagament = document.getElementById("pagament")?.value || null;
     const residuo = document.getElementById("residuoSelect").value;
+    const localDescarte = document.getElementById('locDescarte').value || null
 
-    console.log("residuoSelect", userClientValidade);
-    if (!residuo) {
-      Toastify({
-        text: "Selecione o residuo envolvido nessa Locação",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "orange",
-      }).showToast();
-
-      return;
-    }
 
     if (!dataDevoStr || !pagament) {
       Toastify({
@@ -1132,8 +1136,37 @@ async function handleSubmit() {
       }).showToast();
       return;
     }
+    if (!residuo) {
+      Toastify({
+        text: "Selecione o residuo envolvido nessa Locação",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "orange",
+      }).showToast();
 
-    console.log(dateSave);
+      return;
+    }
+
+    if(!localDescarte || localDescarte === null){
+      Toastify({
+        text: "Selecione o local de descarte Obrigatorio!",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "orange",
+      }).showToast();
+
+      return;
+    }
+
+    await gerarContrato()
+    const contratoHTML = document.querySelector(".contrato").innerHTML.trim();
+    bens.forEach((bem) => {
+    bem.contrato = contratoHTML;
+   });
 
     const payload = {
       numericLocation,
@@ -1141,6 +1174,7 @@ async function handleSubmit() {
       dataLoc: dataLocStr,
       dataDevo: dataDevo.toISOString().split("T")[0],
       localization: dateSave,
+      descarte:localDescarte,
       resi: residuo,
       pagament,
       bens,
@@ -1158,7 +1192,7 @@ async function handleSubmit() {
     });
     const errorData = await response.json();
 
-    if (response.ok) {
+    if (response.ok && response.status === 200) {
       Toastify({
         text: "Contrato de locação gerado com sucesso!",
         duration: 3000,
@@ -1167,10 +1201,13 @@ async function handleSubmit() {
         position: "center",
         backgroundColor: "green",
       }).showToast();
+         
+       const content = document.querySelector('.content')
+      if(content)esconderElemento(content)
 
-      gerarContrato();
+        gerarContrato();
 
-      setTimeout(() => {
+        setTimeout(() => {
         clearFields();
         localStorage.removeItem("dadosInputs");
         atualizarData("dataLoc");
@@ -1200,175 +1237,170 @@ async function handleSubmit() {
 }
 
 // CONTRATO COM OS DADOS A LOCAÇÃO
-async function gerarContrato() {
-  const cpfCliente =
-    document.getElementById("cpfClient")?.value || "Não informado";
+function gerarContrato() {
+  const contratoDiv = document.querySelector(".contrato");
+  contratoDiv.innerHTML = "";
+  contratoDiv.style.display = "flex";
 
-  const nomeCliente =
-    document.getElementById("nameClient")?.value || "Não informado";
+  const getValue = (id) => document.getElementById(id)?.value || "Não informado";
+  const getSelectText = (id) => {
+    const select = document.getElementById(id);
+    return select?.options[select.selectedIndex]?.text || "Não informado";
+  };
 
-  const dataLocacao =
-    document.getElementById("dataLoc")?.value || "Não informado";
-
-  const dataDevolucao =
-    document.getElementById("DataDevo")?.value || "Não informado";
-
-  const numericLocation =
-    document.getElementById("numeroLocation")?.value || "Não informado";
-
-  const pagamento =
-    document.getElementById("pagament")?.value || "Não informado";
-
-  const residuoSelect = document.getElementById('residuoSelect');
-    const residuo = residuoSelect?.options[residuoSelect.selectedIndex]?.text || "Não informado";
-
-  const gruposBens = [];
-  for (let i = 1; i <= 4; i++) {
-    const codeBen =
-      document.getElementById(`family${i}`)?.value || "Não informado";
-
-    const produto =
-      document.getElementById(`produto${i}`)?.value || "Não informado";
-
-    const quantidade =
-      document.getElementById(`quantidade${i}`)?.value || "Não informado";
-
-    const observacao =
-      document.getElementById(`observacao${i}`)?.value || "Não informado";
-
-    const dataInit =
-      document.getElementById(`dataInicio${i}`)?.value || "Não informado";
-
-    const dataFim =
-      document.getElementById(`dataFim${i}`)?.value || "Não informado";
-
-    if (produto !== "Não informado") {
-      gruposBens.push(`
-        <tr>
-          <td>${codeBen}</td>
-          <td>${produto}</td>
-          <td>${quantidade}</td>
-          <td>${observacao}</td>
-          <td>${dataInit}</td>
-          <td>${dataFim}</td>
-        </tr>
-      `);
-    }
-  }
-
-  // Esconder as outras divs
-  const containerContent = document.querySelector(".content");
-  if (containerContent) {
-    esconderElemento(containerContent);
-  }
+  const cpfCliente = getValue("cpfClient");
+  const nomeCliente = getValue("nameClient");
+  const dataLocacao = getValue("dataLoc");
+  const dataDevolucao = getValue("DataDevo");
+  const numericLocation = getValue("numeroLocation");
+  const pagamento = getValue("pagament");
+  const residuo = getSelectText("residuoSelect");
+  const localDescarte = getSelectText("locDescarte");
 
   const dadosInputsLoc = localStorage.getItem("dadosInputs");
   const enderecoLocacao = dadosInputsLoc ? JSON.parse(dadosInputsLoc) : {};
 
-  // Gerar conteúdo do contrato
-  const contratoDiv = document.querySelector(".contrato");
-  contratoDiv.innerHTML = `
-    <div class=" text-dark p-4 rounded">
-      <h2 class="text-center mb-4 text-dark">Contrato de Locação</h2>
-      <hr class="border-light">
-      <p><strong>Número da locação:</strong> ${numericLocation}</p>
-      <p><strong>Nome do Cliente:</strong> ${nomeCliente}</p>
-      <p><strong>CPF/CNPJ do Cliente:</strong> ${cpfCliente}</p>
-      <p><strong>residuo Envolvido:</strong> ${residuo}</p>
-      <div class="border rounded p-3 mb-3 bg-dark-subtle text-white">
-      <p class="mb-1"><strong>Endereço da Locação:</strong></p>
-      <div class="row">
-       <div class="col-md-4 text-dark"><strong>Rua:</strong> ${
-         enderecoLocacao?.localizationRua || "-"
-       }</div>
-       <div class="col-md-4 text-dark"><strong>Bairro:</strong> ${
-         enderecoLocacao?.localizationBairro || "-"
-       }</div>
-    <div class="col-md-4 text-dark"><strong>Cidade:</strong> ${
-      enderecoLocacao?.localizationCida || "-"
-    }</div>
-  </div>
-  <div class="row">
-    <div class="col-md-4 text-dark"><strong>CEP:</strong> ${
-      enderecoLocacao?.localizationCep || "-"
-    }</div>
-    <div class="col-md-4 text-dark"><strong>Referência:</strong> ${
-      enderecoLocacao?.localizationRefe || "-"
-    }</div>
-    <div class="col-md-4 text-dark"><strong>Região:</strong> ${
-      enderecoLocacao?.localizationRegion || "-"
-    }</div>
-  </div>
-</div>
-      <p><strong>Data da Locação:</strong> ${dataLocacao}</p>
-      <p><strong>Data de Devolução:</strong> ${dataDevolucao}</p>
-      <p><strong>Forma de Pagamento:</strong> ${pagamento}</p>
-      <hr class="border-light">
-      <p><strong>Itens Locados:</strong></p>
-      ${
-        gruposBens.length > 0
-          ? `
-          <div class="table-responsive">
-            <table class="table table-bordered table-dark table-sm">
-              <thead class="table-light">
-                <tr>
-                  <th>Código do Bem</th>
-                  <th>Produto</th>
-                  <th>Quantidade</th>
-                  <th>Descrição</th>
-                  <th>Data de Início</th>
-                  <th>Data Final</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${gruposBens.join("")}
-              </tbody>
-            </table>
-          </div>
-          `
-          : "<p>Nenhum item informado.</p>"
-      }
-       <div class="text-center mt-4 d-flex justify-content-center gap-2">
-        <button id="voltar" class="btn btn-light">Voltar</button>
-        <button id="baixarPdf" class="btn btn-success">Salvar como PDF</button>
-       </div>
-    </div>
-  `;
-  contratoDiv.style.display = "block";
+  const container = document.createElement("div");
+  container.className = "text-dark p-4 rounded";
 
-  // Adicionar evento ao botão de voltar
-  const voltarPageContrato = document.getElementById("voltar");
-  if (voltarPageContrato) {
-    voltarPageContrato.addEventListener("click", () => {
-      esconderElemento(contratoDiv);
+  const h2 = document.createElement("h2");
+  h2.className = "text-center mb-4 text-dark";
+  h2.textContent = "Contrato de Locação";
+  container.appendChild(h2);
 
-      const listLocation = document.querySelector(".tableLocation ");
-      if (listLocation) {
-        mostrarElemento(listLocation);
-      }
+  const addParagraph = (label, value) => {
+    const p = document.createElement("p");
+    p.innerHTML = `<strong>${label}:</strong> ${value}`;
+    container.appendChild(p);
+  };
 
-      const buttonMainPage = document.querySelector(".btnInitPageMainLoc");
-      if (buttonMainPage) {
-        mostrarElemento(buttonMainPage);
-      }
-    });
+  addParagraph("Número da locação", numericLocation);
+  addParagraph("Nome do Cliente", nomeCliente);
+  addParagraph("CPF/CNPJ do Cliente", cpfCliente);
+  addParagraph("Residuo Envolvido", residuo);
+
+  // Endereço da Locação
+  const enderecoDiv = document.createElement("div");
+  enderecoDiv.className = "border rounded p-3 mb-3 bg-dark-subtle text-white";
+
+  const enderecoTitulo = document.createElement("p");
+  enderecoTitulo.className = "mb-1";
+  enderecoTitulo.innerHTML = `<strong>Endereço da Locação:</strong>`;
+  enderecoDiv.appendChild(enderecoTitulo);
+
+  const row1 = document.createElement("div");
+  row1.className = "row";
+
+  [["Rua", "localizationRua"], ["Bairro", "localizationBairro"], ["Cidade", "localizationCida"]].forEach(([label, key]) => {
+    const div = document.createElement("div");
+    div.className = "col-md-4 text-dark";
+    div.innerHTML = `<strong>${label}:</strong> ${enderecoLocacao[key] || "-"}`;
+    row1.appendChild(div);
+  });
+
+  const row2 = document.createElement("div");
+  row2.className = "row";
+
+  [["CEP", "localizationCep"], ["Referência", "localizationRefe"], ["Região", "localizationRegion"]].forEach(([label, key]) => {
+    const div = document.createElement("div");
+    div.className = "col-md-4 text-dark";
+    div.innerHTML = `<strong>${label}:</strong> ${enderecoLocacao[key] || "-"}`;
+    row2.appendChild(div);
+  });
+
+  enderecoDiv.appendChild(row1);
+  enderecoDiv.appendChild(row2);
+  container.appendChild(enderecoDiv);
+
+  addParagraph("Data da Locação", dataLocacao);
+  addParagraph("Data de Devolução", dataDevolucao);
+  addParagraph("Forma de Pagamento", pagamento);
+  addParagraph("Local de descarte do residuo", localDescarte);
+
+  // Itens Locados
+  const tituloItens = document.createElement("p");
+  tituloItens.innerHTML = `<strong>Tipo de caçamba que o cliente solicitou:</strong>`;
+  container.appendChild(tituloItens);
+
+  const itens = [];
+
+  for (let i = 1; i <= 4; i++) {
+    const produto = getValue(`produto${i}`);
+    if (produto !== "Não informado") {
+      itens.push({
+        codeBen: getValue(`family${i}`),
+        produto,
+        quantidade: getValue(`quantidade${i}`),
+        observacao: getValue(`observacao${i}`),
+        dataInicio: getValue(`dataInicio${i}`),
+        dataFim: getValue(`dataFim${i}`)
+      });
+    }
   }
 
-  // Evento para gerar o PDF
-  const btnBaixarPdf = document.getElementById("baixarPdf");
-  if (btnBaixarPdf) {
-    btnBaixarPdf.addEventListener("click", () => {
-      const element = document.querySelector(".contrato");
-      const opt = {
-        margin: 0.5,
-        filename: `contrato-locacao-${numericLocation}.pdf`,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
-      };
-      html2pdf().set(opt).from(element).save();
+  if (itens.length > 0) {
+    const tableResponsive = document.createElement("div");
+    tableResponsive.className = "table-responsive";
+
+    const table = document.createElement("table");
+    table.className = "table table-bordered table-dark table-sm";
+
+    const thead = document.createElement("thead");
+    thead.className = "table-light";
+    const trHead = document.createElement("tr");
+    ["Código tipo do Bem", "Produto", "Quantidade", "Descrição", "Data de Início", "Data Final"].forEach(text => {
+      const th = document.createElement("th");
+      th.textContent = text;
+      trHead.appendChild(th);
     });
+    thead.appendChild(trHead);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+
+    itens.forEach(item => {
+      const tr = document.createElement("tr");
+      ["codeBen", "produto", "quantidade", "observacao", "dataInicio", "dataFim"].forEach(key => {
+        const td = document.createElement("td");
+        td.textContent = item[key];
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    tableResponsive.appendChild(table);
+    container.appendChild(tableResponsive);
+  } else {
+    const p = document.createElement("p");
+    p.textContent = "Nenhum item informado.";
+    container.appendChild(p);
   }
+
+  // Botões
+  const divBtn = document.createElement("div");
+  divBtn.className = "text-center mt-4 d-flex justify-content-center gap-2";
+
+  const btnVoltar = document.createElement("button");
+  btnVoltar.id = "voltar";
+  btnVoltar.className = "btn btn-light";
+  btnVoltar.textContent = "Voltar";
+
+
+
+  divBtn.appendChild(btnVoltar);
+  // divBtn.appendChild(btnSalvar);
+  container.appendChild(divBtn);
+  contratoDiv.appendChild(container);
+
+  // Evento botão voltar
+  btnVoltar.addEventListener("click", () => {
+    esconderElemento(contratoDiv);
+    mostrarElemento(document.querySelector(".tableLocation"));
+    mostrarElemento(document.querySelector(".btnInitPageMainLoc"));
+  });
+
+  // Se quiser ativar o download do PDF, adicione novamente o bloco com html2pdf
 }
 
 // cadastrar o cliente pela a tela de locação

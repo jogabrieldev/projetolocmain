@@ -142,6 +142,30 @@ function interationSystemDestination(){
          });
      };
 
+     const exitContainerFormEditDestination = document.querySelector('.btnOutEditDestination')
+     if(exitContainerFormEditDestination){
+        exitContainerFormEditDestination.addEventListener('click',()=>{
+              const buttonsMainPage = document.querySelector('.buttonsMainPage')
+              if(buttonsMainPage){
+                buttonsMainPage.classList.remove('hidden')
+                buttonsMainPage.classList.add('flex')
+              }
+
+             const listDestinationDescart =  document.querySelector('.listDestinationDescart')
+             if(listDestinationDescart){
+                listDestinationDescart.classList.remove('hidden')
+                listDestinationDescart.classList.add('flex')
+             }
+
+             const containerFormEditDestination = document.querySelector('.containerFormEditDestination')
+             if(containerFormEditDestination){
+               containerFormEditDestination.classList.remove('flex')
+               containerFormEditDestination.classList.add('hidden')
+             }
+
+        })
+     }
+
      const btnSubmitEdit = document.querySelector('.btnSubmitEditDestination')
      if(btnSubmitEdit){
        btnSubmitEdit.addEventListener('click' , ()=>{
@@ -547,18 +571,22 @@ function deleteDestination() {
       
       const listDestinationDescart = document.querySelector('.listDestinationDescart')
       if(listDestinationDescart){
+        listDestinationDescart.classList.remove('flex')
         listDestinationDescart.style.display = 'none'
        
       }
 
       const btnMainPageDestination = document.querySelector('.buttonsMainPage')
       if(btnMainPageDestination){
-         btnMainPageDestination.classList.remove('d-flex')
-         btnMainPageDestination.classList.add('d-none')
+         btnMainPageDestination.classList.remove('flex')
+         btnMainPageDestination.classList.add('hidden') 
+         btnMainPageDestination.style.display = 'none'
+
       }
 
       const containerEditDestination = document.querySelector('.containerFormEditDestination')
       if(containerEditDestination){
+        containerEditDestination.classList.remove('hidden')
         containerEditDestination.style.display = 'flex'
       }
 
@@ -633,8 +661,6 @@ async function editAndUpdateDestination() {
       return;
     }
     
-             
-            
              
     const body = {
       nomeDest: document.getElementById("editNomeDest").value,

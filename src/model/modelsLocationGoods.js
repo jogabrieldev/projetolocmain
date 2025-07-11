@@ -19,20 +19,20 @@ export const LocacaoModel = {
     return numero;
   },
 
-  async criarLocacao({cllonmlo, clloidcl, cllodtdv, cllodtlo, cllopgmt,cllorua ,cllocep, clloclno, cllobair, cllocida,cllorefe, clloqdlt, clloresi , cllocpcn}) {
+  async criarLocacao({cllonmlo, clloidcl, cllodtdv, cllodtlo, cllopgmt,cllorua ,cllocep, clloclno, cllobair, cllocida,cllorefe, clloqdlt, clloresi , cllocpcn , cllodesc}) {
     try {
-      if (!cllonmlo|| !clloidcl||!cllodtdv||!cllodtlo|| !cllopgmt|| !cllorua|| !cllobair|| !cllocida|| !clloresi|| !clloclno|| !cllocpcn){
+      if (!cllonmlo|| !clloidcl||!cllodtdv||!cllodtlo|| !cllopgmt|| !cllorua|| !cllobair|| !cllocida|| !clloresi|| !clloclno|| !cllocpcn || !cllodesc){
         throw new Error("Erro: Algum valor está indefinido na inserção do cliente que locou!");
       }
 
       const insertQuery = `
-  INSERT INTO clieloc(cllonmlo, clloidcl, cllodtdv, cllodtlo, cllopgmt,cllorua ,cllocep, clloclno, cllobair, cllocida,cllorefe, clloqdlt, clloresi , cllocpcn)
-  VALUES ($1, $2, $3, $4, $5, $6 , $7 ,$8 ,$9 , $10 , $11 , $12 , $13 , $14)
+  INSERT INTO clieloc(cllonmlo, clloidcl, cllodtdv, cllodtlo, cllopgmt,cllorua ,cllocep, clloclno, cllobair, cllocida,cllorefe, clloqdlt, clloresi , cllocpcn , cllodesc)
+  VALUES ($1, $2, $3, $4, $5, $6 , $7 ,$8 ,$9 , $10 , $11 , $12 , $13 , $14 , $15)
   RETURNING clloid;
 `;
 
       const values = [
-        cllonmlo, clloidcl, cllodtdv, cllodtlo, cllopgmt,cllorua ,cllocep, clloclno, cllobair, cllocida,cllorefe, clloqdlt, clloresi , cllocpcn
+        cllonmlo, clloidcl, cllodtdv, cllodtlo, cllopgmt,cllorua ,cllocep, clloclno, cllobair, cllocida,cllorefe, clloqdlt, clloresi , cllocpcn, cllodesc
       ];
 
       const result = await dataLocation.query(insertQuery, values);
@@ -143,6 +143,7 @@ export const LocacaoModel = {
   c.cllorefe,
   c.clloqdlt,
   c.clloresi,
+  c.cllodesc,
   
   b.belocode, 
   b.bencodb, 
@@ -179,7 +180,8 @@ ORDER BY c.clloid;`
         cllorefe: row.cllorefe,
         clloqdlt: row.clloqdlt,
         clloresi: row.clloresi,
-        bens: [],
+        cllodesc: row.cllodesc,
+        bens: []
       };
       acc.push(locacao);
     }

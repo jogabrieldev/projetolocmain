@@ -1,6 +1,5 @@
 import { LocacaoModel } from "../model/modelsLocationGoods.js";
 
-
 export const location = {
 
   async gerarNumeroLocacao(req, res) {
@@ -18,17 +17,20 @@ export const location = {
   },
 
   async dataLocacao(req, res) {
-    const { userClientValidade, numericLocation, dataLoc, localization, resi, dataDevo, pagament, bens } = req.body;
+    const { userClientValidade, numericLocation, dataLoc, localization, resi, descarte, dataDevo, pagament, bens } = req.body;
      
-    console.log('bens', bens)
     try {
     
-      if (!bens || bens.length === 0) {
-       return res.status(400).json({ error: "Nenhum dado de bens enviado." });
-      }
+       if (!bens || bens.length === 0) {
+        return res.status(400).json({ error: "Nenhum dado de bens enviado." });
+       }
 
       if (!userClientValidade || userClientValidade.length < 2) {
         return res.status(400).json({ error: "CPF/CNPJ e Nome do cliente é obrigatório." });
+      }
+
+      if(!descarte){
+        return res.status(400).json({error: "Local de descarte é obrigatório."});
       }
   
      const ClientDate = userClientValidade[1].replace(/\D/g, ''); 
@@ -37,17 +39,17 @@ export const location = {
 
     if (ClientDate.length === 11) {
   
-     cliente = await LocacaoModel.buscarClientePorCPF(ClientDate);
+       cliente = await LocacaoModel.buscarClientePorCPF(ClientDate);
     } else if (ClientDate.length === 14) {
  
-    cliente = await LocacaoModel.buscarClientePorCnpj(ClientDate);
+       cliente = await LocacaoModel.buscarClientePorCnpj(ClientDate);
      } else {
        return res.status(400).json({ error: "Formato de CPF ou CNPJ inválido." });
      }
 
-if (!cliente) {
-  return res.status(404).json({ error: "Cliente não encontrado no banco de dados." });
-}
+   if (!cliente) {
+     return res.status(404).json({ error: "Cliente não encontrado no banco de dados verifique por favor !." });
+    }
 
       // Verificações de data
       if (!dataLoc || !dataDevo) {
@@ -68,7 +70,7 @@ if (!cliente) {
       const dataDevoNormalizada = normalizar(dataDevoDate);
 
       if (dataDevoNormalizada <= dataLocNormalizada) {
-        return res.status(400).json({ error: "A data de devolução deve ser posterior à data da locação." });
+         return res.status(400).json({ error: "A data de devolução deve ser maior doque à data da locação." });
       }
        
       const feriados = [
@@ -133,6 +135,7 @@ if (!cliente) {
         clloclno: cliente.clienome,
         cllocpcn: cliente.cliecpf || cliente.cliecnpj,
         clloresi: resi,
+        cllodesc:descarte,
         cllorua:localization.localizationRua,
         cllobair:localization.localizationBairro,
         cllocida:localization.localizationCida,
@@ -151,7 +154,7 @@ if (!cliente) {
         io.emit("updateRunTimeRegisterLocation", listAllLocation);
       }
   
-      return res.status(201).json({ message: "Locação criada com sucesso." });
+      return res.status(200).json({ message: "Locação criada com sucesso." , success:true });
     } catch (error) {
       console.error("Erro ao criar locação:", error);
       return res.status(500).json({ error: "Erro interno do servidor." });

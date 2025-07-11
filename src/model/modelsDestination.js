@@ -1,4 +1,6 @@
+
 import { client as dataDestination } from "../database/userDataBase.js";
+
 
  export const movementDestination = {
       
@@ -52,6 +54,22 @@ import { client as dataDestination } from "../database/userDataBase.js";
             throw error
          }
     },
+
+async getDestinationByCode(code){
+   try {
+     const query = `SELECT *FROM cadderi WHERE dereid = $1`
+     const values = [code]
+     const result = await dataDestination.query(query , values )
+        if(result.rows.length === 0){
+           throw new Error("Destino não encontrado");
+         }
+
+        return result.rows[0]
+     } catch (error) {
+        console.error("Erro ao buscar destino por código:", error.message);
+        throw error;
+     } 
+  },
 
   async deleteDestination(id){
       try {

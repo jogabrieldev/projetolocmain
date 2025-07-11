@@ -161,6 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
           dateAtualInField('dtCad')
           deleteClient();
           editarCliente();
+          
 
         } else {
           console.error("#mainContent não encontrado no DOM");
@@ -326,16 +327,10 @@ async function interationSystemClient() {
          const popUpBranch = document.querySelector('.popUpFilial')
          if(popUpBranch){
              popUpBranch.style.display = 'flex'
-               console.log('pop' , popUpBranch)
-         }
-           console.log('pop' , popUpBranch)
-           
-            
-     })
-     
-  }
-
-}
+         }  
+     }); 
+  };
+};
 
 async function registerNewClient() {
 
@@ -1123,23 +1118,26 @@ function editarCliente() {
       return;
     }
 
-    const btnMainPageClient = document.querySelector(".buttonsMainPage");
-    if (btnMainPageClient) {
-      btnMainPageClient.classList.remove("flex");
-      btnMainPageClient.classList.add("hidden");
+    const listClient = document.querySelector('.listClient')
+    if(listClient){
+      listClient.classList.remove('flex')
+      listClient.classList.add('hidden')
+     
     }
 
-    const listClient = document.querySelector(".listClient");
-    if (listClient) {
-      listClient.classList.remove("flex");
-      listClient.classList.add("hidden");
+    const btnMainPageClient = document.querySelector('.buttonsMainPage')
+    if(btnMainPageClient){
+       btnMainPageClient.classList.remove('flex')
+      btnMainPageClient.classList.add('hidden')
     }
 
-    const containerEditForm = document.querySelector(".formEditClient");
-    if (containerEditForm) {
-      containerEditForm.style.display = 'flex'
-    
+    const containerFormEdit = document.querySelector('.formEditClient')
+    if(containerFormEdit){
+      containerFormEdit.classList.remove('hidden')
+      containerFormEdit.classList.add('flex')
+
     }
+     
 
     const clientData = selectedCheckbox.getAttribute("data-cliente");
 
@@ -1147,8 +1145,7 @@ function editarCliente() {
       console.error("O atributo data-client está vazio ou indefinido.");
       return;
     }
-    console.log('cliente' , clientData)
-
+  
     try {
       const clientSelecionado = JSON.parse(clientData);
 

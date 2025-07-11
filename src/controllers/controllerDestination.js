@@ -70,6 +70,24 @@ export const controllerDestination = {
     }
   },
 
+async getDestinationByCode(req , res){
+   try {
+       const {code} = req.params;
+        if(!code){
+            return res.status(400).json({message:'Falta passar o codigo do destino'})
+        }
+        const destino = await movementDestination.getDestinationByCode(code)
+          if(!destino){
+             return res.status(400).json({message:"Destino não encontrado"})
+           }
+
+           return res.status(200).json({success:true , destino})
+      } catch (error) {
+         console.error("Erro ao buscar destino por código:", error.message);
+         return res.status(500).json({message:"Erro no server ao buscar destino por codigo"})
+      }
+},
+
   async deleteDestination(req, res) {
     try {
       const { id } = req.params;

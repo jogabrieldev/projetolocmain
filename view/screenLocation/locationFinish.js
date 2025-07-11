@@ -39,6 +39,8 @@ async function frontLocation() {
     const dataFinish = await response.json();
     const locacoesFinishTable = dataFinish.locacoes || [];
 
+    console.log('locacao' , locacoesFinishTable)
+
     // Limpa a tabela antes de popular os dados
     const table = document.querySelector(".tableLocation");
     if (table) {
@@ -59,6 +61,7 @@ async function frontLocation() {
             dataLocacao: formatDate(locacao.cllodtlo),
             dataDevolucao: formatDate(locacao.cllodtdv),
             formaPagamento: locacao.cllopgmt || "Não definido",
+            descarte: locacao.cllodesc || "Não definido",
             cidade:locacao.cllocida|| "__",
             bairro:locacao.cllobair || "__",
             refere:locacao.cllorefe || "__",
@@ -89,6 +92,7 @@ async function frontLocation() {
 }
 
 function renderTable(data) {
+  console.log('dados lcoa' , data)
   const tableDiv = document.querySelector(".tableLocation");
 
   tableDiv.innerHTML = "";
@@ -111,10 +115,6 @@ function renderTable(data) {
   resetFilterBtn.id = "resetFilterBtn";
   resetFilterBtn.style.display = "none";
   resetFilterBtn.textContent = "Remover Filtro";
-
-  // const searchBtn = document.createElement("button");
-  // searchBtn.classList.add("searchloc");
-  // searchBtn.innerHTML = `<i class="bi bi-search me-2"></i>Buscar Locação`
 
   container.appendChild(title);
   container.appendChild(messageFilter);
@@ -231,16 +231,61 @@ function renderTable(data) {
       });
     });
   });
-
-  // Adiciona o evento de busca ao botão "Buscar Locação"
- 
 }
 
-async function showContratoLocationGoods(locacao) {
-     const contratoDiv = document.querySelector(".contrato");
-  if (!contratoDiv) return;
+async function buscarResiduo(id) {
+  try {
+    const result = await fetch(`/residuo/${id}`, {
+      method: 'GET'
+    });
 
-  contratoDiv.innerHTML = ""; // Limpa o conteúdo anterior
+    const data = await result.json();
+
+    if (data.success && data.resunt && data.resunt.residesc) {
+      return data.resunt.residesc;
+    } else {
+      console.warn('Resposta inválida:', data);
+      return null;
+    }
+
+  } catch (error) {
+    console.error('Erro em buscar residuo:', error);
+    return null;
+  }
+}
+
+async function buscarLocalDescarte(id) {
+   try {
+        const response = await fetch(`/api/destination/${id}` , {
+          method: 'GET'
+        })
+
+        const data = await response.json()
+
+        if(data.success && response.ok){
+           return data.destino
+        }else{
+            console.warn('Resposta inválida:', data);
+            return null;
+        }
+   } catch (error) {
+      console.error('Erro ao buscar local de descarte' , error)
+      return null
+   }
+}
+
+
+async function showContratoLocationGoods(locacao) {
+
+  const contratoDiv = document.querySelector(".contrato");
+  if (!contratoDiv) return;
+  contratoDiv.innerHTML = "";
+
+  const residuo = await buscarResiduo(locacao.residuo);
+  if (!residuo) return;
+
+  const localDescarte = await buscarLocalDescarte(locacao.descarte);
+  if (!localDescarte) return;
 
   const formatDate = (dateStr) => {
     if (!dateStr) return "-";
@@ -253,78 +298,59 @@ async function showContratoLocationGoods(locacao) {
 
   const h2 = document.createElement("h2");
   h2.className = "text-center mb-4";
-  h2.textContent = "Contrato de Locação de Bens";
+  h2.innerHTML = `<i class="bi bi-file-earmark-text-fill me-2"></i>Contrato de Locação de Bens`;
   container.appendChild(h2);
 
   container.innerHTML += `
     <hr class="border-light">
-    <p><strong>Número da locação:</strong> ${locacao.numeroLocacao}</p>
-    <p><strong>Nome do Cliente:</strong> ${locacao.nomeCliente}</p>
-    <p><strong>Forma de Pagamento:</strong> ${locacao.formaPagamento || "-"}</p>
-    <p><strong>Data da Locação:</strong> ${formatDate(locacao.dataLocacao)}</p>
-    <p><strong>Data de Devolução:</strong> ${formatDate(locacao.dataDevolucao)}</p>
-    <p><strong>Observação:</strong> ${locacao.observacao || "-"}</p>
+    <p><i class="bi bi-hash"></i> <strong>Número da locação:</strong> ${locacao.numeroLocacao}</p>
+    <p><i class="bi bi-person-fill"></i> <strong>Nome do Cliente:</strong> ${locacao.nomeCliente}</p>
+    <p><i class="bi bi-credit-card"></i> <strong>Forma de Pagamento:</strong> ${locacao.formaPagamento || "-"}</p>
+    <p><i class="bi bi-calendar-check"></i> <strong>Data da Locação:</strong> ${formatDate(locacao.dataLocacao)}</p>
+    <p><i class="bi bi-calendar-x"></i> <strong>Data de Devolução:</strong> ${formatDate(locacao.dataDevolucao)}</p>
+    <p><i class="bi bi-chat-left-text"></i> <strong>Observação:</strong> ${locacao.observacao || "-"}</p>
+    <p><i class="bi bi-recycle"></i> <strong>Resíduo envolvido na locação:</strong> ${residuo || "-"}</p>
     <hr class="border-light">
   `;
 
+  const descarteDiv = document.createElement("div");
+  descarteDiv.className = "border rounded p-3 mb-3 bg-dark-subtle text-white";
+  descarteDiv.innerHTML = `
+    <p class="mb-1"><i class="bi bi-trash-fill"></i> <strong>Endereço do Descarte:</strong></p>
+    <div class="row">
+      <div class="col-md-4 text-dark"><strong>Nome:</strong> ${localDescarte?.derenome || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>Tipo:</strong> ${localDescarte?.deretipo || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>Rua:</strong> ${localDescarte?.dererua || "-"}</div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 text-dark"><strong>Bairro:</strong> ${localDescarte?.derebair || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>Cidade:</strong> ${localDescarte?.derecida || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>CEP:</strong> ${localDescarte?.derecep || "-"}</div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 text-dark"><strong>Estado:</strong> ${localDescarte?.dereestd || "-"}</div>
+    </div>`;
+  container.appendChild(descarteDiv);
+
   const enderecoDiv = document.createElement("div");
   enderecoDiv.className = "border rounded p-3 mb-3 bg-dark-subtle text-white";
-
-  const enderecoTitulo = document.createElement("p");
-  enderecoTitulo.className = "mb-1";
-  enderecoTitulo.innerHTML = `<strong>Endereço da Locação:</strong>`;
-  enderecoDiv.appendChild(enderecoTitulo);
-
-  const row1 = document.createElement("div");
-  row1.className = "row";
-
-  const ruaDiv = document.createElement("div");
-  ruaDiv.className = "col-md-4 text-dark";
-  ruaDiv.innerHTML = `<strong>Rua:</strong> ${locacao?.rua || "-"}`;
-  row1.appendChild(ruaDiv);
-
-  const bairroDiv = document.createElement("div");
-  bairroDiv.className = "col-md-4 text-dark";
-  bairroDiv.innerHTML = `<strong>Bairro:</strong> ${locacao?.bairro || "-"}`;
-  row1.appendChild(bairroDiv);
-
-  const cidadeDiv = document.createElement("div");
-  cidadeDiv.className = "col-md-4 text-dark";
-  cidadeDiv.innerHTML = `<strong>Cidade:</strong> ${locacao?.cidade || "-"}`;
-  row1.appendChild(cidadeDiv);
-
-  enderecoDiv.appendChild(row1);
-
-  const row2 = document.createElement("div");
-  row2.className = "row";
-
-  const cepDiv = document.createElement("div");
-  cepDiv.className = "col-md-4 text-dark";
-  cepDiv.innerHTML = `<strong>CEP:</strong> ${locacao.localization?.cep || "-"}`;
-  row2.appendChild(cepDiv);
-
-  const refDiv = document.createElement("div");
-  refDiv.className = "col-md-4 text-dark";
-  refDiv.innerHTML = `<strong>Referência:</strong> ${locacao.refere || "-"}`;
-  row2.appendChild(refDiv);
-
-  const qdrDiv = document.createElement("div");
-  qdrDiv.className = "col-md-4 text-dark";
-  qdrDiv.innerHTML = `<strong>Quadra/Lote:</strong> ${locacao.qdlt || "-"}`;
-  row2.appendChild(qdrDiv);
-
-  enderecoDiv.appendChild(row2);
-
+  enderecoDiv.innerHTML = `
+    <p class="mb-1"><i class="bi bi-geo-alt-fill"></i> <strong>Endereço da Locação:</strong></p>
+    <div class="row">
+      <div class="col-md-4 text-dark"><strong>Rua:</strong> ${locacao?.rua || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>Bairro:</strong> ${locacao?.bairro || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>Cidade:</strong> ${locacao?.cidade || "-"}</div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 text-dark"><strong>CEP:</strong> ${locacao.localization?.cep || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>Referência:</strong> ${locacao.refere || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>Quadra/Lote:</strong> ${locacao.qdlt || "-"}</div>
+    </div>`;
   container.appendChild(enderecoDiv);
 
-  const pResiduo = document.createElement("p");
-  pResiduo.innerHTML = `<strong>Residuo Envolvido:</strong> ${locacao.residuo || "-"}`;
-  container.appendChild(pResiduo);
-
-  const BemLocado = document.createElement('P')
-  BemLocado.innerHTML = `<strong>Bem Locado</strong>`
-  container.appendChild(BemLocado)
-
+  const BemLocado = document.createElement("p");
+  BemLocado.innerHTML = `<i class="bi bi-box-seam"></i> <strong>Tipo de bem pedido na locação:</strong>`;
+  container.appendChild(BemLocado);
 
   const tableResponsive = document.createElement("div");
   tableResponsive.className = "table-responsive";
@@ -334,9 +360,8 @@ async function showContratoLocationGoods(locacao) {
 
   const thead = document.createElement("thead");
   thead.className = "table-light";
-
   const trHead = document.createElement("tr");
-  ["Código do Bem", "Descrição", "Quantidade", "Data Início", "Data Final"].forEach(text => {
+  ["Código tipo do Bem", "Descrição", "Quantidade", "Data Início", "Data Final"].forEach(text => {
     const th = document.createElement("th");
     th.textContent = text;
     trHead.appendChild(th);
@@ -346,29 +371,31 @@ async function showContratoLocationGoods(locacao) {
 
   const tbody = document.createElement("tbody");
   const tr = document.createElement("tr");
-
   ["codigoBem", "produto", "quantidade", "dataInicio", "dataFim"].forEach(field => {
     const td = document.createElement("td");
     td.textContent = locacao[field] || "-";
     tr.appendChild(td);
   });
-
   tbody.appendChild(tr);
   table.appendChild(tbody);
   tableResponsive.appendChild(table);
   container.appendChild(tableResponsive);
 
-  // Botão voltar
   const divBtn = document.createElement("div");
   divBtn.className = "text-center mt-4 d-flex justify-content-center gap-2";
 
   const btnVoltar = document.createElement("button");
   btnVoltar.className = "btn btn-light";
-  btnVoltar.textContent = "Voltar";
+  btnVoltar.innerHTML = `<i class="bi bi-arrow-left"></i> Voltar`;
+
+  const btnSalvar = document.createElement("button");
+  btnSalvar.id = "baixarPdf";
+  btnSalvar.className = "btn btn-success";
+  btnSalvar.innerHTML = `<i class="bi bi-arrow-down-circle-fill me-2"></i>Baixar PDF`;
 
   btnVoltar.addEventListener("click", () => {
     contratoDiv.style.display = "none";
-
+    
     const table = document.querySelector(".tableLocation");
     if (table) {
       table.classList.remove("hidden");
@@ -383,6 +410,7 @@ async function showContratoLocationGoods(locacao) {
   });
 
   divBtn.appendChild(btnVoltar);
+  divBtn.appendChild(btnSalvar);
   container.appendChild(divBtn);
 
   contratoDiv.appendChild(container);
@@ -399,7 +427,23 @@ async function showContratoLocationGoods(locacao) {
     containerBtn.classList.remove("flex");
     containerBtn.classList.add("hidden");
   }
-}
+
+  const btnBaixarPdf = document.getElementById("baixarPdf");
+  if (btnBaixarPdf) {
+    btnBaixarPdf.addEventListener("click", () => {
+      const element = document.querySelector(".contrato");
+      const opt = {
+        margin: 0.5,
+        filename: `contrato-locacao-${locacao.numeroLocacao}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+      };
+      html2pdf().set(opt).from(element).save();
+    });
+  };
+};
+
 
 //Filtar locação
 async function filterTable() {
@@ -503,11 +547,18 @@ async function filterTable() {
             idClient: locacao.clloid,
             numeroLocacao: locacao.cllonmlo || "Não definido",
             nomeCliente: locacao.clloclno || "Não definido",
-            cpfCliente: locacao.cllocpf || "Não definido",
             dataLocacao: formatDate(locacao.cllodtlo),
             dataDevolucao: formatDate(locacao.cllodtdv),
             formaPagamento: locacao.cllopgmt || "Não definido",
+            descarte: locacao.cllodesc || "Não definido",
+            cidade:locacao.cllocida|| "__",
+            bairro:locacao.cllobair || "__",
+            refere:locacao.cllorefe || "__",
+            rua:locacao.cllorua || "__", 
+            qdlt:locacao.clloqdlt || "__" ,   
+            residuo:locacao.clloresi || "__" ,
             codigoBem: bem.bencodb || "-",
+            belocode:bem.belocode,
             produto: bem.beloben || "Nenhum bem associado",
             quantidade: bem.beloqntd || "-",
             status: bem.belostat || "Não definido",
@@ -516,24 +567,7 @@ async function filterTable() {
             dataFim: formatDate(bem.belodtfi),
           }));
         } else {
-          return [
-            {
-              idClient: locacao.clloid,
-              numeroLocacao: locacao.cllonmlo || "Não definido",
-              nomeCliente: locacao.clloclno || "Não definido",
-              cpfCliente: locacao.cllocpf || "Não definido",
-              dataLocacao: formatDate(locacao.cllodtlo),
-              dataDevolucao: formatDate(locacao.cllodtdv),
-              formaPagamento: locacao.cllopgmt || "Não definido",
-              codigoBem: "-",
-              produto: "Nenhum bem associado",
-              quantidade: "-",
-              status: "-",
-              observacao: "Nenhuma observação",
-              dataInicio: "-",
-              dataFim: "-",
-            },
-          ];
+          return [];
         }
       })
       .flat();

@@ -37,8 +37,7 @@ async function getAllCar() {
     });
 
     const carros = await response.json();
-    console.log('car' , carros)
-
+   
     // Filtra apenas os veículos com status "Ativo"
     const carrosAtivos = carros.filter((carro) => carro.caaustat === "Disponivel");
 
@@ -83,8 +82,6 @@ async function listDeliveryForDriver() {
 
     const entregas = await response.json();
     const entregasDoMotorista = entregas.filter(e => e.lofiidmt === motoristaId);
-
-    console.log('entregas' , entregasDoMotorista)
 
     if (entregasDoMotorista.length === 0) {
       container.innerHTML = `
@@ -145,6 +142,7 @@ async function listDeliveryForDriver() {
             <p class="mb-1"><i class="bi bi-person-fill text-info"></i> Cliente: ${nomeClient}</p>
             <p class="mb-1"><i class="bi bi-telephone-fill"></i> Telefone do Cliente:${clientPhone}</p>
             <p class="mb-0"><i class="bi bi-credit-card-fill text-warning"></i> Pagamento: ${entrega.lofipgmt}</p>
+            <button class = "btn btn-success" id = "toAcceptDelivery">Aceitar</button>
           </div>
         </div>
       `;
@@ -170,7 +168,17 @@ function formatarData(dataISO) {
   });
 }
 
+function toAcceptDelivery(){
+   
+}
+
 document.addEventListener("DOMContentLoaded", function () {
+  const btnAcceptDelivery = document.getElementById('toAcceptDelivery')
+  if(btnAcceptDelivery){
+     btnAcceptDelivery.addEventListener('click',()=>{
+        toAcceptDelivery()
+     })
+  }
   listDeliveryForDriver();
   getAllCar();
 });

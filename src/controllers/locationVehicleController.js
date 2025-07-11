@@ -30,6 +30,8 @@ async dataLocacaoVehicle(req ,res){
         return res.status(400).json({ error: "CPF do cliente é obrigatório." });
       }
 
+      console.log('veiculo' , veiculo)
+
         const ClientDate = dateClient.client[1].replace(/\D/g, ''); 
 
      let cliente = null;
@@ -101,6 +103,7 @@ if (!cliente) {
         clloclno: cliente.clienome,
         cllocpcn: cliente.cliecpf || cliente.cliecnpj,
         clloresi: dateClient.clloresi,
+        cllodesc: dateClient.cllodesc,
         cllorua:localization.localizationRua,
         cllobair:localization.localizationBairro,
         cllocida:localization.localizationCida,
@@ -109,9 +112,18 @@ if (!cliente) {
         clloqdlt:localization.localizationQdLt
       }); 
 
+
+       const camposInvalidos = veiculo.some((v, index) => {
+          return (  !v.code || v.code.trim() === "" ||  !v.carga || v.carga.trim() === "" ||!v.quantidade || isNaN(v.quantidade) || Number(v.quantidade) <= 0
+         );
+      });
+       if (camposInvalidos) {
+           return res.status(400).json({message: "Preencha todos os campos referente ao veiculo corretamente"})
+        
+        }
         await modelsLocationAuto.registerLocationAuto(veiculo, contrato, locationClient)
     
-        return res.status(200).json({message: 'Locaçaõ do veiculo veita' , success:true })
+        return res.status(200).json({message: 'Locaçaõ do veiculo feita com sucesso!' , success:true })
     } catch (error) {
       console.error('Erro no locaçãp veiculo' , error)
       res.status(500).json({message: 'Erro no servidor'})

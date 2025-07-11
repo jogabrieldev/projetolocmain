@@ -35,6 +35,18 @@ export const moduleResiduo = {
       }
   },
 
+  async getIdResiduo(id){
+    try {
+         const query =  `SELECT * FROM cadresi WHERE resicode = $1`
+         const values = [id] 
+         const resunt = await resi.query(query , values)
+        return resunt.rows[0]
+    } catch (error) {
+        console.error('Erro ao buscar id de residuo')
+        throw error 
+    }
+  },
+
    // analisar por que não deleta
   deleteResiduo: async (id) => {
     try {

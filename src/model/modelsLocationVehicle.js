@@ -6,8 +6,8 @@ export const modelsLocationAuto = {
    async registerLocationAuto(veiculo, contrato, clloid){
            
     const query = `
-      INSERT INTO autoloc (veloidau, veloplac, velomode, velotime, velotpca, velostat, veloclie , velocontr)
-      VALUES ($1, $2, $3, $4, $5, $6, $7 , $8)
+      INSERT INTO autoloc (veloidau, veloplac, velomode, velotime, velotpca, velostat, veloclie , velocontr , veloquat , veloobse)
+      VALUES ($1, $2, $3, $4, $5, $6, $7 , $8 , $9 , $10)
       RETURNING velocode;
     `;
 
@@ -22,6 +22,8 @@ export const modelsLocationAuto = {
       horario,
       carga,
       status,
+      quantidade,
+      observacao
       } of veiculo) {
         const valoresVeiculo = [
             code,
@@ -31,7 +33,9 @@ export const modelsLocationAuto = {
            carga,
            status,
           clloid,
-          contrato
+          contrato,
+          quantidade,
+          observacao
         ];
         
         const resultado = await locationAuto.query(query, valoresVeiculo);
@@ -67,6 +71,7 @@ export const modelsLocationAuto = {
       c.cllorefe,
       c.clloqdlt,
       c.clloresi,
+      c.cllodesc,
 
       a.velocode,
       a.veloidau,
@@ -102,6 +107,7 @@ export const modelsLocationAuto = {
           cllorefe: row.cllorefe,
           clloqdlt: row.clloqdlt,
           clloresi: row.clloresi,
+          cllodesc: row.cllodesc,
           veiculos: [],
         };
         acc.push(locacao);

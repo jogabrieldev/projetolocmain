@@ -91,9 +91,9 @@
     </div>
       
 
-    <div class="col-md-4">
+    <div class="col-md-3">
       <label for="pagament" class="form-label fw-bold">Forma de pagamento</label>
-      <select name="pagament" id="pagament" class="form-select" required>
+      <select name="pagament" id="pagament" class="form-select form-select-sm" required>
         <option value="">Selecione...</option>
         <option value="Pix">Pix</option>
         <option value="Credito">Crédito</option>
@@ -102,9 +102,16 @@
       </select>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
       <label for="residuoSelect" class="form-label fw-bold">Residuo Envolvido</label>
-      <select name="residuoSelect" id="residuoSelect" class="form-select" required>
+      <select name="residuoSelect" id="residuoSelect" class="form-select form-select-sm" required>
+        <option value="">Selecione...</option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <label for="locDescarte" class="form-label fw-bold">Local de Descarte</label>
+      <select name="locDescarte" id="locDescarte" class="form-select form-select-sm" required>
         <option value="">Selecione...</option>
       </select>
     </div>
@@ -217,12 +224,12 @@
       </div>
 
       <div class="col-md-6">
-        <label for="ruaClient" class="form-label fw-bold">Tipo de Cliente</label>
+        <label for="tpClient" class="form-label fw-bold">Tipo de Cliente</label>
         <input
           type="text"
           id="tpClient"
           class="form-control"
-          placeholder="Rua do cliente"
+          placeholder="Tipo de cliente"
           readonly
           required
         />
@@ -318,14 +325,28 @@
             <label for="modelo1" class="form-label">Modelo</label>
             <input type="text" class="form-control form-control-sm" id="modelo1" readonly>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label for="time1" class="form-label">Horario</label>
             <input type="time" class="form-control form-control-sm" id="time1" readonly>
           </div>
           
-          <div class="col-md-6">
+          <div class="col-md-2">
             <label for="carga1" class="form-label">Tipo de Carga</label>
-            <input type="text" class="form-control form-control-sm" id="carga1">
+            <select name="carga1" id="carga1" required class="form-select form-select-sm">
+              <option value="">Selecione...</option>
+              <option value="Caçamba cheia">Caçamba Cheia</option>
+              <option value="Caçamba vazia">Caçamba vazia</option>
+            </select>
+          </div>
+
+            <div class="col-md-1">
+            <label for="Quantidade1" class="form-label">Quatidade</label>
+            <input type="number" class="form-control form-control-sm" id="quantidade1" placeholder="0 A 5" min="0" max="5" >
+          </div>
+
+           <div class="col-md-6">
+            <label for="obs1" class="form-label">Observação</label>
+            <input type="text" class="form-control form-control-sm" id="obs1" placeholder="Observação" min="0" max="5" >
           </div>
         </div>
       </div>
@@ -348,14 +369,28 @@
             <label for="modelo2" class="form-label">Modelo</label>
             <input type="text" class="form-control form-control-sm" id="modelo2" readonly>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label for="time2" class="form-label">Horario</label>
             <input type="time" class="form-control form-control-sm" id="time2" readonly>
           </div>
          
-          <div class="col-md-6">
+          <div class="col-md-2">
             <label for="carga2" class="form-label">Tipo de Carga</label>
-            <input type="text" class="form-control form-control-sm" id="carga2">
+            <select name="carga2" id="carga2" class="form-select form-select-sm">
+              <option value="">Selecione...</option>
+               <option value="Caçamba Cheia">Caçamba Cheia</option>
+               <option value="Caçamba Vazia">Caçamba Vazia</option>
+            </select>
+          </div>
+
+           <div class="col-md-1">
+            <label for="Quantidade2" class="form-label">Quatidade</label>
+            <input type="number" class="form-control form-control-sm" id="quantidade2" placeholder="0 A 5" min="0" max="5" >
+          </div>
+
+           <div class="col-md-6">
+            <label for="obs2" class="form-label">Observação</label>
+            <input type="number" class="form-control form-control-sm" id="obs2" placeholder="0 A 5" min="0" max="5" >
           </div>
         </div>
       </div>
@@ -1008,63 +1043,61 @@
 
   <!-- POP UP DE PESQUISA POR LOCAÇÃO -->
   <div class="popupBackDrop position-fixed top-0 start-0 w-100 h-100 bg-dark opacity-50" style="display: none; z-index: 1050;"></div>
-  <div
-    class="searchLocation position-fixed top-50 start-50 translate-middle bg-white border rounded-4 p-4 shadow-lg w-100"
-    style="display: none; max-width: 500px; z-index: 1055"
-  >
-    <h4 class="mb-4 text-center text-dark fw-semibold">
-      <i class="bi bi-search text-primary me-2"></i>Escolha um formato de
-      Pesquisa:
-    </h4>
+ <div
+  class="searchLocation position-fixed top-50 start-50 translate-middle bg-white border rounded-4 p-4 shadow-lg w-100 flex-column"
+  style="display: none; max-width: 650px; z-index: 1055; max-height: 90vh; overflow-y: auto;"
+>
+  <h4 class="mb-4 text-center text-dark fw-semibold">
+    <i class="bi bi-search text-primary me-2"></i>Escolha um formato de
+    Pesquisa:
+  </h4>
 
-    <div class="form-floating mb-3">
-      <input
-        type="number"
-        name="numberLocation"
-        id="numberLocation"
-        class="form-control"
-        placeholder="Número da locação"
-      />
-      <label for="numberLocation"
-        ><i class="bi bi-hash me-1"></i>Número da Locação</label
-      >
-    </div>
-
-    <div class="form-floating mb-3">
-      <select name="statusLocation" id="statusLocation" class="form-select">
-        <option value="" selected>Selecione...</option>
-        <option value="Pendente">Pendente</option>
-        <option value="Em Locação">Em Locação</option>
-      </select>
-      <label for="statusLocation"
-        ><i class="bi bi-ui-checks me-1"></i>Status</label
-      >
-    </div>
-
-    <div class="form-floating mb-4">
-      <input
-        type="text"
-        name="nameClient"
-        id="nameClientSearch"
-        class="form-control"
-        placeholder="Nome do Cliente"
-      />
-      <label for="nameClientSearch"
-        ><i class="bi bi-person me-1"></i>Nome do Cliente</label
-      >
-    </div>
-
-    <div class="d-flex justify-content-between gap-2">
-      <button
-        class="btn btn-primary w-50 submitSearchLocation"
-      >
-        <i class="bi bi-search"></i> Pesquisar
-      </button>
-      <button class="btn btn-outline-secondary w-50 outPageSearchLocation">
-        <i class="bi bi-arrow-left"></i> Voltar
-      </button>
-    </div>
+  <div class="form-floating mb-3">
+    <input
+      type="number"
+      name="numberLocation"
+      id="numberLocation"
+      class="form-control"
+      placeholder="Número da locação"
+    />
+    <label for="numberLocation"
+      ><i class="bi bi-hash me-1"></i>Número da Locação</label
+    >
   </div>
+
+  <div class="form-floating mb-3">
+    <select name="statusLocation" id="statusLocation" class="form-select">
+      <option value="" selected>Selecione...</option>
+      <option value="Pendente">Pendente</option>
+      <option value="Em Locação">Em Locação</option>
+    </select>
+    <label for="statusLocation"
+      ><i class="bi bi-ui-checks me-1"></i>Status</label
+    >
+  </div>
+
+  <div class="form-floating mb-4">
+    <input
+      type="text"
+      name="nameClient"
+      id="nameClientSearch"
+      class="form-control"
+      placeholder="Nome do Cliente"
+    />
+    <label for="nameClientSearch"
+      ><i class="bi bi-person me-1"></i>Nome do Cliente</label
+    >
+  </div>
+
+  <div class="d-flex justify-content-between gap-2">
+    <button class="btn btn-primary w-50 submitSearchLocation">
+      <i class="bi bi-search"></i> Pesquisar
+    </button>
+    <button class="btn btn-outline-secondary w-50 outPageSearchLocation">
+      <i class="bi bi-arrow-left"></i> Voltar
+    </button>
+  </div>
+</div>
 
   <!-- CADASTRAR CLIENTE -->
   <div class="LocRegisterClient container overflow-auto" style="display: none">

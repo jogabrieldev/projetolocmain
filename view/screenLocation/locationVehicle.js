@@ -140,7 +140,7 @@ async function locationTheVehicle() {
     const dataDevoStr = document.getElementById("DataDevo")?.value || null;
     const pagament = document.getElementById("pagament")?.value || null;
     const residuo = document.getElementById("residuoSelect").value;
-
+    const descart = document.getElementById('locDescarte').value;
 
     const feriadosFixos = [
     "01-01", // Ano Novo
@@ -165,6 +165,17 @@ async function locationTheVehicle() {
     if(!residuo){
         Toastify({
         text: "Adicione qual residuo esta envolvido na locação",
+        duration: 4000,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "orange",
+      }).showToast();
+      return; 
+    }
+
+    if(!descart){
+        Toastify({
+        text: "Adicione onde vai ser o local de descarte dessa locação!",
         duration: 4000,
         gravity: "top",
         position: "center",
@@ -292,17 +303,15 @@ async function locationTheVehicle() {
       cllodtdv: dataDevo.toISOString().split("T")[0],
       cllodtlo: dataLocStr,
       cllopgmt: pagament,
+      cllodesc: descart,
       localization: dateSave,
       clloclno:userClientValidade[0],
       clloresi: residuo,
       cllocpcn: userClientValidade[1]
     };
-     
-    await gerarContratoVeiculos();
-    const contratoHTML = document.querySelector(".contratoLocationVehicle").innerHTML.trim();
-    if(!contratoHTML){
-       return;
-    }
+
+
+    
     const veiculos = [];
 
     const veiculo1 = document.getElementById("veiculo1");
@@ -310,7 +319,8 @@ async function locationTheVehicle() {
     const placa1 = document.getElementById("placa1").value;
     const horario1 = document.getElementById("time1").value;
     const carga1 = document.getElementById("carga1").value;
-
+    const quantidade1 = document.getElementById("quantidade1").value;
+    const observa1 = document.getElementById('obs1').value
     if (veiculo1.value) {
       veiculos.push({
         code: veiculo1.value,
@@ -318,6 +328,8 @@ async function locationTheVehicle() {
         placa: placa1,
         horario: horario1,
         carga: carga1,
+        quantidade:quantidade1,
+        observacao:observa1,
         status:"Pendente"
       });
     }
@@ -327,6 +339,8 @@ async function locationTheVehicle() {
     const placa2 = document.getElementById("placa2").value;
     const horario2 = document.getElementById("time2")?.value;
     const carga2 = document.getElementById("carga2").value;
+    const quantidade2 = document.getElementById("quantidade2").value;
+    const observa2 = document.getElementById('obs2').value
 
     if (veiculo2.value) {
       veiculos.push({
@@ -335,8 +349,34 @@ async function locationTheVehicle() {
         placa: placa2,
         horario: horario2,
         carga: carga2,
+        quantidade:quantidade2,
+        observacao:observa2,
         status:'Pendente'
       });
+    }
+
+    const camposInvalidos = veiculos.some((v, index) => {
+          return (  !v.code || v.code.trim() === "" ||  !v.carga || v.carga.trim() === "" ||!v.quantidade || isNaN(v.quantidade) || Number(v.quantidade) <= 0
+         );
+      });
+
+
+      if(camposInvalidos){
+         Toastify({
+         text: "Preencha todos os campos obrigatórios dos veículos corretamente.",
+         duration: 3000,
+         close: true,
+         gravity: "top",
+         position: "center",
+         backgroundColor: "red",
+       }).showToast();
+         return; // impede o envio
+      }
+
+    await gerarContratoVeiculos();
+    const contratoHTML = document.querySelector(".contratoLocationVehicle").innerHTML.trim();
+    if(!contratoHTML){
+       return;
     }
 
     const payloadLocationVehicle = {
@@ -345,6 +385,8 @@ async function locationTheVehicle() {
       veiculos: veiculos,
       contrato: contratoHTML
     };
+
+    
     const res = await fetch("/api/locacaoveiculo", {
       method: "POST",
       headers: {
@@ -533,20 +575,6 @@ async function locationTheVehicle() {
     });
   };
 
- const btnBaixarPdf = document.getElementById("baixarPdf");
-  if (btnBaixarPdf) {
-    btnBaixarPdf.addEventListener("click", () => {
-      const element = document.querySelector(".contratoLocationVehicle");
-      const opt = {
-        margin: 0.5,
-        filename: `contrato-locacao-veiculos-${numericLocation}.pdf`,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
-      };
-      html2pdf().set(opt).from(element).save();
-    });
-  };
 };
 
 
@@ -589,6 +617,8 @@ async function frontLocationVeiculos() {
     const dataFinish = await response.json();
     const locacoes = dataFinish.locacoes || [];
 
+    console.log('locaco veiculos' , locacoes)
+
     const table = document.querySelector(".tableLocation");
     if (!table) return;
 
@@ -603,6 +633,7 @@ async function frontLocationVeiculos() {
           dataLocacao: formatDate(locacao.cllodtlo),
           dataDevolucao: formatDate(locacao.cllodtdv),
           formaPagamento: locacao.cllopgmt || "Não definido",
+          descarte: locacao.cllodesc || "Não definido",
           localization: {
             cep:locacao.cllocep,
             rua:locacao.cllorua,
@@ -673,7 +704,6 @@ function renderTableVeiculos(data) {
     "Data da Locação",
     "Data de Devolução",
     "Forma de Pagamento",
-    "Identificador",
     "Placa",
     "Modelo",
     "Horário",
@@ -714,7 +744,6 @@ function renderTableVeiculos(data) {
       "dataLocacao",
       "dataDevolucao",
       "formaPagamento",
-      "veloidau",
       "veloplac",
       "velomode",
       "velotime",
@@ -775,9 +804,20 @@ function renderTableVeiculos(data) {
   });
 }
 
-function showContratoLocacao(locacao) {
+async function showContratoLocacao(locacao) {
+
   const contratoDiv = document.querySelector(".contratoLocationVehicle");
   if (!contratoDiv) return;
+
+  const nameResiduo = await buscarResiduo(locacao.residuo)
+  if(!nameResiduo || nameResiduo === null){
+     return
+  };
+
+  const destinoDescarte = await buscarLocalDescarte(locacao.descarte)
+  if(!destinoDescarte || destinoDescarte === null){
+     return
+  }
 
   const formatDate = (dateStr) => {
     if (!dateStr) return "-";
@@ -810,6 +850,26 @@ function showContratoLocacao(locacao) {
   const pNome = document.createElement("p");
   pNome.innerHTML = `<strong>Nome do Cliente:</strong> ${locacao.nomeCliente}`;
   container.appendChild(pNome);
+
+ const descarteDiv = document.createElement("div");
+  descarteDiv.className = "border rounded p-3 mb-3 bg-dark-subtle text-white";
+  descarteDiv.innerHTML = `
+    <p class="mb-1"><i class="bi bi-trash-fill"></i> <strong>Endereço do Descarte:</strong></p>
+    <div class="row">
+      <div class="col-md-4 text-dark"><strong>Nome:</strong> ${destinoDescarte?.derenome || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>Tipo:</strong> ${destinoDescarte?.deretipo || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>Rua:</strong> ${destinoDescarte?.dererua || "-"}</div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 text-dark"><strong>Bairro:</strong> ${destinoDescarte?.derebair || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>Cidade:</strong> ${destinoDescarte?.derecida || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>CEP:</strong> ${destinoDescarte?.derecep || "-"}</div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 text-dark"><strong>Estado:</strong> ${destinoDescarte?.dereestd || "-"}</div>
+    </div>`;
+
+    container.appendChild(descarteDiv)
 
   const enderecoDiv = document.createElement("div");
   enderecoDiv.className = "border rounded p-3 mb-3 bg-dark-subtle text-white";
@@ -862,7 +922,7 @@ function showContratoLocacao(locacao) {
   container.appendChild(enderecoDiv);
 
   const pResiduo = document.createElement("p");
-  pResiduo.innerHTML = `<strong>Residuo Envolvido:</strong> ${locacao.residuo || "-"}`;
+  pResiduo.innerHTML = `<strong>Residuo Envolvido:</strong> ${nameResiduo  || "-"}`;
   container.appendChild(pResiduo);
 
   const pDataLoc = document.createElement("p");
@@ -944,6 +1004,11 @@ function showContratoLocacao(locacao) {
   btnVoltar.className = "btn btn-light";
   btnVoltar.textContent = "Voltar";
 
+   const btnSalvar = document.createElement("button");
+  btnSalvar.id = "baixarPdf";
+  btnSalvar.className = "btn btn-success";
+  btnSalvar.innerHTML = `<i class="bi bi-arrow-down-circle-fill me-2"></i>Baixar PDF`;
+
   btnVoltar.addEventListener("click", () => {
     contratoDiv.style.display = "none";
     const table = document.querySelector(".tableLocation");
@@ -959,6 +1024,7 @@ function showContratoLocacao(locacao) {
   });
 
   divBtn.appendChild(btnVoltar);
+  divBtn.appendChild(btnSalvar)
   container.appendChild(divBtn);
 
   contratoDiv.appendChild(container);
@@ -974,6 +1040,21 @@ function showContratoLocacao(locacao) {
   if (containerBtn) {
     containerBtn.classList.remove("flex");
     containerBtn.classList.add("hidden");
+  }
+
+   const btnBaixarPdf = document.getElementById("baixarPdf");
+  if (btnBaixarPdf) {
+    btnBaixarPdf.addEventListener("click", () => {
+      const element = document.querySelector(".contratoLocationVehicle");
+      const opt = {
+        margin: 0.5,
+        filename: `contrato-locacao-${locacao.numeroLocacao}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+      };
+      html2pdf().set(opt).from(element).save();
+    });
   }
 }
 

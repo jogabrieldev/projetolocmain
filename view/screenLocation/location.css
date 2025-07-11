@@ -154,25 +154,6 @@
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 }
 
-.btnUpdateLocation{
-  height: 30px;
-  width: 35%;
-  background-color: rgb(100, 137, 189);
-  color: black;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.outLocationEdit{
-  height: 30px;
-  width: 35%;
-  background-color: rgb(100, 137, 189);
-  color: black;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
 
 .tableLocation {
   overflow: auto;
@@ -182,23 +163,6 @@
  
 }
 
-.searchLocation {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: darkgray;
-  padding: 10px;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 9999;
-  width: 30%;
-  height: 40%;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-}
 #resetFilterBtn {
   width: 20%;
   height: 30px;
