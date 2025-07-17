@@ -10,7 +10,7 @@ import {movementOfTypeProd} from "../controllers/controllerTypeProd.js";
 import {movementOfDriver} from '../controllers/controllerDriver.js';
 import { movementAuto } from '../controllers/automovelController.js';
 import {location} from '../controllers/locationController.js';
-import logistics from '../controllers/logistcsController.js'
+import logistcgController from '../controllers/logistcsController.js'
 import { controllerDelivery } from "../controllers/deliveryController.js";
 import { movementResiduo } from "../controllers/residuoController.js";
 import { controllerDestination } from "../controllers/controllerDestination.js";
@@ -23,24 +23,34 @@ route.post("/autenticar",  (req, res) => {
    authSystemValidade.AuthLoginCenter(req ,res)
 });
 
+
 //bens
 route.get('/api/listbens',  authenticateToken,(req , res)=>{
   movementGoods.listBens(req , res)
 });
+
+route.get("/api/bens/:id" , authenticateToken, (req ,res)=>{
+  movementGoods.pegarBemPorID(req,res)
+})
+
 route.get('/api/codebens/search', authenticateToken, (req , res)=>{
    movementGoods.getbensByCode(req , res)
 })
+
 route.post("/api/bens/submit", authenticateToken,(req, res) => {
   movementGoods.registerBens(req, res)
 });
+
 route.delete('/api/bens/delete/:id', authenticateToken, async (req,res)=>{
   movementGoods.deletarGoods(req , res)
 });
+
 route.put('/api/bens/update/:id' , authenticateToken, async (req , res)=>{
   movementGoods.updateGoods(req , res)
 });
+
 route.put("/api/updatestatus/:bemId" , authenticateToken, async(req, res)=>{
-  movementGoods.update(req ,res)
+  movementGoods.updateStatus(req ,res)
 });
 
 //client
@@ -72,13 +82,13 @@ route.get('/api/codeforn' , authenticateToken, (req , res)=>{
   movementForne.codeForn(req , res)
 });
 route.get('/api/forne/search' , (req ,res)=>{
-   movementForne.getfornecedorByCode(req ,res)
+   movementForne.searchForneParams(req ,res)
 })
 route.get('/api/listForn' , authenticateToken, (req , res)=>{
   movementForne.listOfForn(req, res)
 });
 route.delete('/api/deleteForn/:id' , authenticateToken, (req , res)=>{
-  movementForne.deleteOfForm(req , res)
+  movementForne.deleteOfForn(req , res)
 });
 route.put('/api/updateforn/:id' , authenticateToken, (req , res)=>{
   movementForne.updateOfForn(req , res)
@@ -90,11 +100,8 @@ route.post('/api/prod/submit' ,  authenticateToken,  (req , res)=>{
   movementOfProd.registerProd(req ,res)
 });
 route.get('/api/prod/search' , authenticateToken, (req ,res)=>{
-   movementOfProd.getProdutoByCode(req ,res)
+   movementOfProd.searchProductByCode(req ,res)
 })
-route.get('/api/codetipoprod' ,  authenticateToken,  (req , res)=>{
-movementOfProd.codeTipoProd(req , res)
-});
 route.get('/api/listProd' ,  authenticateToken,  (req , res)=>{
   movementOfProd.listofProd(req , res)
 });
@@ -134,6 +141,9 @@ route.post('/api/typeprod/submit' , authenticateToken, (req , res)=>{
 route.get('/api/typeprod/search' , authenticateToken , (req ,res)=>{
    movementOfTypeProd.getTypeProductByCode(req ,res)
 })
+route.get('/api/codetipoprod' ,  authenticateToken,  (req , res)=>{
+movementOfProd.codeTipoProd(req , res)
+});
 route.get('/api/listingTypeProd' , authenticateToken, (req, res )=>{
   movementOfTypeProd.listingOfTypeProd(req , res)
 });
@@ -150,13 +160,13 @@ route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
   movementOfDriver.registerOfDriver(req , res)
  });
  route.get('/api/driver/search' , authenticateToken, (req , res)=>{
-  movementOfDriver.getDriverByCode(req ,res)
+  movementOfDriver.searchDriver(req ,res)
  })
  route.post('/api/drive/auth' , (req , res)=>{
    authSystemValidade.loginMotorista(req ,res)
  })
  route.get('/api/driver/:motoristaid' , (req ,res)=>{
-    movementOfDriver.getAllDriverForDelivery(req ,res)
+    movementOfDriver.getDriverByCode(req ,res)
  })
  route.get('/api/listingdriver' , authenticateToken, (req , res)=>{
   movementOfDriver.listingOfDriver(req , res)
@@ -178,7 +188,7 @@ route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
  });
  route.get('/api/automovel/search' , authenticateToken, (req ,res)=>{
    movementAuto.getAutomovelByCode(req ,res)
- })
+ });
  route.get('/api/listauto', authenticateToken, (req , res)=>{
   movementAuto.listingOfAuto(req, res)
  });
@@ -190,20 +200,21 @@ route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
  }); 
  route.put('/api/automo/:id' , (req ,res)=>{
    movementAuto.updateStatusVehicle(req , res)
- })
+ });
 
 
  // residuo
 route.post('/residuo' , (req ,res)=>{
    movementResiduo.registerResiduo(req ,res)
 });
+
 route.get('/residuo' , (req ,res)=>{
   movementResiduo.listResiduo(req ,res)
 });
 
 route.get('/residuo/:id',(req ,res)=>{
    movementResiduo.getIdResiduo(req ,res)
-})
+});
 route.delete("/residuo/:id" , (req , res)=>{
    movementResiduo.deleteResiduo(req , res)
 });
@@ -277,8 +288,16 @@ route.put('/api/destination/:iddestination' , (req ,res)=>{
 
  // DELIVERY LOCATION 
  route.post('/logistics' , (req , res)=>{
-  logistics.submitDateForLogistcs(req ,res)
+  logistcgController.submitDateForLogistcs(req ,res)
 });
+
+route.get("/api/contrato/:id",(req , res)=>{
+  logistcgController.getAll(req ,res)
+})
+
+route.put("/api/contrato/:id" , (req ,res)=>{
+  logistcgController.updateContratoWithGoods(req ,res)
+})
  route.get('/api/getdelivery' , authenticateToken, (req ,res)=>{
   controllerDelivery.getDate(req ,res)
  });

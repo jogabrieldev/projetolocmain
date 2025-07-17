@@ -149,6 +149,27 @@ function readOnlyFieldChange(){
   });
 }
 
+async function buscarLocalDescarte(id) {
+   try {
+        const response = await fetch(`/api/destination/${id}` , {
+          method: 'GET'
+        })
+
+        const data = await response.json()
+
+        if(data.success && response.ok){
+           return data.destino
+        }else{
+            console.warn('Resposta inválida:', data);
+            return null;
+        }
+   } catch (error) {
+      console.error('Erro ao buscar local de descarte' , error)
+      return null
+   }
+}
+
+
 const socketContainerLocation = io();
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -874,41 +895,58 @@ async function handleSubmit() {
    
   // Capturar dados dos grupos
   for (let i = 1; i <= totalGrups; i++) {
-    const codeBen = document.getElementById(`family${i}`)?.value || "";
-    const produto = document.getElementById(`produto${i}`)?.value || "";
-    const quantidade = document.getElementById(`quantidade${i}`)?.value || "";
-    const observacao = document.getElementById(`observacao${i}`)?.value || "";
-    const dataInicioStr =
-      document.getElementById(`dataInicio${i}`)?.value || "";
-    const dataFimStr = document.getElementById(`dataFim${i}`)?.value || "";
-     
+  const codeBen = document.getElementById(`family${i}`)?.value.trim() || "";
+  const produto = document.getElementById(`produto${i}`)?.value.trim() || "";
+  const quantidade = document.getElementById(`quantidade${i}`)?.value.trim() || "";
+  const observacao = document.getElementById(`observacao${i}`)?.value.trim() || "";
+  const dataInicioStr = document.getElementById(`dataInicio${i}`)?.value.trim() || "";
+  const dataFimStr = document.getElementById(`dataFim${i}`)?.value.trim() || "";
 
-    if (!codeBen) continue
- 
-      if (codigosUsados.has(codeBen)) {
-        Toastify({
-          text: `Grupo ${i}: O código "${codeBen}" já foi selecionado em outro grupo.`,
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-        return;
-      }
+  // Se todos os campos estão em branco, pula
+  if (!codeBen && !quantidade && !dataFimStr) continue;
 
-      codigosUsados.add(codeBen);
-      if (!codeBen || !dataInicioStr || !dataFimStr || !quantidade) {
-        Toastify({
-          text: `Grupo ${i}: Preencha código, quantidade, data de início e data fim.`,
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-        return;
-      }
+  const quantidadeNum = parseInt(quantidade, 10);
+   if (isNaN(quantidadeNum) || quantidadeNum < 1 || quantidadeNum > 5) {
+   Toastify({
+    text: `Grupo ${i}: A quantidade deve ser um número entre 1 e 5.`,
+    duration: 3000,
+    close: true,
+    gravity: "top",
+    position: "center",
+    backgroundColor: "orange",
+  }).showToast();
+  return;
+}
+
+  console.log('Grupo:', i, 'CodeBen:', codeBen, 'Quantidade:', quantidade, 'Data Início:', dataInicioStr, 'Data Fim:', dataFimStr);
+
+  // Verifica campos obrigatórios
+  if (!codeBen || !quantidade || !dataInicioStr || !dataFimStr) {
+    Toastify({
+      text: `Grupo ${i}: Preencha código, quantidade, data de início e data fim.`,
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+    return;
+  }
+
+  // Verifica duplicidade
+  if (codigosUsados.has(codeBen)) {
+    Toastify({
+      text: `Grupo ${i}: O código "${codeBen}" já foi selecionado em outro grupo.`,
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+    return;
+  }
+
+  codigosUsados.add(codeBen);
 
       if (!isDataValida(dataInicioStr) || !isDataValida(dataFimStr)) {
         Toastify({
@@ -1162,11 +1200,25 @@ async function handleSubmit() {
       return;
     }
 
-    await gerarContrato()
-    const contratoHTML = document.querySelector(".contrato").innerHTML.trim();
-    bens.forEach((bem) => {
-    bem.contrato = contratoHTML;
-   });
+
+    try {
+       await gerarContrato();
+        const contratoHTML = document.querySelector(".contrato").innerHTML.trim();
+        bens.forEach((bem) => {
+        bem.contrato = contratoHTML;
+       })
+} catch (err) {
+  Toastify({
+    text: "Erro ao gerar contrato, verifique os dados do cliente ou bens.",
+    duration: 4000,
+    gravity: "top",
+    position: "center",
+    backgroundColor: "red",
+  }).showToast();
+  return;
+}
+
+    ;
 
     const payload = {
       numericLocation,
@@ -1180,8 +1232,7 @@ async function handleSubmit() {
       bens,
     };
 
-    console.log("payload locação", payload);
-
+    
     const response = await fetch("/api/datalocation", {
       method: "POST",
       headers: {
@@ -1237,7 +1288,7 @@ async function handleSubmit() {
 }
 
 // CONTRATO COM OS DADOS A LOCAÇÃO
-function gerarContrato() {
+async function gerarContrato() {
   const contratoDiv = document.querySelector(".contrato");
   contratoDiv.innerHTML = "";
   contratoDiv.style.display = "flex";
@@ -1248,6 +1299,12 @@ function gerarContrato() {
     return select?.options[select.selectedIndex]?.text || "Não informado";
   };
 
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "-";
+    const d = new Date(dateStr);
+    return isNaN(d) ? "-" : d.toLocaleDateString("pt-BR");
+  };
+
   const cpfCliente = getValue("cpfClient");
   const nomeCliente = getValue("nameClient");
   const dataLocacao = getValue("dataLoc");
@@ -1255,8 +1312,9 @@ function gerarContrato() {
   const numericLocation = getValue("numeroLocation");
   const pagamento = getValue("pagament");
   const residuo = getSelectText("residuoSelect");
-  const localDescarte = getSelectText("locDescarte");
+  const descarteId = getValue("locDescarte");
 
+  const localDescarte = await buscarLocalDescarte(descarteId);
   const dadosInputsLoc = localStorage.getItem("dadosInputs");
   const enderecoLocacao = dadosInputsLoc ? JSON.parse(dadosInputsLoc) : {};
 
@@ -1264,66 +1322,73 @@ function gerarContrato() {
   container.className = "text-dark p-4 rounded";
 
   const h2 = document.createElement("h2");
-  h2.className = "text-center mb-4 text-dark";
-  h2.textContent = "Contrato de Locação";
+  h2.className = "text-center mb-4";
+  h2.innerHTML = `<i class="bi bi-file-earmark-text-fill me-2"></i>Contrato de Locação de Bens`;
   container.appendChild(h2);
 
-  const addParagraph = (label, value) => {
-    const p = document.createElement("p");
-    p.innerHTML = `<strong>${label}:</strong> ${value}`;
-    container.appendChild(p);
-  };
+  container.innerHTML += `
+    <hr class="border-light">
+    <p><i class="bi bi-hash"></i> <strong>Número da locação:</strong> ${numericLocation}</p>
+    <p><i class="bi bi-person-fill"></i> <strong>Nome do Cliente:</strong> ${nomeCliente}</p>
+    <p><i class="bi bi-credit-card"></i> <strong>CPF/CNPJ do Cliente:</strong> ${cpfCliente}</p>
+    <p><i class="bi bi-recycle"></i> <strong>Resíduo Envolvido:</strong> ${residuo}</p>
+    <p><i class="bi bi-credit-card-2-front"></i> <strong>Forma de Pagamento:</strong> ${pagamento}</p>
+    <p><i class="bi bi-calendar-check"></i> <strong>Data da Locação:</strong>  ${(dataLocacao)}</p>
+    <p><i class="bi bi-calendar-x"></i> <strong>Data de Devolução:</strong> ${(dataDevolucao)}</p>
+  `;
 
-  addParagraph("Número da locação", numericLocation);
-  addParagraph("Nome do Cliente", nomeCliente);
-  addParagraph("CPF/CNPJ do Cliente", cpfCliente);
-  addParagraph("Residuo Envolvido", residuo);
+  const descarteDiv = document.createElement("div");
+  descarteDiv.className = "border rounded p-3 mb-3 bg-dark-subtle text-white";
+  descarteDiv.innerHTML = `
+    <p class="mb-1"><i class="bi bi-trash-fill"></i> <strong>Endereço do Descarte:</strong></p>
+    <div class="row">
+      <div class="col-md-4 text-dark"><strong>Nome:</strong> ${localDescarte?.derenome || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>Tipo:</strong> ${localDescarte?.deretipo || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>Rua:</strong> ${localDescarte?.dererua || "-"}</div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 text-dark"><strong>Bairro:</strong> ${localDescarte?.derebair || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>Cidade:</strong> ${localDescarte?.derecida || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>CEP:</strong> ${localDescarte?.derecep || "-"}</div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 text-dark"><strong>Estado:</strong> ${localDescarte?.dereestd || "-"}</div>
+    </div>`;
+  container.appendChild(descarteDiv);
 
-  // Endereço da Locação
+  const statusDiv = document.createElement("div")
+  statusDiv.className = "border rounded p-3 mb-3 bg-dark-subtle text-dark text-center";
+  statusDiv.classList.add("statusLocacaoContainer") 
+  statusDiv.style.display = 'none'
+  container.appendChild(statusDiv)
+
   const enderecoDiv = document.createElement("div");
   enderecoDiv.className = "border rounded p-3 mb-3 bg-dark-subtle text-white";
-
-  const enderecoTitulo = document.createElement("p");
-  enderecoTitulo.className = "mb-1";
-  enderecoTitulo.innerHTML = `<strong>Endereço da Locação:</strong>`;
-  enderecoDiv.appendChild(enderecoTitulo);
-
-  const row1 = document.createElement("div");
-  row1.className = "row";
-
-  [["Rua", "localizationRua"], ["Bairro", "localizationBairro"], ["Cidade", "localizationCida"]].forEach(([label, key]) => {
-    const div = document.createElement("div");
-    div.className = "col-md-4 text-dark";
-    div.innerHTML = `<strong>${label}:</strong> ${enderecoLocacao[key] || "-"}`;
-    row1.appendChild(div);
-  });
-
-  const row2 = document.createElement("div");
-  row2.className = "row";
-
-  [["CEP", "localizationCep"], ["Referência", "localizationRefe"], ["Região", "localizationRegion"]].forEach(([label, key]) => {
-    const div = document.createElement("div");
-    div.className = "col-md-4 text-dark";
-    div.innerHTML = `<strong>${label}:</strong> ${enderecoLocacao[key] || "-"}`;
-    row2.appendChild(div);
-  });
-
-  enderecoDiv.appendChild(row1);
-  enderecoDiv.appendChild(row2);
+  enderecoDiv.innerHTML = `
+    <p class="mb-1"><i class="bi bi-geo-alt-fill"></i> <strong>Endereço da Locação:</strong></p>
+    <div class="row">
+      <div class="col-md-4 text-dark"><strong>Rua:</strong> ${enderecoLocacao.localizationRua || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>Bairro:</strong> ${enderecoLocacao.localizationBairro || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>Cidade:</strong> ${enderecoLocacao.localizationCida || "-"}</div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 text-dark"><strong>CEP:</strong> ${enderecoLocacao.localizationCep || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>Referência:</strong> ${enderecoLocacao.localizationRefe || "-"}</div>
+      <div class="col-md-4 text-dark"><strong>Região:</strong> ${enderecoLocacao.localizationRegion || "-"}</div>
+    </div>
+  `;
   container.appendChild(enderecoDiv);
 
-  addParagraph("Data da Locação", dataLocacao);
-  addParagraph("Data de Devolução", dataDevolucao);
-  addParagraph("Forma de Pagamento", pagamento);
-  addParagraph("Local de descarte do residuo", localDescarte);
-
-  // Itens Locados
   const tituloItens = document.createElement("p");
-  tituloItens.innerHTML = `<strong>Tipo de caçamba que o cliente solicitou:</strong>`;
+  tituloItens.innerHTML = `<i class="bi bi-box-seam"></i> <strong>Tipo de bem pedido na locação:</strong>`;
   container.appendChild(tituloItens);
 
-  const itens = [];
+  const bensVinculados =  document.createElement("div")
+  bensVinculados.classList.add('bensVinculados')
+  bensVinculados.style.display = 'none'
+  container.appendChild(bensVinculados)
 
+  const itens = [];
   for (let i = 1; i <= 4; i++) {
     const produto = getValue(`produto${i}`);
     if (produto !== "Não informado") {
@@ -1332,8 +1397,8 @@ function gerarContrato() {
         produto,
         quantidade: getValue(`quantidade${i}`),
         observacao: getValue(`observacao${i}`),
-        dataInicio: getValue(`dataInicio${i}`),
-        dataFim: getValue(`dataFim${i}`)
+        dataInicio: formatDate(getValue(`dataInicio${i}`)),
+        dataFim: formatDate(getValue(`dataFim${i}`))
       });
     }
   }
@@ -1377,31 +1442,34 @@ function gerarContrato() {
     container.appendChild(p);
   }
 
-  // Botões
   const divBtn = document.createElement("div");
   divBtn.className = "text-center mt-4 d-flex justify-content-center gap-2";
 
   const btnVoltar = document.createElement("button");
   btnVoltar.id = "voltar";
   btnVoltar.className = "btn btn-light";
-  btnVoltar.textContent = "Voltar";
+  btnVoltar.innerHTML = `<i class="bi bi-arrow-left"></i> Voltar`;
 
-
+  const btnSalvar = document.createElement("button");
+  btnSalvar.id = "baixarPdf";
+  btnSalvar.className = "btn btn-success";
+  btnSalvar.innerHTML = `<i class="bi bi-arrow-down-circle-fill me-2"></i>Baixar PDF`;
 
   divBtn.appendChild(btnVoltar);
-  // divBtn.appendChild(btnSalvar);
+  divBtn.appendChild(btnSalvar)
   container.appendChild(divBtn);
   contratoDiv.appendChild(container);
 
-  // Evento botão voltar
   btnVoltar.addEventListener("click", () => {
     esconderElemento(contratoDiv);
     mostrarElemento(document.querySelector(".tableLocation"));
     mostrarElemento(document.querySelector(".btnInitPageMainLoc"));
   });
 
-  // Se quiser ativar o download do PDF, adicione novamente o bloco com html2pdf
-}
+   
+};
+
+
 
 // cadastrar o cliente pela a tela de locação
 function registerClientPageLocation() {

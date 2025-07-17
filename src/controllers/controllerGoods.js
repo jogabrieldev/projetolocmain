@@ -1,14 +1,13 @@
 import { goodsRegister } from "../model/modelsGoods.js";
 import { crudRegisterForn as infoForn } from "../model/modelsFornecedor.js";
+import { crudRegisterFamilyGoods as validFamily } from "../model/modelsFamilyGoods.js";
 
 export const movementGoods = {
 
   async registerBens(req, res) {
   try {
     const data = req.body;
-
-    console.log('Corpo' , data)
-
+  
     if (!data) {
       return res.status(400).json({ message: "Nenhum dado enviado" });
     }
@@ -47,7 +46,7 @@ export const movementGoods = {
     if (!isDataValida(data.dtStatus)) {
       return res.status(400).json({ message: "Data de status inválida." });
     }
-   
+    
     // 3) Validação do ano do modelo vs ano de compra
     if (data.bensAnmo) {
     const dataModelo = new Date(data.bensAnmo);
@@ -79,6 +78,9 @@ export const movementGoods = {
     
    
     const newBens = await goodsRegister.registerOfBens(data);
+    if(!newBens){
+       return res.status(400).json({message:'Erro para cadastrar bem'})
+    }
     const bens = await goodsRegister.listingBens();
 
     const io = req.app.get("socketio");
@@ -86,7 +88,7 @@ export const movementGoods = {
       io.emit("updateRunTimeGoods", bens);
     }
 
-    return res.status(201).json({ success: true, Bem: newBens });
+    return res.status(200).json({ success: true, Bem: newBens });
 
   } catch (error) {
     if (error.message.includes("Código do Bem ja cadastrado. Tente outro.")) {
@@ -95,6 +97,8 @@ export const movementGoods = {
     return res.status(500).json({ success: false, message: error.message });
   }
 },
+
+
 
 async getbensByCode(req, res) {
     const { benscode, status } = req.query;
@@ -117,6 +121,24 @@ async getbensByCode(req, res) {
   }
 },
 
+  async pegarBemPorID(req ,res){
+     try {
+        const {id} = req.params
+        if(!id){
+          return res.status(400).json({message:"É necessário passar o ID do bem"})
+        }
+        const bem = await goodsRegister.pegarbemPorID(id)
+        if(!bem){
+          return res.status(404).json({message:"Bem não encontrado"})
+        }
+
+        return res.status(200).json({success:true , message:"busca feita com sucesso" , bem })
+     } catch (error) {
+        console.error("Erro ao buscar bem por ID:", error);
+        return res.status(500).json({ message: "Erro ao buscar bem por ID." });
+     }
+  },
+
   async codeFamilyBens(req, res) {
     try {
       const dataFamilybens = await goodsRegister.buscarIdFamiliaBens();
@@ -138,7 +160,7 @@ async getbensByCode(req, res) {
       if(!bens){
          return res.status(400).json({ error: "Erro na listagem de bens" });
       }
-      res.json(bens).status(200);
+      return res.status(200).json({success: true , bens});
     } catch (error) {
       console.error("Erro no controller:", error.message);
       res.status(500).json({
@@ -169,9 +191,23 @@ async getbensByCode(req, res) {
     if (!codeValid.includes(bemId)) {
       return res.status(400).json({ message: "Código do bem e inválido." });
       }
-
-    try {
      
+      const codeFamily = await goodsRegister.buscarIdFamiliaBens(); 
+      const codigosValidos = codeFamily.map(item => item.fabecode); 
+
+    if (!codigosValidos.includes(updatedData.benscofa)) {
+      return res.status(400).json({ message: "Código da família de bens inválido." });
+      }
+  
+
+    const codigosForne= await infoForn.buscarIdForn(); 
+    const valiCode = codigosForne.map(item => item.forncode);
+
+    if (!valiCode.includes(updatedData.benscofo)) {
+      return res.status(400).json({ message: "Código do fornecedor de bens inválido." });
+      }
+    try {
+
       const bemUpdate = await goodsRegister.updateBens(bemId , updatedData)
       if (!bemUpdate) {
         return res.status(404).json({ message: "Bem não encontrado para atualização." });
@@ -218,13 +254,17 @@ async getbensByCode(req, res) {
     }
   },
 
-  async update(req, res) {
+  async updateStatus(req, res) {
     try {
-      const { bemId } = req.params; // Pega o ID da URL
-      const { bensstat } = req.body; // Pega o novo status
-
+      const { bemId } = req.params; 
+      const { bensstat } = req.body; 
+     
       if (!bemId || !bensstat) {
         return res.status(400).json({ message: "Dados inválidos" });
+      }
+
+      if(bensstat !== "Disponível" && bensstat !== "Locado"){
+        return res.status(400).json({message:"O status passado e invalido no processo!"})
       }
 
       const result = await goodsRegister.updateStatus(bemId, bensstat);
@@ -233,12 +273,10 @@ async getbensByCode(req, res) {
         return res.status(404).json({ message: "Bem não encontrado" });
       }
 
-      res
-        .status(200)
-        .json({ message: "Status atualizado com sucesso!", data: result });
+      return res.status(200).json({ message: "Status atualizado com sucesso!", success:true , status: result.bensstat });
     } catch (error) {
       console.error("Erro ao atualizar status:", error);
-      res.status(500).json({ message: "Erro no servidor" });
+      return res.status(500).json({ message: "Erro no servidor na atualização do status" });
     }
   },
 };

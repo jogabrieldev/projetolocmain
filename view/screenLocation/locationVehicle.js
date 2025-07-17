@@ -319,7 +319,7 @@ async function locationTheVehicle() {
     const placa1 = document.getElementById("placa1").value;
     const horario1 = document.getElementById("time1").value;
     const carga1 = document.getElementById("carga1").value;
-    const quantidade1 = document.getElementById("quantidade1").value;
+    const quantidade1 = document.getElementById("quantCacamba1").value;
     const observa1 = document.getElementById('obs1').value
     if (veiculo1.value) {
       veiculos.push({
@@ -339,7 +339,7 @@ async function locationTheVehicle() {
     const placa2 = document.getElementById("placa2").value;
     const horario2 = document.getElementById("time2")?.value;
     const carga2 = document.getElementById("carga2").value;
-    const quantidade2 = document.getElementById("quantidade2").value;
+    const quantidade2 = document.getElementById("quantCacamba2").value;
     const observa2 = document.getElementById('obs2').value
 
     if (veiculo2.value) {

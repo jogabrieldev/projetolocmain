@@ -22,6 +22,40 @@ class logistcsModel  {
      }
     }
 
+async getContratosPorLocacao(belocode) {
+       const query = `
+        SELECT belocontr
+        FROM bensloc
+        WHERE belocode = $1
+      `;
+
+  try {
+    const result = await client.query(query, [belocode]);
+    return result.rows.map(row => row.belocontr);
+  } catch (error) {
+    console.error("Erro ao buscar contratos:", error);
+    throw error;
+  }
+}
+
+async getContratoAndUpdate(id , body){
+    const query = `
+    UPDATE bensloc
+    SET belocontr = $1
+    WHERE belocode = $2
+    RETURNING belocontr;
+  `;
+
+  try {
+    const result = await client.query(query, [body.trim(), id]);
+    return result.rows[0]; // Retorna o contrato atualizado
+  } catch (error) {
+    console.error("Erro ao atualizar contrato do bem:", error);
+    throw error;
+  }
+}
+
+
 };
 
 export default new logistcsModel()

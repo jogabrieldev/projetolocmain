@@ -310,7 +310,7 @@ function registerNewProduto(){
       } 
 
       try {
-        const response = await fetch("http://localhost:3000/api/prod/submit", {
+        const response = await fetch("/api/prod/submit", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -331,29 +331,18 @@ function registerNewProduto(){
             backgroundColor: "green",
           }).showToast();
 
-      
           document.querySelector(".formRegisterProduto").reset();
           dateAtualInField('prodData')
-        } else if(response.status === 409) {
+        } else {
           Toastify({
-            text: result.message,
+            text: result?.message || "Erro ao cadastrar Cliente.",
             duration: 3000,
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "orange",
+            backgroundColor: response.status === 409 ? "orange" : "red",
           }).showToast();
-
-        }else {
-        Toastify({
-          text: result.message || "Erro ao cadastrar o Produto",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-      }
+        }
       } catch (error) {
         console.error("Erro ao enviar formulário:", error);
         Toastify({

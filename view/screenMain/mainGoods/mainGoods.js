@@ -426,7 +426,7 @@ for (const { key, label } of datas) {
 
       const result = await response.json();
 
-      if (response.ok) {
+      if (response.ok || response.status === 200) {
         Toastify({
           text: "Bem cadastrado com sucesso!",
           duration: 3000,
@@ -438,25 +438,16 @@ for (const { key, label } of datas) {
 
         document.querySelector("#formRegisterBens").reset();
         dateAtualInFieldAndHours("dtStatus" , "hrStatus")
-      } else if (response.status === 409) {
-        Toastify({
-          text: result.message,
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "orange",
-        }).showToast();
       } else {
-        Toastify({
-          text: result.message || "Erro ao cadastrar o Bem",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-      }
+          Toastify({
+            text: result?.message || "Erro ao cadastrar Bem.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: response.status === 409 ? "orange" : "red",
+          }).showToast();
+        }
     } catch (error) {
       console.error("Erro ao enviar formulário:", error);
       Toastify({
@@ -471,7 +462,7 @@ for (const { key, label } of datas) {
     }
   });
   validationFormGoods()
- }
+ };
  
 //LISTAGEM DOS BENS
 async function fetchBens() {
@@ -516,8 +507,8 @@ async function fetchBens() {
       }).showToast();
       return;
     }
-
-    const bens = result;
+  
+    const bens = result.bens;
     const bensListDiv = document.querySelector("#listingBens");
     bensListDiv.innerHTML = "";
 

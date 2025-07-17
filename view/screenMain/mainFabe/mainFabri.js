@@ -278,28 +278,26 @@ function registerNewFamilyBens() {
 
           // Limpar o formulário após o sucesso
           document.querySelector(".formRegisterFabricante").reset();
-        } else if (response.status === 409) {
+        } else {
           Toastify({
-            text: result.message,
+            text: result.message || "Erro ao cadastrar familia de bem",
             duration: 3000,
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "orange",
+            backgroundColor: response.status === 409 ? "orange" : "red",
           }).showToast();
-        } else {
-          Toastify({
-            text: "Erro ao cadastrar familia de bens",
+        }
+      } catch (error) {
+        console.error("Erro ao enviar formulário:", error);
+         Toastify({
+            text: "Erro ao enviar dados para o server",
             duration: 3000,
             close: true,
             gravity: "top",
             position: "center",
             backgroundColor: "red",
           }).showToast();
-        }
-      } catch (error) {
-        console.error("Erro ao enviar formulário:", error);
-        alert("Erro ao enviar os dados.", error);
       }
     });
   validationFormFabric();

@@ -546,7 +546,7 @@ async function registerNewClient() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor:"green",
           }).showToast();
 
           document.querySelector("#formRegisterClient").reset();
@@ -563,7 +563,14 @@ async function registerNewClient() {
         }
       } catch (error) {
         console.error("Erro ao enviar formulário:", error);
-        alert("Erro ao enviar os dados para o server.");
+        Toastify({
+            text: "Erro ao enviar os dados para o server.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
       }
     });
 

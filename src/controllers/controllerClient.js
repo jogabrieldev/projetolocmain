@@ -116,7 +116,7 @@ export const movementClient = {
 
       const newClient = await clientRegister.registerOfClient(dataClientSubmit);
       if (!newClient) {
-        return res.status(400).json({ message: "Erro ao inserir cliente" });
+        return res.status(400).json({ message: "Erro ao cadastrar o cliente" });
       }
 
       if(dataClientSubmit.filial){
@@ -137,7 +137,7 @@ export const movementClient = {
         io.emit("clienteAtualizado", clients);
       }
 
-      res.status(201).json({ success: true, user: newClient });
+     return res.status(200).json({ success: true, cliente: newClient });
       
     } catch (error) {
       console.error("erro no controller client" , error);
@@ -210,7 +210,7 @@ export const movementClient = {
           .status(400)
           .json({ success: false, message: "Erro na listagem de client" });
       }
-      res.status(200).json(client);
+     return res.status(200).json(client);
     } catch (error) {
       console.error("erro no controller para listar o cliente", error.message);
       res.status(500).json({

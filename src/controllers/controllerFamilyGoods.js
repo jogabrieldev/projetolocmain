@@ -5,8 +5,6 @@ export const movementOfFamilyGoods = {
     try {
       const dataFabri = req.body;
 
-      console.log('corpo' , dataFabri)
-
       if (!dataFabri) {
         return res
           .status(400)
@@ -15,8 +13,9 @@ export const movementOfFamilyGoods = {
 
       const newFabri = await fabriRegister.registerOfFabri(dataFabri);
       if(!newFabri){
-        return res.status(400).json({message: 'Erro ao inserir nova familia de bens'})
+        return res.status(400).json({message: 'Erro ao cadastrar nova familia de bens'})
       }
+
       const listFamilyBens = await fabriRegister.listingFabri();
       if(!listFamilyBens){
          return res.status(400).json({message:"Erro ao listar familias para o socket"})
@@ -26,7 +25,7 @@ export const movementOfFamilyGoods = {
       if (io) {
         io.emit("updateRunTimeFamilyBens", listFamilyBens);
       }
-      res.status(201).json({ success: true, user: newFabri });
+       return res.status(200).json({ success: true, familia: newFabri });
     } catch (error) {
 
       console.error("erro no controller");
@@ -65,10 +64,10 @@ export const movementOfFamilyGoods = {
       if(!fabricante){
         return res.status(400).json({message:'Erro ao listar familias de bens'})
       }
-      res.json(fabricante).status(200);
+      return res.status(200).json(fabricante);
     } catch (error) {
       console.error("erro no controller", error.message);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: "erro interno no server",
         message: error.message,
@@ -121,8 +120,8 @@ export const movementOfFamilyGoods = {
       }
     });
 
-    if(!fabeId){
-      return res.status(400).json({message:"Codigo da familia de bens invalido"})
+    if(!fabeId || !updateData){
+      return res.status(400).json({message:"Não foi passado os dados necessarios para atualização"})
     }
 
      const idFamilyBens = await fabriRegister.getCodeIdFamilyBens()
@@ -135,27 +134,25 @@ export const movementOfFamilyGoods = {
 
     try {
       const io = req.app.get("socketio");
-      const updateProd = await fabriRegister.updateFabri(fabeId, updateData);
+      const updatedFamily = await fabriRegister.updateFabri(fabeId, updateData);
        
-      if(!updateProd){
+      if(!updatedFamily){
         return res.status(404).json({ message: "familia de bem não encontrado para atualização."});
       }
       
       if (io) {
-        io.emit("updateRunTimeTableFamilyGoods", updateProd); 
+        io.emit("updateRunTimeTableFamilyGoods", updatedFamily); 
       } else {
         console.warn("Socket.IO não está configurado.");
       }
 
-      res.json({
+     return res.json({
         message: "produto atualizado com sucesso",
-        fabricante: updateProd,
+        familia: updatedFamily ,
       });
     } catch (error) {
-      console.error("Erro ao atualizar o fabricante:", error);
-      res
-        .status(500)
-        .json({ message: "Erro ao atualizar o fabricante", error });
+      console.error("Erro ao atualizar o familia:", error);
+      return res.status(500).json({ message: "Erro ao atualizar o familia", error });
     }
   },
 };

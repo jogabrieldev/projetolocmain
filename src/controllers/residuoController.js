@@ -22,29 +22,28 @@ export const movementResiduo =  {
                io.emit("updateRunTimeResiduo", residuo);
               }
 
-       
-        res.status(200).json({message:"Residuo Inserido com sucesso" , success:true , residuo:result})
+          return res.status(200).json({message:"Residuo Inserido com sucesso" , success:true , residuo:result})
      
         } catch (error) {
             console.error('erro na aplicação na parte residuo' , error)
 
             if (error.message.includes("Código de Residuo já cadastrado. Tente outro.")) {
             return res.status(409).json({ success: false, message: error.message });
-      }
-            res.status(500).json({message: 'Erro no controller do residuo' , success:false})
+          }
+            return res.status(500).json({message: 'Erro no controller do residuo' , success:false})
         }
        
     },
 
-     async listResiduo(req , res){
-          try {
-              const residuo = await moduleResiduo.getAllResiduo()
-              if(!residuo){return res.status(400).json({message:"Erro para pegar os residuos"})}
-              return res.status(200).json({success: true , list: residuo})
-          } catch (error) {
-            console.error('erro na aplicação na parte residuo para listar' , error)
-            res.status(500).json({message: 'Erro no controller do residuo' , success:false})
-          }
+async listResiduo(req , res){
+   try {
+       const residuo = await moduleResiduo.getAllResiduo()
+       if(!residuo){return res.status(400).json({message:"Erro para pegar os residuos"})}
+           return res.status(200).json({success: true , list: residuo})
+      } catch (error) {
+         console.error('erro na aplicação na parte residuo para listar' , error)
+          return res.status(500).json({message: 'Erro no controller do residuo' , success:false})
+       }
      },
 
   async getIdResiduo(req , res){
@@ -74,7 +73,6 @@ export const movementResiduo =  {
                 res.status(400).json({message:"E preciso passar o ID do client"})
             }
 
-            console.log('id' , id)
           const  deleteComponent = await moduleResiduo.deleteResiduo(id)
          
           if (deleteComponent) {

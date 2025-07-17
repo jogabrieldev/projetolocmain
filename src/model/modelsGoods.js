@@ -72,6 +72,18 @@ export const goodsRegister = {
     }
   },
 
+  pegarbemPorID:async (id)=>{
+      try {
+         const query = "SELECT * FROM cadbens WHERE benscode = $1";
+         const result = await dbGoods.query(query,[id])
+         if(result.rows.length === 0){
+            return null;
+         }
+         return result.rows[0];
+      } catch (error) {
+         console.error("Erro ao buscar bem por codigo" , error)
+      }
+  },
   getAllBemId:async ()=>{
     try {
       const query = "SELECT benscode FROM cadbens";

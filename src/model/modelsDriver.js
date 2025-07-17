@@ -85,7 +85,7 @@ export const crudRegisterDriver = {
     }
   },
 
-  async getdriverById(motocode, status, situacao) {
+  async searchDriver(motocode, status, situacao) {
     try {
       let query = "SELECT * FROM cadmoto WHERE 1=1";
       const values = [];
@@ -112,7 +112,7 @@ export const crudRegisterDriver = {
     }
   },
 
-  getAllDriverForDelivery: async (id) => {
+  getDriverByCode: async (id) => {
     try {
       const query = "SELECT * FROM cadmoto WHERE motocode = $1";
 
@@ -185,14 +185,14 @@ export const crudRegisterDriver = {
       const query = `
       UPDATE cadmoto
       SET 
-           motoname = $1, motodtnc = $2, motocpf = $3, motodtch = $4, motoctch = $5 ,
+           motonome = $1, motodtnc = $2, motocpf = $3, motodtch = $4, motoctch = $5 ,
            motodtvc = $6 , motorest = $7, motoorem = $8 , motocelu = $9 , motocep = $10,
            motorua = $11, motocity = $12 , motoestd = $13 , motomail = $14, motostat = $15
            WHERE motocode = $16
           RETURNING *;
           `;
       const values = [
-        updateMoto.motoname || null,
+        updateMoto.motonome || null,
         updateMoto.motodtnc || null,
         updateMoto.motocpf || null,
         updateMoto.motodtch || null,

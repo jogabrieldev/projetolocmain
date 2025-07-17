@@ -219,11 +219,7 @@ function interationSystemVehicles() {
 async function registerNewVehicles() {
 
  dateAtualInField('dtCadAuto')
-  const token = localStorage.getItem("token");
-
-  document
-    .querySelector(".cadAutomo")
-    .addEventListener("click", async (event) => {
+  document.querySelector(".cadAutomo").addEventListener("click", async (event) => {
       event.preventDefault();
 
       const token = localStorage.getItem("token");

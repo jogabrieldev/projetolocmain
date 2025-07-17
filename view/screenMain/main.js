@@ -8,6 +8,9 @@ function isDataValida(data) {
   );
 }
 
+
+
+
 function validLocationHours(){
    const socket = io()
 

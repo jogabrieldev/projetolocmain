@@ -224,8 +224,7 @@ function registerNewTypeProduct(){
     }; 
 
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/typeprod/submit",
+      const response = await fetch("/api/typeprod/submit",
         {
           method: "POST",
           headers: {
@@ -273,7 +272,14 @@ function registerNewTypeProduct(){
       }
     } catch (error) {
       console.error("Erro ao enviar formulário:", error);
-      alert("Erro ao enviar os dados.");
+      Toastify({
+       text: "Erro no server para cadastrar tipo de produto",
+       duration: 3000,
+       close: true,
+       gravity: "top",
+       position: "center",
+       backgroundColor: "red",
+      }).showToast();
     }
   });
   validationFormTipoProd();
@@ -487,7 +493,7 @@ async function searchTypeProduct(){
           position: "center",
           backgroundColor: "green",
           }).showToast();
-          // Exibe botão limpar filtro
+      
           btnClearFilter.style.display = 'inline-block';
           // Atualiza a tabela com os bens filtrados
           renderTypeProdTable(data.typeProduct);

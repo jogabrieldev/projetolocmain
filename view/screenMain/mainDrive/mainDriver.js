@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded' , ()=>{
          })
       }
 
-      sokectDriver.on("updateRunTimeDriver", (motorista) => {
+  sokectDriver.on("updateRunTimeDriver", (motorista) => {
    fetchListMotorista();
     loadingDriver();
   });
@@ -396,18 +396,9 @@ function registerNewDriver(){
 
               // Limpar o formulário após o sucesso
               document.querySelector('.formRegisterDriver').reset();
-          } else if(response.status === 409) {
-            Toastify({
-              text: result.message,
-              duration: 3000,
-              close: true,
-              gravity: "top",
-              position: "center",
-              backgroundColor: "orange",
-            }).showToast();
           }else{
             Toastify({
-            text: result?.message || "Erro ao cadastrar Cliente.",
+            text: result?.message || "Erro ao cadastrar motorista.",
             duration: 3000,
             close: true,
             gravity: "top",
@@ -638,9 +629,9 @@ async function searchDriverForId() {
   if(btnSubmitSearchClient){
      btnSubmitSearchClient.addEventListener('click' , async ()=>{
            
-         const motocode = document.getElementById('codeDriver').value.trim()
-         const valueStat = document.getElementById('statusInDriver').value.trim()
-         const valueSitu = document.getElementById('situationInDriver').value.trim()
+       const motocode = document.getElementById('codeDriver').value.trim()
+       const valueStat = document.getElementById('statusInDriver').value.trim()
+       const valueSitu = document.getElementById('situationInDriver').value.trim()
 
        const preenchidos = [motocode, valueStat, valueSitu].filter(valor => valor !== "");
 

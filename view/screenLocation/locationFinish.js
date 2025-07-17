@@ -92,7 +92,9 @@ async function frontLocation() {
 }
 
 function renderTable(data) {
-  console.log('dados lcoa' , data)
+
+  console.log('Dados para ' , data)
+ 
   const tableDiv = document.querySelector(".tableLocation");
 
   tableDiv.innerHTML = "";
@@ -254,168 +256,12 @@ async function buscarResiduo(id) {
   }
 }
 
-async function buscarLocalDescarte(id) {
-   try {
-        const response = await fetch(`/api/destination/${id}` , {
-          method: 'GET'
-        })
-
-        const data = await response.json()
-
-        if(data.success && response.ok){
-           return data.destino
-        }else{
-            console.warn('Resposta inválida:', data);
-            return null;
-        }
-   } catch (error) {
-      console.error('Erro ao buscar local de descarte' , error)
-      return null
-   }
-}
-
 
 async function showContratoLocationGoods(locacao) {
-
   const contratoDiv = document.querySelector(".contrato");
   if (!contratoDiv) return;
-  contratoDiv.innerHTML = "";
 
-  const residuo = await buscarResiduo(locacao.residuo);
-  if (!residuo) return;
-
-  const localDescarte = await buscarLocalDescarte(locacao.descarte);
-  if (!localDescarte) return;
-
-  const formatDate = (dateStr) => {
-    if (!dateStr) return "-";
-    const d = new Date(dateStr);
-    return isNaN(d) ? "-" : d.toLocaleDateString("pt-BR");
-  };
-
-  const container = document.createElement("div");
-  container.className = "text-dark p-4 rounded";
-
-  const h2 = document.createElement("h2");
-  h2.className = "text-center mb-4";
-  h2.innerHTML = `<i class="bi bi-file-earmark-text-fill me-2"></i>Contrato de Locação de Bens`;
-  container.appendChild(h2);
-
-  container.innerHTML += `
-    <hr class="border-light">
-    <p><i class="bi bi-hash"></i> <strong>Número da locação:</strong> ${locacao.numeroLocacao}</p>
-    <p><i class="bi bi-person-fill"></i> <strong>Nome do Cliente:</strong> ${locacao.nomeCliente}</p>
-    <p><i class="bi bi-credit-card"></i> <strong>Forma de Pagamento:</strong> ${locacao.formaPagamento || "-"}</p>
-    <p><i class="bi bi-calendar-check"></i> <strong>Data da Locação:</strong> ${formatDate(locacao.dataLocacao)}</p>
-    <p><i class="bi bi-calendar-x"></i> <strong>Data de Devolução:</strong> ${formatDate(locacao.dataDevolucao)}</p>
-    <p><i class="bi bi-chat-left-text"></i> <strong>Observação:</strong> ${locacao.observacao || "-"}</p>
-    <p><i class="bi bi-recycle"></i> <strong>Resíduo envolvido na locação:</strong> ${residuo || "-"}</p>
-    <hr class="border-light">
-  `;
-
-  const descarteDiv = document.createElement("div");
-  descarteDiv.className = "border rounded p-3 mb-3 bg-dark-subtle text-white";
-  descarteDiv.innerHTML = `
-    <p class="mb-1"><i class="bi bi-trash-fill"></i> <strong>Endereço do Descarte:</strong></p>
-    <div class="row">
-      <div class="col-md-4 text-dark"><strong>Nome:</strong> ${localDescarte?.derenome || "-"}</div>
-      <div class="col-md-4 text-dark"><strong>Tipo:</strong> ${localDescarte?.deretipo || "-"}</div>
-      <div class="col-md-4 text-dark"><strong>Rua:</strong> ${localDescarte?.dererua || "-"}</div>
-    </div>
-    <div class="row">
-      <div class="col-md-4 text-dark"><strong>Bairro:</strong> ${localDescarte?.derebair || "-"}</div>
-      <div class="col-md-4 text-dark"><strong>Cidade:</strong> ${localDescarte?.derecida || "-"}</div>
-      <div class="col-md-4 text-dark"><strong>CEP:</strong> ${localDescarte?.derecep || "-"}</div>
-    </div>
-    <div class="row">
-      <div class="col-md-4 text-dark"><strong>Estado:</strong> ${localDescarte?.dereestd || "-"}</div>
-    </div>`;
-  container.appendChild(descarteDiv);
-
-  const enderecoDiv = document.createElement("div");
-  enderecoDiv.className = "border rounded p-3 mb-3 bg-dark-subtle text-white";
-  enderecoDiv.innerHTML = `
-    <p class="mb-1"><i class="bi bi-geo-alt-fill"></i> <strong>Endereço da Locação:</strong></p>
-    <div class="row">
-      <div class="col-md-4 text-dark"><strong>Rua:</strong> ${locacao?.rua || "-"}</div>
-      <div class="col-md-4 text-dark"><strong>Bairro:</strong> ${locacao?.bairro || "-"}</div>
-      <div class="col-md-4 text-dark"><strong>Cidade:</strong> ${locacao?.cidade || "-"}</div>
-    </div>
-    <div class="row">
-      <div class="col-md-4 text-dark"><strong>CEP:</strong> ${locacao.localization?.cep || "-"}</div>
-      <div class="col-md-4 text-dark"><strong>Referência:</strong> ${locacao.refere || "-"}</div>
-      <div class="col-md-4 text-dark"><strong>Quadra/Lote:</strong> ${locacao.qdlt || "-"}</div>
-    </div>`;
-  container.appendChild(enderecoDiv);
-
-  const BemLocado = document.createElement("p");
-  BemLocado.innerHTML = `<i class="bi bi-box-seam"></i> <strong>Tipo de bem pedido na locação:</strong>`;
-  container.appendChild(BemLocado);
-
-  const tableResponsive = document.createElement("div");
-  tableResponsive.className = "table-responsive";
-
-  const table = document.createElement("table");
-  table.className = "table table-bordered table-dark table-sm";
-
-  const thead = document.createElement("thead");
-  thead.className = "table-light";
-  const trHead = document.createElement("tr");
-  ["Código tipo do Bem", "Descrição", "Quantidade", "Data Início", "Data Final"].forEach(text => {
-    const th = document.createElement("th");
-    th.textContent = text;
-    trHead.appendChild(th);
-  });
-  thead.appendChild(trHead);
-  table.appendChild(thead);
-
-  const tbody = document.createElement("tbody");
-  const tr = document.createElement("tr");
-  ["codigoBem", "produto", "quantidade", "dataInicio", "dataFim"].forEach(field => {
-    const td = document.createElement("td");
-    td.textContent = locacao[field] || "-";
-    tr.appendChild(td);
-  });
-  tbody.appendChild(tr);
-  table.appendChild(tbody);
-  tableResponsive.appendChild(table);
-  container.appendChild(tableResponsive);
-
-  const divBtn = document.createElement("div");
-  divBtn.className = "text-center mt-4 d-flex justify-content-center gap-2";
-
-  const btnVoltar = document.createElement("button");
-  btnVoltar.className = "btn btn-light";
-  btnVoltar.innerHTML = `<i class="bi bi-arrow-left"></i> Voltar`;
-
-  const btnSalvar = document.createElement("button");
-  btnSalvar.id = "baixarPdf";
-  btnSalvar.className = "btn btn-success";
-  btnSalvar.innerHTML = `<i class="bi bi-arrow-down-circle-fill me-2"></i>Baixar PDF`;
-
-  btnVoltar.addEventListener("click", () => {
-    contratoDiv.style.display = "none";
-    
-    const table = document.querySelector(".tableLocation");
-    if (table) {
-      table.classList.remove("hidden");
-      table.classList.add("flex");
-    }
-
-    const containerBtn = document.querySelector(".btnInitPageMainLoc");
-    if (containerBtn) {
-      containerBtn.classList.remove("hidden");
-      containerBtn.classList.add("flex");
-    }
-  });
-
-  divBtn.appendChild(btnVoltar);
-  divBtn.appendChild(btnSalvar);
-  container.appendChild(divBtn);
-
-  contratoDiv.appendChild(container);
-  contratoDiv.style.display = "block";
-
+  // Oculta a tabela de locações e os botões
   const tableList = document.querySelector(".tableLocation");
   if (tableList) {
     tableList.classList.remove("flex");
@@ -428,13 +274,65 @@ async function showContratoLocationGoods(locacao) {
     containerBtn.classList.add("hidden");
   }
 
-  const btnBaixarPdf = document.getElementById("baixarPdf");
+  try {
+    // Busca contrato no backend
+    const response = await fetch(`/api/contrato/${locacao.belocode}` , {
+      method:'GET'
+    });
+    if (!response.ok){
+
+      const errorData = await response.json()
+      Toastify({
+      text: errorData.message || "Não foi encontrado o contrato! verifique com suporte por favor.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+     throw new Error("Contrato não encontrado.");
+       
+    } 
+
+    const data = await response.json();
+    const contratoHTML = data.result; // deve conter o HTML salvo na coluna `belocontr`
+
+    contratoDiv.innerHTML = contratoHTML;
+    contratoDiv.style.display = "block";
+     
+    const status = contratoDiv.querySelector(".statusLocacaoContainer");
+    status.style.display = 'block'
+    if(status){
+      const statusLocacao = locacao.status || "Não definido"
+      status.innerHTML = `<p class = "text-center ">Status da Locação: <br> <strong>${statusLocacao}</strong></p>`;
+    }
+    
+    // Lógica do botão voltar (reaproveita do HTML retornado)
+    const btnVoltar = contratoDiv.querySelector("#voltar");
+    if (btnVoltar) {
+      btnVoltar.addEventListener("click", () => {
+        contratoDiv.style.display = "none";
+
+        const table = document.querySelector(".tableLocation");
+        if (table) {
+          table.classList.remove("hidden");
+          table.classList.add("flex");
+        }
+
+        const containerBtn = document.querySelector(".btnInitPageMainLoc");
+        if (containerBtn) {
+          containerBtn.classList.remove("hidden");
+          containerBtn.classList.add("flex");
+        }
+      });
+    }
+    const btnBaixarPdf = document.getElementById("baixarPdf");
   if (btnBaixarPdf) {
     btnBaixarPdf.addEventListener("click", () => {
       const element = document.querySelector(".contrato");
       const opt = {
         margin: 0.5,
-        filename: `contrato-locacao-${locacao.numeroLocacao}.pdf`,
+        filename: `contrato-locacao-${ locacao.numeroLocacao}.pdf`,
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
@@ -442,7 +340,20 @@ async function showContratoLocationGoods(locacao) {
       html2pdf().set(opt).from(element).save();
     });
   };
-};
+
+  } catch (error) {
+    console.error("Erro ao carregar contrato:", error);
+    Toastify({
+      text: "Erro ao carregar contrato",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+  }
+}
+
 
 
 //Filtar locação

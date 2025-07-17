@@ -1,5 +1,5 @@
 import { crudRegisterForn as fornRegister } from "../model/modelsFornecedor.js";
-
+import fetch from "node-fetch";
 export const movementForne = {
   async registerForn(req, res) {
     try {
@@ -80,6 +80,7 @@ export const movementForne = {
 
       const cepForn = dataForn.fornCep;
 
+
       if (!cepForn || !/^\d{5}-?\d{3}$/.test(cepForn)) {
         return res.status(400).json({ message: "CEP inválido." });
       }
@@ -95,7 +96,7 @@ export const movementForne = {
 
       const newForn = await fornRegister.registerOfForn(dataForn);
       if (!newForn) {
-        return res.status(400).json({ message: "Erro ao inserir fornecedor" });
+        return res.status(400).json({ message: "Erro ao cadastrar fornecedor" });
       }
       const forne = await fornRegister.listingForn();
 
@@ -103,7 +104,7 @@ export const movementForne = {
       if (io) {
         io.emit("updateRunTimeForne", forne);
       }
-      res.status(201).json({ success: true, user: newForn });
+      return res.status(200).json({ success: true, fornecedor: newForn });
     } catch (error) {
       console.error("erro no controller");
 
@@ -118,9 +119,8 @@ export const movementForne = {
     }
   },
 
-  async getfornecedorByCode(req, res) {
-      const { fornCode, fornCnpj } = req.query;
-      console.log('log' , req.query)
+  async searchForneParams(req, res) {
+    const { fornCode, fornCnpj } = req.query;
      
     try {
       if (!fornCode && !fornCnpj) {
@@ -151,7 +151,7 @@ export const movementForne = {
       if(!forne){
          return res.status(400).json({message: 'Erro ao listar fornecedor'})
       }
-      res.json(forne).status(200);
+      return res.status(200).json({success:true , forne});
     } catch (error) {
       console.error("erro no controller", error.message);
       res.status(500).json({
@@ -177,7 +177,7 @@ export const movementForne = {
     }
   },
 
-  async deleteOfForm(req, res) {
+  async deleteOfForn(req, res) {
     try {
       const { id } = req.params;
 
@@ -190,15 +190,16 @@ export const movementForne = {
         });
       }
       const deleteComponent = await fornRegister.deleteForn(id);
-
-      if (deleteComponent) {
+       if(!deleteComponent){
+         return res.status(400).json({success:false , message:"Erro eo encontrar o indentificador passado"})
+       }
+  
+        console.log('delete' , deleteComponent)
         return res.status(200).json({
           message: "componente Apagado com sucesso",
           component: deleteComponent,
         });
-      } else {
-        res.status(500).json({ message: "Erro no servidor" });
-      }
+     
     } catch (error) {
       console.error("erro ao apagar componente:", error);
       return res.status(500).json({ message: "erro no servidor" });
@@ -215,8 +216,8 @@ export const movementForne = {
       }
     });
 
-     if (!fornId) {
-          return res.status(400).json({ message: "ID fornecedor não fornecido" });
+     if (!fornId  || !updateForn) {
+          return res.status(400).json({ message: "Não foi passado os dados para atualização" });
         }
     
         const idForne = await fornRegister.buscarIdForn();

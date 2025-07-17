@@ -12,7 +12,6 @@ export const movementAuto = {
         .json({ message: "Campos obrigatórios não preenchidos." });
     }
 
-    // === Validação: data de cadastro ===
     const isDataValida = (dataStr) => {
       return /^\d{4}-\d{2}-\d{2}$/.test(dataStr);
     };
@@ -51,7 +50,7 @@ export const movementAuto = {
       io.emit("updateRunTimeAutomovel", automovel);
     }
 
-    res.status(201).json({ success: true, auto: newAuto });
+   return res.status(200).json({ success: true, automovel: newAuto });
 
   } catch (error) {
     console.error("Erro no controller para cadastrar veiculo:", error);
@@ -60,7 +59,7 @@ export const movementAuto = {
       return res.status(409).json({ success: false, message: error.message });
     }
 
-    res.status(500).json({ success: false, message: "Erro interno no servidor." });
+     return res.status(500).json({ success: false, message: "Erro interno no servidor." });
   }
 },
 
@@ -72,7 +71,7 @@ async getAutomovelByCode(req, res) {
       return res.status(400).json({ message: "Informe o código ou placa para a busca." });
     }
 
-    const veiculo = await autoRegister.getVehicleById(caaucode , caauplac) ;
+    const veiculo = await autoRegister.searchVehicle(caaucode , caauplac) ;
 
     if (!veiculo || veiculo.length === 0) {
       return res.status(404).json({ message: "Nenhum veiculo encontrado." });
@@ -91,10 +90,10 @@ async getAutomovelByCode(req, res) {
       if(!autos){
         return res.status(400).json({message:'Erro na listagem de veiculos'})
       }
-      res.status(200).json(autos);
+      return res.status(200).json(autos);
     } catch (error) {
       console.error("Erro no controller ao listar veiculo", error.message);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: "Erro interno no servidor",
         error: error.message,
@@ -107,10 +106,10 @@ async getAutomovelByCode(req, res) {
     try {
       const { id } = req.params;
 
-      const hasDependecy = await autoRegister.verificarDependeciaDoAutomovel()
-      if(hasDependecy){
-        return res.status(400).json({message: 'Não é Possivel apagar o veiculo, tem um motorista vinculado ao veiculo'})
+      if(!id){
+        return res.status(400).json({message: 'Não foi passado o ID do veiculo'})
       }
+
       const deletedAuto = await autoRegister.deleteAuto(id);
 
       if (!deletedAuto) {
@@ -154,13 +153,13 @@ async getAutomovelByCode(req, res) {
       } else {
         console.warn("Socket.IO não está configurado.");
       }
-      res.json({
+       return res.json({
         message: "Registro atualizado com sucesso",
         auto: updatedAuto,
       });
     } catch (error) {
       console.error("Erro ao atualizar o registro:", error);
-      res.status(500).json({ message: "Erro ao atualizar o registro", error });
+      return res.status(500).json({ message: "Erro ao atualizar o veiculo", error });
     }
   },
 
@@ -178,7 +177,7 @@ async getAutomovelByCode(req, res) {
              return res.status(400).json({message:'Erro em atualizar o status'})
            }
 
-           return  res.status(200).json({success: true  , update: update})
+           return  res.status(200).json({success: true  , status: update.caaustat})
       } catch (error) {
          console.log('Erro na atualização do status do veiculo' ,error)
           return res.status(500).json({message:'Erro no server na atualização do status do veiculo', success:false})

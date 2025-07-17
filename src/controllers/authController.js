@@ -48,7 +48,6 @@ export const authSystemValidade = {
         return res.status(400).json({ message: "Usuário e senha obrigatórios" });
       }
          
-     
       const motorista = await modelsAuthenticateUser.authDriver(username, password);
 
       if (!motorista) {

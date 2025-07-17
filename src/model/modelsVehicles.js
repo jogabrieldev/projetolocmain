@@ -50,7 +50,7 @@ export const autoRegister = {
     }
   },
 
- async getVehicleById(caaucode, placa) {
+ async searchVehicle(caaucode, placa) {
    try {
      let query = "SELECT * FROM cadauto WHERE 1=1";
      const values = [];

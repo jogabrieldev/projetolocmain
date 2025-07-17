@@ -6,9 +6,7 @@ export const movementOfTypeProd = {
       const dataTypeProd = req.body;
 
       if (!dataTypeProd) {
-        return res
-          .status(400)
-          .json({ message: "campos obrigatorios não preenchidos" });
+       return res.status(400).json({ message: "campos obrigatorios não preenchidos" });
       }
 
       const newTypeProd = await typeProdRegister.registerTypeProd(dataTypeProd);
@@ -24,14 +22,14 @@ export const movementOfTypeProd = {
       if (io) {
         io.emit("updateRunTimeTypeProduto", listTypeProd );
       }
-      res.status(201).json({ success: true, user: newTypeProd });
+      return res.status(200).json({ success: true, tipoProduto: newTypeProd });
     } catch (error) {
       console.error("erro no controller");
 
       if (error.message.includes("Código do tipo de produto ja cadastrado. Tente outro.")) {
         return res.status(409).json({ success: false, message: error.message });
       }
-      res.status(500).json({ success: false, message: error.message });
+       return res.status(500).json({ success: false, message: error.message });
     }
   },
 
@@ -63,7 +61,7 @@ export const movementOfTypeProd = {
       if(!produto){
          return res.status(400).json({message:'Erro ao listar tipos de produto'})
       }
-      res.json(produto).status(200);
+       return res.status(200).json(produto);
     } catch (error) {
       console.error("Erro no controller:", error.message);
       res.status(500).json({
@@ -113,8 +111,8 @@ export const movementOfTypeProd = {
       }
     });
 
-    if(!prodId){
-      return res.status(400).json({message:"Codigo do tipo de produto invalido"})
+    if(!prodId || !updateData){
+      return res.status(400).json({message:"Não foi passado os dados para atualização"})
     }
 
      const idTypeProduto = await typeProdRegister.getCodeIdtypeP()
@@ -137,15 +135,11 @@ export const movementOfTypeProd = {
       } else {
         console.warn("Socket.IO não está configurado.");
       }
-      res.json({
-        message: "tipo do produto atualizado com sucesso",
-        produto: updateTypeProd,
+       return res.json({ message: "tipo do produto atualizado com sucesso",produto: updateTypeProd,
       });
     } catch (error) {
       console.error("Erro ao atualizar o tipo do produto:", error);
-      res
-        .status(500)
-        .json({ message: "Erro ao atualizar o tipo do produto", error });
+       return res.status(500).json({ message: "Erro ao atualizar o tipo do produto", error });
     }
   },
 };

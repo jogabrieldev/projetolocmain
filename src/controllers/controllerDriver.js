@@ -63,12 +63,7 @@ export const movementOfDriver = {
 
       // Data de vencimento deve ser futura
       if (dtVenci.getTime() <= hoje0.getTime()) {
-        return res
-          .status(400)
-          .json({
-            message:
-              "A data de vencimento da CNH deve ser maior que a data de hoje.",
-          });
+        return res.status(400).json({message:"A data de vencimento da CNH deve ser maior que a data de hoje.",});
       }
 
       // Data de nascimento não pode ser futura
@@ -94,9 +89,7 @@ export const movementOfDriver = {
 
       // Validação de CEP usando ViaCEP
       const cepLimpo = motoCep.replace(/\D/g, "");
-      const viaCepRes = await fetch(
-        `https://viacep.com.br/ws/${cepLimpo}/json/`
-      );
+      const viaCepRes = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
 
       if (!viaCepRes.ok) {
         return res.status(400).json({ message: "Erro ao buscar o CEP." });
@@ -107,12 +100,6 @@ export const movementOfDriver = {
       if (cepData.erro) {
         return res.status(400).json({ message: "CEP inválido." });
       }
-
-      // Preenchendo dados a partir do ViaCEP (caso necessário)
-      data.motoRua =
-      data.motoRua || `${cepData.logradouro} - ${cepData.bairro}`;
-      data.motoCity = data.motoCity || cepData.localidade;
-      data.motoEstd = data.motoEstd || cepData.uf;
 
       const saltRounds = 10;
 
@@ -128,6 +115,10 @@ export const movementOfDriver = {
 
       // Prossegue com o cadastro
       const newDriver = await driverRegister.registerDriver(data);
+      if(!newDriver){
+        return res.status(400).json({message:"Erro para cadastrar o motorista"})
+      }
+
       const listDriver = await driverRegister.listingDriver();
 
       const io = req.app.get("socketio");
@@ -135,7 +126,7 @@ export const movementOfDriver = {
         io.emit("updateRunTimeDriver", listDriver);
       }
 
-      res.status(201).json({ success: true, user: newDriver });
+      return res.status(200).json({ success: true, Motorista: newDriver });
     } catch (error) {
       console.error("erro no controller", error);
 
@@ -143,42 +134,41 @@ export const movementOfDriver = {
         return res.status(409).json({ success: false, message: error.message });
       }
 
-      res.status(500).json({ success: false, message: error.message });
+      return res.status(500).json({ success: false, message: error.message });
     }
   },
 
-  async getAllDriverForDelivery(req ,res){
+  async getDriverByCode(req ,res){
        
     try {
       const {motoristaid} = req.params
+
       if(!motoristaid){
-        return res.status(400).json({message:"Parametro não passado"})
+        return res.status(400).json({message:"ID do motorista não passado"})
       }
 
-      console.log('motorista' , motoristaid)
-
-      const success = await driverRegister.getAllDriverForDelivery(motoristaid)
+      const success = await driverRegister.getDriverByCode(motoristaid)
       if(!success){
-        return res.status(400).json({message:"Erro ao buscar"})
+        return res.status(400).json({message:"Erro ao buscar o motorista"})
       }
 
-      return res.status(200).json({success:true , user:success})
+      return res.status(200).json({success:true , motorista:success})
     } catch (error) {
        console.error('Erro ao buscar motorista')
        return res.status(500).json({message:"Erro no server ao buscar motorista" , success:false})
     }
   },
 
-  async getDriverByCode(req, res) {
+  async searchDriver(req, res) {
 
-    const { motocode, status , situacao } = req.query;
+   const { motocode, status , situacao } = req.query;
      
     try {
       if (!motocode && !status && !situacao ) {
-        return res.status(400).json({ message: "Informe o código, status ou situação para a busca." });
+        return res.status(400).json({ message: "Informe o código, status ou situação para a busca."});
       }
   
-      const driver = await driverRegister.getdriverById(motocode , status , situacao);
+      const driver = await driverRegister.searchDriver(motocode , status , situacao);
   
       if (!driver || driver.length === 0) {
         return res.status(404).json({ message: "Nenhum motorista encontrado." });
@@ -194,13 +184,14 @@ export const movementOfDriver = {
   async listingOfDriver(req, res) {
     try {
       const motorista = await driverRegister.listingDriver();
+      
       if(!motorista){
         return res.status(400).json({message: 'Erro ao listar Motoristas'})
       }
-      res.json(motorista).status(200);
+      return res.status(200).json(motorista);
     } catch (error) {
       console.error("erro no controller", error.message);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: "erro interno no server",
         message: error.message,
@@ -210,10 +201,8 @@ export const movementOfDriver = {
 
   async deleteOfDriver(req, res) {
     const { id } = req.params;
-    try {
-      
-      const verificarEntregas =
-        await driverRegister.verificarEntregaComMotorista(id);
+     try {
+      const verificarEntregas = await driverRegister.verificarEntregaComMotorista(id);
       if (verificarEntregas) {
         return res.status(400).json({
           message:
@@ -223,11 +212,11 @@ export const movementOfDriver = {
       const deleteMotorista = await driverRegister.deleteDriver(id);
 
       if (!deleteMotorista) {
-        return res.status(404).json({ message: "Componente Não encontrado" });
+        return res.status(404).json({ message: "Motorista Não encontrado" });
       }
       return res.status(200).json({
         message: "componente Apagado com sucesso",
-        component: deleteMotorista,
+        motorista: deleteMotorista,
       });
     } catch (error) {
       console.error("erro ao apagar componente:", error);
@@ -245,7 +234,7 @@ export const movementOfDriver = {
       }
     });
 
-    if(!motoId){
+    if(!motoId || !updateData){
       return res.status(400).json({message: 'ID do motorista não passado'})
     }
 
@@ -277,26 +266,19 @@ export const movementOfDriver = {
       const updateMoto = await driverRegister.updateDriver(motoId, updateData);
 
       if (!updateMoto) {
-        return res
-          .status(404)
-          .json({
-            message: "Atualizaçao não foi bem sucedida.",
-          });
+        return res.status(404).json({message: "Atualizaçao não foi bem sucedida.",});
       }
-        const io = req.app.get("socketio");
+      const io = req.app.get("socketio");
 
       if (io) {
         io.emit("updateRunTimeTableDrive", updateMoto);
       } else {
         console.warn("Socket.IO não está configurado.");
       }
-      res.status(200).json({
-        message: "Motorista atualizado com sucesso",
-        Motorista: updateMoto,
-      });
+      return res.status(200).json({message: "Motorista atualizado com sucesso", Motorista: updateMoto});
     } catch (error) {
       console.error("Erro ao atualizar o Motorista:", error);
-      res.status(500).json({ message: "Erro ao atualizar o Motorista", error });
+       return res.status(500).json({ message: "Erro ao atualizar o Motorista", error });
     }
   },
 
@@ -314,12 +296,10 @@ export const movementOfDriver = {
         return res.status(404).json({ message: "Motorista não encontrado" });
       }
 
-      res
-        .status(200)
-        .json({ message: "Status atualizado com sucesso!", data: result });
+      return res.status(200).json({ message: "Status atualizado com sucesso!", status: result.motostat });
     } catch (error) {
       console.error("Erro ao atualizar status:", error);
-      res.status(500).json({ message: "Erro no servidor" });
+      return res.status(500).json({ message: "Erro no servidor para atualizar status motorista" });
     }
   },
 

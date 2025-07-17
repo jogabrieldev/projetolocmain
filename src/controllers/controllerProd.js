@@ -47,6 +47,9 @@ export const movementOfProd = {
       }
 
     const newProd = await prodRegister.registerOfProd(dataProd);
+    if(!newProd){
+      return res.status(400).json({message: 'Erro para cadastrar o produto' , success:false})
+    }
     const listProduto = await prodRegister.listingOfProd();
 
     const io = req.app.get("socketio");
@@ -54,7 +57,8 @@ export const movementOfProd = {
       io.emit("updateRunTimeProduto", listProduto);
     }
 
-    res.status(201).json({ success: true, user: newProd });
+   return res.status(200).json({ success: true, produto: newProd });
+
   } catch (error) {
     console.error("Erro no controller:", error);
 
@@ -65,20 +69,18 @@ export const movementOfProd = {
     res.status(500).json({ success: false, message: error.message });
   }
 },
-async getProdutoByCode(req, res) {
+async searchProductByCode(req, res) {
       const { prodCode } = req.query;
-      console.log('log' , req.query)
-     
+    
     try {
       if (!prodCode) {
         return res.status(400).json({ message: "Informe o código do produto." });
       }
 
-    
       const produto = await prodRegister.getProdutoById(prodCode);
   
       if (!produto) {
-        return res.status(404).json({ message: "Nenhum produto encontrado." });
+        return res.status(404).json({ message: "Nenhum produto encontrado com esse codigo." });
       }
   
       return res.status(200).json({ success: true, produto });
@@ -94,10 +96,9 @@ async getProdutoByCode(req, res) {
       const dataTyperod = await prodRegister.buscartipoProd();
 
       if (dataTyperod) {
-        res.status(200).json(dataTyperod);
-        return dataTyperod;
+       return res.status(200).json(dataTyperod);
       } else {
-        return req.status(400).json({ error: "Nenhum dado encontrado" });
+        return res.status(400).json({ error: "Nenhum dado encontrado" });
       }
     } catch (error) {
       console.error("Erro ao buscar tipo do produto:", error);
@@ -109,9 +110,9 @@ async getProdutoByCode(req, res) {
     try {
       const produto = await prodRegister.listingOfProd();
       if(!produto){
-          res.status(400).json({message:"Erro na listagem de produtos"})
+          return res.status(400).json({message:"Erro na listagem de produtos"})
       }
-      res.json(produto).status(200);
+      return res.status(200).json({sucess:true , produto});
     } catch (error) {
       console.error("Erro no controller:", error.message);
       res.status(500).json({
@@ -151,8 +152,8 @@ async getProdutoByCode(req, res) {
       }
     });
 
-    if(!prodId){
-      return res.status(400).json({message:'Erro no ID do produto'})
+    if(!prodId || !updateData){
+      return res.status(400).json({message:'Não foi passado as informações necessarias'})
     }
 
      const idProduto = await prodRegister.getCodeProd()
@@ -174,11 +175,10 @@ async getProdutoByCode(req, res) {
       } else {
         console.warn("Socket.IO não está configurado.");
       }
-      res.json({
+      return res.status(200).json({
         message: "produto atualizado com sucesso",
         produto: updateProd,
       });
-
 
     } catch (error) {
       console.error("Erro ao atualizar o bem:", error);

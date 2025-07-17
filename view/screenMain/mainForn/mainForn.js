@@ -354,7 +354,7 @@ function registerNewFornecedor() {
       }
 
       try {
-        const response = await fetch("http://localhost:3000/api/forne/submit", {
+        const response = await fetch("/api/forne/submit", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -678,7 +678,7 @@ async function fetchListFornecedores() {
       return;
     }
 
-    const fornecedores = result;
+    const fornecedores = result.forne;
     const fornecedoresListDiv = document.querySelector(".listingForn");
     fornecedoresListDiv.innerHTML = "";
 

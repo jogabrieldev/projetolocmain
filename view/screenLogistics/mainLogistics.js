@@ -499,7 +499,7 @@ async function needVsAvaible(
       }).showToast();
       return;
     }
-    const bens = result;
+    const bens = result.bens;
     const bensFiltrados = bens.filter((bem) => {
       bem.bensstat === "Disponivel" && bem.benscofa === familiaBem;
       return bem.bensstat === "Disponivel" && bem.benscofa === familiaBem;
@@ -618,14 +618,6 @@ async function validateFamilyBensPending() {
   const token = localStorage.getItem("token");
 
   if (!token || isTokenExpired(token)) {
-    Toastify({
-      text: "Sessão expirada. Faça login novamente.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
 
     localStorage.removeItem("token");
     setTimeout(() => {
@@ -706,8 +698,8 @@ async function validateFamilyBensPending() {
       const codigoFamilia = familia.fabecode;
       const familiaDescrição = familia.fabedesc;
 
-      const bensDisponiveis = result.filter(
-        (bem) => bem.bensstat === "Disponivel" && bem.benscofa === codigoFamilia
+      const bensDisponiveis = result.bens.filter(
+        (bem) => bem.bensstat === "Disponível" && bem.benscofa === codigoFamilia
       ).length;
 
       // Contar pedidos pendentes para essa família
@@ -891,9 +883,9 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
   });
 
   if (!response.ok) throw new Error("Erro ao buscar bens.");
-  const bens = await response.json();
+  const result = await response.json();
 
-  const bensFiltrados = bens.filter(
+  const bensFiltrados = result.bens.filter(
     (bem) => bem.bensstat === "Disponivel" && bem.benscofa === familiaBem
   );
 
@@ -1131,6 +1123,28 @@ function atingiuQuantidadeSolicitada(locacao, familiaBem) {
   return vinculados >= quantidadeSolicitada;
 }
 
+async function buscarBemPorCodigo(id, token) {
+   try {
+    const response = await fetch(`/api/bens/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao buscar bem pelo código");
+    }
+
+    const bem = await response.json();
+    return bem;
+   } catch (error) {
+      console.error('Erro ao buscar o bem' , error)
+      throw new error("Erro ao buscar o bem pelo o codigo")
+   }
+}
+
 // vincular o bem a locação e atualizar status
 async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
   const token = localStorage.getItem("token");
@@ -1153,6 +1167,21 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
   }
 
   try {
+
+    const bemResponse = await buscarBemPorCodigo(bemId, token)
+
+    if(!bemResponse) {
+      Toastify({
+        text: `Bem ${bemId} não está disponível para locação.`,
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red"
+      }).showToast();
+      return false;
+    }
+
     const locations = await getAllLocationsForLogistics(token);
     if (!locations || locations.locacoes.length === 0) {
       throw new Error("Não foi possível localizar dados de locação.");
@@ -1242,6 +1271,13 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
       token
     );
 
+     const motoRow = document.querySelector(`[data-motocode="${motoId}"]`);
+      if (motoRow) {
+      const statusMoto = motoRow.querySelector(".status-moto");
+      if (statusMoto) statusMoto.textContent = "Entrega destinada";
+     }
+
+    //  await atualizarStatus('/api/contrato/:id' , {})
     await atualizarStatus(
         `/api/updatestatuslocation/${codeLocation}`,
         { belostat: "Em Locação" },
@@ -1255,14 +1291,86 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
        if (statusLocacao) statusLocacao.textContent = "Em Locação";
       }
 
-      const motoRow = document.querySelector(`[data-motocode="${motoId}"]`);
-      if (motoRow) {
-      const statusMoto = motoRow.querySelector(".status-moto");
-      if (statusMoto) statusMoto.textContent = "Entrega destinada";
-     }
- 
-   
-     
+      const contratoAtualResponse = await fetch(`/api/contrato/${codeLocation}` , {
+        method: "GET"
+      });
+if (!contratoAtualResponse.ok) {
+  throw new Error("Não foi possível buscar o contrato atual.");
+}
+const contratoAtualData = await contratoAtualResponse.json();
+const contratoHTML = contratoAtualData.result; // HTML como string
+
+// Converte a string HTML em DOM manipulável
+const parser = new DOMParser();
+const contratoDoc = parser.parseFromString(contratoHTML, "text/html");
+
+// Localiza a tabela do contrato
+const bensVnculadoDiv = contratoDoc.querySelector(".bensVinculados");
+if (!bensVnculadoDiv) {
+  throw new Error("container de bens não encontrada no contrato.");
+}
+bensVnculadoDiv.style.display = 'block'
+// Remove o thead antigo (se existir)
+const bemCard = document.createElement("div");
+bemCard.className = "card mb-3 shadow-sm";
+
+// Cabeçalho do card
+const bemHeader = document.createElement("div");
+bemHeader.className = "card-header bg-success text-white d-flex justify-content-between align-items-center";
+bemHeader.innerHTML = `
+  <span><i class="bi bi-box-seam me-2"></i> Bem Vinculado</span>
+  <span class="badge bg-light text-success">
+    <i class="bi bi-check-circle me-1"></i>OK
+  </span>
+`;
+
+const bemLocado = bemResponse.bem
+// Corpo do card
+const bemBody = document.createElement("div");
+bemBody.className = "card-body p-2";
+bemBody.innerHTML = `
+  <table class="table table-sm mb-0">
+    <thead>
+      <tr>
+        <th>Modelo</th>
+        <th>Nome</th>
+        <th>Código</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>${bemLocado.bensmode || "-"}</td>
+        <td>${bemLocado.bensnome}</td>
+        <td>${bemLocado.benscode}</td>
+      </tr>
+    </tbody>
+  </table>
+`;
+
+// Monta o card
+bemCard.appendChild(bemHeader);
+bemCard.appendChild(bemBody);
+
+// Adiciona na área de bens vinculados
+bensVnculadoDiv.appendChild(bemCard);
+
+// Atualiza o contrato no servidor
+const contratoAtualizado = contratoDoc.body.innerHTML;
+
+const responseUpdateContrato = await fetch(`/api/contrato/${codeLocation}`, {
+  method: "PUT",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ body: contratoAtualizado }),
+});
+
+if (!responseUpdateContrato.ok) {
+  const erro = await responseUpdateContrato.json();
+  throw new Error(erro.message || "Erro ao atualizar contrato.");
+}
+
+
     Toastify({
       text: `Bem ${bemId} vinculado com sucesso!`,
       duration: 4000,
@@ -1272,6 +1380,8 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
       backgroundColor: "green",
     }).showToast();
 
+    
+    
    
   return true;
   } catch (error) {
