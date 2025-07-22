@@ -55,6 +55,18 @@ import { client as dataDestination } from "../database/userDataBase.js";
          }
     },
 
+async getCodeDestination(){
+   try {
+     
+       const result =  await dataDestination.query(`SELECT dereid FROM cadderi`)
+       if(!result){return}
+       return result.rows
+
+   } catch (error) {
+       console.error('Erro para buscar o codigo do descarte')
+       throw error
+   }
+ },
 async getDestinationByCode(code){
    try {
      const query = `SELECT *FROM cadderi WHERE dereid = $1`

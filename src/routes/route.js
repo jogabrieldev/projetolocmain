@@ -1,4 +1,12 @@
 import express from "express";
+import { validateClient } from "../middleware/validators/validClient.js";
+import { validateBens } from "../middleware/validators/validGoods.js";
+import { validateForn } from "../middleware/validators/validFornecedor.js";
+import { validateMotorista } from "../middleware/validators/validDriver.js"
+import { validateProduto } from "../middleware/validators/validProduct.js";
+import { validateAutomovel } from "../middleware/validators/validVehicles.js";
+import { validateDestino } from "../middleware/validators/validDestination.js";
+import { validate } from "../middleware/validators.js";
 import  authenticateToken from '../middleware/authMiddleware.js'
 import {authSystemValidade} from "../controllers/authController.js";
 import {movementGoods} from "../controllers/controllerGoods.js";
@@ -16,6 +24,7 @@ import { movementResiduo } from "../controllers/residuoController.js";
 import { controllerDestination } from "../controllers/controllerDestination.js";
 import{controllerLocationVehicle} from "../controllers/locationVehicleController.js"
 
+
 const route = express.Router()
 
 // AUTENTICAÇÃO
@@ -25,6 +34,11 @@ route.post("/autenticar",  (req, res) => {
 
 
 //bens
+
+route.post("/api/bens/submit", validateBens,validate, authenticateToken,(req, res) => {
+  movementGoods.registerBens(req, res)
+});
+
 route.get('/api/listbens',  authenticateToken,(req , res)=>{
   movementGoods.listBens(req , res)
 });
@@ -36,10 +50,6 @@ route.get("/api/bens/:id" , authenticateToken, (req ,res)=>{
 route.get('/api/codebens/search', authenticateToken, (req , res)=>{
    movementGoods.getbensByCode(req , res)
 })
-
-route.post("/api/bens/submit", authenticateToken,(req, res) => {
-  movementGoods.registerBens(req, res)
-});
 
 route.delete('/api/bens/delete/:id', authenticateToken, async (req,res)=>{
   movementGoods.deletarGoods(req , res)
@@ -54,11 +64,11 @@ route.put("/api/updatestatus/:bemId" , authenticateToken, async(req, res)=>{
 });
 
 //client
-route.post('/api/client/submit', authenticateToken, (req, res) => {
+route.post('/api/client/submit', validateClient, validate, authenticateToken, (req, res) => {
   movementClient.registerClient(req, res);  
 });
 route.get('/api/cliente/search', authenticateToken ,(req ,res)=>{
-  movementClient.getClientByCode(req ,res)
+  movementClient.searchClient(req ,res)
 })
 route.get('/api/client/:cliecode' , authenticateToken , (req ,res)=>{
    movementClient.getClientId(req ,res)
@@ -69,13 +79,13 @@ route.get('/api/listclient', authenticateToken, (req , res)=>{
 route.delete('/api/deleteclient/:id' , authenticateToken, (req ,res)=>{
   movementClient.deleteOfClient(req, res)
 });
-route.put('/api/updateclient/:id' , authenticateToken, (req , res)=>{
+route.put('/api/updateclient/:id', authenticateToken, (req , res)=>{
   movementClient.updateOfClient(req , res)
 });
 
 
 // fornecedor
-route.post('/api/forne/submit' , authenticateToken, (req , res)=>{
+route.post('/api/forne/submit' , validateForn,validate, authenticateToken, (req , res)=>{
 movementForne.registerForn(req, res)
 });
 route.get('/api/codeforn' , authenticateToken, (req , res)=>{
@@ -96,7 +106,7 @@ route.put('/api/updateforn/:id' , authenticateToken, (req , res)=>{
 
 
 // produto
-route.post('/api/prod/submit' ,  authenticateToken,  (req , res)=>{
+route.post('/api/prod/submit' , validateProduto, validate,  authenticateToken,  (req , res)=>{
   movementOfProd.registerProd(req ,res)
 });
 route.get('/api/prod/search' , authenticateToken, (req ,res)=>{
@@ -156,7 +166,7 @@ route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
 
 
  // motorista 
- route.post('/api/drive/submit' , authenticateToken, (req , res)=>{
+ route.post('/api/drive/submit' , validateMotorista , validate, authenticateToken, (req , res)=>{
   movementOfDriver.registerOfDriver(req , res)
  });
  route.get('/api/driver/search' , authenticateToken, (req , res)=>{
@@ -183,7 +193,7 @@ route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
 
 
  // Veiculo
- route.post('/api/cadauto', authenticateToken, (req , res)=>{
+ route.post('/api/cadauto', authenticateToken, validateAutomovel, validate, (req , res)=>{
   movementAuto.registerAuto(req, res)
  });
  route.get('/api/automovel/search' , authenticateToken, (req ,res)=>{
@@ -221,7 +231,7 @@ route.delete("/residuo/:id" , (req , res)=>{
 
 // destino
 
-route.post('/api/destination' , (req ,res)=>{
+route.post('/api/destination' , validateDestino,validate, (req ,res)=>{
   controllerDestination.insertDestination(req,res)
 })
 
@@ -230,11 +240,11 @@ route.get('/api/destination' , (req ,res)=>{
 })
 
 route.get('/api/destination/:code' , (req ,res)=>{
-   controllerDestination.getDestinationByCode(req,res)
+  controllerDestination.getDestinationByCode(req,res)
 })
 
 route.delete('/api/destination/:id' , (req,res)=>{
-   controllerDestination.deleteDestination(req ,res)
+  controllerDestination.deleteDestination(req ,res)
 })
 
 route.put('/api/destination/:iddestination' , (req ,res)=>{

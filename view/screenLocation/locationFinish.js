@@ -68,9 +68,9 @@ async function frontLocation() {
             rua:locacao.cllorua || "__", 
             qdlt:locacao.clloqdlt || "__" ,   
             residuo:locacao.clloresi || "__" ,
-            codigoBem: bem.bencodb || "-",
+            codigoBem: bem.belocodb || "-",
             belocode:bem.belocode,
-            produto: bem.beloben || "Nenhum bem associado",
+            produto: bem.belobem || "Nenhum bem associado",
             quantidade: bem.beloqntd || "-",
             status: bem.belostat || "Não definido",
             observacao: bem.beloobsv || "Sem observação",
@@ -468,9 +468,9 @@ async function filterTable() {
             rua:locacao.cllorua || "__", 
             qdlt:locacao.clloqdlt || "__" ,   
             residuo:locacao.clloresi || "__" ,
-            codigoBem: bem.bencodb || "-",
+            codigoBem: bem.belocodb || "-",
             belocode:bem.belocode,
-            produto: bem.beloben || "Nenhum bem associado",
+            produto: bem.belobem || "Nenhum bem associado",
             quantidade: bem.beloqntd || "-",
             status: bem.belostat || "Não definido",
             observacao: bem.beloobsv || "Sem observação",
@@ -748,8 +748,8 @@ function preencherFormularioDeEdicao(locacao) {
   
 
     if (i <= 5) {
-      document.getElementById(`family${i}Edit`).value = bem.bencodb;
-      document.getElementById(`produto${i}Edit`).value = bem.beloben;
+      document.getElementById(`family${i}Edit`).value = bem.belocodb;
+      document.getElementById(`produto${i}Edit`).value = bem.belobem;
       document.getElementById(`quantidade${i}Edit`).value = bem.beloqntd;
       document.getElementById(`observacao${i}Edit`).value = bem.beloobsv;
       document.getElementById(`dataInicio${i}Edit`).value = bem.belodtin.split("T")[0];
@@ -999,7 +999,7 @@ async function addNewGoodsInLocation(novosBens, token) {
     } catch (error) {
       console.error("🔥 Erro ao inserir novos bens:", error);
       Toastify({
-        text: "Erro ao inserir bens no servidor.",
+        text:"Erro ao inserir bens no servidor.",
         duration: 3000,
         close: true,
         gravity: "top",

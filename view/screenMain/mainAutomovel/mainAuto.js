@@ -1,4 +1,3 @@
-
 function isTokenExpired(token) {
   try {
     const payload = JSON.parse(atob(token.split(".")[1]));
@@ -8,35 +7,31 @@ function isTokenExpired(token) {
     return true;
   }
 }
-function dateAtualInField(date){
-  const inputDtCad = document.getElementById(date)
-  if(inputDtCad){
-
-  const hoje = new Date()
-  const ano = hoje.getFullYear();
-  const mes = String(hoje.getMonth() + 1).padStart(2, "0");
-  const dia = String(hoje.getDate()).padStart(2, "0");
+function dateAtualInField(date) {
+  const inputDtCad = document.getElementById(date);
+  if (inputDtCad) {
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+    const dia = String(hoje.getDate()).padStart(2, "0");
 
     inputDtCad.value = `${ano}-${mes}-${dia}`;
     return true; // indica sucesso
-  }else{
-    console.error('Campo #fornDtcd não encontrado no DOM');
+  } else {
+    console.error("Campo #fornDtcd não encontrado no DOM");
     return false; // indica falha
   }
- 
 }
 
-function maskFieldveicu(){
-   
-  $(document).ready(function(){
-  $('#placAuto').mask('AAA0A00', {
-    translation: {
-      'A': { pattern: /[A-Za-z]/ },
-      '0': { pattern: /[0-9]/ }
-    }
+function maskFieldveicu() {
+  $(document).ready(function () {
+    $("#placAuto").mask("AAA0A00", {
+      translation: {
+        A: { pattern: /[A-Za-z]/ },
+        0: { pattern: /[0-9]/ },
+      },
+    });
   });
-});
-
 }
 
 const socketAutomovel = io();
@@ -57,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
           mainContent.innerHTML = html;
           interationSystemVehicles();
           registerNewVehicles();
-          dateAtualInField('dtCadAuto');
+          dateAtualInField("dtCadAuto");
           deleteVehicles();
           searchVehicles();
           editVehicles();
@@ -217,9 +212,10 @@ function interationSystemVehicles() {
 }
 
 async function registerNewVehicles() {
-
- dateAtualInField('dtCadAuto')
-  document.querySelector(".cadAutomo").addEventListener("click", async (event) => {
+  dateAtualInField("dtCadAuto");
+  document
+    .querySelector(".cadAutomo")
+    .addEventListener("click", async (event) => {
       event.preventDefault();
 
       const token = localStorage.getItem("token");
@@ -255,11 +251,11 @@ async function registerNewVehicles() {
         caaucor: document.querySelector("#corAuto").value.trim(),
         caautico: document.querySelector("#tpCombusAuto").value.trim(),
         caaukmat: document.querySelector("#kmAtAuto").value.trim(),
-        caauloca: document.querySelector('#pdLocCar').value.trim(),
+        caauloca: document.querySelector("#pdLocCar").value.trim(),
         caaustat: document.querySelector("#statAuto").value.trim(),
-        caaudtca: document.querySelector('#dtCadAuto').value,
+        caaudtca: document.querySelector("#dtCadAuto").value,
       };
-      
+
       try {
         const response = await fetch("/api/cadauto", {
           method: "POST",
@@ -282,25 +278,34 @@ async function registerNewVehicles() {
             backgroundColor: "green",
           }).showToast();
           document.querySelector(".foorm").reset();
-          dateAtualInField('dtCadAuto')
-        } else if (response.status === 409) {
-          Toastify({
-            text: result.message || "Codigo ja cadastrado",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "orange",
-          }).showToast();
+          dateAtualInField("dtCadAuto");
         } else {
-          Toastify({
-            text: result.message || "Erro ao cadastrar o Bem",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "red",
-          }).showToast();
+          // 👇 aqui tratamos erros de validação do express-validator
+          if (result?.errors && Array.isArray(result.errors)) {
+            // junta todas as mensagens em uma string
+            const mensagens = result.errors
+              .map((err) => `• ${err.msg}`)
+              .join("\n");
+
+            Toastify({
+              text: mensagens,
+              duration: 5000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "red",
+            }).showToast();
+          } else {
+            // 👇 caso seja outro tipo de erro
+            Toastify({
+              text: result?.message || "Erro ao cadastrar automovel.",
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: response.status === 409 ? "orange" : "red",
+            }).showToast();
+          }
         }
       } catch (error) {
         console.error("Erro ao enviar formulário:", error);
@@ -370,7 +375,8 @@ async function listarVeiculos() {
       wrapper.className = "table-responsive";
 
       const tabela = document.createElement("table");
-      tabela.className = "table table-sm table-hover table-striped table-bordered tableVehicles";
+      tabela.className =
+        "table table-sm table-hover table-striped table-bordered tableVehicles";
 
       const cabecalho = tabela.createTHead();
       const linhaCabecalho = cabecalho.insertRow();
@@ -394,7 +400,13 @@ async function listarVeiculos() {
       colunas.forEach((coluna) => {
         const th = document.createElement("th");
         th.textContent = coluna;
-        th.classList.add("px-3", "py-2", "align-middle", "text-center", "wh-nowrap");
+        th.classList.add(
+          "px-3",
+          "py-2",
+          "align-middle",
+          "text-center",
+          "wh-nowrap"
+        );
         linhaCabecalho.appendChild(th);
       });
 
@@ -443,7 +455,8 @@ async function listarVeiculos() {
       wrapper.appendChild(tabela);
       veiculosListDiv.appendChild(wrapper);
     } else {
-      veiculosListDiv.innerHTML = "<p class='text-light'>Nenhum veículo cadastrado.</p>";
+      veiculosListDiv.innerHTML =
+        "<p class='text-light'>Nenhum veículo cadastrado.</p>";
     }
   } catch (error) {
     console.error("Erro ao carregar veículos:", error);
@@ -455,120 +468,120 @@ async function listarVeiculos() {
 // PESQUISAR VEICULO
 
 async function searchVehicles() {
-
-  const btnSearch = document.getElementById('searchVehicle');
-  const popUpSearch = document.querySelector('.popUpsearchIdVehicles');
+  const btnSearch = document.getElementById("searchVehicle");
+  const popUpSearch = document.querySelector(".popUpsearchIdVehicles");
   const vehicleListDiv = document.querySelector(".listingAutomo");
-  const backdrop = document.querySelector('.popupBackDrop')
-  const btnOutPageSearch = document.querySelector('.outPageSearchVehicle')
+  const backdrop = document.querySelector(".popupBackDrop");
+  const btnOutPageSearch = document.querySelector(".outPageSearchVehicle");
 
   if (btnSearch && popUpSearch) {
-    btnSearch.addEventListener('click', () => {
-      popUpSearch.style.display = 'flex';
-      backdrop.style.display = 'block'
+    btnSearch.addEventListener("click", () => {
+      popUpSearch.style.display = "flex";
+      backdrop.style.display = "block";
     });
   }
 
-  if(popUpSearch || btnOutPageSearch){
-     btnOutPageSearch.addEventListener('click' , ()=>{
-       popUpSearch.style.display = 'none'
-       backdrop.style.display = 'none'
-     })
+  if (popUpSearch || btnOutPageSearch) {
+    btnOutPageSearch.addEventListener("click", () => {
+      popUpSearch.style.display = "none";
+      backdrop.style.display = "none";
+    });
   }
- 
-  let btnClearFilter = document.getElementById('btnClearFilter');
+
+  let btnClearFilter = document.getElementById("btnClearFilter");
   if (!btnClearFilter) {
-    btnClearFilter = document.createElement('button');
-    btnClearFilter.id = 'btnClearFilter';
-    btnClearFilter.textContent = 'Limpar filtro';
-    btnClearFilter.className = 'btn btn-secondary w-25 aling align-items: center;';
-    btnClearFilter.style.display = 'none'; 
+    btnClearFilter = document.createElement("button");
+    btnClearFilter.id = "btnClearFilter";
+    btnClearFilter.textContent = "Limpar filtro";
+    btnClearFilter.className =
+      "btn btn-secondary w-25 aling align-items: center;";
+    btnClearFilter.style.display = "none";
     vehicleListDiv.parentNode.insertBefore(btnClearFilter, vehicleListDiv);
 
-    btnClearFilter.addEventListener('click', () => {
-     
-      btnClearFilter.style.display = 'none';
-      
-      document.getElementById('codeVehicle').value = '';
-      document.getElementById('placVehicles').value = '';
+    btnClearFilter.addEventListener("click", () => {
+      btnClearFilter.style.display = "none";
+
+      document.getElementById("codeVehicle").value = "";
+      document.getElementById("placVehicles").value = "";
       listarVeiculos();
     });
   }
 
- const btnSearchVehicle = document.querySelector('.submitSearchVehicle');
+  const btnSearchVehicle = document.querySelector(".submitSearchVehicle");
   if (btnSearchVehicle) {
-     btnSearchVehicle.addEventListener('click', async () => {
-      const codeInput = document.getElementById('codeVehicle').value.trim();
-      const placInput = document.getElementById('placVehicles').value.trim();
+    btnSearchVehicle.addEventListener("click", async () => {
+      const codeInput = document.getElementById("codeVehicle").value.trim();
+      const placInput = document.getElementById("placVehicles").value.trim();
 
-      const filterField = [codeInput , placInput].filter((value)=> value !== "")
+      const filterField = [codeInput, placInput].filter(
+        (value) => value !== ""
+      );
 
-       if (filterField.length === 0 ) {
-       Toastify({
-        text: "Preencha um campo para a pesquisa!",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-       }).showToast();
-      return;
-    }
-    if (filterField.length > 1 ) {
-       Toastify({
-        text: "Preencha apenas 1 campo para a pesquisa!",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-       }).showToast();
-      return;
-    }
+      if (filterField.length === 0) {
+        Toastify({
+          text: "Preencha um campo para a pesquisa!",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
+      if (filterField.length > 1) {
+        Toastify({
+          text: "Preencha apenas 1 campo para a pesquisa!",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
+      }
 
       const params = new URLSearchParams();
-      if (codeInput) params.append('caaucode', codeInput);
-      if (placInput) params.append('caauplac', placInput);
+      if (codeInput) params.append("caaucode", codeInput);
+      if (placInput) params.append("caauplac", placInput);
 
       try {
         const response = await fetch(`/api/automovel/search?${params}`, {
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
         });
 
         const data = await response.json();
 
         if (response.ok && data.veiculo?.length > 0) {
           console.log("Resultados encontrados:", data.produto);
-          
+
           Toastify({
-          text: "O tipo de familia de bem foi encontrado com sucesso!.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "green",
+            text: "O tipo de familia de bem foi encontrado com sucesso!.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "green",
           }).showToast();
           // Exibe botão limpar filtro
-          btnClearFilter.style.display = 'inline-block';
+          btnClearFilter.style.display = "inline-block";
           // Atualiza a tabela com os bens filtrados
           renderVeiculosTable(data.veiculo);
 
           // Fecha o pop-up após a busca (opcional)
-          if (popUpSearch) popUpSearch.style.display = 'none';
-          if(backdrop)backdrop.style.display = 'none'
-
+          if (popUpSearch) popUpSearch.style.display = "none";
+          if (backdrop) backdrop.style.display = "none";
         } else {
           Toastify({
-          text: data.message || "Nenhum veiculo encontrado nessa pesquisa",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
+            text: data.message || "Nenhum veiculo encontrado nessa pesquisa",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
           }).showToast();
         }
       } catch (error) {
@@ -580,19 +593,20 @@ async function searchVehicles() {
           gravity: "top",
           position: "center",
           backgroundColor: "red",
-          }).showToast();
+        }).showToast();
       }
     });
-  };
-};
+  }
+}
 
-// renderizar tabela 
+// renderizar tabela
 function renderVeiculosTable(veiculos) {
   const veiculosListDiv = document.querySelector(".listingAutomo");
   veiculosListDiv.innerHTML = "";
 
   if (!veiculos || veiculos.length === 0) {
-    veiculosListDiv.innerHTML = "<p class='text-light'>Nenhum veículo cadastrado.</p>";
+    veiculosListDiv.innerHTML =
+      "<p class='text-light'>Nenhum veículo cadastrado.</p>";
     return;
   }
 
@@ -600,7 +614,8 @@ function renderVeiculosTable(veiculos) {
   wrapper.className = "table-responsive";
 
   const tabela = document.createElement("table");
-  tabela.className = "table table-sm table-hover table-striped table-bordered tableVehicles";
+  tabela.className =
+    "table table-sm table-hover table-striped table-bordered tableVehicles";
 
   const colunas = [
     "Selecionar",
@@ -682,8 +697,7 @@ function renderVeiculosTable(veiculos) {
 
   wrapper.appendChild(tabela);
   veiculosListDiv.appendChild(wrapper);
-};
-
+}
 
 // DELETAR VEICULOS
 function deleteVehicles() {
@@ -758,27 +772,27 @@ function deleteVehicles() {
 
         autoRow.remove();
       } else {
-      if (response.status === 400) {
-        Toastify({
-          text: data.message, // Mensagem retornada do backend
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "orange",
-        }).showToast();
-      } else {
-        console.log("Erro para excluir:", data);
-        Toastify({
-          text: "Erro na exclusão do Veiculo ",
-          duration: 2000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
+        if (response.status === 400) {
+          Toastify({
+            text: data.message, // Mensagem retornada do backend
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "orange",
+          }).showToast();
+        } else {
+          console.log("Erro para excluir:", data);
+          Toastify({
+            text: "Erro na exclusão do Veiculo ",
+            duration: 2000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
+        }
       }
-    }
     } catch (error) {
       console.error("Erro ao excluir veículo:", error);
       Toastify({
@@ -846,7 +860,7 @@ function editVehicles() {
 
     try {
       const autoSelecionado = JSON.parse(autoData);
-      console.log('veiculo' , autoSelecionado)
+      console.log("veiculo", autoSelecionado);
 
       const campos = [
         { id: "codeAutoEdit", valor: autoSelecionado.caaucode },
@@ -859,7 +873,7 @@ function editVehicles() {
         { id: "tpCombusAutoEdit", valor: autoSelecionado.caautico },
         { id: "kmAtAutoEdit", valor: autoSelecionado.caaukmat },
         { id: "statAutoEdit", valor: autoSelecionado.caaustat },
-        {id: "pdLocCarEdit" , valor: autoSelecionado.caauloca},
+        { id: "pdLocCarEdit", valor: autoSelecionado.caauloca },
         { id: "dtCadAutoEdit", valor: autoSelecionado.caaudtca },
       ];
 
@@ -871,19 +885,22 @@ function editVehicles() {
           } else {
             elemento.value = valor || "";
           }
-
         } else {
           console.warn(`Elemento com ID '${id}' não encontrado.`);
         }
-          
-         let valorFormatado = (valor || "").trim();
+
+        let valorFormatado = (valor || "").trim();
         if (elemento.tagName === "SELECT") {
-          const option = [...elemento.options].find(opt => opt.value === valorFormatado);
+          const option = [...elemento.options].find(
+            (opt) => opt.value === valorFormatado
+          );
           if (option) {
             elemento.value = valorFormatado;
 
             if (id === "tpCombusAutoEdit") {
-              const hiddenInput = document.getElementById("tpCombusAutoEditHidden");
+              const hiddenInput = document.getElementById(
+                "tpCombusAutoEditHidden"
+              );
               if (hiddenInput) {
                 hiddenInput.value = valorFormatado;
               }
@@ -937,7 +954,7 @@ function editVehicles() {
         caautico: document.getElementById("tpCombusAutoEdit").value,
         caaukmat: document.getElementById("kmAtAutoEdit").value,
         caaustat: document.getElementById("statAutoEdit").value,
-        caauloca: document.getElementById('pdLocCarEdit').value,
+        caauloca: document.getElementById("pdLocCarEdit").value,
         caaudtca: document.getElementById("dtCadAutoEdit").value,
       };
 
@@ -960,11 +977,10 @@ function editVehicles() {
         return;
       }
       try {
-
         const confirmedEdition = confirm(
-        `Tem certeza de que deseja ATUALIZAR os dados desse veiculo?`
+          `Tem certeza de que deseja ATUALIZAR os dados desse veiculo?`
         );
-          if (!confirmedEdition) return;
+        if (!confirmedEdition) return;
 
         const response = await fetch(
           `/api/cadauto/${autoSelecionado.caaucode}`,
@@ -1008,5 +1024,4 @@ function editVehicles() {
   }
 
   editAndUpdateOfAuto();
-};
-
+}

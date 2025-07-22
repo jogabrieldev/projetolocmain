@@ -1,5 +1,6 @@
 import { crudRegisterForn as fornRegister } from "../model/modelsFornecedor.js";
 import fetch from "node-fetch";
+
 export const movementForne = {
   async registerForn(req, res) {
     try {
@@ -11,89 +12,6 @@ export const movementForne = {
           .json({ message: "campos obrigatorios não preenchidos" });
       }
       
-            const validCnpjSystem = await fornRegister.buscarIdFornCnpj();
-            const resuntConsult = validCnpjSystem.map(item => (item.forncnpj));
-            const cnpjToCheck = (dataForn.fornCnpj);
-
-           if (resuntConsult.includes(cnpjToCheck)) {
-              return res.status(400).json({ message: "CNPJ ja cadastrado valide com seu fornecedor" });
-            }
-
-      const isDataValida = (dataStr) => {
-        const regex = /^\d{4}-\d{2}-\d{2}$/;
-        if (!regex.test(dataStr)) return false;
-
-        const [y, m, d] = dataStr.split("-").map(Number);
-        const date = new Date(y, m - 1, d);
-        return (
-          date.getFullYear() === y &&
-          date.getMonth() === m - 1 &&
-          date.getDate() === d
-        );
-      };
-
-      const { fornDtcd } = dataForn;
-
-      if (!isDataValida(fornDtcd)) {
-        return res.status(400).json({
-          success: false,
-          message: "Data de Cadastro INVÁLIDA.",
-        });
-      }
-
-      const [y, m, d] = fornDtcd.split("-").map(Number);
-      const dtCd = new Date(y, m - 1, d);
-      const hoje = new Date();
-      const hoje0 = new Date(
-        hoje.getFullYear(),
-        hoje.getMonth(),
-        hoje.getDate()
-      );
-
-      if (dtCd.getTime() !== hoje0.getTime()) {
-        return res.status(400).json({
-          success: false,
-          message: "Data de cadastro deve ser a data de hoje.",
-        });
-      }
-
-      const { fornName } = dataForn;
-
-      if (!fornName || fornName.trim().length < 3) {
-        return res.status(400).json({
-          success: false,
-          message:
-            "O nome do fornecedor é obrigatório e deve conter pelo menos 3 letras.",
-        });
-      }
-
-      const { fornMail } = dataForn;
-
-      const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-      if (!emailValido.test(fornMail)) {
-        return res.status(400).json({
-          success: false,
-          message: "E-mail inválido. Insira um e-mail no formato correto.",
-        });
-      }
-
-      const cepForn = dataForn.fornCep;
-
-
-      if (!cepForn || !/^\d{5}-?\d{3}$/.test(cepForn)) {
-        return res.status(400).json({ message: "CEP inválido." });
-      }
-
-      const response = await fetch(`https://viacep.com.br/ws/${cepForn}/json/` , {
-        method:'GET'
-      });
-      const cepData = await response.json();
-
-      if (cepData.erro) {
-        return res.status(400).json({ message: "CEP não encontrado." });
-      }
-
       const newForn = await fornRegister.registerOfForn(dataForn);
       if (!newForn) {
         return res.status(400).json({ message: "Erro ao cadastrar fornecedor" });
@@ -108,14 +26,10 @@ export const movementForne = {
     } catch (error) {
       console.error("erro no controller");
 
-      if (
-        error.message.includes(
-          "Código do Fornecedor ja cadastrado. Tente outro."
-        )
-      ) {
+      if (error.message.includes("Código do Fornecedor ja cadastrado. Tente outro.")) {
         return res.status(409).json({ success: false, message: error.message });
       }
-      res.status(500).json({ success: false, message: error.message });
+      return res.status(500).json({ success: false, message: error.message });
     }
   },
 
@@ -263,13 +177,13 @@ export const movementForne = {
       } else {
         console.warn("Socket.IO não está configurado.");
       }
-      res.json({
+      return res.json({
         message: "Bem atualizado com sucesso",
         Fornecedor: fornUpdate,
       });
     } catch (error) {
       console.error("Erro ao atualizar o Fornecedor:", error);
-      res.status(500).json({ message: "Erro ao atualizar o Cliente", error });
+      return res.status(500).json({ message: "Erro ao atualizar o Cliente", error });
     }
   },
 };

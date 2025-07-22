@@ -157,8 +157,8 @@ async function locationPendente() {
           dataLocacao: formatDate(locacao.cllodtlo),
           dataDevolucao: formatDate(locacao.cllodtdv),
           formaPagamento: locacao.cllopgmt || "Não definido",
-          codigoBem: bem.bencodb || "-",
-          produto: bem.beloben || "Nenhum bem associado",
+          codigoBem: bem.belocodb || "-",
+          produto: bem.belobem || "Nenhum bem associado",
           quantidade: bem.beloqntd || "-",
           status: bem.belostat || "Não definido",
           observacao: bem.beloobsv || "Sem observação",
@@ -345,8 +345,8 @@ function filterLocation() {
               dataLocacao: formatDate(locacao.cllodtlo),
               dataDevolucao: formatDate(locacao.cllodtdv),
               formaPagamento: locacao.cllopgmt || "Não definido",
-              codigoBem: bem.bencodb || "-",
-              produto: bem.beloben || "Nenhum bem associado",
+              codigoBem: bem.belocodb || "-",
+              produto: bem.belobem || "Nenhum bem associado",
               quantidade: bem.beloqntd || "-",
               status: bem.belostat || "Não definido",
               observacao: bem.beloobsv || "Sem observação",
@@ -467,8 +467,8 @@ function filterLocation() {
         return;
       }
     });
-  }
-}
+  };
+};
 
 // Necessidade vs Disponibilidade
 async function needVsAvaible(
@@ -706,7 +706,7 @@ async function validateFamilyBensPending() {
      const pedidosPendentes = bensLoc
     .filter(
       (bem) =>
-        bem.belostat === "Pendente" && bem.bencodb === codigoFamilia
+        bem.belostat === "Pendente" && bem.belocodb === codigoFamilia
     )
     .reduce((total, bem) => total + Number(bem.beloqntd || 0), 0);
 

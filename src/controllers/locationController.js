@@ -1,4 +1,6 @@
 import { LocacaoModel } from "../model/modelsLocationGoods.js";
+import { moduleResiduo } from "../model/modelsResiduo.js";
+import { movementDestination } from "../model/modelsDestination.js";
 
 export const location = {
 
@@ -21,18 +23,50 @@ export const location = {
      
     try {
     
-       if (!bens || bens.length === 0) {
+       if(!bens || bens.length === 0) {
         return res.status(400).json({ error: "Nenhum dado de bens enviado." });
        }
 
-      if (!userClientValidade || userClientValidade.length < 2) {
-        return res.status(400).json({ error: "CPF/CNPJ e Nome do cliente é obrigatório." });
+      if(!userClientValidade || userClientValidade.length < 2) {
+         return res.status(400).json({ error: "CPF/CNPJ e Nome do cliente é obrigatório." });
+      }
+
+      if(!numericLocation){
+        return res.status(400).json({error:"Numero de locação não foi gerado"})
+      }
+       
+      const idNumericLocation = await LocacaoModel.getNumberLocationCheck()
+      const validNumericLocation= idNumericLocation.map(item =>item.cllonmlo)
+      const numericLocationNormalized = String(numericLocation).trim();
+
+     if (validNumericLocation.includes(numericLocationNormalized)) {
+       return res.status(400).json({
+       error: "O número de locação gerado já existe! Acione o suporte."
+       });
       }
 
       if(!descarte){
         return res.status(400).json({error: "Local de descarte é obrigatório."});
       }
+
+      const codeDescarte = await movementDestination.getCodeDestination()
   
+      const validCode = codeDescarte.map(item =>item.dereid)
+      if(!validCode.includes(descarte)){
+        return res.status(400).json({error:"Local de descarte não existe no banco de dados! verifique"})
+      }
+      
+      if(!resi){
+        return res.status(400).json({error:"E obrigatorio passar o residuo envolvido"})
+      }
+
+       const codeResi = await moduleResiduo.getCodeResiduo()
+       const codeValid = codeResi.map(item => item.resicode);
+        if (!codeValid.includes(resi)) {
+           return res.status(400).json({ error: "O residuo não existe no nosso banco de dados! verifique" });
+         }
+     
+     
      const ClientDate = userClientValidade[1].replace(/\D/g, ''); 
 
      let cliente = null;
@@ -181,13 +215,13 @@ export const location = {
           .json({ success: false, message: "Cliente não encontrado." });
       }
 
-      res.status(200).json({ success: true, nome: client.clienome });
+      return res.status(200).json({ success: true, nome: client.clienome });
     } catch (error) {
       console.error(
         "Erro no controller ao buscar cliente por CPF:",
         error.message
       );
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: "Erro interno no servidor.",
         error: error.message,
@@ -199,12 +233,12 @@ export const location = {
     try {
       const familias = await LocacaoModel.buscarCodigosBens();
       if(!familias){
-        res.status(400).json({success:false , message:'Erro ao buscar dados da familia'})
+        return res.status(400).json({success:false , message:'Erro ao buscar dados da familia'})
       }
-      res.status(200).json(familias); 
+       return res.status(200).json(familias); 
     } catch (error) {
       console.error("Erro ao listar famílias de bens:", error);
-      res.status(500).json({ error: "Erro ao buscar famílias de bens." });
+       return res.status(500).json({ error: "Erro ao buscar famílias de bens." });
     }
   },
 
@@ -218,7 +252,7 @@ export const location = {
   
       return res.status(200).json({ locacoes: locacaoFinish }); 
     } catch (error) {
-      res.status(500).json({ error: "Erro ao buscar os dados de locação" });
+      return res.status(500).json({ error: "Erro ao buscar os dados de locação" });
     }
   },
   
@@ -301,8 +335,8 @@ async DeleteLocationFinish(req, res) {
       const { bens } = req.body; // Recebendo os dados da locação e bens
 
       const bensConvertidos = bens.map(bem => ({
-        codeBen: bem.bencodb,
-        produto: bem.beloben,
+        codeBen: bem.belocodb,
+        produto: bem.belobem,
         dataInicio: bem.belodtin,
         dataFim: bem.belodtfi,
         quantidade: bem.beloqntd,
@@ -324,13 +358,13 @@ async DeleteLocationFinish(req, res) {
         io.emit("updateRunTimeInEditLocation", {id:id});
       }
 
-      res.status(200).json({
+      return res.status(200).json({
         message: "Locação atualizada com sucesso!",
         data: resultado,
       });
     } catch (error) {
       console.error("Erro ao atualizar locação e bens:", error);
-      res.status(500).json({ error: "Erro interno ao atualizar locação e bens." });
+      return res.status(500).json({ error: "Erro interno ao atualizar locação e bens." });
     }
   },
   
@@ -359,7 +393,7 @@ async DeleteLocationFinish(req, res) {
       
        const novosbensInseridosLocacao = await LocacaoModel.inserirNovosBens(newGoods)
        if(!novosbensInseridosLocacao){
-        res.status(400).json({error: "Bens não inserido"})
+         return res.status(400).json({error: "Problema para inserir novos bens"})
        }
 
        const io = req.app.get("socketio");

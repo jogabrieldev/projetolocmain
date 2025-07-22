@@ -378,15 +378,32 @@ function registerNewFornecedor() {
           document.querySelector("#registerForn").reset();
           dateAtualInField("fornDtcd")
         } else {
-          Toastify({
-            text: result?.message || "Erro ao cadastrar Cliente.",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: response.status === 409 ? "orange" : "red",
-          }).showToast();
-        }
+    // 👇 aqui tratamos erros de validação do express-validator
+    if (result?.errors && Array.isArray(result.errors)) {
+      // junta todas as mensagens em uma string
+      const mensagens = result.errors.map(err => `• ${err.msg}`).join("\n");
+
+      Toastify({
+        text: mensagens,
+        duration: 5000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+
+    } else {
+      // 👇 caso seja outro tipo de erro
+      Toastify({
+        text: result?.message || "Erro ao cadastrar fornecedor.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: response.status === 409 ? "orange" : "red",
+      }).showToast();
+    }
+  }
       } catch (error) {
         console.error("Erro ao enviar formulário:", error);
        Toastify({

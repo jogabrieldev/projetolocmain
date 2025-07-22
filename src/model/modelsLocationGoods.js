@@ -46,7 +46,7 @@ export const LocacaoModel = {
 
   async inserirBens(bens, clloid) {
     const query = `
-      INSERT INTO bensloc (bencodb, beloben, belodtin, belodtfi, beloqntd, beloobsv, belostat, beloidcl , belocontr)
+      INSERT INTO bensloc (belocodb, belobem, belodtin, belodtfi, beloqntd, beloobsv, belostat, beloidcl , belocontr)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8 , $9)
       RETURNING belocode;
     `;
@@ -89,6 +89,17 @@ export const LocacaoModel = {
       throw error;
     }
   },
+
+async getNumberLocationCheck(){
+   try {
+       const resunt = await dataLocation.query(`SELECT cllonmlo FROM clieloc`)
+       if(!resunt){return}
+      return resunt.rows
+   } catch (error) {
+      console.error('Erro para verificar numero de locação esta repetido', error)
+      throw error;
+   }
+},
 
   async getClientByCPF(cpf) {
     try {
@@ -146,8 +157,8 @@ export const LocacaoModel = {
   c.cllodesc,
   
   b.belocode, 
-  b.bencodb, 
-  b.beloben, 
+  b.belocodb, 
+  b.belobem, 
   b.belodtin, 
   b.belodtfi, 
   b.beloqntd, 
@@ -189,8 +200,8 @@ ORDER BY c.clloid;`
     if (row.belocode) {
       locacao.bens.push({
         belocode: row.belocode,
-        bencodb: row.bencodb,
-        beloben: row.beloben,
+        belocodb: row.belocodb,
+        belobem: row.belobem,
         belodtin: row.belodtin,
         belodtfi: row.belodtfi,
         beloqntd: row.beloqntd,
@@ -204,7 +215,7 @@ ORDER BY c.clloid;`
 
   return locacoes;
 } catch (error) {
-  console.error("Erro ao buscar locações e bens:", error);
+  console.error("Erro ao buscar locações de bens:", error);
   throw error;
 }
 
@@ -293,7 +304,7 @@ ORDER BY c.clloid;`
       // Query para atualização dos bens
       const updateQuery = `
       UPDATE bensloc
-      SET bencodb = $1, beloben = $2, belodtin = $3, belodtfi = $4, beloqntd = $5, 
+      SET belocodb = $1, belobem = $2, belodtin = $3, belodtfi = $4, beloqntd = $5, 
           beloobsv = $6
       WHERE belocode = $7
       RETURNING belocode;

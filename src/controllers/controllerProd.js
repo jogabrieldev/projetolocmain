@@ -1,6 +1,4 @@
 import { crudRegisterProd as prodRegister} from "../model/modelsProd.js";
-import { crudRegisterTypeProd  as typePro} from "../model/modelsTypeProd.js";
-
 
 export const movementOfProd = {
 
@@ -11,40 +9,6 @@ export const movementOfProd = {
     if (!dataProd) {
       return res.status(400).json({ message: "Campos obrigatórios não preenchidos." });
     }
-
-   
-    const dataParts = dataProd.prodData?.split("-");
-    if (!dataParts || dataParts.length !== 3) {
-      return res.status(400).json({ message: "Data de cadastro inválida." });
-    }
-
-    const [y, m, d] = dataParts.map(Number);
-    const dtCd = new Date(y, m - 1, d);
-    const hoje = new Date();
-    const hoje0 = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
-
-    if (dtCd.getTime() !== hoje0.getTime()) {
-      return res.status(400).json({ message: "Data de cadastro deve ser a data de hoje." });
-    }
-
-    const valorLiquido = parseFloat(dataProd.prodPeli);
-    const valorBruto = parseFloat(dataProd.prodPebr);
-
-    if (isNaN(valorLiquido) || isNaN(valorBruto)) {
-      return res.status(400).json({ message: "Valores de preço inválidos." });
-    }
-
-    if (valorLiquido > valorBruto) {
-      return res.status(400).json({ message: "O preço líquido não pode ser maior que o preço bruto." });
-    }
-
-    const codeTypePro = await typePro.getCodeIdtypeP()
-
-    const codeValid = codeTypePro.map(item => item.tiprcode);
-
-    if (!codeValid.includes(dataProd.prodTipo)) {
-      return res.status(400).json({ message: "Código do tipo de produto e inválido." });
-      }
 
     const newProd = await prodRegister.registerOfProd(dataProd);
     if(!newProd){
@@ -66,7 +30,7 @@ export const movementOfProd = {
       return res.status(409).json({ success: false, message: error.message });
     }
 
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 },
 async searchProductByCode(req, res) {
@@ -115,7 +79,7 @@ async searchProductByCode(req, res) {
       return res.status(200).json({sucess:true , produto});
     } catch (error) {
       console.error("Erro no controller:", error.message);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: "erro interno no server",
         message: error.message,
@@ -182,7 +146,7 @@ async searchProductByCode(req, res) {
 
     } catch (error) {
       console.error("Erro ao atualizar o bem:", error);
-      res.status(500).json({ message: "Erro ao atualizar o produto", error });
+      return res.status(500).json({ message: "Erro ao atualizar o produto", error });
     }
   },
 };

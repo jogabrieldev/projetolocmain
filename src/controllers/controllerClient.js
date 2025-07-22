@@ -16,103 +16,18 @@ export const movementClient = {
           .json({ message: "Campos obrigatórios não preenchidos." });
       }
 
-  
-      const validCpfSystem = await clientRegister.verifyCredenciClient();
+      // const cepClie = dataClientSubmit.clieCep;
 
-      const resuntConsult = validCpfSystem.map(item => (item.cliecpf || item.cliecnpj));
+      // if (!cepClie || !/^\d{5}-?\d{3}$/.test(cepClie)) {
+      //   return res.status(400).json({ message: "CEP inválido." });
+      // }
 
-      const cpfToCheck = (dataClientSubmit.clieCpf || dataClientSubmit.clieCnpj || "").replace(/\D/g, "");
+      // const response = await fetch(`https://viacep.com.br/ws/${cepClie}/json/`);
+      // const cepData = await response.json();
 
-      const jaCadastrado = resuntConsult.some(doc => (doc || "").replace(/\D/g, "") === cpfToCheck);
-
-       if (jaCadastrado) {
-         return res.status(400).json({ message: "CPF ou CNPJ já cadastrado no sistema. Valide com o cliente." });
-      }
-
-      const { dtCad, dtNasc } = dataClientSubmit;
-
-      // Função auxiliar para validar se a data é válida
-      const isDataValida = (str) => {
-        return (
-          /^\d{4}-\d{2}-\d{2}$/.test(str) && !isNaN(new Date(str).getTime())
-        );
-      };
-
-      if (!isDataValida(dtCad)) {
-        return res.status(400).json({ message: "Data de Cadastro inválida." });
-      }
-
-      if (!isDataValida(dtNasc)) {
-        return res
-          .status(400)
-          .json({ message: "Data de Nascimento inválida." });
-      }
-
-      const [yCad, mCad, dCad] = dtCad.split("-").map(Number);
-      const [yNasc, mNasc, dNasc] = dtNasc.split("-").map(Number);
-
-      const dataCadastro = new Date(yCad, mCad - 1, dCad);
-      const dataNascimento = new Date(yNasc, mNasc - 1, dNasc);
-      const hoje = new Date();
-      const hoje0 = new Date(
-        hoje.getFullYear(),
-        hoje.getMonth(),
-        hoje.getDate()
-      );
-
-      // dtCad deve ser igual à data de hoje
-      if (dataCadastro.getTime() !== hoje0.getTime()) {
-        return res.status(400).json({
-          message: "Data de Cadastro deve ser igual à data de hoje.",
-        });
-      }
-
-      // dtNasc não pode ser no futuro
-      if (dataNascimento.getTime() >= hoje0.getTime()) {
-        return res.status(400).json({
-          message:
-            "Data de Nascimento não pode ser maior ou igual à data de hoje.",
-        });
-      }
-
-      // dtNasc deve ser anterior ou igual à dtCad
-      if (dataNascimento.getTime() > dataCadastro.getTime()) {
-        return res.status(400).json({
-          message:
-            "Data de Nascimento não pode ser posterior à Data de Cadastro.",
-        });
-      }
-
-      const { clieName } = dataClientSubmit
-    if (!clieName || clieName.trim().length < 3) {
-    return res.status(400).json({
-    success: false,
-    message: "O nome do fornecedor é obrigatório e deve conter pelo menos 3 letras.",
-  });
-}
-  const { clieMail} = dataClientSubmit;
-
-      const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-      if (!emailValido.test(clieMail)) {
-        return res.status(400).json({
-          success: false,
-          message: "E-mail inválido. Insira um e-mail no formato correto.",
-        });
-      }
-
-      const cepClie = dataClientSubmit.clieCep;
-
-      if (!cepClie || !/^\d{5}-?\d{3}$/.test(cepClie)) {
-        return res.status(400).json({ message: "CEP inválido." });
-      }
-
-      const response = await fetch(`https://viacep.com.br/ws/${cepClie}/json/`);
-      const cepData = await response.json();
-
-      if (cepData.erro) {
-        return res.status(400).json({ message: "CEP não encontrado." });
-      }
+      // if (cepData.erro) {
+      //   return res.status(400).json({ message: "CEP não encontrado." });
+      // }
 
       const newClient = await clientRegister.registerOfClient(dataClientSubmit);
       if (!newClient) {
@@ -120,13 +35,11 @@ export const movementClient = {
       }
 
       if(dataClientSubmit.filial){
-
           const filialData = dataClientSubmit.filial
-          console.log('filial'  , filialData)
           try {
                await controllerFili.registerFilial(newClient.cliecode , filialData)
           } catch (error) {
-              console.log('ERRO AO INSERIR FILIAL' , error)
+              return res.status(400).json({message: "Erro para cadastrar filial"})
           }
          
       }
@@ -146,11 +59,11 @@ export const movementClient = {
         return res.status(409).json({ success: false, message: error.message });
       }
 
-      res.status(500).json({ success: false, message: error.message });
+      return res.status(500).json({ success: false, message: error.message });
     }
   },
 
- async getClientByCode(req, res) {
+ async searchClient(req, res) {
     const { cliecode , valueCpf , valueCnpj } = req.query;
     try {
       if (!cliecode && !valueCpf && !valueCnpj ) {
@@ -195,10 +108,10 @@ export const movementClient = {
         return res.status(404).json({ message: "Cliente não encontrado verifique a credencial." });
       }
 
-      res.status(200).json(cliente);
+     return res.status(200).json(cliente);
     } catch (error) {
       console.error("Erro ao buscar cliente:", error.message);
-      res.status(500).json({ message: "Erro interno ao buscar cliente." });
+      return res.status(500).json({ message: "Erro interno ao buscar cliente." });
     }
   },
 
@@ -213,7 +126,7 @@ export const movementClient = {
      return res.status(200).json(client);
     } catch (error) {
       console.error("erro no controller para listar o cliente", error.message);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: "erro interno no server",
         message: error.message,
@@ -224,10 +137,7 @@ export const movementClient = {
   async deleteOfClient(req, res) {
     const { id } = req.params;
     try {
-      const temDependencia = await clientRegister.verificarDependenciaCliente(
-        id
-      );
-
+      const temDependencia = await clientRegister.verificarDependenciaCliente(id);
       if (temDependencia) {
         return res.status(400).json({
           message: "Não e possivel excluir. O cliente tem locação",
@@ -237,7 +147,6 @@ export const movementClient = {
       const verifiqueFilial = await clientRegister.verifiqueFilial(id)
     
       if(verifiqueFilial){
-        console.log('filial' , verifiqueFilial)
         return res.status(400).json({message:'O cliente possui filiais no nosso sistema'})
       }
 
@@ -271,7 +180,7 @@ export const movementClient = {
       }
     });
 
-    const clientExists = await clientRegister.getClientByFilter(clientId);
+    const clientExists = await clientRegister.getAllClientForId(clientId);
       if (!clientExists) {
        return res.status(400).json({ message: "Código do cliente é inválido." });
     }
@@ -318,13 +227,13 @@ export const movementClient = {
         console.warn("Socket.IO não está configurado.");
       }
 
-      res.json({
+      return res.json({
         message: "Bem atualizado com sucesso",
         Cliente: clientUpdate,
       });
     } catch (error) {
       console.error("Erro ao atualizar o Cliente:", error);
-      res.status(500).json({ message: "Erro ao atualizar o Cliente", error });
+      return res.status(500).json({ message: "Erro ao atualizar o Cliente", error });
     }
   },
 };

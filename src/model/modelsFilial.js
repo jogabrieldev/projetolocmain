@@ -32,6 +32,6 @@ import { client as infoFili } from "../database/userDataBase.js";
     } catch (error) {
         console.log('ERRO AO INSERIR FILIAL' , error)
         throw new error
-    }
+    };
   }
-}
+};

@@ -1060,7 +1060,7 @@ async function handleSubmit() {
     const dataDevoStr = document.getElementById("DataDevo")?.value || null;
     const pagament = document.getElementById("pagament")?.value || null;
     const residuo = document.getElementById("residuoSelect").value;
-    const localDescarte = document.getElementById('locDescarte').value || null
+    const localDescarte = Number(document.getElementById('locDescarte').value) || null
 
 
     if (!dataDevoStr || !pagament) {
@@ -1218,8 +1218,6 @@ async function handleSubmit() {
   return;
 }
 
-    ;
-
     const payload = {
       numericLocation,
       userClientValidade,
@@ -1266,7 +1264,7 @@ async function handleSubmit() {
       }, 500);
     } else {
       Toastify({
-        text: errorData.error || "Erro na locação!",
+        text: errorData.error || "Erro para gerar a locação!",
         duration: 3000,
         close: true,
         gravity: "top",

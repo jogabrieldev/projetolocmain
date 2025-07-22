@@ -6,33 +6,12 @@ export const controllerDestination = {
     try {
       const body = req.body;
       if (!body) {
-        return res
-          .status(400)
-          .json({
-            message: "Falta passar informações para o cadastro de destino",
-          });
-      }
-
-      const cepDestinationDescart = body.cepDest;
-
-      if (!cepDestinationDescart || !/^\d{5}-?\d{3}$/.test(cepDestinationDescart)) {
-        return res.status(400).json({ message: "CEP inválido." });
-      }
-
-      const response = await fetch(
-        `https://viacep.com.br/ws/${cepDestinationDescart}/json/`
-      );
-      const cepData = await response.json();
-
-      if (cepData.erro) {
-        return res.status(400).json({ message: "CEP não encontrado." });
+        return res.status(400).json({message: "Falta passar informações para o cadastro de destino",});
       }
 
       const insert = await movementDestination.registerInDestination(body);
       if (!insert) {
-        return res
-          .status(400)
-          .json({ message: "Erro ao inserir Destiono de descarte" });
+        return res.status(400).json({ message: "Erro ao inserir Destiono de descarte" });
       }
 
       const io = req.app.get("socketio");
@@ -47,9 +26,7 @@ export const controllerDestination = {
         return res.status(409).json({ success: false, message: error.message });
       }
       console.error("Erro ao inserir no server", error);
-      return res
-        .status(500)
-        .json({ message: "Erro no server para inserir destino" });
+      return res.status(500).json({ message: "Erro no server para inserir destino" });
     }
   },
 
@@ -116,8 +93,6 @@ async getDestinationByCode(req , res){
     try {
         const {iddestination} = req.params
         const bodyDestination = req.body
-        console.log('id' , iddestination)
-        console.log('body' , bodyDestination)
 
        if(!iddestination || !bodyDestination){
           return res.status(400).json({message:'falta passar informações verifique'})

@@ -9,6 +9,7 @@ export const authSystemValidade = {
   async AuthLoginCenter(req, res) {
     try {
       const { username, password } = req.body;
+      console.log('corpo' ,  req.body)
       
       if (!username || !password ) {
         return res.status(400).json({ message: "Usuário e senha obrigatórios" });
@@ -20,13 +21,13 @@ export const authSystemValidade = {
         return res.status(401).json({ message: "Usuário ou senha inválidos" });
       }
 
-      const idUserMain = user.empCode
+      const idUserMain = user.empcode
       if(!idUserMain){
          return res.status(400).json({message:'O id não foi encontrado'})
       }
 
       const token = jwt.sign(
-        { user: user.username, id: user.empCode, tipo: "main" },
+        { user: user.username, id: user.empcode, tipo: "main" },
         secretKey,
         { expiresIn: '1h' }
       );

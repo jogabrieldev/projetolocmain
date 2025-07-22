@@ -1,5 +1,4 @@
-import {client} from '../database/userDataBase.js'
-const resi = client
+import {client as resi} from '../database/userDataBase.js'
 
 export const moduleResiduo = {
 
@@ -21,6 +20,18 @@ export const moduleResiduo = {
            throw error;
       }
   },
+
+async getCodeResiduo(){
+  try {
+     const result = await resi.query(`SELECT resicode FROM cadresi`) 
+      if(!result){return}
+      return result.rows
+      
+    } catch (error) {
+       console.error('Erro para buscar codigo de residuo')
+       throw error
+    }
+ },
 
   async getAllResiduo(){
       try {

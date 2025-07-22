@@ -2,8 +2,7 @@ import { moduleResiduo } from "../model/modelsResiduo.js";
 
 export const movementResiduo =  {
     
-    async registerResiduo(req , res){
-         
+  async registerResiduo(req , res){
         try {
          const {dataResi} = req.body
 
@@ -13,7 +12,7 @@ export const movementResiduo =  {
 
          const result = await moduleResiduo.registerResiduo(dataResi)
          if(!result){
-            res.status(400).json({message:'Erro para inserir no DB'})
+           return res.status(400).json({message:'Erro para inserir no DB'})
         }
 
           const io = req.app.get("socketio");

@@ -1,3 +1,4 @@
+
 const socketUpdateTableDelivey = io();
 document.addEventListener("DOMContentLoaded", () => {
   const buttonLoadDelivery = document.querySelector(".delivery");
@@ -198,7 +199,7 @@ function renderTableDelivery() {
                 <td>${item.lofiidbe}</td>
                 <td>${cliente ? cliente.clienome : "Desconhecido"}</td>
                 <td>${item.lofiidlo}</td>
-                <td>${new Date(item.lofidtlo).toLocaleString()}</td>
+                <td>${(item.lofidtlo)}</td>
                 <td><button class="detalhes" onclick="showDetails(${
                   item.loficode
                 })">Detalhes</button></td>

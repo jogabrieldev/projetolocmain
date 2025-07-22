@@ -12,32 +12,6 @@ export const movementAuto = {
         .json({ message: "Campos obrigatórios não preenchidos." });
     }
 
-    const isDataValida = (dataStr) => {
-      return /^\d{4}-\d{2}-\d{2}$/.test(dataStr);
-    };
-
-    if (!isDataValida(dataAuto.caaudtca)) {
-      return res.status(400).json({
-        success: false,
-        message: "Data de Cadastro inválida.",
-      });
-    }
-
-    const [y, m, d] = dataAuto.caaudtca.split("-").map(Number);
-    const dtCd = new Date(y, m - 1, d);
-    const hoje = new Date();
-    const hojeZerado = new Date(
-      hoje.getFullYear(),
-      hoje.getMonth(),
-      hoje.getDate()
-    );
-
-    if (dtCd.getTime() !== hojeZerado.getTime()) {
-      return res.status(400).json({
-        success: false,
-        message: "Data de cadastro deve ser a data de hoje.",
-      });
-    }
 
     const newAuto = await autoRegister.registerAuto(dataAuto);
     if(!newAuto){

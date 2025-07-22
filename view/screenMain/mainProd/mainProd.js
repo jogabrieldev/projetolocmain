@@ -1,4 +1,3 @@
-
 function isTokenExpired(token) {
   try {
     const payload = JSON.parse(atob(token.split(".")[1]));
@@ -9,109 +8,110 @@ function isTokenExpired(token) {
   }
 }
 
-function maskFieldProduto(){
-  $("#prodValor").mask('R$ 000.000.000,00',{ reverse: true,  } )
-   
-  $("#prodPeli").mask('R$ 000.000.000,00',{ reverse: true,  } );
+function maskFieldProduto() {
+  $("#prodValor").mask("R$ 000.000.000,00", { reverse: true });
 
-  $("#prodPebr").mask('R$ 000.000.000,00', { reverse: true,  });
+  $("#prodPeli").mask("R$ 000.000.000,00", { reverse: true });
 
-  $("#editProdValor").mask('R$ 000.000.000,00',{ reverse: true,  } )
- 
-  $("#editProdPeli").mask('R$ 000.000.000,00',{ reverse: true,  } );
+  $("#prodPebr").mask("R$ 000.000.000,00", { reverse: true });
 
-  $("#editProdPebr").mask('R$ 000.000.000,00', { reverse: true,  });
+  $("#editProdValor").mask("R$ 000.000.000,00", { reverse: true });
+
+  $("#editProdPeli").mask("R$ 000.000.000,00", { reverse: true });
+
+  $("#editProdPebr").mask("R$ 000.000.000,00", { reverse: true });
 }
 
-function dateAtualInField(date){
-  const inputDtCad = document.getElementById(date)
-  if(inputDtCad){
-
-  const hoje = new Date()
-  const ano = hoje.getFullYear();
-  const mes = String(hoje.getMonth() + 1).padStart(2, "0");
-  const dia = String(hoje.getDate()).padStart(2, "0");
+function dateAtualInField(date) {
+  const inputDtCad = document.getElementById(date);
+  if (inputDtCad) {
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+    const dia = String(hoje.getDate()).padStart(2, "0");
 
     inputDtCad.value = `${ano}-${mes}-${dia}`;
-    return true; 
-  }else{
-    console.error('Campo data cadastro não encontrado no DOM');
-    return false; 
+    return true;
+  } else {
+    console.error("Campo data cadastro não encontrado no DOM");
+    return false;
   }
- 
 }
 
-
 const socketProduto = io();
-document.addEventListener('DOMContentLoaded' , ()=>{
-    
-  const btnLoadProd = document.querySelector('.btnCadProd')
-  if(btnLoadProd){
-      btnLoadProd.addEventListener('click' , async ()=>{
+document.addEventListener("DOMContentLoaded", () => {
+  const btnLoadProd = document.querySelector(".btnCadProd");
+  if (btnLoadProd) {
+    btnLoadProd.addEventListener("click", async () => {
+      try {
+        const responseProd = await fetch("/produto", {
+          method: "GET",
+        });
 
-         try {
-            const responseProd = await fetch('/produto' , {
-              method:'GET'
-            })
+        if (!responseProd.ok)
+          throw new Error(`Erro HTTP: ${responseProd.status}`);
+        const html = await responseProd.text();
+        const mainContent = document.querySelector("#mainContent");
+        if (mainContent) {
+          mainContent.innerHTML = html;
+          maskFieldProduto();
+          interationSystemProduto();
+          dateAtualInField("prodData");
+          registerNewProduto();
+          searchProduto();
+          deleteProduto();
+          editProduto();
+        } else {
+          console.error("#mainContent não encontrado no DOM");
+        }
 
-            if (!responseProd.ok) throw new Error(`Erro HTTP: ${responseProd.status}`);
-            const html = await responseProd.text();
-            const mainContent = document.querySelector('#mainContent');
-            if (mainContent) {
-              mainContent.innerHTML = html;
-                 maskFieldProduto()
-                interationSystemProduto()
-                dateAtualInField('prodData')
-                 registerNewProduto()
-                 searchProduto()
-                 deleteProduto()
-                 editProduto()
-            }else{
-              console.error('#mainContent não encontrado no DOM')
-            }
+        const containerAppProd = document.querySelector(".containerAppProd");
+        if (containerAppProd) containerAppProd.classList.add("flex");
 
-            const containerAppProd = document.querySelector('.containerAppProd');
-            if (containerAppProd) containerAppProd.classList.add('flex') ;
-      
-            const sectionsToHide = [
-              '.containerAppForn', '.containerAppFabri', '.containerAppTipoProd',
-              '.containerAppDriver', '.containerAppAutomo', '.containerAppBens',
-              '.containerAppClient'
-            ];
-            sectionsToHide.forEach((selector) => {
-              const element = document.querySelector(selector);
-              if (element) element.style.display = 'none';
-            });
-      
-            const  containerRegisterProd = document.querySelector('.formRegisterProd');
-            const btnMainPageProd = document.querySelector('.btnMainPageProd');
-            const listingProd = document.querySelector('.listingProd');
-            const editFormProd = document.querySelector('.formEditProd');
-            const informative = document.querySelector('.information');
-      
-            if (containerRegisterProd) containerRegisterProd.style.display = 'none';
-            if (btnMainPageProd) btnMainPageProd.style.display = 'flex';
-            if (listingProd)listingProd.style.display = 'flex';
-            if (editFormProd ) editFormProd.style.display = 'none';
-            if (informative) {
-              informative.style.display = 'block';
-              informative.textContent = 'SEÇÃO PRODUTO';
-            }
-            
-            await fetchListProdutos();
-            await loadSelectOptions("/api/codetipoprod", "prodTipo", "tiprcode");
-         } catch (error) {
-          Toastify({
-            text: "Erro na pagina",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "green",
-          }).showToast();
-           console.error("btnLoadProd não encontrado no DOM")
-         }
-      })
+        const sectionsToHide = [
+          ".containerAppForn",
+          ".containerAppFabri",
+          ".containerAppTipoProd",
+          ".containerAppDriver",
+          ".containerAppAutomo",
+          ".containerAppBens",
+          ".containerAppClient",
+        ];
+        sectionsToHide.forEach((selector) => {
+          const element = document.querySelector(selector);
+          if (element) element.style.display = "none";
+        });
+
+        const containerRegisterProd =
+          document.querySelector(".formRegisterProd");
+        const btnMainPageProd = document.querySelector(".btnMainPageProd");
+        const listingProd = document.querySelector(".listingProd");
+        const editFormProd = document.querySelector(".formEditProd");
+        const informative = document.querySelector(".information");
+
+        if (containerRegisterProd) containerRegisterProd.style.display = "none";
+        if (btnMainPageProd) btnMainPageProd.style.display = "flex";
+        if (listingProd) listingProd.style.display = "flex";
+        if (editFormProd) editFormProd.style.display = "none";
+        if (informative) {
+          informative.style.display = "block";
+          informative.textContent = "SEÇÃO PRODUTO";
+        }
+
+        await fetchListProdutos();
+        await loadSelectOptions("/api/codetipoprod", "prodTipo", "tiprcode");
+      } catch (error) {
+        Toastify({
+          text: "Erro na pagina",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "green",
+        }).showToast();
+        console.error("btnLoadProd não encontrado no DOM");
+      }
+    });
   }
 
   socketProduto.on("updateRunTimeProduto", (produtos) => {
@@ -119,118 +119,110 @@ document.addEventListener('DOMContentLoaded' , ()=>{
   });
 
   socketProduto.on("updateRunTimeTableProduto", (updatedProduct) => {
-   fetchListProdutos();
+    fetchListProdutos();
   });
-})
+});
 
-function interationSystemProduto(){
+function interationSystemProduto() {
+  const registerProd = document.querySelector(".registerProd");
+  if (registerProd) {
+    registerProd.addEventListener("click", () => {
+      const formRegisterProd = document.querySelector(".formRegisterProd");
+      if (formRegisterProd) {
+        formRegisterProd.classList.remove("hidden");
+        formRegisterProd.classList.add("flex");
+      }
+      const btnMainPageProd = document.querySelector(".btnMainPageProd");
+      if (btnMainPageProd) {
+        btnMainPageProd.classList.remove("flex");
+        btnMainPageProd.classList.add("hidden");
+      }
+      const listingProd = document.querySelector(".listingProd");
+      if (listingProd) {
+        listingProd.classList.remove("flex");
+        listingProd.classList.add("hidden");
+      }
+    });
+  }
 
- const registerProd = document.querySelector(".registerProd");
- if(registerProd){
-   registerProd.addEventListener("click", () => {
+  const btnExitProd = document.getElementById("buttonExitProd");
+  if (btnExitProd) {
+    btnExitProd.addEventListener("click", () => {
+      const containerAppProd = document.querySelector(".containerAppProd");
+      if (containerAppProd) {
+        containerAppProd.classList.remove("flex");
+        containerAppProd.classList.add("hidden");
+      }
 
-    const formRegisterProd = document.querySelector(".formRegisterProd");
-    if(formRegisterProd){
-       formRegisterProd.classList.remove('hidden')
-       formRegisterProd.classList.add('flex')
-    }
-    const btnMainPageProd = document.querySelector(".btnMainPageProd");
-    if(btnMainPageProd){
-      btnMainPageProd.classList.remove('flex')
-      btnMainPageProd.classList.add('hidden')
-    }
-    const listingProd = document.querySelector(".listingProd");
-    if(listingProd){
-       listingProd.classList.remove('flex')
-       listingProd.classList.add('hidden')
-    }
-    
-  });
- }
- 
+      const informative = document.querySelector(".information");
+      if (informative) {
+        informative.style.display = "block";
+        informative.textContent = "Sessão ativa";
+      }
+    });
+  }
 
-const btnExitProd = document.getElementById("buttonExitProd");
-if(btnExitProd){
-  btnExitProd.addEventListener("click", () => {
+  const btnOutInitProd = document.querySelector(".btnOutInitProd");
 
-    const containerAppProd = document.querySelector(".containerAppProd");
-    if(containerAppProd){
-      containerAppProd.classList.remove('flex')
-      containerAppProd.classList.add('hidden')
-    }
+  if (btnOutInitProd) {
+    btnOutInitProd.addEventListener("click", (event) => {
+      event.preventDefault();
 
-    const informative = document.querySelector('.information')
-            if (informative) {
-              informative.style.display = 'block';
-              informative.textContent = 'Sessão ativa';
-            }
-   
-  });
+      const btnMainPageProd = document.querySelector(".btnMainPageProd");
+      if (btnMainPageProd) {
+        btnMainPageProd.classList.remove("hidden");
+        btnMainPageProd.classList.add("flex");
+      }
+
+      const listingProd = document.querySelector(".listingProd");
+      if (listingProd) {
+        listingProd.classList.remove("hidden");
+        listingProd.classList.add("flex");
+      }
+
+      const containerFormProd = document.querySelector(".formRegisterProd");
+      if (containerFormProd) {
+        containerFormProd.classList.remove("flex");
+        containerFormProd.classList.add("hidden");
+      }
+    });
+  }
+
+  const btnOutEditForm = document.querySelector(".btnOutInitProdEdit");
+  if (btnOutEditForm) {
+    btnOutEditForm.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      const btnMainPageProd = document.querySelector(".btnMainPageProd");
+      if (btnMainPageProd) {
+        btnMainPageProd.classList.remove("hidden");
+        btnMainPageProd.classList.add("flex");
+      }
+
+      const listingProd = document.querySelector(".listingProd");
+      if (listingProd) {
+        listingProd.classList.remove("hidden");
+        listingProd.classList.add("flex");
+      }
+
+      const containerFormEditProd = document.querySelector(".formEditProd");
+      if (containerFormEditProd) {
+        containerFormEditProd.classList.remove("flex");
+        containerFormEditProd.classList.add("hidden");
+      }
+    });
+  }
 }
 
+function registerNewProduto() {
+  dateAtualInField("prodData");
 
-const btnOutInitProd = document.querySelector(".btnOutInitProd");
+  document
+    .querySelector(".cadProd")
+    .addEventListener("click", async (event) => {
+      event.preventDefault();
 
-if(btnOutInitProd){
-  btnOutInitProd.addEventListener("click", (event) => {
-    event.preventDefault();
-
-    const btnMainPageProd = document.querySelector(".btnMainPageProd");
-    if(btnMainPageProd){
-       btnMainPageProd.classList.remove('hidden')
-       btnMainPageProd.classList.add('flex')
-    }
-
-    const listingProd = document.querySelector(".listingProd");
-    if(listingProd){
-       listingProd.classList.remove('hidden')
-       listingProd.classList.add('flex')
-    }
-
-    const containerFormProd = document.querySelector(".formRegisterProd");
-    if(containerFormProd){
-      containerFormProd.classList.remove('flex')
-      containerFormProd.classList.add('hidden')
-    }
-  });
-}
-
-const btnOutEditForm = document.querySelector(".btnOutInitProdEdit");
-if(btnOutEditForm){
-  btnOutEditForm.addEventListener("click", (event) => {
-    event.preventDefault();
-  
-    const btnMainPageProd = document.querySelector(".btnMainPageProd");
-    if(btnMainPageProd){
-       btnMainPageProd.classList.remove('hidden')
-       btnMainPageProd.classList.add('flex')
-    }
-    
-    const listingProd = document.querySelector(".listingProd");
-    if(listingProd){
-       listingProd.classList.remove('hidden')
-       listingProd.classList.add('flex')
-    }
-    
-  
-    const containerFormEditProd = document.querySelector(".formEditProd");
-    if(containerFormEditProd){
-      containerFormEditProd.classList.remove('flex')
-      containerFormEditProd.classList.add('hidden')
-    }
-   
-  });
-  };
-}
-
-function registerNewProduto(){
-
-  dateAtualInField('prodData')
-
-    document.querySelector(".cadProd").addEventListener("click", async (event) => {
-      event.preventDefault(); 
-
-      const token = localStorage.getItem("token"); 
+      const token = localStorage.getItem("token");
 
       if (!token || isTokenExpired(token)) {
         Toastify({
@@ -264,7 +256,7 @@ function registerNewProduto(){
         prodPebr: document.querySelector("#prodPebr").value.trim(), // Preço Bruto
         prodAtiv: document.querySelector("#prodAtiv").value, // Ativo
       };
-       
+
       if (!isDataValida(formData.prodData)) {
         Toastify({
           text: "Data de Cadastro INVALIDA.",
@@ -276,13 +268,17 @@ function registerNewProduto(){
         }).showToast();
         return;
       }
-    
+
       //  Converte “YYYY-MM-DD” para Date local e zera horas
-      const [y, m, d] = formData.prodData.split('-').map(Number);
-      const dtCd       = new Date(y, m - 1, d);
-      const hoje       = new Date();
-      const hoje0      = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
-    
+      const [y, m, d] = formData.prodData.split("-").map(Number);
+      const dtCd = new Date(y, m - 1, d);
+      const hoje = new Date();
+      const hoje0 = new Date(
+        hoje.getFullYear(),
+        hoje.getMonth(),
+        hoje.getDate()
+      );
+
       //  Regra: não pode ser futura
       if (dtCd.getTime() !== hoje0.getTime()) {
         Toastify({
@@ -296,8 +292,9 @@ function registerNewProduto(){
         return;
       }
 
-    
-      if (!validarPrecoLiquidoMenorOuIgual(formData.prodPeli, formData.prodPebr)) {
+      if (
+        !validarPrecoLiquidoMenorOuIgual(formData.prodPeli, formData.prodPebr)
+      ) {
         Toastify({
           text: "O preço líquido não pode ser maior que o preço bruto.",
           duration: 3000,
@@ -307,7 +304,7 @@ function registerNewProduto(){
           backgroundColor: "orange",
         }).showToast();
         return;
-      } 
+      }
 
       try {
         const response = await fetch("/api/prod/submit", {
@@ -332,16 +329,34 @@ function registerNewProduto(){
           }).showToast();
 
           document.querySelector(".formRegisterProduto").reset();
-          dateAtualInField('prodData')
+          dateAtualInField("prodData");
         } else {
-          Toastify({
-            text: result?.message || "Erro ao cadastrar Cliente.",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: response.status === 409 ? "orange" : "red",
-          }).showToast();
+          // 👇 aqui tratamos erros de validação do express-validator
+          if (result?.errors && Array.isArray(result.errors)) {
+            // junta todas as mensagens em uma string
+            const mensagens = result.errors
+              .map((err) => `• ${err.msg}`)
+              .join("\n");
+
+            Toastify({
+              text: mensagens,
+              duration: 5000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "red",
+            }).showToast();
+          } else {
+            // 👇 caso seja outro tipo de erro
+            Toastify({
+              text: result?.message || "Erro ao cadastrar produto.",
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: response.status === 409 ? "orange" : "red",
+            }).showToast();
+          }
         }
       } catch (error) {
         console.error("Erro ao enviar formulário:", error);
@@ -389,6 +404,7 @@ async function fetchListProdutos() {
     });
 
     const result = await response.json();
+    console.log("resultado", result);
 
     if (!response.ok) {
       Toastify({
@@ -402,7 +418,7 @@ async function fetchListProdutos() {
       return;
     }
 
-    const produtos = result;
+    const produtos = result.produto;
     const produtosListDiv = document.querySelector(".listingProd");
     produtosListDiv.innerHTML = "";
 
@@ -411,7 +427,8 @@ async function fetchListProdutos() {
       wrapper.className = "table-responsive";
 
       const tabela = document.createElement("table");
-      tabela.className = "table table-sm table-hover table-striped table-bordered tableProd";
+      tabela.className =
+        "table table-sm table-hover table-striped table-bordered tableProd";
 
       // Cabeçalho
       const cabecalho = tabela.createTHead();
@@ -434,7 +451,13 @@ async function fetchListProdutos() {
         th.textContent = coluna;
 
         if (["Selecionar", "Código", "Unidade", "Ativo"].includes(coluna)) {
-          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+          th.classList.add(
+            "text-center",
+            "px-2",
+            "py-1",
+            "align-middle",
+            "wh-nowrap"
+          );
         } else {
           th.classList.add("px-3", "py-2", "align-middle");
         }
@@ -489,7 +512,8 @@ async function fetchListProdutos() {
       wrapper.appendChild(tabela);
       produtosListDiv.appendChild(wrapper);
     } else {
-      produtosListDiv.innerHTML = "<p class='text-light'>Nenhum produto cadastrado.</p>";
+      produtosListDiv.innerHTML =
+        "<p class='text-light'>Nenhum produto cadastrado.</p>";
     }
   } catch (error) {
     console.error("Erro ao carregar produtos:", error);
@@ -508,103 +532,99 @@ async function fetchListProdutos() {
 
 // pesquisar por produtos
 async function searchProduto() {
-    
-  const btnProdutoSearch = document.getElementById('searchProd');
-  const popUpSearch = document.querySelector('.popUpsearchIdProd');
+  const btnProdutoSearch = document.getElementById("searchProd");
+  const popUpSearch = document.querySelector(".popUpsearchIdProd");
   const produtoListDiv = document.querySelector(".listingProd");
-  const backdrop = document.querySelector('.popupBackDrop')
-  const btnOutPageSearch = document.querySelector('.outPageSearchProd')
+  const backdrop = document.querySelector(".popupBackDrop");
+  const btnOutPageSearch = document.querySelector(".outPageSearchProd");
 
   if (btnProdutoSearch && popUpSearch) {
-    btnProdutoSearch.addEventListener('click', () => {
-      popUpSearch.style.display = 'flex';
-      backdrop.style.display = 'block'
+    btnProdutoSearch.addEventListener("click", () => {
+      popUpSearch.style.display = "flex";
+      backdrop.style.display = "block";
     });
   }
 
-  if(popUpSearch || btnOutPageSearch){
-     btnOutPageSearch.addEventListener('click' , ()=>{
-       popUpSearch.style.display = 'none'
-       backdrop.style.display = 'none'
-     })
+  if (popUpSearch || btnOutPageSearch) {
+    btnOutPageSearch.addEventListener("click", () => {
+      popUpSearch.style.display = "none";
+      backdrop.style.display = "none";
+    });
   }
- 
-  let btnClearFilter = document.getElementById('btnClearFilter');
+
+  let btnClearFilter = document.getElementById("btnClearFilter");
   if (!btnClearFilter) {
-    btnClearFilter = document.createElement('button');
-    btnClearFilter.id = 'btnClearFilter';
-    btnClearFilter.textContent = 'Limpar filtro';
-    btnClearFilter.className = 'btn btn-secondary w-25 aling align-items: center;';
-    btnClearFilter.style.display = 'none'; // fica oculto até uma busca ser feita
+    btnClearFilter = document.createElement("button");
+    btnClearFilter.id = "btnClearFilter";
+    btnClearFilter.textContent = "Limpar filtro";
+    btnClearFilter.className =
+      "btn btn-secondary w-25 aling align-items: center;";
+    btnClearFilter.style.display = "none"; // fica oculto até uma busca ser feita
     produtoListDiv.parentNode.insertBefore(btnClearFilter, produtoListDiv);
 
-    btnClearFilter.addEventListener('click', () => {
-     
-      btnClearFilter.style.display = 'none';
-      
-      document.getElementById('codeProd').value = '';
+    btnClearFilter.addEventListener("click", () => {
+      btnClearFilter.style.display = "none";
+
+      document.getElementById("codeProd").value = "";
       fetchListProdutos();
     });
   }
 
- const btnSearchProduto = document.querySelector('.submitSearchProd');
+  const btnSearchProduto = document.querySelector(".submitSearchProd");
   if (btnSearchProduto) {
-    btnSearchProduto.addEventListener('click', async () => {
+    btnSearchProduto.addEventListener("click", async () => {
+      const codeInput = document.getElementById("codeProd").value.trim();
 
-      const codeInput = document.getElementById('codeProd').value.trim();
-
-       if (!codeInput) {
-       Toastify({
-        text: "Preencha com o codigo para fazer a pesquisa!",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-       }).showToast();
-      return;
-    }
-
-      const params = new URLSearchParams();
-      if (codeInput) params.append('prodCode', codeInput);
-      try {
-        const response = await fetch(`/api/prod/search?${params}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        const data = await response.json();
-
-        if (response.ok && data.produto?.length > 0) {
-         
-          Toastify({
-          text: "O Produto foi encontrado com sucesso!.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "green",
-          }).showToast();
-          // Exibe botão limpar filtro
-          btnClearFilter.style.display = 'inline-block';
-          // Atualiza a tabela com os bens filtrados
-          renderProdutoTable(data.produto);
-
-          // Fecha o pop-up após a busca (opcional)
-          if (popUpSearch) popUpSearch.style.display = 'none';
-          if(backdrop) backdrop.style.display = 'none'
-
-        } else {
-          Toastify({
-          text: data.message || "Nenhum Bem encontrado nessa pesquisa",
+      if (!codeInput) {
+        Toastify({
+          text: "Preencha com o codigo para fazer a pesquisa!",
           duration: 3000,
           close: true,
           gravity: "top",
           position: "center",
           backgroundColor: "red",
+        }).showToast();
+        return;
+      }
+
+      const params = new URLSearchParams();
+      if (codeInput) params.append("prodCode", codeInput);
+      try {
+        const response = await fetch(`/api/prod/search?${params}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.produto?.length > 0) {
+          Toastify({
+            text: "O Produto foi encontrado com sucesso!.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "green",
+          }).showToast();
+          // Exibe botão limpar filtro
+          btnClearFilter.style.display = "inline-block";
+          // Atualiza a tabela com os bens filtrados
+          renderProdutoTable(data.produto);
+
+          // Fecha o pop-up após a busca (opcional)
+          if (popUpSearch) popUpSearch.style.display = "none";
+          if (backdrop) backdrop.style.display = "none";
+        } else {
+          Toastify({
+            text: data.message || "Nenhum Bem encontrado nessa pesquisa",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
           }).showToast();
         }
       } catch (error) {
@@ -616,11 +636,11 @@ async function searchProduto() {
           gravity: "top",
           position: "center",
           backgroundColor: "red",
-          }).showToast();
+        }).showToast();
       }
     });
-  };
-};
+  }
+}
 
 // renderizar tabela
 function renderProdutoTable(produtos) {
@@ -628,7 +648,8 @@ function renderProdutoTable(produtos) {
   produtosListDiv.innerHTML = "";
 
   if (produtos.length === 0) {
-    produtosListDiv.innerHTML = "<p class='text-light'>Nenhum produto cadastrado.</p>";
+    produtosListDiv.innerHTML =
+      "<p class='text-light'>Nenhum produto cadastrado.</p>";
     return;
   }
 
@@ -636,7 +657,8 @@ function renderProdutoTable(produtos) {
   wrapper.className = "table-responsive";
 
   const tabela = document.createElement("table");
-  tabela.className = "table table-sm table-hover table-striped table-bordered tableProduto";
+  tabela.className =
+    "table table-sm table-hover table-striped table-bordered tableProduto";
 
   const colunas = [
     "Selecionar",
@@ -659,7 +681,13 @@ function renderProdutoTable(produtos) {
     th.textContent = coluna;
 
     if (["Selecionar", "Código", "Unidade", "Ativo"].includes(coluna)) {
-      th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+      th.classList.add(
+        "text-center",
+        "px-2",
+        "py-1",
+        "align-middle",
+        "wh-nowrap"
+      );
     } else {
       th.classList.add("px-3", "py-2", "align-middle");
     }
@@ -714,265 +742,42 @@ function renderProdutoTable(produtos) {
 
   wrapper.appendChild(tabela);
   produtosListDiv.appendChild(wrapper);
-};
+}
 
 // deletar produto
-function deleteProduto(){
-
+function deleteProduto() {
   const btnDeleteProd = document.querySelector(".buttonDeleteProd");
-    btnDeleteProd.addEventListener("click", async () => {
-
+  btnDeleteProd.addEventListener("click", async () => {
     const selectedCheckbox = document.querySelector(
-    'input[name="selectProduto"]:checked'
-  );
-  if (!selectedCheckbox) {
-    Toastify({
-      text: "Selecione um Produto para excluir",
-      duration: 2000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
-  }
-
-  const produtoSelecionado = JSON.parse(selectedCheckbox.dataset.produto);
-  const produtoId = produtoSelecionado.prodcode;
-
-  const confirmacao = confirm(
-    `Tem certeza de que deseja excluir o produto com código ${produtoId}?`
-  );
-  if (!confirmacao) {
-    return;
-  }
-
-  await deleteProd(produtoId, selectedCheckbox.closest("tr"));
-});
-
-async function deleteProd(id, rowProd) {
-  const token = localStorage.getItem("token"); 
-
-  if (!token || isTokenExpired(token)) {
-    Toastify({
-      text: "Sessão expirada. Faça login novamente.",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-
-    localStorage.removeItem("token");
-    setTimeout(() => {
-      window.location.href = "/index.html";
-    }, 2000);
-    return;
-  }
-
-  try {
-    const response = await fetch(`/api/deleteprod/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await response.json();
-
-    if (response.ok) {
+      'input[name="selectProduto"]:checked'
+    );
+    if (!selectedCheckbox) {
       Toastify({
-        text: "O produto foi excluido com sucesso",
-        duration: 2000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "green",
-      }).showToast();
-
-      rowProd.remove();
-    } else {
-      console.log("Erro para excluir:", data);
-      Toastify({
-        text: "Erro na exclusão do produto",
+        text: "Selecione um Produto para excluir",
         duration: 2000,
         close: true,
         gravity: "top",
         position: "center",
         backgroundColor: "red",
       }).showToast();
-    }
-  } catch (error) {
-    console.error("Erro ao excluir produto:", error);
-    Toastify({
-      text: "Erro ao excluir produto. Tente novamente.",
-      duration: 2000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-  }
- }
-}
-// EDITAR PRODUTO
-
-function editProduto(){
-
-  const editProdButton = document.querySelector(".buttonEditProd");
-  editProdButton.addEventListener("click", (event) => {
-  loadSelectOptions("/api/codetipoprod", "editProdTipo", "tiprcode");
-
-  const selectedCheckbox = document.querySelector(
-    'input[name="selectProduto"]:checked'
-  );
-
-  if (!selectedCheckbox) {
-    Toastify({
-      text: "Selecione um Produto para editar",
-      duration: 2000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return;
-  }
-
-  const btnMainPageProd = document.querySelector(".btnMainPageProd");
-  if(btnMainPageProd ){
-    btnMainPageProd.classList.remove('flex')
-    btnMainPageProd .classList.add('hidden')
-  }
-
-  const listProd = document.querySelector(".listingProd");
-  if(listProd){
-    listProd.classList.remove('flex')
-    listProd.classList.add('hidden')
-  }
-
-const containerEditForm = document.querySelector('.formEditProd')
-   if(containerEditForm){
-      containerEditForm.classList.remove('hidden')
-      containerEditForm.classList.add('flex')
-   }
-
-  const produtoData = selectedCheckbox.dataset.produto;
-  if (!produtoData) {
-    console.error("O atributo data-bem está vazio ou indefinido.");
-    return;
-  }
-
-  try {
-    const produtoSelecionado = JSON.parse(produtoData);
-
-
-    const campos = [
-      { id: "editProdCode", valor: produtoSelecionado.prodcode },
-      { id: "editProdDesc", valor: produtoSelecionado.proddesc },
-      { id: "editProdTipo", valor: produtoSelecionado.prodtipo },
-      { id: "editProdUni", valor: produtoSelecionado.produnid },
-      { id: "editProdData", valor: produtoSelecionado.proddtuc },
-      { id: "editProdValor", valor: produtoSelecionado.prodvluc },
-      { id: "editProdPeli", valor: produtoSelecionado.prodpeli },
-      { id: "editProdPebr", valor: produtoSelecionado.prodpebr },
-      { id: "editProdAtiv", valor: produtoSelecionado.prodativ },
-    ];
-
-
-    campos.forEach(({ id, valor }) => {
-      const elemento = document.getElementById(id);
-      if (elemento) {
-        if (elemento.type === "date" && valor) {
-          
-          const dataFormatada = new Date(valor).toISOString().split("T")[0];
-          elemento.value = dataFormatada;
-
-          if (id === "editProdTipo") {
-            const hiddenInput = document.getElementById("editProdTipoHidden");
-            if (hiddenInput) {
-              hiddenInput.value = valorFormatado;
-            }
-          }
-        } else {
-          elemento.value = valor || "";
-        }
-      } else {
-        console.warn(`Elemento com ID '${id}' não encontrado.`);
-      }
-    });
-
-
-    const spaceEditprod = document.querySelector(".formEditProd");
-    const btnMainPageProd = document.querySelector(".btnMainPageProd");
-    const listingProd = document.querySelector(".listingProd");
-
-    if (spaceEditprod) {
-      spaceEditprod.style.display = "flex";
-    } else {
-      console.error("O formulário de edição não foi encontrado.");
+      return;
     }
 
-    if (listingProd) {
-      listingProd.style.display = "none";
-    } else {
-      console.error("A lista de produto não foi encontrada.");
-    }
+    const produtoSelecionado = JSON.parse(selectedCheckbox.dataset.produto);
+    const produtoId = produtoSelecionado.prodcode;
 
-    if (btnMainPageProd) {
-      btnMainPageProd.style.display = "none";
-    }
-  } catch (error) {
-    console.error("Erro ao fazer parse de data-bem:", error);
-  }
-});
-
-async function editAndUpdateOfProduct() {
-  const formEditProd = document.querySelector(".editProd");
-
-  formEditProd.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData.entries());
-
-    const selectedCheckbox = document.querySelector(
-      'input[name="selectProduto"]:checked'
+    const confirmacao = confirm(
+      `Tem certeza de que deseja excluir o produto com código ${produtoId}?`
     );
-
-    if (!selectedCheckbox) {
-      console.error("Nenhum checkbox foi selecionado.");
+    if (!confirmacao) {
       return;
     }
 
-    const produtoId = selectedCheckbox.dataset.produto;
+    await deleteProd(produtoId, selectedCheckbox.closest("tr"));
+  });
 
-    if (!produtoId) {
-      console.error("O atributo data-bem está vazio ou inválido.");
-      return;
-    }
-
-    let prodIdParsed;
-    try {
-      prodIdParsed = JSON.parse(produtoId).prodcode;
-    } catch (error) {
-      console.error("Erro ao fazer parse de produtoId:", error);
-      return;
-    }
-
-    const updateProduct = {
-      prodcode: document.getElementById("editProdCode").value,
-      proddesc: document.getElementById("editProdDesc").value,
-      prodtipo: document.getElementById("editProdTipo").value,
-      produnid: document.getElementById("editProdUni").value,
-      proddtuc: document.getElementById("editProdData").value || null,
-      prodvluc: document.getElementById("editProdValor").value,
-      prodpeli: document.getElementById("editProdPeli").value,
-      prodpebr: document.getElementById("editProdPebr").value,
-      prodativ: document.getElementById("editProdAtiv").value,
-    };
-
-    const token = localStorage.getItem("token"); // Pega o token armazenado no login
+  async function deleteProd(id, rowProd) {
+    const token = localStorage.getItem("token");
 
     if (!token || isTokenExpired(token)) {
       Toastify({
@@ -992,50 +797,261 @@ async function editAndUpdateOfProduct() {
     }
 
     try {
-
-      const confirmedEdition = confirm(
-        `Tem certeza de que deseja ATUALIZAR os dados do produto?`
-        );
-          if (!confirmedEdition) return;
-      const response = await fetch(`/api/updateprod/${prodIdParsed}`, {
-        method: "PUT",
+      const response = await fetch(`/api/deleteprod/${id}`, {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(updateProduct),
       });
-
+      const data = await response.json();
 
       if (response.ok) {
-
         Toastify({
-          text: `Produto '${prodIdParsed}' Atualizado com sucesso!!`,
-          duration: 3000,
+          text: "O produto foi excluido com sucesso",
+          duration: 2000,
           close: true,
           gravity: "top",
           position: "center",
           backgroundColor: "green",
         }).showToast();
 
-        formEditProd.reset();
+        rowProd.remove();
       } else {
+        console.log("Erro para excluir:", data);
         Toastify({
-          text: "Erro a atualizar produto",
+          text: "Erro na exclusão do produto",
+          duration: 2000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+      }
+    } catch (error) {
+      console.error("Erro ao excluir produto:", error);
+      Toastify({
+        text: "Erro ao excluir produto. Tente novamente.",
+        duration: 2000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+    }
+  }
+}
+// EDITAR PRODUTO
+
+function editProduto() {
+  const editProdButton = document.querySelector(".buttonEditProd");
+  editProdButton.addEventListener("click", (event) => {
+    loadSelectOptions("/api/codetipoprod", "editProdTipo", "tiprcode");
+
+    const selectedCheckbox = document.querySelector(
+      'input[name="selectProduto"]:checked'
+    );
+
+    if (!selectedCheckbox) {
+      Toastify({
+        text: "Selecione um Produto para editar",
+        duration: 2000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+      return;
+    }
+
+    const btnMainPageProd = document.querySelector(".btnMainPageProd");
+    if (btnMainPageProd) {
+      btnMainPageProd.classList.remove("flex");
+      btnMainPageProd.classList.add("hidden");
+    }
+
+    const listProd = document.querySelector(".listingProd");
+    if (listProd) {
+      listProd.classList.remove("flex");
+      listProd.classList.add("hidden");
+    }
+
+    const containerEditForm = document.querySelector(".formEditProd");
+    if (containerEditForm) {
+      containerEditForm.classList.remove("hidden");
+      containerEditForm.classList.add("flex");
+    }
+
+    const produtoData = selectedCheckbox.dataset.produto;
+    if (!produtoData) {
+      console.error("O atributo data-bem está vazio ou indefinido.");
+      return;
+    }
+
+    try {
+      const produtoSelecionado = JSON.parse(produtoData);
+
+      const campos = [
+        { id: "editProdCode", valor: produtoSelecionado.prodcode },
+        { id: "editProdDesc", valor: produtoSelecionado.proddesc },
+        { id: "editProdTipo", valor: produtoSelecionado.prodtipo },
+        { id: "editProdUni", valor: produtoSelecionado.produnid },
+        { id: "editProdData", valor: produtoSelecionado.proddtuc },
+        { id: "editProdValor", valor: produtoSelecionado.prodvluc },
+        { id: "editProdPeli", valor: produtoSelecionado.prodpeli },
+        { id: "editProdPebr", valor: produtoSelecionado.prodpebr },
+        { id: "editProdAtiv", valor: produtoSelecionado.prodativ },
+      ];
+
+      campos.forEach(({ id, valor }) => {
+        const elemento = document.getElementById(id);
+        if (elemento) {
+          if (elemento.type === "date" && valor) {
+            const dataFormatada = new Date(valor).toISOString().split("T")[0];
+            elemento.value = dataFormatada;
+
+            if (id === "editProdTipo") {
+              const hiddenInput = document.getElementById("editProdTipoHidden");
+              if (hiddenInput) {
+                hiddenInput.value = valorFormatado;
+              }
+            }
+          } else {
+            elemento.value = valor || "";
+          }
+        } else {
+          console.warn(`Elemento com ID '${id}' não encontrado.`);
+        }
+      });
+
+      const spaceEditprod = document.querySelector(".formEditProd");
+      const btnMainPageProd = document.querySelector(".btnMainPageProd");
+      const listingProd = document.querySelector(".listingProd");
+
+      if (spaceEditprod) {
+        spaceEditprod.style.display = "flex";
+      } else {
+        console.error("O formulário de edição não foi encontrado.");
+      }
+
+      if (listingProd) {
+        listingProd.style.display = "none";
+      } else {
+        console.error("A lista de produto não foi encontrada.");
+      }
+
+      if (btnMainPageProd) {
+        btnMainPageProd.style.display = "none";
+      }
+    } catch (error) {
+      console.error("Erro ao fazer parse de data-bem:", error);
+    }
+  });
+
+  async function editAndUpdateOfProduct() {
+    const formEditProd = document.querySelector(".editProd");
+
+    formEditProd.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+      const data = Object.fromEntries(formData.entries());
+
+      const selectedCheckbox = document.querySelector(
+        'input[name="selectProduto"]:checked'
+      );
+
+      if (!selectedCheckbox) {
+        console.error("Nenhum checkbox foi selecionado.");
+        return;
+      }
+
+      const produtoId = selectedCheckbox.dataset.produto;
+
+      if (!produtoId) {
+        console.error("O atributo data-bem está vazio ou inválido.");
+        return;
+      }
+
+      let prodIdParsed;
+      try {
+        prodIdParsed = JSON.parse(produtoId).prodcode;
+      } catch (error) {
+        console.error("Erro ao fazer parse de produtoId:", error);
+        return;
+      }
+
+      const updateProduct = {
+        prodcode: document.getElementById("editProdCode").value,
+        proddesc: document.getElementById("editProdDesc").value,
+        prodtipo: document.getElementById("editProdTipo").value,
+        produnid: document.getElementById("editProdUni").value,
+        proddtuc: document.getElementById("editProdData").value || null,
+        prodvluc: document.getElementById("editProdValor").value,
+        prodpeli: document.getElementById("editProdPeli").value,
+        prodpebr: document.getElementById("editProdPebr").value,
+        prodativ: document.getElementById("editProdAtiv").value,
+      };
+
+      const token = localStorage.getItem("token"); // Pega o token armazenado no login
+
+      if (!token || isTokenExpired(token)) {
+        Toastify({
+          text: "Sessão expirada. Faça login novamente.",
           duration: 3000,
           close: true,
           gravity: "top",
           position: "center",
           backgroundColor: "red",
         }).showToast();
-        console.error("Erro ao atualizar produto:", await response.text());
+
+        localStorage.removeItem("token");
+        setTimeout(() => {
+          window.location.href = "/index.html";
+        }, 2000);
+        return;
       }
-    } catch (error) {
-      console.error("Erro na requisição:", error);
-    }
-  });
-}
- editAndUpdateOfProduct();
-}
 
+      try {
+        const confirmedEdition = confirm(
+          `Tem certeza de que deseja ATUALIZAR os dados do produto?`
+        );
+        if (!confirmedEdition) return;
+        const response = await fetch(`/api/updateprod/${prodIdParsed}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(updateProduct),
+        });
 
+        if (response.ok) {
+          Toastify({
+            text: `Produto '${prodIdParsed}' Atualizado com sucesso!!`,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "green",
+          }).showToast();
+
+          formEditProd.reset();
+        } else {
+          Toastify({
+            text: "Erro a atualizar produto",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
+          console.error("Erro ao atualizar produto:", await response.text());
+        }
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+      }
+    });
+  }
+  editAndUpdateOfProduct();
+}

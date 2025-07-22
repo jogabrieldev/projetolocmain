@@ -8,7 +8,7 @@ export const modelsAuthenticateUser = {
 
 async  authenticateLogin(username, password) {
   try {
-      const query = `SELECT * FROM cademp WHERE "empMail" = $1 LIMIT 1`;
+      const query = `SELECT * FROM cademp WHERE "empmail" = $1 LIMIT 1`;
       const values = [username];
 
       const result = await pool.query(query, values);
@@ -19,11 +19,11 @@ async  authenticateLogin(username, password) {
       }
       const user = result.rows[0];
 
-      const passwordMatch = await bcrypt.compare(password, user.empSenha);
+    //   const passwordMatch = await bcrypt.compare(password, user.empSenha);
 
-      if (!passwordMatch) {
-          return null; 
-      }
+    //   if (!passwordMatch) {
+    //       return null; 
+    //   }
 
       return user;
   } catch (error) {

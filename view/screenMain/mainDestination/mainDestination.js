@@ -278,14 +278,32 @@ function registerDestination(){
             }).showToast();
             document.querySelector("#formRegisterDestination").reset()
          }else {
-          Toastify({
-            text: result?.message || "Erro ao cadastrar Cliente.",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: result.status === 409 ? "orange" : "red",
-          }).showToast();
+          // 👇 aqui tratamos erros de validação do express-validator
+          if (result?.errors && Array.isArray(result.errors)) {
+            // junta todas as mensagens em uma string
+            const mensagens = result.errors
+              .map((err) => `• ${err.msg}`)
+              .join("\n");
+
+            Toastify({
+              text: mensagens,
+              duration: 5000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "red",
+            }).showToast();
+          } else {
+            // 👇 caso seja outro tipo de erro
+            Toastify({
+              text: result?.message || "Erro ao cadastrar destino.",
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: response.status === 409 ? "orange" : "red",
+            }).showToast();
+          }
         }
 
            } catch (error) {
@@ -630,9 +648,6 @@ function deleteDestination() {
         const form = document.getElementById("formEditDestination");
         form.dataset.destinationId = destinationSelect.dereid;
 
-        // Exibir formulário de edição
-     
-        
       } catch (error) {
          console.error('Erro ao carregar destino selecionado')
         Toastify({
@@ -651,9 +666,8 @@ function deleteDestination() {
 
 
 async function editAndUpdateDestination() {
+
   const form = document.getElementById("formEditDestination");
-
-
     const id = form.dataset.destinationId;
 
     if (!id) {
@@ -667,7 +681,7 @@ async function editAndUpdateDestination() {
       cepDest: document.getElementById("editCepDest").value,
       cidaDest: document.getElementById("editCidaDest").value,
       ruaDest: document.getElementById("editRuaDest").value,
-     bairDest: document.getElementById("editBairDest").value,
+      bairDest: document.getElementById("editBairDest").value,
       estdDest: document.getElementById("editEstdDest").value,
       ativDest: document.getElementById("editAtivDest").value === "Sim",
        tipoDest: document.getElementById("editTipoDest").value

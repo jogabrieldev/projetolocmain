@@ -1,5 +1,3 @@
-
-
 function isTokenExpired(token) {
   try {
     const payload = JSON.parse(atob(token.split(".")[1]));
@@ -11,11 +9,10 @@ function isTokenExpired(token) {
 }
 
 function maskFieldClient() {
-   
   $("#clieCpf").mask("000.000.000-00");
   $("#searchCpf").mask("000.000.000-00");
   $("#clieCnpj").mask("00.000.000/0000-00");
-   $("#searchCnpj").mask("00.000.000/0000-00");
+  $("#searchCnpj").mask("00.000.000/0000-00");
   $("#clieCelu").mask("(00) 00000-0000");
   $("#clieCep").mask("00000-000");
   $("#editCliecpfCnpj").mask("000.000.000-00");
@@ -26,7 +23,6 @@ function maskFieldClient() {
   $("#cpfClientLoc").mask("000.000.000-00");
 }
 
-
 const formatDate = (isoDate) => {
   if (!isoDate) return "";
   const dateObj = new Date(isoDate);
@@ -36,36 +32,36 @@ const formatDate = (isoDate) => {
   return `${year}/${month}/${day}`;
 };
 
-function dateAtualInField(date){
-  const inputDtCad = document.getElementById(date)
-  if(inputDtCad){
-
-  const hoje = new Date()
-  const ano = hoje.getFullYear();
-  const mes = String(hoje.getMonth() + 1).padStart(2, "0");
-  const dia = String(hoje.getDate()).padStart(2, "0");
+function dateAtualInField(date) {
+  const inputDtCad = document.getElementById(date);
+  if (inputDtCad) {
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+    const dia = String(hoje.getDate()).padStart(2, "0");
 
     inputDtCad.value = `${ano}-${mes}-${dia}`;
-    return true; 
-  }else{
-    console.error('Campo #fornDtcd não encontrado no DOM');
+    return true;
+  } else {
+    console.error("Campo #fornDtcd não encontrado no DOM");
     return false; // indica falha
   }
- 
 }
 
 function initTipoClienteHandler() {
-  const tipoInput = document.getElementById('clieTiCli');
+  const tipoInput = document.getElementById("clieTiCli");
   const btnAddFili = document.querySelector(".btnAddFili");
-  const popUpFilial = document.querySelector('.popUpFilial');
-  const buttonExitPopUpFilial = document.querySelector('.outPageRegisterClientFili');
+  const popUpFilial = document.querySelector(".popUpFilial");
+  const buttonExitPopUpFilial = document.querySelector(
+    ".outPageRegisterClientFili"
+  );
 
   if (!tipoInput || !btnAddFili) return;
 
-  tipoInput.addEventListener('change', function () {
+  tipoInput.addEventListener("change", function () {
     const tipoCliente = this.value;
-    const cpfField = document.getElementById('clieCpf');
-    const cnpjField = document.getElementById('clieCnpj');
+    const cpfField = document.getElementById("clieCpf");
+    const cnpjField = document.getElementById("clieCnpj");
 
     if (!cpfField || !cnpjField) return;
 
@@ -73,52 +69,66 @@ function initTipoClienteHandler() {
       cpfField.value = "";
       cpfField.readOnly = true;
       cnpjField.readOnly = false;
-      btnAddFili.classList.remove('hidden');
-      btnAddFili.classList.add('flex');
+      btnAddFili.classList.remove("hidden");
+      btnAddFili.classList.add("flex");
     } else if (tipoCliente === "Pessoa Física") {
       cnpjField.value = "";
       cnpjField.readOnly = true;
       cpfField.readOnly = false;
-      btnAddFili.classList.add('hidden');
-      btnAddFili.classList.remove('flex');
+      btnAddFili.classList.add("hidden");
+      btnAddFili.classList.remove("flex");
     } else {
       cpfField.readOnly = false;
       cnpjField.readOnly = false;
-      btnAddFili.classList.add('hidden');
-      btnAddFili.classList.remove('flex');
+      btnAddFili.classList.add("hidden");
+      btnAddFili.classList.remove("flex");
     }
   });
 
   // Abrir o pop-up ao clicar no botão de adicionar filial
-  btnAddFili.addEventListener('click', () => {
+  btnAddFili.addEventListener("click", () => {
     if (popUpFilial) {
-      popUpFilial.style.display = 'flex';
+      popUpFilial.style.display = "flex";
     }
   });
 
   // Fechar o pop-up ao clicar no botão de saída
   if (buttonExitPopUpFilial) {
-    buttonExitPopUpFilial.addEventListener('click', () => {
+    buttonExitPopUpFilial.addEventListener("click", () => {
       if (popUpFilial) {
-        popUpFilial.style.display = 'none';
+        popUpFilial.style.display = "none";
       }
     });
   }
 }
 
 function getFilialData() {
-  const nomeFili = document.getElementById('nameFili').value.trim();
-  const cnpjFili = document.getElementById('cnpjFili').value.trim();
-  const cepFili = document.getElementById('cepFili').value.trim();
-  const ruaFili = document.getElementById('ruaFili').value.trim();
-  const cidaFili = document.getElementById('cidaFili').value.trim();
-  const bairFili = document.getElementById('bairFili')?.value.trim() || '';
+  const nomeFili = document.getElementById("nameFili").value.trim();
+  const cnpjFili = document.getElementById("cnpjFili").value.trim();
+  const cepFili = document.getElementById("cepFili").value.trim();
+  const ruaFili = document.getElementById("ruaFili").value.trim();
+  const cidaFili = document.getElementById("cidaFili").value.trim();
+  const bairFili = document.getElementById("bairFili")?.value.trim() || "";
 
-  if (!nomeFili && !cnpjFili && !cepFili && !ruaFili && !cidaFili && !bairFili) {
+  if (
+    !nomeFili &&
+    !cnpjFili &&
+    !cepFili &&
+    !ruaFili &&
+    !cidaFili &&
+    !bairFili
+  ) {
     return null; // Nenhuma filial foi preenchida
   }
 
-  if (!nomeFili || !cnpjFili || !cepFili || !ruaFili || !cidaFili || !bairFili) {
+  if (
+    !nomeFili ||
+    !cnpjFili ||
+    !cepFili ||
+    !ruaFili ||
+    !cidaFili ||
+    !bairFili
+  ) {
     Toastify({
       text: "Faltam informações da filial!",
       duration: 3000,
@@ -133,7 +143,7 @@ function getFilialData() {
     cepFili,
     ruaFili,
     cidaFili,
-    bairFili
+    bairFili,
   };
 }
 
@@ -154,15 +164,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (mainContent) {
           mainContent.innerHTML = html;
           maskFieldClient();
-          initTipoClienteHandler()
+          initTipoClienteHandler();
           interationSystemClient();
           searchClient();
           registerNewClient();
-          dateAtualInField('dtCad')
+          dateAtualInField("dtCad");
           deleteClient();
           editarCliente();
-          
-
         } else {
           console.error("#mainContent não encontrado no DOM");
           return;
@@ -321,20 +329,19 @@ async function interationSystemClient() {
     return;
   }
 
-  const btnAddFilial = document.querySelector('.btnAddFili')
-  if(btnAddFilial){
-     btnAddFilial.addEventListener('click' , ()=>{
-         const popUpBranch = document.querySelector('.popUpFilial')
-         if(popUpBranch){
-             popUpBranch.style.display = 'flex'
-         }  
-     }); 
-  };
-};
+  const btnAddFilial = document.querySelector(".btnAddFili");
+  if (btnAddFilial) {
+    btnAddFilial.addEventListener("click", () => {
+      const popUpBranch = document.querySelector(".popUpFilial");
+      if (popUpBranch) {
+        popUpBranch.style.display = "flex";
+      }
+    });
+  }
+}
 
 async function registerNewClient() {
-
-  dateAtualInField('dtCad')
+  dateAtualInField("dtCad");
   document
     .querySelector(".btnRegisterClient")
     .addEventListener("click", async (event) => {
@@ -417,29 +424,41 @@ async function registerNewClient() {
       }
 
       // Captura os valores do formulário após o preenchimento
-      const dataFilial =getFilialData()
+      const dataFilial = getFilialData();
       const formData = {
         clieCode: document.querySelector("#clieCode").value.trim(),
         clieName: document.querySelector("#clieName").value.trim(),
-        clieTpCl: document.querySelector('#clieTiCli').value.trim(),
-        clieCpf: document.querySelector("#clieCpf").value.trim().replace(/\D/g, ''),    // <-- Limpa CPF
-        clieCnpj: document.querySelector("#clieCnpj").value.trim().replace(/\D/g, ''),
-        dtCad:document.querySelector('#dtCad').value,
+        clieTpCl: document.querySelector("#clieTiCli").value.trim(),
+        clieCpf: document
+          .querySelector("#clieCpf")
+          .value.trim()
+          .replace(/\D/g, ""), // <-- Limpa CPF
+        clieCnpj: document
+          .querySelector("#clieCnpj")
+          .value.trim()
+          .replace(/\D/g, ""),
+        dtCad: document.querySelector("#dtCad").value,
         dtNasc: document.querySelector("#dtNasc").value,
-        clieCelu: document.querySelector("#clieCelu").value.trim().replace(/\D/g, ''),
+        clieCelu: document
+          .querySelector("#clieCelu")
+          .value.trim()
+          .replace(/\D/g, ""),
         clieCity: document.querySelector("#clieCity").value.trim(),
         clieEstd: document.querySelector("#clieEstd").value.trim(),
         clieRua: document.querySelector("#clieRua").value.trim(),
-        clieCep: document.querySelector("#clieCep").value.trim().replace(/\D/g, ''),
+        clieCep: document
+          .querySelector("#clieCep")
+          .value.trim()
+          .replace(/\D/g, ""),
         clieMail: document.querySelector("#clieMail").value.trim(),
-        clieBanc: document.querySelector('#clieBanc').value.trim(),
-        clieAgen: document.querySelector('#clieAgen').value.trim(),
-        clieCont: document.querySelector('#clieCont').value.trim(),
-        cliePix: document.querySelector('#cliePix').value.trim(),
-        filial: dataFilial
-      }
-      if(formData.clieTpCl === "Pessoa Jurídica" && formData.clieCnpj === ""){
-          Toastify({
+        clieBanc: document.querySelector("#clieBanc").value.trim(),
+        clieAgen: document.querySelector("#clieAgen").value.trim(),
+        clieCont: document.querySelector("#clieCont").value.trim(),
+        cliePix: document.querySelector("#cliePix").value.trim(),
+        filial: dataFilial,
+      };
+      if (formData.clieTpCl === "Pessoa Jurídica" && formData.clieCnpj === "") {
+        Toastify({
           text: "O Cliente e uma pessoa jurídica adicione o CNPJ dele. OBRIGATORIO",
           duration: 4000,
           gravity: "top",
@@ -449,8 +468,8 @@ async function registerNewClient() {
         return;
       }
 
-      if(formData.clieTpCl === "Pessoa Física" && formData.clieCpf === ""){
-          Toastify({
+      if (formData.clieTpCl === "Pessoa Física" && formData.clieCpf === "") {
+        Toastify({
           text: "O Cliente e uma Pessoa Física adicione o CPF dele. OBRIGATORIO",
           duration: 4000,
           gravity: "top",
@@ -460,8 +479,7 @@ async function registerNewClient() {
         return;
       }
 
-     
-      const clieMail = formData.clieMail
+      const clieMail = formData.clieMail;
       const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       if (!emailValido.test(clieMail)) {
@@ -475,9 +493,7 @@ async function registerNewClient() {
         return;
       }
 
-      const datas = [
-        { key: "dtNasc", label: "Data de Nascimento" },
-      ];
+      const datas = [{ key: "dtNasc", label: "Data de Nascimento" }];
       for (const { key, label } of datas) {
         const str = formData[key];
         if (!isDataValida(str)) {
@@ -546,31 +562,46 @@ async function registerNewClient() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor:"green",
+            backgroundColor: "green",
           }).showToast();
 
           document.querySelector("#formRegisterClient").reset();
-          dateAtualInField('dtCad')
-        } else {
-          Toastify({
-            text: result?.message || "Erro ao cadastrar Cliente.",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: response.status === 409 ? "orange" : "red",
-          }).showToast();
-        }
+          dateAtualInField("dtCad");
+        }else{
+
+          if (result.errors && Array.isArray(result.errors)) {
+            // Mostrar todas as mensagens de erro que vieram do backend
+            result.errors.forEach((err) => {
+              Toastify({
+                text: err.msg,
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "red",
+              }).showToast();
+            });
+          } else {
+            Toastify({
+              text: result?.message || "Erro ao cadastrar Cliente.",
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: response.status === 409 ? "orange" : "red",
+            }).showToast();
+          }
+         }
       } catch (error) {
         console.error("Erro ao enviar formulário:", error);
         Toastify({
-            text: "Erro ao enviar os dados para o server.",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "red",
-          }).showToast();
+          text: "Erro ao enviar os dados para o server.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
       }
     });
 
@@ -633,7 +664,8 @@ async function fetchListClientes() {
       wrapper.className = "table-responsive";
 
       const tabela = document.createElement("table");
-      tabela.className = "table table-sm table-hover table-striped table-bordered tableClient";
+      tabela.className =
+        "table table-sm table-hover table-striped table-bordered tableClient";
 
       // Cabeçalho
       const cabecalho = tabela.createTHead();
@@ -654,7 +686,7 @@ async function fetchListClientes() {
         "Tipo de Cliente",
         "Banco",
         "Agencia",
-        "Conta"
+        "Conta",
       ];
 
       colunas.forEach((coluna) => {
@@ -662,7 +694,13 @@ async function fetchListClientes() {
         th.textContent = coluna;
 
         if (["Selecionar", "Código", "CPF", "Estado", "CEP"].includes(coluna)) {
-          th.classList.add("text-center", "px-2", "py-1", "align-middle", "wh-nowrap");
+          th.classList.add(
+            "text-center",
+            "px-2",
+            "py-1",
+            "align-middle",
+            "wh-nowrap"
+          );
         } else {
           th.classList.add("px-3", "py-2", "align-middle");
         }
@@ -692,10 +730,10 @@ async function fetchListClientes() {
         checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
         checkboxCell.appendChild(checkbox);
 
-        const validDoc  = cliente.cliecnpj || cliente.cliecpf
-        const formatDoc = formatarCampo(  'documento',validDoc)
+        const validDoc = cliente.cliecnpj || cliente.cliecpf;
+        const formatDoc = formatarCampo("documento", validDoc);
         const telefoneFormatado = formatarCampo("telefone", cliente.cliecelu);
-       const cepFormatado = formatarCampo("cep", cliente.cliecep);
+        const cepFormatado = formatarCampo("cep", cliente.cliecep);
 
         // Dados do cliente
         const dados = [
@@ -704,7 +742,7 @@ async function fetchListClientes() {
           formatDoc,
           formatDate(cliente.cliedtcd),
           formatDate(cliente.cliedtnc),
-          telefoneFormatado ,
+          telefoneFormatado,
           cliente.cliecity,
           cliente.clieestd,
           cliente.clierua,
@@ -713,7 +751,7 @@ async function fetchListClientes() {
           cliente.clietpcl,
           cliente.cliebanc,
           cliente.clieagen,
-          cliente.cliecont
+          cliente.cliecont,
         ];
 
         dados.forEach((valor, index) => {
@@ -733,7 +771,8 @@ async function fetchListClientes() {
       wrapper.appendChild(tabela);
       clientesListDiv.appendChild(wrapper);
     } else {
-      clientesListDiv.innerHTML = "<p class='text-light'>Nenhum cliente cadastrado.</p>";
+      clientesListDiv.innerHTML =
+        "<p class='text-light'>Nenhum cliente cadastrado.</p>";
     }
   } catch (error) {
     console.error("Erro ao carregar clientes:", error);
@@ -747,157 +786,152 @@ async function fetchListClientes() {
     }).showToast();
     document.querySelector(".listClient").innerHTML =
       "<p>Erro ao carregar clientes.</p>";
-  };
-};
+  }
+}
 
 // BUSCAR CLIENTE ESPECIFICO
 async function searchClient() {
-
-  const btnForSearch = document.getElementById('searchClient');
-  const popUpSearch = document.querySelector('.searchIdClient');
+  const btnForSearch = document.getElementById("searchClient");
+  const popUpSearch = document.querySelector(".searchIdClient");
   const bensListDiv = document.querySelector(".listClient");
-  const backdrop = document.querySelector('.popupBackDrop');
-  const btnOutPageSearch = document.querySelector('.outPageSearchClient')
- 
+  const backdrop = document.querySelector(".popupBackDrop");
+  const btnOutPageSearch = document.querySelector(".outPageSearchClient");
 
-  if(btnForSearch && popUpSearch){
-     btnForSearch.addEventListener('click' , ()=>{
-       popUpSearch.style.display = 'flex'
-       backdrop.style.display = 'block'
-       
-     })
+  if (btnForSearch && popUpSearch) {
+    btnForSearch.addEventListener("click", () => {
+      popUpSearch.style.display = "flex";
+      backdrop.style.display = "block";
+    });
   }
 
-   if(popUpSearch || btnOutPageSearch){
-     btnOutPageSearch.addEventListener('click' , ()=>{
-       popUpSearch.style.display = 'none'
-        backdrop.style.display = 'none'
-     })
+  if (popUpSearch || btnOutPageSearch) {
+    btnOutPageSearch.addEventListener("click", () => {
+      popUpSearch.style.display = "none";
+      backdrop.style.display = "none";
+    });
   }
 
-  let btnClearFilter = document.getElementById('btnClearFilter');
+  let btnClearFilter = document.getElementById("btnClearFilter");
   if (!btnClearFilter) {
-    btnClearFilter = document.createElement('button');
-    btnClearFilter.id = 'btnClearFilter';
-    btnClearFilter.textContent = 'Limpar filtro';
-    btnClearFilter.className = 'btn btn-secondary w-25 aling align-items: center;';
-    btnClearFilter.style.display = 'none'; // fica oculto até uma busca ser feita
+    btnClearFilter = document.createElement("button");
+    btnClearFilter.id = "btnClearFilter";
+    btnClearFilter.textContent = "Limpar filtro";
+    btnClearFilter.className =
+      "btn btn-secondary w-25 aling align-items: center;";
+    btnClearFilter.style.display = "none"; // fica oculto até uma busca ser feita
     bensListDiv.parentNode.insertBefore(btnClearFilter, bensListDiv);
 
-    btnClearFilter.addEventListener('click', () => {
-     
-      btnClearFilter.style.display = 'none';
-      
-         document.getElementById('codeClient').value = ""
-         document.getElementById('searchCpf').value = ""
-          document.getElementById('searchCnpj').value = ""
-    
+    btnClearFilter.addEventListener("click", () => {
+      btnClearFilter.style.display = "none";
+
+      document.getElementById("codeClient").value = "";
+      document.getElementById("searchCpf").value = "";
+      document.getElementById("searchCnpj").value = "";
+
       fetchListClientes();
     });
   }
 
-  const btnSubmitSearchClient =  document.querySelector('.submitSearchClient')
-  if(btnSubmitSearchClient){
-     btnSubmitSearchClient.addEventListener('click' , async ()=>{
-           
-         const cliecode = document.getElementById('codeClient').value.trim()
-         const valueCpf = document.getElementById('searchCpf').value.trim()
-         const valueCnpj = document.getElementById('searchCnpj').value.trim()
+  const btnSubmitSearchClient = document.querySelector(".submitSearchClient");
+  if (btnSubmitSearchClient) {
+    btnSubmitSearchClient.addEventListener("click", async () => {
+      const cliecode = document.getElementById("codeClient").value.trim();
+      const valueCpf = document.getElementById("searchCpf").value.trim();
+      const valueCnpj = document.getElementById("searchCnpj").value.trim();
 
-       const preenchidos = [cliecode, valueCpf, valueCnpj].filter(valor => valor !== "");
+      const preenchidos = [cliecode, valueCpf, valueCnpj].filter(
+        (valor) => valor !== ""
+      );
 
-       if (preenchidos.length === 0) {
-       Toastify({
-        text: "Preencha pelo menos um campo para buscar!",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-       }).showToast();
-      return;
-    }
-
-      if (preenchidos.length > 1) {
-      Toastify({
-      text: "Preencha apenas um campo por vez para buscar!",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "orange",
-     }).showToast();
-     return;
-    }
-
-
-      const params = new URLSearchParams();
-      if (cliecode) params.append('cliecode', cliecode);
-      if (valueCpf) params.append('valueCpf', valueCpf);
-      if(valueCnpj) params.append('valueCnpj' , valueCnpj);
-
-    try {
-      const result =  await fetch(`/api/cliente/search?${params}` , {
-        method:'GET',
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          }
-      })
-       
-      const data = await result.json()
-
-      if(result.ok || data.cliente.length > 0){
-           
-          Toastify({
-          text: "O Cliente foi encontrado com sucesso!.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "green",
-          }).showToast();
-          // Exibe botão limpar filtro
-          btnClearFilter.style.display = 'inline-block';
-          
-          renderClientesTable(data.cliente)
- 
-          if (popUpSearch) popUpSearch.style.display = 'none';
-          if(backdrop)backdrop.style.display = 'none'
-
-      }else{
+      if (preenchidos.length === 0) {
         Toastify({
-          text: data.message || "Nenhum Cliente encontrado nessa pesquisa",
+          text: "Preencha pelo menos um campo para buscar!",
           duration: 3000,
           close: true,
           gravity: "top",
           position: "center",
           backgroundColor: "red",
-          }).showToast();
+        }).showToast();
+        return;
       }
 
-     } catch (error) {
-         console.error('Erro ao buscar cliente' , error)
+      if (preenchidos.length > 1) {
+        Toastify({
+          text: "Preencha apenas um campo por vez para buscar!",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "orange",
+        }).showToast();
+        return;
+      }
+
+      const params = new URLSearchParams();
+      if (cliecode) params.append("cliecode", cliecode);
+      if (valueCpf) params.append("valueCpf", valueCpf);
+      if (valueCnpj) params.append("valueCnpj", valueCnpj);
+
+      try {
+        const result = await fetch(`/api/cliente/search?${params}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        const data = await result.json();
+
+        if (result.ok || data.cliente.length > 0) {
           Toastify({
+            text: "O Cliente foi encontrado com sucesso!.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "green",
+          }).showToast();
+          // Exibe botão limpar filtro
+          btnClearFilter.style.display = "inline-block";
+
+          renderClientesTable(data.cliente);
+
+          if (popUpSearch) popUpSearch.style.display = "none";
+          if (backdrop) backdrop.style.display = "none";
+        } else {
+          Toastify({
+            text: data.message || "Nenhum Cliente encontrado nessa pesquisa",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+          }).showToast();
+        }
+      } catch (error) {
+        console.error("Erro ao buscar cliente", error);
+        Toastify({
           text: "Erro a buscar Cliente tente novamente",
           duration: 3000,
           close: true,
           gravity: "top",
           position: "center",
           backgroundColor: "red",
-          }).showToast();
-     };
+        }).showToast();
+      }
     });
-  };
-};
+  }
+}
 
-//RENDERIZAR TABELA PATHERS 
+//RENDERIZAR TABELA PATHERS
 function renderClientesTable(clientes) {
   const clientesListDiv = document.querySelector(".listClient");
   clientesListDiv.innerHTML = "";
 
   if (!clientes || clientes.length === 0) {
-    clientesListDiv.innerHTML = "<p class='text-light'>Nenhum cliente cadastrado.</p>";
+    clientesListDiv.innerHTML =
+      "<p class='text-light'>Nenhum cliente cadastrado.</p>";
     return;
   }
 
@@ -905,7 +939,8 @@ function renderClientesTable(clientes) {
   wrapper.className = "table-responsive";
 
   const tabela = document.createElement("table");
-  tabela.className = "table table-sm table-hover table-striped table-bordered tableClient";
+  tabela.className =
+    "table table-sm table-hover table-striped table-bordered tableClient";
 
   const cabecalho = tabela.createTHead();
   const linhaCabecalho = cabecalho.insertRow();
@@ -926,7 +961,7 @@ function renderClientesTable(clientes) {
     "Tipo de Cliente",
     "Banco",
     "Agencia",
-    "Conta"
+    "Conta",
   ];
 
   colunas.forEach((coluna) => {
@@ -934,7 +969,9 @@ function renderClientesTable(clientes) {
     th.textContent = coluna;
     th.classList.add("align-middle");
 
-    if (["Selecionar", "Código", "CPF/CNPJ", "Estado", "CEP"].includes(coluna)) {
+    if (
+      ["Selecionar", "Código", "CPF/CNPJ", "Estado", "CEP"].includes(coluna)
+    ) {
       th.classList.add("text-center", "px-2", "py-1", "wh-nowrap");
     } else {
       th.classList.add("px-3", "py-2");
@@ -981,7 +1018,7 @@ function renderClientesTable(clientes) {
       cliente.clietpcl,
       cliente.cliebanc,
       cliente.clieagen,
-      cliente.cliecont
+      cliente.cliecont,
     ];
 
     dados.forEach((valor, index) => {
@@ -1000,7 +1037,7 @@ function renderClientesTable(clientes) {
 
   wrapper.appendChild(tabela);
   clientesListDiv.appendChild(wrapper);
-};
+}
 
 // //deletar cliente
 function deleteClient() {
@@ -1039,7 +1076,6 @@ function deleteClient() {
     const token = localStorage.getItem("token");
 
     if (!token || isTokenExpired(token)) {
-    
       localStorage.removeItem("token");
       setTimeout(() => {
         window.location.href = "/index.html";
@@ -1125,26 +1161,23 @@ function editarCliente() {
       return;
     }
 
-    const listClient = document.querySelector('.listClient')
-    if(listClient){
-      listClient.classList.remove('flex')
-      listClient.classList.add('hidden')
-     
+    const listClient = document.querySelector(".listClient");
+    if (listClient) {
+      listClient.classList.remove("flex");
+      listClient.classList.add("hidden");
     }
 
-    const btnMainPageClient = document.querySelector('.buttonsMainPage')
-    if(btnMainPageClient){
-       btnMainPageClient.classList.remove('flex')
-      btnMainPageClient.classList.add('hidden')
+    const btnMainPageClient = document.querySelector(".buttonsMainPage");
+    if (btnMainPageClient) {
+      btnMainPageClient.classList.remove("flex");
+      btnMainPageClient.classList.add("hidden");
     }
 
-    const containerFormEdit = document.querySelector('.formEditClient')
-    if(containerFormEdit){
-      containerFormEdit.classList.remove('hidden')
-      containerFormEdit.classList.add('flex')
-
+    const containerFormEdit = document.querySelector(".formEditClient");
+    if (containerFormEdit) {
+      containerFormEdit.classList.remove("hidden");
+      containerFormEdit.classList.add("flex");
     }
-     
 
     const clientData = selectedCheckbox.getAttribute("data-cliente");
 
@@ -1152,7 +1185,7 @@ function editarCliente() {
       console.error("O atributo data-client está vazio ou indefinido.");
       return;
     }
-  
+
     try {
       const clientSelecionado = JSON.parse(clientData);
 
@@ -1170,37 +1203,39 @@ function editarCliente() {
         { id: "editClieRua", valor: clientSelecionado.clierua },
         { id: "editClieCep", valor: clientSelecionado.cliecep },
         { id: "editClieMail", valor: clientSelecionado.cliemail },
-        {id: "editClieBanc" , valor: clientSelecionado.cliebanc},
-        {id: "editClieAgen" , valor: clientSelecionado.clieagen},
-        {id: "editClieCont" , valor: clientSelecionado.cliecont},
-        {id: "editCliePix" , valor: clientSelecionado.cliepix}
+        { id: "editClieBanc", valor: clientSelecionado.cliebanc },
+        { id: "editClieAgen", valor: clientSelecionado.clieagen },
+        { id: "editClieCont", valor: clientSelecionado.cliecont },
+        { id: "editCliePix", valor: clientSelecionado.cliepix },
       ];
 
       // Atualizar valores no formulário
       campos.forEach(({ id, valor }) => {
-       const elemento = document.getElementById(id);
-  if (!elemento) {
-    console.warn(`Elemento com ID '${id}' não encontrado.`);
-    return;
-  }
-
-  if (elemento.type === "date" && valor) {
-    const dataFormatada = new Date(valor).toISOString().split("T")[0];
-    elemento.value = dataFormatada;
-  } else if (elemento.tagName === "SELECT") {
-    const option = [...elemento.options].find(opt => opt.value === valor);
-    if (option) {
-      elemento.value = valor;
-      if (id === "EditClieTiCli") {
-        const hiddenInput = document.getElementById("tipoClieEditHidden");
-        if (hiddenInput) {
-          hiddenInput.value = valor;
+        const elemento = document.getElementById(id);
+        if (!elemento) {
+          console.warn(`Elemento com ID '${id}' não encontrado.`);
+          return;
         }
-      }
-    }
-  } else {
-    elemento.value = valor || "";
-  }
+
+        if (elemento.type === "date" && valor) {
+          const dataFormatada = new Date(valor).toISOString().split("T")[0];
+          elemento.value = dataFormatada;
+        } else if (elemento.tagName === "SELECT") {
+          const option = [...elemento.options].find(
+            (opt) => opt.value === valor
+          );
+          if (option) {
+            elemento.value = valor;
+            if (id === "EditClieTiCli") {
+              const hiddenInput = document.getElementById("tipoClieEditHidden");
+              if (hiddenInput) {
+                hiddenInput.value = valor;
+              }
+            }
+          }
+        } else {
+          elemento.value = valor || "";
+        }
       });
 
       document.querySelector(".formEditClient").style.display = "flex";
@@ -1331,7 +1366,7 @@ function editarCliente() {
       const updateClient = {
         cliecode: document.getElementById("editClieCode").value,
         clienome: document.getElementById("editClieName").value,
-        clietpcl: document.getElementById('EditClieTiCli').value,
+        clietpcl: document.getElementById("EditClieTiCli").value,
         cliecpf: document.getElementById("editClieCpf").value || null,
         cliecnpj: document.getElementById("editClieCnpj").value || null,
         cliedtcd: document.getElementById("editClieDtCad").value || null,
@@ -1349,11 +1384,10 @@ function editarCliente() {
       };
 
       try {
-
         const confirmedEdition = confirm(
-        `Tem certeza de que deseja ATUALIZAR os dados desse Cliente?`
+          `Tem certeza de que deseja ATUALIZAR os dados desse Cliente?`
         );
-          if (!confirmedEdition) return;
+        if (!confirmedEdition) return;
 
         const response = await fetch(`/api/updateclient/${clientIdParsed}`, {
           method: "PUT",
@@ -1376,7 +1410,6 @@ function editarCliente() {
 
           formEditClient.reset();
         } else {
-  
           const errorResponse = await response.json();
           Toastify({
             text: errorResponse.message || "Erro ao atualizar Cliente.",
@@ -1386,11 +1419,10 @@ function editarCliente() {
             position: "center",
             backgroundColor: "red",
           }).showToast();
-
-      }
-     } catch (error) {
+        }
+      } catch (error) {
         console.error("Erro na requisição:", error);
-         Toastify({
+        Toastify({
           text: "Erro interno na requisição. Tente novamente.",
           duration: 3000,
           close: true,
@@ -1403,4 +1435,3 @@ function editarCliente() {
   }
   editAndUpdateOfClient();
 }
-
