@@ -10,8 +10,9 @@ const controllerDelivery = {
                 return res.status(200).json(response)
              }
           } catch (error) {
-            res.status(500).json({messagem: "ERRO SERVER "})
-             console.error('erro no controller', error)
+              console.error('erro no controller', error)
+             return res.status(500).json({messagem: "ERRO SERVER "})
+           
 
           }
      },

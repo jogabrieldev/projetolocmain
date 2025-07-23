@@ -11,12 +11,13 @@
 </head>
 <body>
       
-<div class="container py-3">
+<section class="container py-3">
 
   <!-- Tela de Seleção -->
   <div id="telaSelecao">
     <div class="text-center mb-4">
-      <h4 class="fw-bold">Início da Jornada</h4>
+      <h3 class="text-dark nameDriver"></h3>
+      <p class="fw-bold">Início da Jornada</p>
       <p class="text-muted small">Selecione o caminhão e informe o KM atual</p>
     </div>
 
@@ -24,23 +25,65 @@
       <div class="showDelivery row g-3"></div>
     </div>
 
-    <form id="formInicio">
-      <div class="mb-3">
-        <label for="caminhao" class="form-label">Caminhão</label>
-        <select class="form-select" id="caminhao" required>
-          <option value="" disabled selected>Selecione</option>
-          <!-- <option value="CAM001">CAM001 - Volvo</option>
-          <option value="CAM002">CAM002 - Scania</option> -->
-        </select>
-      </div>
+  <form id="formCheckIn" class="border mt-3">
+    <h4 class="text-center">Faça o Check-in</h4>
+    <div class="mb-2">
+     <label for="caminhao" class="form-label">Caminhão</label>
+     <select class="form-select form-select-sm" id="caminhao" required>
+      <option value="" disabled selected>Selecione</option>
+    </select>
+   </div>
 
-      <div class="mb-3">
-        <label for="km" class="form-label">KM atual</label>
-        <input type="number" class="form-control" id="km" placeholder="Digite o KM atual" required>
-      </div>
+  <div class="mb-2">
+    <label for="checObs" class="form-label">Observação</label>
+    <input type="number" class="form-control form-control-sm" id="checObs" placeholder="obs...">
+  </div>
 
-      <button type="submit" class="btn btn-primary w-100">Ver Entregas</button>
-    </form>
+
+  <div class="mb-2">
+    <label for="km" class="form-label">KM atual</label>
+    <input type="number" class="form-control form-control-sm" id="km" placeholder="Digite o KM atual" required>
+  </div>
+
+  <button type="submit" class="btn btn-success btn-sm w-100">Fazer Check-in</button>
+</form>
+
+
+<form id="formCheckOut" class="border mt-3">
+    <h4 class="text-center">Faça o Check-Out</h4>
+  <div class="mb-2">
+    <label for="caminhao" class="form-label">Caminhão</label>
+    <select class="form-select form-select-sm" id="caminhao" required>
+      <option value="" disabled selected>Selecione</option>
+    </select>
+  </div>
+
+  <div class="mb-2">
+    <label for="checObs" class="form-label">Observação</label>
+    <input type="number" class="form-control form-control-sm" id="checObs" placeholder="obs...">
+  </div>
+
+  <div class="mb-2">
+    <label for="status" class="form-label">Status</label>
+    <select class="form-select form-select-sm" id="status" required>
+      <option value="">Selecione...</option>
+      <option value="Finalizado">Finalizado</option>
+    </select>
+  </div>
+
+  <div class="mb-2">
+    <label for="km" class="form-label">KM atual</label>
+    <input type="number" class="form-control form-control-sm" id="km" placeholder="Digite o KM atual" required>
+  </div>
+
+  <div class="mb-2">
+    <label for="km" class="form-label">Data e hora</label>
+    <input type="datetime-local" class="form-control form-control-sm" id="dateTimeChec"  required>
+  </div>
+
+  <button type="submit" class="btn btn-success btn-sm w-100">Fazer Check-Out</button>
+</form>
+
   </div>
 
   <!-- Tela de Entregas (inicialmente oculta) -->
@@ -49,51 +92,9 @@
       <h4 class="fw-bold">Entregas Pendentes</h4>
       <p class="text-muted small">Painel do Motorista</p>
     </div>
+ </div> 
+</section>
 
-    <!-- Lista de entregas -->
-    <div class="d-grid gap-3">
-
-      <!-- Card de entrega -->
-      <div class="card entrega-card shadow-sm">
-        <div class="card-body">
-          <h6 class="card-title mb-1">Entrega #12345</h6>
-          <p class="card-text mb-2 text-muted small">
-            Cliente: João da Silva <br>
-            Endereço: Rua das Acácias, 321 - Goiânia/GO
-          </p>
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="status-tag bg-warning text-dark">Pendente</span>
-            <div class="btn-group btn-group-sm">
-              <button class="btn btn-success"><i class="bi bi-check-circle"></i> Aceitar</button>
-              <button class="btn btn-danger"><i class="bi bi-x-circle"></i> Recusar</button>
-              <button class="btn btn-secondary"><i class="bi bi-info-circle"></i></button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Outro card de exemplo -->
-      <div class="card entrega-card shadow-sm">
-        <div class="card-body">
-          <h6 class="card-title mb-1">Entrega #12346</h6>
-          <p class="card-text mb-2 text-muted small">
-            Cliente: Maria Oliveira <br>
-            Endereço: Av. Brasil, 999 - Aparecida/GO
-          </p>
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="status-tag bg-warning text-dark">Pendente</span>
-            <div class="btn-group btn-group-sm">
-              <button class="btn btn-success"><i class="bi bi-check-circle"></i> Aceitar</button>
-              <button class="btn btn-danger"><i class="bi bi-x-circle"></i> Recusar</button>
-              <button class="btn btn-secondary"><i class="bi bi-info-circle"></i></button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

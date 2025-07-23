@@ -55,9 +55,7 @@ function loginUserCenter() {
           }else{
             localStorage.setItem('user' , response.user)
           }
-          // localStorage.setItem("user" , response.user)
-
-
+         
           Toastify({
             text: "Login com sucesso",
             duration: 3000,

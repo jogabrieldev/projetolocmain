@@ -501,8 +501,8 @@ async function needVsAvaible(
     }
     const bens = result.bens;
     const bensFiltrados = bens.filter((bem) => {
-      bem.bensstat === "Disponivel" && bem.benscofa === familiaBem;
-      return bem.bensstat === "Disponivel" && bem.benscofa === familiaBem;
+      bem.bensstat === "Disponível" && bem.benscofa === familiaBem;
+      return bem.bensstat === "Disponível" && bem.benscofa === familiaBem;
     });
 
     const quantidadeDisponivel = bensFiltrados.length;

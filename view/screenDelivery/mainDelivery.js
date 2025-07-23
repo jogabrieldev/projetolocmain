@@ -53,9 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  socketUpdateTableDelivey.on(
-    "updateRunTimeRegisterLinkGoodsLocation",
-    async () => {
+  socketUpdateTableDelivey.on("updateRunTimeRegisterLinkGoodsLocation",async () => {
       await getAllDelivery();
       renderTableDelivery();
     }
@@ -119,10 +117,7 @@ async function getAllDelivery() {
 
     console.log("entrega", deliveryData);
     if (!Array.isArray(deliveryData)) {
-      console.error(
-        "deliveryData não está definido corretamente:",
-        deliveryData
-      );
+      console.error("deliveryData não está definido corretamente:",deliveryData);
       return;
     }
 
@@ -192,6 +187,17 @@ function renderTableDelivery() {
 
     deliveryData.forEach((item) => {
       const cliente = clientData.find((c) => c.cliecode === item.lofiidcl);
+      if(!cliente){
+        Toastify({
+        text: "Cliente não encontrado no nosso sistema valide por favor!",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+        }).showToast();
+        return;
+      }
       const tr = document.createElement("tr");
 
       tr.innerHTML = `
@@ -199,7 +205,7 @@ function renderTableDelivery() {
                 <td>${item.lofiidbe}</td>
                 <td>${cliente ? cliente.clienome : "Desconhecido"}</td>
                 <td>${item.lofiidlo}</td>
-                <td>${(item.lofidtlo)}</td>
+                <td>${new Date((item.lofidtlo)).toLocaleDateString('pt-BR')}</td>
                 <td><button class="detalhes" onclick="showDetails(${
                   item.loficode
                 })">Detalhes</button></td>
@@ -267,6 +273,9 @@ async function showDetails(codigo) {
 
     const motorista = motoris.find((m) => m.motocode === item.lofiidmt);
 
+    const dataL = new Date(item.lofidtlo)
+    const dataLocFormat = dataL.toLocaleDateString("pt-BR")
+
     const dateD = new Date(item.lofidtdv);
     const dataFormat = dateD.toLocaleDateString("pt-BR");
 
@@ -292,22 +301,12 @@ async function showDetails(codigo) {
       <h5 class="mb-0">Detalhes da Locação</h5>
     </div>
     <div class="card-body">
-      <p><strong><i class="bi bi-box-seam"></i> ID do Bem:</strong> ${
-        item.lofiidbe
-      }</p>
-      <p><strong><i class="bi bi-hash"></i> ID Locação:</strong> ${
-        item.lofiidlo
-      }</p>
-      <p><strong><i class="bi bi-person"></i> Motorista:</strong> ${
-        motorista?.motonome || "Nenhum"
-      }</p>
-      <p><strong><i class="bi bi-calendar-event"></i> Data/Hora Locação:</strong> ${new Date(
-        item.lofidtlo
-      ).toLocaleString()}</p>
+      <p><strong><i class="bi bi-box-seam"></i> ID do Bem:</strong> ${item.lofiidbe}</p>
+      <p><strong><i class="bi bi-hash"></i> ID Locação:</strong> ${item.lofiidlo}</p>
+      <p><strong><i class="bi bi-person"></i> Motorista:</strong> ${motorista?.motonome || "Nenhum"}</p>
+      <p><strong><i class="bi bi-calendar-event"></i> Data da Locação:</strong> ${dataLocFormat}</p>
       <p><strong><i class="bi bi-calendar-check"></i> Devolução:</strong> ${dataFormat}</p>
-      <p><strong><i class="bi bi-cash-stack"></i> Pagamento:</strong> ${
-        item.lofipgmt
-      }</p>
+      <p><strong><i class="bi bi-cash-stack"></i> Pagamento:</strong> ${item.lofipgmt}</p>
     </div>
   </div>
 `;
