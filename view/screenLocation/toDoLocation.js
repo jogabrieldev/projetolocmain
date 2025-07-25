@@ -1346,9 +1346,7 @@ async function gerarContrato() {
       <div class="col-md-4 text-dark"><strong>Cidade:</strong> ${
         localDescarte?.derecida || "-"
       }</div>
-      <div class="col-md-4 text-dark"><strong>CEP:</strong> ${
-        localDescarte?.derecep || "-"
-      }</div>
+
     </div>
     <div class="row">
       <div class="col-md-4 text-dark"><strong>Estado:</strong> ${

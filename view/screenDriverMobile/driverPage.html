@@ -30,22 +30,22 @@
     <div class="mb-2">
      <label for="caminhao" class="form-label">Caminhão</label>
      <select class="form-select form-select-sm" id="caminhao" required>
-      <option value="" disabled selected>Selecione</option>
+      <option value="">Selecione..</option>
     </select>
    </div>
 
   <div class="mb-2">
     <label for="checObs" class="form-label">Observação</label>
-    <input type="number" class="form-control form-control-sm" id="checObs" placeholder="obs...">
+    <input type="text" class="form-control form-control-sm" id="checObs" placeholder="obs...">
   </div>
 
 
   <div class="mb-2">
     <label for="km" class="form-label">KM atual</label>
-    <input type="number" class="form-control form-control-sm" id="km" placeholder="Digite o KM atual" required>
+    <input type="number" class="form-control form-control-sm" id="kmAt" placeholder="Digite o KM atual" required>
   </div>
 
-  <button type="submit" class="btn btn-success btn-sm w-100">Fazer Check-in</button>
+  <button type="button" id="submitCheckIn" class="btn btn-success btn-sm w-100">Fazer Check-in</button>
 </form>
 
 
@@ -100,5 +100,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.js"></script>
   <script src="loginDriver.js"></script>
+  <script src="checkInAndCheckOut.js"></script>
 </body>
 </html>

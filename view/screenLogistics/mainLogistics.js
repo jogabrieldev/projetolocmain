@@ -886,7 +886,7 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
   const result = await response.json();
 
   const bensFiltrados = result.bens.filter(
-    (bem) => bem.bensstat === "Disponivel" && bem.benscofa === familiaBem
+    (bem) => bem.bensstat === "Disponível" && bem.benscofa === familiaBem
   );
 
   const modalWrapper = document.querySelector(".modal");

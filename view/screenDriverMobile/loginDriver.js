@@ -1,12 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
   const btnAcceptDelivery = document.getElementById('toAcceptDelivery')
   if(btnAcceptDelivery){
-     btnAcceptDelivery.addEventListener('click',()=>{
-        toAcceptDelivery()
-     })
+     btnAcceptDelivery.addEventListener('click' , toAcceptDelivery())
   }
+
+  const selectCar = document.getElementById('caminhao')
+  if(selectCar){
+    selectCar.addEventListener('click' , getAllCar())
+  }
+  checkIn();
   listDeliveryForDriver();
-  getAllCar();
   addNameDriver();
 });
 
@@ -88,7 +91,7 @@ async function addNameDriver(){
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "green",
+        backgroundColor: "red",
       }).showToast();
       return 
     }
@@ -109,17 +112,19 @@ async function getAllCar() {
 
     const carros = await response.json();
    
-    const carrosAtivos = carros.filter((carro) => carro.caaustat === "Disponivel");
+    const carrosAtivos = carros.filter((carro) => carro.caaustat === "Disponivel" && carro.caausitu === "Interno");
 
     const select = document.getElementById("caminhao");
     if (select) {
-      select.innerHTML = ""; // Limpa
+       select.innerHTML = '<option value="">Selecione..</option>'; // Limpa
       carrosAtivos.forEach((carro) => {
         const option = document.createElement("option");
         option.value = carro.caaucode;
         option.textContent = `${carro.caaumaca} - ${carro.caauplac}`;
         select.appendChild(option);
       });
+
+       select.value = "";
     }
 
   } catch (error) {
@@ -204,9 +209,8 @@ async function listDeliveryForDriver() {
          
             nomeClient = cliente.clienome || "Sem nome";
             clientPhone = cliente.cliecelu || "Não passado"
-        }
+        
       
-
       const card = document.createElement("div");
       card.className = "col-md-6 col-lg-4";
 
@@ -229,19 +233,17 @@ async function listDeliveryForDriver() {
              <button class = "btn btn-danger" id = "toAcceptDelivery">Recusar</button>
             </div>
           </div>
-        </div>
-      `;
-
+        </div> `;
       container.appendChild(card);
-    }
+     };
+    };
 
   } catch (error) {
     console.error("Erro na listagem de entregas:", error);
     document.querySelector(".showDelivery").innerHTML = `
-      <p class="text-danger text-center fw-bold">Erro ao carregar entregas.</p>
-    `;
+      <p class="text-danger text-center fw-bold">Erro ao carregar entregas.</p>`;
   }
-}
+};
 
 function toAcceptDelivery(){
    

@@ -880,8 +880,17 @@ function validationFormDestinationDescarte(){
         nomeDest:{
           required: true 
         },
-        cepDest:{
+        cidaDest:{
           required: true
+        },
+        ruaDest:{
+          required:true
+        },
+        bairDest:{
+          required:true
+        },
+        estdDest:{
+           required:true
         },
         
         ativDest:{
@@ -892,15 +901,23 @@ function validationFormDestinationDescarte(){
         },
         
     },
-         messages: {
+        messages: {
 
         nomeDest:{
           required:"OBRIGATORIO"
         },
-        cepDest:{
+        cidaDest:{
           required:"OBRIGATORIO"
         },
-
+        ruaDest:{
+           required:"OBRIGATORIO"
+        },
+        bairDest:{
+           required:"OBRIGATORIO"
+        },
+        estdDest:{
+          required:"OBRIGATORIO"
+        },
         ativDest:{
           required: "OBRIGATORIO"
         },

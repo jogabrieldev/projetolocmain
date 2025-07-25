@@ -185,71 +185,10 @@ function registerDestination(){
       }
         try {
 
-        const cepDestinationDescarte = document.querySelector("#cepDest").value.replace(/\D/g, "");
-      try {
-       
-         
-        const response = await fetch(
-          `https://viacep.com.br/ws/${cepDestinationDescarte}/json/`
-        );
-
-        if (!response.ok) {
-          throw new Error("Erro ao buscar o CEP.");
-        }
-
-        const data = await response.json();
-        
-        if (data.erro) {
-          Toastify({
-            text: "CEP inválido.",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "red",
-          }).showToast();
-          return;
-        }
-
-        // Preenchendo os campos do formulário
-        const ruaField = document.getElementById("ruaDest");
-        const cityField = document.getElementById("cidaDest");
-        const stateField = document.getElementById("estdDest");
-        const bairroField = document.getElementById("bairDest")
-
-        if (ruaField) {
-          ruaField.value = data.logradouro || "";
-          ruaField.readOnly = true;
-        }
-        if (cityField) {
-          cityField.value = data.localidade || "";
-          cityField.readOnly = true;
-        }
-        if (stateField) {
-          stateField.value = data.uf || "";
-          stateField.readOnly = true;
-        }
-        if(bairroField){
-            bairroField.value = data.bairro || ""
-            bairroField.readOnly = true
-        }
-      } catch (error) {
-        console.error("Erro ao buscar o CEP:", error);
-        Toastify({
-          text: "Erro ao buscar o CEP, tente novamente.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-        return;
-      }
-            
+      
        const ativDestValue = document.getElementById('ativDest').value.trim().toLowerCase();
          const formData = {
            nomeDest: document.getElementById('nomeDest').value.trim(),
-           cepDest: document.getElementById('cepDest').value.trim().replace(/\D/g, ''),
            cidaDest: document.getElementById('cidaDest').value.trim(),
            ruaDest: document.getElementById('ruaDest').value.trim(),  
            bairDest: document.getElementById('bairDest').value.trim(),
@@ -378,7 +317,6 @@ async function getAllDestinationDescarte() {
       const colunas = [
         "Selecionar",
         "Nome",
-        "CEP",
         "Cidade",
         "Rua",
         "Bairro",
@@ -425,7 +363,6 @@ async function getAllDestinationDescarte() {
         // Dados
         const dados = [
           dest.derenome,
-          formatarCampo("cep", dest.derecep),
           dest.derecida,
           dest.dererua,
           dest.derebair,

@@ -8,6 +8,40 @@ function isTokenExpired(token) {
   }
 }
 
+function addMetrosCubicos() {
+  const inputCapa = document.getElementById('fabeCapa');
+  if (!inputCapa) return; // se o input não existe ainda, sai da função
+
+  inputCapa.addEventListener('input', () => {
+    let somenteNumero = inputCapa.value.replace(/\D/g, '');
+    inputCapa.value = somenteNumero ? `${somenteNumero}m³` : '';
+  });
+
+   inputCapa.addEventListener('focus', () => {
+    // ao focar, remove o m³ para o usuário editar livremente
+    inputCapa.value = inputCapa.value.replace(/m³/, '');
+  });
+};
+
+function aplicarMetrosCubicosEdicao(valorNumero) {
+  const inputEdit = document.getElementById('editFabeCapa');
+  if (!inputEdit) return;
+
+  // 👉 Preenche o campo já com a unidade (ex.: vindo do banco apenas número)
+  inputEdit.value = valorNumero ? `${valorNumero}m³` : '';
+
+  // Ao focar (quando clicar para editar): remove a unidade para facilitar a edição
+  inputEdit.addEventListener('focus', () => {
+    inputEdit.value = inputEdit.value.replace(/m³/, '');
+  });
+
+  // Ao perder o foco (sair do campo): adiciona novamente a unidade
+  inputEdit.addEventListener('blur', () => {
+    let apenasNumero = inputEdit.value.replace(/\D/g, '');
+    inputEdit.value = apenasNumero ? `${apenasNumero}m³` : '';
+  });
+}
+
 const socketFamilyBens = io();
 document.addEventListener("DOMContentLoaded", () => {
   const btnLoadFabe = document.querySelector(".btnCadFabri");
@@ -27,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
           mainContent.innerHTML = html;
           interationSystemFamilyBens();
           registerNewFamilyBens();
+          addMetrosCubicos();
           searchFamilyGoodsForId();
           deleteFamilyGoods();
           editFamilyGoods();
@@ -249,7 +284,7 @@ function registerNewFamilyBens() {
         fabeCode: document.querySelector("#fabeCode").value.trim(), // Código
         fabeDesc: document.querySelector("#fabeDesc").value.trim(), // Descrição
         fabeCate: document.querySelector("#fabeCate").value.trim(), // Categoria
-        fabeCapa: document.querySelector("#fabeCapa").value.trim(), // Subcategoria
+        fabeCapa: document.querySelector("#fabeCapa").value.trim().replace(/\D/g, ''), 
         fabeObs: document.querySelector("#fabeObs").value.trim(), // Observação
         fabeCtct: document.querySelector("#fabeCtct").value.trim(), // Centro de Custo
       };
@@ -416,7 +451,12 @@ async function fetchListFabricante() {
 
         dados.forEach((valor, index) => {
           const td = linha.insertCell();
-          td.textContent = valor || "";
+         if (index === 3 && valor) {
+            td.textContent = valor + "m³";
+           } else {
+              td.textContent = valor || "";
+          }
+
           td.classList.add("align-middle", "text-break");
 
           const coluna = colunas[index + 1];
@@ -431,12 +471,12 @@ async function fetchListFabricante() {
       wrapper.appendChild(tabela);
       familyGoodsListDiv.appendChild(wrapper);
     } else {
-      familyGoodsListDiv.innerHTML = "<p class='text-light'>Nenhum fornecedor cadastrado.</p>";
+      familyGoodsListDiv.innerHTML = "<p class='text-light'>Nenhuma familia de bens cadastrado.</p>";
     }
   } catch (error) {
-    console.error("Erro ao carregar fornecedores:", error);
+    console.error("Erro ao carregar familia de bens:", error);
     document.querySelector(".listingFabri").innerHTML =
-      "<p>Erro ao carregar fornecedores.</p>";
+      "<p>Erro ao carregar familia de bens.</p>";
   }
 };
 
@@ -815,11 +855,35 @@ const containerEditForm = document.querySelector('.editFabri')
     campos.forEach(({ id, valor }) => {
       const elemento = document.getElementById(id);
       if (elemento) {
-        elemento.value = valor || "";
+        if(id === "editFabeCapa"){
+           elemento.value = (valor || "")? valor + "m³" : ""
+        }else{
+             elemento.value = valor || "";
+        }
+       
       } else {
         console.warn(`Elemento com ID '${id}' não encontrado.`);
       }
     });
+    function aplicarMascaraMetrosCubicosEdicao() {
+  const input = document.getElementById("editFabeCapa");
+  if (!input) return;
+
+  // remove unidade ao focar
+  input.addEventListener("focus", () => {
+    input.value = input.value.replace(/m³/, "");
+  });
+
+  // recoloca unidade ao sair do foco
+  input.addEventListener("blur", () => {
+    const num = input.value.replace(/\D/g, "");
+    input.value = num ? num + "m³" : "";
+  });
+}
+
+// depois de popular o formulário de edição
+aplicarMascaraMetrosCubicosEdicao();
+
 
     // Mostrar o formulário de edição e ocultar a lista
     const spaceEditFabri = document.querySelector(".editFabri");
@@ -879,12 +943,14 @@ async function editAndUpdateOfFabric() {
       console.error("Erro ao fazer parse de bemId:", error);
       return;
     }
+    const valorCapacidadeComUnidade = document.getElementById("editFabeCapa").value;
+    const apenasNumeroCapacidade = valorCapacidadeComUnidade.replace(/\D/g, "");
 
     const updateFabric = {
       fabecode: document.getElementById("editFabeCode").value,
       fabedesc: document.getElementById("editFabeDesc").value,
       fabecate: document.getElementById("editFabeCate").value,
-      fabecapa: document.getElementById("editFabeCapa").value,
+      fabecapa: apenasNumeroCapacidade,
       fabeobse: document.getElementById("editFabeObs").value,
       fabectct: document.getElementById("editFabeCtct").value,
     };

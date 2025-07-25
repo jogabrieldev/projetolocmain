@@ -5,7 +5,9 @@ import { validateForn } from "../middleware/validators/validFornecedor.js";
 import { validateMotorista } from "../middleware/validators/validDriver.js"
 import { validateProduto } from "../middleware/validators/validProduct.js";
 import { validateAutomovel } from "../middleware/validators/validVehicles.js";
-import { validateDestino } from "../middleware/validators/validDestination.js";
+
+import { validateCheckIn } from "../middleware/validators/validCheckIn.js";
+import {validateCheckInOpen} from "../middleware/validators/validCheckIn.js"
 import { validate } from "../middleware/validators.js";
 import  authenticateToken from '../middleware/authMiddleware.js'
 import {authSystemValidade} from "../controllers/authController.js";
@@ -23,6 +25,7 @@ import { controllerDelivery } from "../controllers/deliveryController.js";
 import { movementResiduo } from "../controllers/residuoController.js";
 import { controllerDestination } from "../controllers/controllerDestination.js";
 import{controllerLocationVehicle} from "../controllers/locationVehicleController.js"
+import { controllerCheckInAndCheckOut } from "../controllers/controllerCheckIn.js";
 
 
 const route = express.Router()
@@ -208,7 +211,7 @@ route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
  route.delete('/api/cadauto/:id',  authenticateToken, (req ,res)=>{
   movementAuto.deleteOfAuto(req , res)
  }); 
- route.put('/api/automo/:id' , (req ,res)=>{
+ route.patch('/api/automo/:id' , (req ,res)=>{
    movementAuto.updateStatusVehicle(req , res)
  });
 
@@ -231,7 +234,7 @@ route.delete("/residuo/:id" , (req , res)=>{
 
 // destino
 
-route.post('/api/destination' , validateDestino,validate, (req ,res)=>{
+route.post('/api/destination' , (req ,res)=>{
   controllerDestination.insertDestination(req,res)
 })
 
@@ -250,6 +253,19 @@ route.delete('/api/destination/:id' , (req,res)=>{
 route.put('/api/destination/:iddestination' , (req ,res)=>{
   controllerDestination.updateDestination(req ,res)
 })
+
+// checkIN checkOut
+
+route.post("/api/checkin" ,validateCheckIn , validate, (req ,res)=>{
+  controllerCheckInAndCheckOut.toDoCheckIn(req ,res)
+})
+route.get('/api/checkin/:idMoto' ,(req ,res)=>{
+   controllerCheckInAndCheckOut.getCheckInOpen(req ,res)
+})
+route.put("/api;checkin/:id" , (req ,res)=> {
+  controllerCheckInAndCheckOut.toCheckOut(req ,res)
+})
+
 
  //locação Bens
  route.get('/api/generateNumber' , (req , res)=>{

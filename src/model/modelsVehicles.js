@@ -16,11 +16,13 @@ export const autoRegister = {
         caauloca,
         caaukmat,
         caaustat,
+        caausitu,
         caaudtca,
+        
       } = data;
 
-      const insert = `INSERT INTO cadauto (caaucode, caauplac, caauchss, caaurena, caaumaca, caaumode, caaucor, caautico, caauloca, caaukmat, caaustat, caaudtca) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 , $12) RETURNING *`;
+      const insert = `INSERT INTO cadauto (caaucode, caauplac, caauchss, caaurena, caaumaca, caaumode, caaucor, caautico, caauloca, caaukmat, caaustat,caausitu, caaudtca) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 , $12 , $13) RETURNING *`;
 
       const values = [
         caaucode,
@@ -34,7 +36,9 @@ export const autoRegister = {
         caauloca,
         caaukmat,
         caaustat,
+        caausitu,
         caaudtca,
+       
       ];
 
       const result = await dataClient.query(insert, values);
@@ -46,6 +50,21 @@ export const autoRegister = {
       }
 
       console.error("Erro ao registrar automóvel:", error);
+      throw error;
+    }
+  },
+
+  async getCodeVehicle(code){
+    try {
+         const query = `SELECT *FROM cadauto WHERE caaucode = $1`
+         const result = await dataClient.query(query , [code])
+          if (result && result.rows.length > 0) {
+        return result.rows[0]; // retorna um único motorista
+      }
+
+      return null;
+    } catch (error) {
+      console.error('Erro para buscar por code de veiculo ')
       throw error;
     }
   },

@@ -254,6 +254,7 @@ async function registerNewVehicles() {
         caauloca: document.querySelector("#pdLocCar").value.trim(),
         caaustat: document.querySelector("#statAuto").value.trim(),
         caaudtca: document.querySelector("#dtCadAuto").value,
+        caausitu: document.querySelector("#situAuto").value.trim()
       };
 
       try {
@@ -394,6 +395,7 @@ async function listarVeiculos() {
         "Km Atual",
         "Pode ser Locado",
         "Status",
+        "Situação",
         "Data de Cadastro",
       ];
 
@@ -442,6 +444,7 @@ async function listarVeiculos() {
           v.caaukmat,
           v.caauloca,
           v.caaustat,
+          v.caausitu,
           formatDate(v.caaudtca),
         ];
 

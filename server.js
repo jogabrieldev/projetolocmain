@@ -109,6 +109,10 @@ io.on("connection", (socket) => {
         io.emit("InsertNewGoodsRunTimeInEditLocation" , msg);
     });
 
+    socket.on("checkIn" , (msg)=>{
+        io.emit("checkIn" , msg);
+    });
+
     socket.on("disconnect", () => {
     });
 });

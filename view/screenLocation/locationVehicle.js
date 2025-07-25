@@ -385,7 +385,9 @@ async function locationTheVehicle() {
       veiculos: veiculos,
       contrato: contratoHTML
     };
-
+    
+     const token = localStorage.getItem('token')
+     if(!token)return 
     
     const res = await fetch("/api/locacaoveiculo", {
       method: "POST",
@@ -409,11 +411,15 @@ async function locationTheVehicle() {
 
     const codeVehicles = veiculos.map(v => v.code);
 
+    console.log('veiculo' , codeVehicles)
+
     // Atualiza todos os veículos em paralelo
-    const updateRequests = codeVehicles.map(code =>
-      fetch(`/api/automo/${code}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
+    const updateRequests = codeVehicles.map(async code =>
+      await fetch(`/api/automo/${code}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json",
+          Authorization:token
+         },
         body: JSON.stringify({ caaustat: "Veiculo Locado" }),
       }).then(res => res.json())
         .catch(error => ({ error: true, code, message: error.message }))
@@ -429,6 +435,7 @@ async function locationTheVehicle() {
           duration: 4000,
           backgroundColor: "red",
         }).showToast();
+        return;
       }
     });
 
@@ -506,7 +513,7 @@ async function locationTheVehicle() {
       <p><strong>CPF/CNPJ do Cliente:</strong> ${cpfCliente}</p>
       
       <div class="border rounded p-3 mb-3 bg-dark-subtle text-white">
-        <p class="mb-1"><strong>Endereço da Locação:</strong></p>
+        <p class="mb-1"><strong>Endereço para buscar o material:</strong></p>
         <div class="row">
           <div class="col-md-4 text-dark"><strong>Rua:</strong> ${enderecoLocacao?.localizationRua || "-"}</div>
           <div class="col-md-4 text-dark"><strong>Bairro:</strong> ${enderecoLocacao?.localizationBairro || "-"}</div>
