@@ -5,7 +5,7 @@ import { validateForn } from "../middleware/validators/validFornecedor.js";
 import { validateMotorista } from "../middleware/validators/validDriver.js"
 import { validateProduto } from "../middleware/validators/validProduct.js";
 import { validateAutomovel } from "../middleware/validators/validVehicles.js";
-
+import { controllerLinkVehicleWithDriver } from "../controllers/controllerLinkDriverVehicle.js"
 import { validateCheckIn } from "../middleware/validators/validCheckIn.js";
 import {validateCheckInOpen} from "../middleware/validators/validCheckIn.js"
 import { validate } from "../middleware/validators.js";
@@ -31,6 +31,10 @@ import { controllerCheckInAndCheckOut } from "../controllers/controllerCheckIn.j
 const route = express.Router()
 
 // AUTENTICAÇÃO
+
+route.post('/newuser' , (req ,res)=>{
+   authSystemValidade.registerUserSystem(req ,res)
+})
 route.post("/autenticar",  (req, res) => {
    authSystemValidade.AuthLoginCenter(req ,res)
 });
@@ -146,7 +150,6 @@ route.put('/api/updatefabe/:id' , authenticateToken,(req , res)=>{
   movementOfFamilyGoods.updateFabri(req ,res)
 });
 
-
 // tipo do produto
 route.post('/api/typeprod/submit' , authenticateToken, (req , res)=>{
    movementOfTypeProd.registerTyperProd(req , res)
@@ -166,7 +169,6 @@ route.delete('/api/deletetp/:id', authenticateToken, (req , res)=>{
 route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
   movementOfTypeProd.updateOfTypeProd(req , res)
 });
-
 
  // motorista 
  route.post('/api/drive/submit' , validateMotorista , validate, authenticateToken, (req , res)=>{
@@ -202,6 +204,9 @@ route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
  route.get('/api/automovel/search' , authenticateToken, (req ,res)=>{
    movementAuto.getAutomovelByCode(req ,res)
  });
+ route.get("/api/automo/:code" , (req ,res)=>{
+  movementAuto.getCodeVehicle(req , res)
+ })
  route.get('/api/listauto', authenticateToken, (req , res)=>{
   movementAuto.listingOfAuto(req, res)
  });
@@ -254,15 +259,29 @@ route.put('/api/destination/:iddestination' , (req ,res)=>{
   controllerDestination.updateDestination(req ,res)
 })
 
+//VINCULAR VEICULO COM MOTORISTA EXTERNO
+
+route.post('/api/linkdriver' , (req , res)=>{
+   controllerLinkVehicleWithDriver.registerLinkVehicleWithDriver(req , res)
+})
+
+route.get('/api/listdriverexterno' , (req , res)=>{
+   controllerLinkVehicleWithDriver.getAllDriverExternoWithVehicle(req ,res)
+})
+
+route.get('/api/drivercar/:id' , (req ,res)=>{
+   controllerLinkVehicleWithDriver.getVehicleTheDriver(req ,res)
+})
+
 // checkIN checkOut
 
-route.post("/api/checkin" ,validateCheckIn , validate, (req ,res)=>{
+route.post("/api/checkin" ,validateCheckIn , validate, authenticateToken, (req ,res)=>{
   controllerCheckInAndCheckOut.toDoCheckIn(req ,res)
 })
-route.get('/api/checkin/:idMoto' ,(req ,res)=>{
+route.get('/api/checkin/:idMoto' ,authenticateToken ,(req ,res)=>{
    controllerCheckInAndCheckOut.getCheckInOpen(req ,res)
 })
-route.put("/api;checkin/:id" , (req ,res)=> {
+route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
   controllerCheckInAndCheckOut.toCheckOut(req ,res)
 })
 
@@ -324,9 +343,17 @@ route.get("/api/contrato/:id",(req , res)=>{
 route.put("/api/contrato/:id" , (req ,res)=>{
   logistcgController.updateContratoWithGoods(req ,res)
 })
+
+route.patch('/api/updatestatus/:id', (req ,res)=>{
+   controllerDelivery.updateStatusDelivery(req ,res)
+})
  route.get('/api/getdelivery' , authenticateToken, (req ,res)=>{
   controllerDelivery.getDate(req ,res)
  });
+
+ route.get("/api/deliverydriver/:id" , (req ,res)=>{
+   controllerDelivery.getDataLocationDriver(req ,res)
+ })
 
  export {route}
 

@@ -1012,8 +1012,6 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
   });
 }
 
-
-
 // pegar locações para logistica
 async function getAllLocationsForLogistics(token) {
   const resunt = await fetch("/api/locationFinish", {
@@ -1115,7 +1113,6 @@ function atingiuQuantidadeSolicitada(locacao, familiaBem) {
 
   const quantidadeSolicitada = parseInt(bensFamilia[0].beloqntd, 10);
 
-  // Considera todos os bens dessa família que já estão com status "Em Locação"
   const vinculados = bensFamilia.filter(
     (b) => b.belostat === "Locado"
   ).length;
@@ -1222,6 +1219,7 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
         driver: motoId,
         pagament: locacaoEncontrada.cllopgmt,
         devolution: locacaoEncontrada.cllodtdv,
+        status:"Pendente",
         localization:{
            rua:locacaoEncontrada.cllorua,
            cep:locacaoEncontrada.cllocep,

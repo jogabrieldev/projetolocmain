@@ -190,28 +190,36 @@ async getbensByCode(req, res) {
   },
 
   async updateStatus(req, res) {
-    try {
-      const { bemId } = req.params; 
-      const { bensstat } = req.body; 
-     
-      if (!bemId || !bensstat) {
-        return res.status(400).json({ message: "Dados inválidos" });
-      }
+  try {
+    const { bemId } = req.params;
+    const { bensstat } = req.body;
 
-      if(bensstat !== "Disponível" && bensstat !== "Locado"){
-        return res.status(400).json({message:"O status passado e invalido no processo!"})
-      }
-
-      const result = await goodsRegister.updateStatus(bemId, bensstat);
-
-      if (!result) {
-        return res.status(404).json({ message: "Bem não encontrado" });
-      }
-
-      return res.status(200).json({ message: "Status atualizado com sucesso!", success:true , status: result.bensstat });
-    } catch (error) {
-      console.error("Erro ao atualizar status:", error);
-      return res.status(500).json({ message: "Erro no servidor na atualização do status" });
+    if (!bemId || !bensstat) {
+      return res.status(400).json({ message: "Dados inválidos" });
     }
-  },
+
+    const statusValidos = ["Disponível", "Locado", "A destino do cliente"];
+    if (!statusValidos.includes(bensstat)) {
+      return res.status(400).json({ message: "Status inválido!" });
+    }
+    const result = await goodsRegister.updateStatus(bemId, bensstat);
+
+    if (!result) {
+      return res.status(404).json({ message: "Bem não encontrado" });
+    }
+
+    return res.status(200).json({
+      message: "Status atualizado com sucesso!",
+      success: true,
+      status: result.bensstat,
+      dataAtualizacao: result.bensdtus,
+      horaAtualizacao: result.benshrus
+    });
+
+  } catch (error) {
+    console.error("Erro ao atualizar status:", error);
+    return res.status(500).json({ message: "Erro no servidor na atualização do status" });
+  }
+}
+
 };

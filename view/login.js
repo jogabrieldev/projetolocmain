@@ -48,14 +48,9 @@ function loginUserCenter() {
         if (response.token) {
           localStorage.setItem("token", response.token);
           localStorage.setItem("tipoUsuario", response.tipo);
+           
+          localStorage.setItem('user' , response.user)
 
-
-          if(response.tipo === 'motorista'){
-            localStorage.setItem('user' , response.user)
-          }else{
-            localStorage.setItem('user' , response.user)
-          }
-         
           Toastify({
             text: "Login com sucesso",
             duration: 3000,
@@ -65,9 +60,13 @@ function loginUserCenter() {
           }).showToast();
 
           setTimeout(() => {
-            if (response.tipo === "motorista") {
+            if (response.tipo === "motoristaInterno") {
               window.location.href = "screenDriverMobile/driverPage.html";
-            } else {
+
+            } else if(response.tipo === "motoristaExterno"){
+              window.location.href = "screenDriverMobile/driverExterno/driverExterno.html"
+            }
+            else {
               window.location.href = "screenMain/main.html";
             }
           }, 300);

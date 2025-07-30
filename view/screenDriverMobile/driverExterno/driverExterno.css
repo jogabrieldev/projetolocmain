@@ -1,0 +1,23 @@
+  .body{
+      background-color: #f8f9fa;
+  } 
+    .card-entrega {
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border: none;
+      border-radius: 12px;
+    }
+    .card-veiculo {
+      background-color: #e9f7ef;
+      border-left: 5px solid #28a745;
+    }
+    .header {
+      background-color: #343a40;
+      color: #fff;
+      padding: 1rem;
+      border-radius: 0 0 12px 12px;
+      margin-bottom: 1.5rem;
+    }
+    .entrega-status {
+      font-size: 0.9rem;
+      font-weight: bold;
+    }

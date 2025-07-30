@@ -197,11 +197,10 @@ function formatarCampo(tipo, valor) {
 
   return valor;
 
-
     default:
       return valor;
   }
-}
+};
 
 
 
@@ -231,7 +230,6 @@ document.addEventListener("DOMContentLoaded", () => {
        welcome.classList.add("hidden");
      }
    }
-
    // Mostra após login
    showWelcome();
 

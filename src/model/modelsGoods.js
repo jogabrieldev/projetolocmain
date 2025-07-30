@@ -207,21 +207,26 @@ export const goodsRegister = {
   },
 
   updateStatus: async (bemId, bensstat) => {
-    try {
-      const query = `
+  try {
+    const dataAtual = new Date();
+    const dataFormatada = dataAtual.toISOString().split('T')[0]; // yyyy-mm-dd
+    const horaFormatada = dataAtual.toTimeString().split(' ')[0]; // HH:mm:ss
+
+    const query = `
       UPDATE cadbens
-      SET bensstat = $1
-      WHERE benscode = $2
+      SET bensstat = $1, bensdtus = $2, benshrus = $3
+      WHERE benscode = $4
       RETURNING *;
-  `;
+    `;
 
-      const values = [bensstat, bemId];
-      const result = await dbGoods.query(query, values);
+    const values = [bensstat, dataFormatada, horaFormatada, bemId];
+    const result = await dbGoods.query(query, values);
 
-      return result.rows[0];
-    } catch (error) {
-      console.error("erro a atualizar status do bem ");
-      throw error;
-    }
-  },
+    return result.rows[0];
+  } catch (error) {
+    console.error("Erro ao atualizar status do bem:", error);
+    throw error;
+  }
+},
+
 };

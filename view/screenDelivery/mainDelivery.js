@@ -186,6 +186,7 @@ function renderTableDelivery() {
     }
 
     deliveryData.forEach((item) => {
+      console.log(item)
       const cliente = clientData.find((c) => c.cliecode === item.lofiidcl);
       if(!cliente){
         Toastify({
@@ -205,7 +206,12 @@ function renderTableDelivery() {
                 <td>${item.lofiidbe}</td>
                 <td>${cliente ? cliente.clienome : "Desconhecido"}</td>
                 <td>${item.lofiidlo}</td>
-                <td>${new Date((item.lofidtlo)).toLocaleDateString('pt-BR')}</td>
+                <td>${item.lofistat}</td>
+                <td>${new Date((item.lofidtlo)).toLocaleDateString('pt-BR' , {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric'
+                })}</td>
                 <td><button class="detalhes" onclick="showDetails(${
                   item.loficode
                 })">Detalhes</button></td>
@@ -267,8 +273,6 @@ async function showDetails(codigo) {
     const item = deliveryData.find((d) => d.loficode === codigo);
     if (!item) return;
 
-    console.log("item");
-
     const cliente = clientData.find((c) => c.cliecode === item.lofiidcl);
 
     const motorista = motoris.find((m) => m.motocode === item.lofiidmt);
@@ -307,6 +311,7 @@ async function showDetails(codigo) {
       <p><strong><i class="bi bi-calendar-event"></i> Data da Locação:</strong> ${dataLocFormat}</p>
       <p><strong><i class="bi bi-calendar-check"></i> Devolução:</strong> ${dataFormat}</p>
       <p><strong><i class="bi bi-cash-stack"></i> Pagamento:</strong> ${item.lofipgmt}</p>
+      <p><strong><i class="bi-hourglass-split"></i> Status:</strong> ${item.lofistat}</p>
     </div>
   </div>
 `;

@@ -41,21 +41,34 @@ export const movimentCheckInAndCheckOut = {
   },
 
  async toDoCheckOut(id , body){
-      try {
-      const query = `
+  try {
+    const query = `
       UPDATE checmtve
-      SET checobse = $1 , checdtvt = $2 , checkmvt = $3 , checstvt = $4 , checobvt = $5
+      SET checobse = $1,
+          checdtvt = $2,
+          checkmvt = $3,
+          checstvt = $4,
+          checobvt = $5
       WHERE checid = $6
       RETURNING *;
-  `;
+    `;
 
-      const values = [body, id];
-      const result = await dataCheckIn.query(query, values);
+    const values = [
+      body.checobse || null,      
+      body.checdtvt,
+      body.checkmvt,
+      body.checstvt,
+      body.checobvt,
+      id
+    ];
 
-      return result.rows[0];
-    } catch (error) {
-      console.error("Erro em fazer check-out " ,error);
-      throw error;
-    }
- }
+    const result = await dataCheckIn.query(query, values);
+    return result.rows[0];
+
+  } catch (error) {
+    console.error("Erro em fazer check-out:", error);
+    throw error;
+  }
+}
+
 }

@@ -70,7 +70,10 @@ class Control {
   devolution(req , res){
     res.sendFile(path.join(__dirname , '..' , '..' , 'view' , 'screenDevolution' , 'mainDevolution.html'))
   }
-
+   
+  driverExternoWithVehicle(req ,res){
+     res.sendFile(path.join(__dirname , ".." , ".." , "view" , "screenMain" , "driverWithVehicleExterno" , "driverWithVehicle.html"))
+  }
  
 
 }

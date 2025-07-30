@@ -50,38 +50,25 @@
 
 
 <form id="formCheckOut" class="border mt-3">
-    <h4 class="text-center">Faça o Check-Out</h4>
+  <h4 class="text-center">Faça o Check-Out</h4>
   <div class="mb-2">
-    <label for="caminhao" class="form-label">Caminhão</label>
-    <select class="form-select form-select-sm" id="caminhao" required>
-      <option value="" disabled selected>Selecione</option>
-    </select>
+    <label for="caminhaoCheckOut" class="form-label">Caminhão</label>
+     <input type="text" name="caminhaoCheckOut" class="form-control form-control-sm" id="caminhaoCheckOut" readonly maxlength="80">
   </div>
 
   <div class="mb-2">
-    <label for="checObs" class="form-label">Observação</label>
-    <input type="number" class="form-control form-control-sm" id="checObs" placeholder="obs...">
+    <label for="checObsVt" class="form-label">Observação</label>
+    <input type="text" class="form-control form-control-sm" id="checObsVt" placeholder="obs...">
   </div>
+
 
   <div class="mb-2">
-    <label for="status" class="form-label">Status</label>
-    <select class="form-select form-select-sm" id="status" required>
-      <option value="">Selecione...</option>
-      <option value="Finalizado">Finalizado</option>
-    </select>
+    <label for="kmVt" class="form-label">KM atual</label>
+    <input type="number" class="form-control form-control-sm" id="kmVt" placeholder="Digite o KM atual" required>
   </div>
 
-  <div class="mb-2">
-    <label for="km" class="form-label">KM atual</label>
-    <input type="number" class="form-control form-control-sm" id="km" placeholder="Digite o KM atual" required>
-  </div>
 
-  <div class="mb-2">
-    <label for="km" class="form-label">Data e hora</label>
-    <input type="datetime-local" class="form-control form-control-sm" id="dateTimeChec"  required>
-  </div>
-
-  <button type="submit" class="btn btn-success btn-sm w-100">Fazer Check-Out</button>
+  <button type="button" id="submitCheckOut" class="btn btn-success btn-sm w-100">Fazer Check-Out</button>
 </form>
 
   </div>
@@ -99,7 +86,7 @@
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.js"></script>
-  <script src="loginDriver.js"></script>
+  <script src="driverPage.js"></script>
   <script src="checkInAndCheckOut.js"></script>
 </body>
 </html>

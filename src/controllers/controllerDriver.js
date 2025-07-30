@@ -7,6 +7,7 @@ export const movementOfDriver = {
   async registerOfDriver(req, res) {
     try {
       const data = req.body;
+      console.log('data' , data)
 
       if (!data) {
         return res
@@ -25,8 +26,8 @@ export const movementOfDriver = {
       }
 
      data.motoPasw = await bcrypt.hash(data.motoPasw, saltRounds);
-
-
+        
+  
       // Prossegue com o cadastro
       const newDriver = await driverRegister.registerDriver(data);
       if(!newDriver){

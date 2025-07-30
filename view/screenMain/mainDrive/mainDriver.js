@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const mainContent = document.querySelector("#mainContent");
         if (mainContent) {
           mainContent.innerHTML = html;
+
           maskFieldDriver();
           interationSystemDriver();
           registerNewDriver();
@@ -46,6 +47,9 @@ document.addEventListener("DOMContentLoaded", () => {
           searchDriverForId();
           editDriver();
           editAndUpdateOfDriver();
+          linkDriverExternoWithVehicle();
+          getCarSituationExterno();
+          
         } else {
           console.error("#mainContent não encontrado no DOM");
           return;
@@ -297,23 +301,14 @@ function registerNewDriver() {
         motoCode: document.querySelector("#motoCode").value.trim(), // Código
         motoNome: document.querySelector("#motoNome").value.trim(), // Nome
         motoDtnc: document.querySelector("#motoDtnc").value, // Data de nascimento
-        motoCpf: document
-          .querySelector("#motoCpf")
-          .value.trim()
-          .replace(/\D/g, ""), // CPF
+        motoCpf: document.querySelector("#motoCpf").value.trim().replace(/\D/g, ""), // CPF
         motoDtch: document.querySelector("#motoDtch").value.trim(), // Data de emissão da CNH
         motoctch: document.querySelector("#motoctch").value.trim(), // Categoria da CNH
         motoDtvc: document.querySelector("#motoDtvc").value, // Data de vencimento
         motoRest: document.querySelector("#motoRest").value.trim(), // Restrições
         motoOrem: document.querySelector("#motoOrem").value.trim(), // Órgão emissor
-        motoCelu: document
-          .querySelector("#motoCelu")
-          .value.trim()
-          .replace(/\D/g, ""), // Celular
-        motoCep: document
-          .querySelector("#motoCep")
-          .value.trim()
-          .replace(/\D/g, ""), // CEP
+        motoCelu: document.querySelector("#motoCelu").value.trim().replace(/\D/g, ""), // Celular
+        motoCep: document.querySelector("#motoCep").value.trim().replace(/\D/g, ""), // CEP
         motoRua: document.querySelector("#motoRua").value.trim(), // Rua
         motoCity: document.querySelector("#motoCity").value.trim(), // Cidade
         motoEstd: document.querySelector("#motoEstd").value.trim(), // Estado
@@ -382,7 +377,7 @@ function registerNewDriver() {
       }
 
       try {
-        const response = await fetch("http://localhost:3000/api/drive/submit", {
+        const response = await fetch("/api/drive/submit", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -392,6 +387,7 @@ function registerNewDriver() {
         });
 
         const result = await response.json();
+        console.log("resposta" , response)
 
         if (response.ok) {
           Toastify({
@@ -410,7 +406,7 @@ function registerNewDriver() {
           if (result?.errors && Array.isArray(result.errors)) {
             // junta todas as mensagens em uma string
             const mensagens = result.errors
-              .map((err) => `• ${err.msg}`)
+              .map((err) => `${err.msg}`)
               .join("\n");
 
             Toastify({
@@ -620,6 +616,7 @@ async function fetchListMotorista() {
       "<p>Erro ao carregar motoristas.</p>";
   }
 }
+
 
 // buscar motorista
 async function searchDriverForId() {

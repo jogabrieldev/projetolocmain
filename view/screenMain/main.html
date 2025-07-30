@@ -102,7 +102,7 @@
   </li>
   <li class="nav-item mb-2">
     <button class="btn btn-submenu btn-outline-light w-100 btnCadMotorista">
-      <i class="bi bi-person-badge me-2"></i>Motorista
+      <i class="bi bi-person-badge me-2"></i>Motoristas
     </button>
   </li>
   <li class="nav-item mb-2">
@@ -119,6 +119,12 @@
   <li class="nav-item mb-2">
     <button class="btn btn-submenu btn-outline-light w-100 btnLoadDestination">
       <i class="bi bi-geo-alt me-2"></i>Destino Descarte
+    </button>
+  </li>
+
+  <li class="nav-item my-1">
+    <button class="btn btn-submenu btn-outline-light w-100 buttonInformationDriverWithVehicleExterno">
+      <i class="bi bi-person-badge me-2"></i> Motoristas externo
     </button>
   </li>
 
@@ -184,6 +190,7 @@
           <li class="nav-item my-1"><button class="btn btn-submenu btn-outline-light w-100 btnCadAutomo">Veículos</button></li>
 
           <li class="nav-item my-1"><button class="btn btn-submenu btn-outline-light w-100 btnCadResiduo">Residuo</button></li>
+
         </ul>
       </div>
 
@@ -233,6 +240,8 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="./mainGoods/mainGoods.js"></script>
     <script type="module" src="./mainClient/mainClient.js"></script>
+    <script src="./mainDrive/linkDriverVehicle.js"></script>
+    <script src="./driverWithVehicleExterno/driverExterno.js"></script>
     <script src="./mainForn/mainForn.js"></script>
     <script src="./mainProd/mainProd.js"></script>
     <script src="./mainFabe/mainFabri.js"></script>
@@ -248,6 +257,7 @@
     <script src="../screenLocation/localization.js"></script>
     <script src="../screenLocation/locationVehicle.js"></script>
     <script src="../screenMain/mainDestination/mainDestination.js"></script>
+  
     <script src="main.js"></script>
 
   </body>

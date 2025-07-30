@@ -1,7 +1,19 @@
 import { body } from 'express-validator';
+import { autoRegister } from '../../model/modelsVehicles.js';
 
 export const validateAutomovel = [
-  // ✅ Validação da data de cadastro do automóvel
+
+
+  body("caauplac")
+  .notEmpty().withMessage('Obrigatorio passar a placa do veiculo')
+  .custom(async(value)=>{
+      const validPlac = await autoRegister.searchPlacaExist()
+      const placExist = validPlac.map((item)=>item.caauplac)
+      if(placExist.includes(value)){
+         throw new Error("Placa ja e cadastrada verifique se a placa esta correta")
+      }
+  }),
+ 
   body('caaudtca')
     .custom((value) => {
       // Verifica formato yyyy-mm-dd

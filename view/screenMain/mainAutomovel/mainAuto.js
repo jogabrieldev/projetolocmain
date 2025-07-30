@@ -280,10 +280,10 @@ async function registerNewVehicles() {
           }).showToast();
           document.querySelector(".foorm").reset();
           dateAtualInField("dtCadAuto");
+          
         } else {
-          // 👇 aqui tratamos erros de validação do express-validator
+    
           if (result?.errors && Array.isArray(result.errors)) {
-            // junta todas as mensagens em uma string
             const mensagens = result.errors
               .map((err) => `• ${err.msg}`)
               .join("\n");

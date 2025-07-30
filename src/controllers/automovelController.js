@@ -7,11 +7,8 @@ export const movementAuto = {
     const dataAuto = req.body;
 
     if (!dataAuto) {
-      return res
-        .status(400)
-        .json({ message: "Campos obrigatórios não preenchidos." });
+      return res.status(400).json({ message: "Campos obrigatórios não preenchidos." });
     }
-
 
     const newAuto = await autoRegister.registerAuto(dataAuto);
     if(!newAuto){
@@ -35,6 +32,25 @@ export const movementAuto = {
 
      return res.status(500).json({ success: false, message: "Erro interno no servidor." });
   }
+},
+
+async getCodeVehicle(req , res){
+   try {
+       const {code} = req.params
+       if(!code){
+        return res.status(400).json({message:"E obrigatorio passar o codigo para a busca"})
+       }
+       
+       const vehicle = await autoRegister.getCodeVehicle(code)
+       if(!vehicle){
+         return res.status(400).json({message:"Não foi encontrado nenhum veiculo com esse codigo"})
+       }
+
+       return res.status(200).json({message:"Veiculo encontrado com sucesso" , success:true, veiculo:vehicle })
+   } catch (error) {
+      console.error("Erro para buscar veiculo por codigo")
+      return res.status(500).json({message:"Erro para buscar o veiculo por codigo", success:false})
+   }
 },
 
 async getAutomovelByCode(req, res) {

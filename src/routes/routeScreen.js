@@ -35,4 +35,6 @@ routeEscreen.get('/localization' , control.localization)
 
 routeEscreen.get('/destination' , control.destination)
 
+routeEscreen.get('/driverexterno' , control.driverExternoWithVehicle)
+
 export { routeEscreen };

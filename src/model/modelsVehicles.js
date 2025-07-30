@@ -69,6 +69,21 @@ export const autoRegister = {
     }
   },
 
+  async searchPlacaExist(){
+    try {
+       const query = `SELECT caauplac from cadauto `
+       const result = await dataClient.query(query)
+       if(result){
+          return result.rows
+       }
+      
+       return null
+      
+    } catch (error) {
+      console.error('Erro em buscar placas de veiculos')
+      throw error;
+    }
+  },
  async searchVehicle(caaucode, placa) {
    try {
      let query = "SELECT * FROM cadauto WHERE 1=1";

@@ -15,6 +15,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
       <button class="registerDriver text-dark fw-semibold btn btn-primary">Incluir</button>
       <button class="buttonDeleteDriver btn btn-danger text-dark fw-semibold">Excluir</button>
       <button class="buttonEditDriver btn btn-warning text-dark fw-semibold">Editar</button>
+      <button class="btn btn-warning text-dark fw-semibold" id="buttonLinkDriverExterno">Vincular veiculo externo</button>
       <button class="btn btn-light text-dark fw-semibold" id="searchDriver"><i class="bi bi-search me-2"></i>Buscar</button>
     </div>
 
@@ -208,9 +209,49 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
     </div>
 
   </div>
-</form>
+ </form>
+</div>
 
+<div class="popUpLinkDriverVehicle position-fixed top-0 start-0 w-100 h-100 justify-content-center align-items-center"
+     style="background-color: rgba(0, 0, 0, 0.4); display: none; z-index: 1055;">
 
+  <!-- Modal centralizado com sombra e borda arredondada -->
+  <div class="bg-white border rounded-4 p-4 shadow w-100 mx-3 linkDriverVehicle"
+       style="max-width: 500px; ">
+
+    <div class="text-center mb-4">
+      <h5 class="fw-bold text-dark mb-1">
+        <i class="bi bi-link-45deg text-primary me-2"></i>Vincular Veículo ao Motorista
+      </h5>
+      <p class="text-muted small mb-0">Selecione o veículo externo para vincular ao motorista selecionado.</p>
+    </div>
+
+    <!-- Campo Código do Motorista -->
+    <div class="form-floating mb-3 position-relative">
+      <input type="hidden" name="codigoMotorista" id="codigoMotorista"/>
+      <input type="text" name="idMoto" id="idMoto" class="form-control ps-5" readonly/>
+      <label for="idMoto"><i class="bi bi-person-badge-fill me-1"></i> Código do Motorista</label>
+    </div>
+
+    <!-- Seleção de Veículo Externo -->
+    <div class="form-floating mb-3 position-relative">
+      <select name="veicExterno" id="veicExterno" class="form-select ps-5">
+       
+      </select>
+      <label for="veicExterno"><i class="bi bi-truck-front-fill me-1"></i> Veículos Externos Cadastrados</label>
+    </div>
+
+    <!-- Botões -->
+    <div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+      <button class="btn btn-primary w-100 w-sm-50 saveDriverVehicle">
+        <i class="bi bi-check-circle me-1"></i> Salvar
+      </button>
+      <button class="btn btn-secondary w-100 w-sm-50 exitPopUpLinkVehicle">
+        <i class="bi bi-arrow-left me-1"></i> Voltar
+      </button>
+    </div>
+
+  </div>
 </div>
 
 
