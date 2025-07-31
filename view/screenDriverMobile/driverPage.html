@@ -41,7 +41,7 @@
 
 
   <div class="mb-2">
-    <label for="km" class="form-label">KM atual</label>
+    <label for="kmAt" class="form-label">KM atual</label>
     <input type="number" class="form-control form-control-sm" id="kmAt" placeholder="Digite o KM atual" required>
   </div>
 
@@ -53,7 +53,7 @@
   <h4 class="text-center">Faça o Check-Out</h4>
   <div class="mb-2">
     <label for="caminhaoCheckOut" class="form-label">Caminhão</label>
-     <input type="text" name="caminhaoCheckOut" class="form-control form-control-sm" id="caminhaoCheckOut" readonly maxlength="80">
+     <input type="text" name="caminhaoCheckOut" class="form-control form-control-sm" id="caminhaoCheckOut" readonly="80">
   </div>
 
   <div class="mb-2">
@@ -74,18 +74,19 @@
   </div>
 
   <!-- Tela de Entregas (inicialmente oculta) -->
-  <div id="telaEntregas" style="display: none;">
+  <!-- <div id="telaEntregas" style="display: none;">
     <div class="text-center mb-4">
       <h4 class="fw-bold">Entregas Pendentes</h4>
       <p class="text-muted small">Painel do Motorista</p>
     </div>
- </div> 
+ </div>  -->
 </section>
 
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
   <script src="driverPage.js"></script>
   <script src="checkInAndCheckOut.js"></script>
 </body>

@@ -1,6 +1,6 @@
 import { movimentCheckInAndCheckOut } from "../model/modelsCheckIn.js";
 import { autoRegister as updateRuntime } from "../model/modelsVehicles.js";
-
+import { mecanismDelivey } from "../model/modelsDelivery.js";
  export const controllerCheckInAndCheckOut = {
        
     async toDoCheckIn(req ,res){
@@ -20,7 +20,6 @@ import { autoRegister as updateRuntime } from "../model/modelsVehicles.js";
                payloadCheckin.checDtch = new Date()
             }
             
-            console.log(payloadCheckin)
            const newCheckIn =  await movimentCheckInAndCheckOut.toDoCheckIn(payloadCheckin)
            if(!newCheckIn){
              return res.status(400).json({message:"Erro para fazer esse CHECK_IN tente novemente"})
@@ -28,9 +27,16 @@ import { autoRegister as updateRuntime } from "../model/modelsVehicles.js";
            
           const io = req.app.get("socketio")
            if(io){
-            const listVehicle = await updateRuntime.listAutos()
-             io.emit("checkIn" , listVehicle)
+            const listVehicle = await updateRuntime.updateStatus(payloadCheckin.checVeic , "Esta com Motorista!")
+
+             const checkInsAbertos = await movimentCheckInAndCheckOut.getCheckInOpen(payloadCheckin.checMoto, "Em uso");
+
+             
+
+
+             io.emit("checkIn" , listVehicle , checkInsAbertos)
            }
+
            return res.status(200).json({success:true , checkin: newCheckIn})
         } catch (error) {
             console.error('Erro para fazer checkin' ,error)
@@ -43,13 +49,11 @@ import { autoRegister as updateRuntime } from "../model/modelsVehicles.js";
             const idMoto = req.params.idMoto
       
              if(idMoto){
-                
-              const status = 'Em uso'
-              const verificar = await movimentCheckInAndCheckOut.getCheckInOpen(idMoto , status)
+              const verificar = await movimentCheckInAndCheckOut.getCheckInOpen(idMoto)
               if(!verificar){
-                return res.status(400).json({message: "Não consegui encontrar nenhum registro!"})
+                return res.status(400).json({message: "Não consegui encontrar nenhum registro desse motorista!"})
               }
-             
+             console.log('verificar', verificar)
                return res.status(200).json({success:true , verificar:verificar })
              }
         } catch (error) {
@@ -58,6 +62,7 @@ import { autoRegister as updateRuntime } from "../model/modelsVehicles.js";
         }
     },
 
+  
  async toCheckOut(req, res) {
   try {
     const { id } = req.params; // ID do check-in aberto
@@ -74,7 +79,7 @@ import { autoRegister as updateRuntime } from "../model/modelsVehicles.js";
 
     // Atualizar no banco
     const atualizado = await movimentCheckInAndCheckOut.toDoCheckOut(id, {
-      checstvt: 'Finalizado', 
+      checstat: 'Finalizado', 
       checkmvt,               
       checdtvt: new Date(),              
       checobvt                
@@ -82,6 +87,16 @@ import { autoRegister as updateRuntime } from "../model/modelsVehicles.js";
 
     if (!atualizado) {
       return res.status(400).json({ message: 'Não foi possível finalizar o check-out!' });
+    }
+    console.log('atualizado' , atualizado)
+    const socket = req.app.get("socketio")
+    if(socket){
+
+        const statusVehicle = await updateRuntime.updateStatus(atualizado.checveic , "Disponível")
+          const checkInsFinish = await movimentCheckInAndCheckOut.getCheckInOpen(atualizado.checmoto, "Finalizado");
+
+          console.log('volta' ,checkInsFinish)
+      socket.emit('checkOut' , statusVehicle , checkInsFinish)
     }
 
     return res.status(200).json({ success: true, checkout: atualizado });

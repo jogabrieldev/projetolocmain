@@ -50,6 +50,13 @@ const controllerDelivery = {
                return res.status(400).json({message:"Erro na atualização", success:false})
              }
 
+             console.log(result)
+
+           const socket = req.app.get("socketio")
+               if(socket){
+                 socket.emit('statusDelivey' , result)
+               }
+
              return res.status(200).json({message:"sucesso na atualização de status dessa entrega" , success:true,  update:result})
          } catch (error) {
             console.error('Erro para atualizar o status da entrega' , error)

@@ -4,16 +4,16 @@ export const movimentCheckInAndCheckOut = {
        
   async toDoCheckIn(data){
     try {
-         const {checMoto, checVeic,checDtch,checKmat,checStat } = data
+         const {checMoto, checVeic,checDtch,checKmat,checStat ,checkObs} = data
          console.log(data)
 
          const insert = `
-         INSERT INTO checmtve (checmoto, checveic, checdtch, checkmat, checstat)
-         VALUES ($1, $2, $3, $4, $5)
+         INSERT INTO checmtve (checmoto, checveic, checdtch, checkmat, checstat , checobse)
+         VALUES ($1, $2, $3, $4, $5 , $6)
          RETURNING *`;
 
 
-         const values = [ checMoto,checVeic,checDtch, checKmat,checStat]
+         const values = [ checMoto,checVeic,checDtch, checKmat,checStat , checkObs]
 
          const result = await dataCheckIn.query(insert , values)
 
@@ -24,10 +24,10 @@ export const movimentCheckInAndCheckOut = {
     }
  },
 
-  async getCheckInOpen(idMoto , status){
+  async getCheckInOpen(idMoto){
       try {
-            const query = 'SELECT * FROM checmtve WHERE checmoto = $1 AND checstat = $2 LIMIT 1'
-            const values = [idMoto , status]
+            const query = 'SELECT * FROM checmtve WHERE checmoto = $1 LIMIT 2'
+            const values = [idMoto]
             const result = await dataCheckIn.query(query , values)
 
              if (result.rows.length > 0) {
@@ -40,6 +40,7 @@ export const movimentCheckInAndCheckOut = {
      }
   },
 
+ 
  async toDoCheckOut(id , body){
   try {
     const query = `
@@ -47,7 +48,7 @@ export const movimentCheckInAndCheckOut = {
       SET checobse = $1,
           checdtvt = $2,
           checkmvt = $3,
-          checstvt = $4,
+          checstat = $4,
           checobvt = $5
       WHERE checid = $6
       RETURNING *;
@@ -57,7 +58,7 @@ export const movimentCheckInAndCheckOut = {
       body.checobse || null,      
       body.checdtvt,
       body.checkmvt,
-      body.checstvt,
+      body.checstat,
       body.checobvt,
       id
     ];

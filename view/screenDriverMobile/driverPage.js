@@ -1,15 +1,64 @@
-document.addEventListener("DOMContentLoaded", function () {
- 
-  const selectCar = document.getElementById("caminhao");
-  if (selectCar) {
-    selectCar.addEventListener("click", getAllCar());
-  }
+
+
+document.addEventListener("DOMContentLoaded", async function () {
   
-  checkOut();
+  // finisihCheckOut()
+  valueSelect();
+  initSocketCheckIn()
+  getCheck();
   checkIn();
   listDeliveryForDriver();
   addNameDriver();
+  toAcceptDeliveryNow()
 });
+
+function valueSelect() {
+  const selectCar = document.getElementById("caminhao");
+  if (selectCar) {
+    selectCar.addEventListener("click", getAllCar());
+}
+}
+
+// function finisihCheckOut(){
+//    const socket = io()
+//    socket.on("checkOut", async(listVehicle)=>{
+//     console.log('lista lifa' , listVehicle)
+//         finisihCheckOut(listVehicle.caaucode)
+//    } )  
+// }
+
+function initSocketCheckIn(){
+   const socket = io(); // conecta ao servidor
+
+  socket.on("checkIn", async (listVehicle, checkin) => {
+    console.log("Novo check-in recebido via socket!", listVehicle, checkin);
+    console.log('lista' , listVehicle)
+  
+    Toastify({
+      text: `Novo Check-In! Veículo ${listVehicle.caauplac || "sem placa"} com motorista.`,
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "green",
+    }).showToast();
+   
+
+      const inputVehicle = document.getElementById("caminhaoCheckOut");
+      const vehicle = await getVehicleWithDriver(listVehicle.caaucode)
+      if (vehicle && inputVehicle) {
+        inputVehicle.value = ""
+       inputVehicle.value = `${vehicle.caaumaca} - ${vehicle.caauplac}`;
+      }
+
+        const inputCaminhao = document.getElementById('caminhao');
+         if (inputCaminhao) {
+           inputCaminhao.disabled = true; // Torna o campo somente leitura
+          }
+    
+    getAllCar(); 
+  });
+}
 
 function isTokenExpired(token) {
   try {
@@ -107,10 +156,14 @@ async function getAllCar() {
     });
 
     const carros = await response.json();
+    console.log('carros' , carros)
+
 
     const carrosAtivos = carros.filter(
-      (carro) => carro.caaustat === "Disponivel" && carro.caausitu === "Interno"
+      (carro) => carro.caaustat === "Disponível" && carro.caausitu === "Interno"
     );
+
+    console.log('Carros' ,carrosAtivos)
 
     const select = document.getElementById("caminhao");
     if (select) {
@@ -132,6 +185,8 @@ async function getAllCar() {
 let idDelivery = "";
 let idBem = ""
 async function listDeliveryForDriver() {
+
+  updateRuntimeStatusDelivery()
   try {
     const token = localStorage.getItem("token");
     const motoristaId = localStorage.getItem("user");
@@ -176,9 +231,11 @@ async function listDeliveryForDriver() {
         position: "center",
         backgroundColor: "red",
       }).showToast();
+      return
     }
 
     const entrega = data.entrega;
+
 
     if (entrega.length === 0) {
       container.innerHTML = `
@@ -190,7 +247,7 @@ async function listDeliveryForDriver() {
     }
     
     idDelivery = entrega?.loficode;
-    idBem = entrega?.lofiidbe
+    idBem = entrega?.lofiidbe;
 
     let botoes = "";
 
@@ -199,7 +256,7 @@ async function listDeliveryForDriver() {
     if (statusEntrega === "Entrega aceita") {
       botoes = `<button class="btn btn-warning w-75 finishDelivery">Finalizar</button>`;
     } else {
-      botoes = `<button class="btn btn-success w-75 toAcceptDelivery">Aceitar</button>`;
+      botoes = `<button class="btn btn-success w-75 toAcceptDelivery" disabled>Aceitar</button>`;
     }
 
     let nomeClient = "";
@@ -230,8 +287,9 @@ async function listDeliveryForDriver() {
       const card = document.createElement("div");
       card.className = "col-md-6 col-lg-4";
 
-      card.innerHTML = `
-        <div class="card border-0 shadow-sm h-100">
+     card.innerHTML = `
+  <div class="card border-0 shadow-sm h-100" data-entrega-id="${entrega.lofiidlo}">
+
           <div class="card-body">
             <h5 class="card-title">
               <i class="bi bi-box-seam-fill text-primary"></i>
@@ -272,6 +330,25 @@ async function listDeliveryForDriver() {
       <p class="text-danger text-center fw-bold">Erro ao carregar entregas.</p>`;
   };
 };
+
+// ATUALIZAR EM TEMPO REAL PARA MOSTRAR O BOTÃO NA TELA FINALIZAR
+async function  updateRuntimeStatusDelivery() {
+  const socket = io()
+    socket.on('statusDelivey', (entregaAtualizada) => {
+  console.log('Atualização recebida via socket:', entregaAtualizada);
+
+  // Localize o card da entrega pelo ID
+  const card = document.querySelector(`.card-title:contains("Entrega #${entregaAtualizada.lofiidlo}")`)?.closest(".card-body");
+  if (card) {
+    const btnFinalizar = card.querySelector(".finishDelivery");
+    const btnAceitar = card.querySelector(".toAcceptDelivery");
+
+    if (btnAceitar) btnAceitar.classList.add("d-none");
+    if (btnFinalizar) btnFinalizar.classList.add("d-flex");
+  }
+});
+}
+
 
 async function updateStatusGoods(idBem) {
   try {
@@ -316,7 +393,7 @@ async function toAcceptDeliveryNow(event) {
       throw new Error("Token ou ID da entrega não encontrado");
     }
 
-    const response = await fetch(`/api/updatestatus/${idDelivery}`, {
+    const response = await fetch(`/api/updatestatusdelivery/${idDelivery}`, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
@@ -357,14 +434,15 @@ async function toAcceptDeliveryNow(event) {
 
   } catch (error) {
     console.error("Erro para atualizar status da entrega", error);
-    Toastify({
-      text: "Erro para atualizar status da entrega",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-  }
-}
+  };
+};
+
+//  function finishDelivery () {
+//      const btnFinishDelivery =  document.getElementById('finishDelivery')
+//      if(btnFinishDelivery){
+//         btnFinishDelivery.addEventListener("click", async ()=>{
+//              const response = await fetch('')
+//         })
+//      }
+// }
 

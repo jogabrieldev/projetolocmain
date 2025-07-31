@@ -112,6 +112,13 @@ io.on("connection", (socket) => {
     socket.on("checkIn" , (msg)=>{
         io.emit("checkIn" , msg);
     });
+    socket.on('cheeckOut' , (msg)=>{
+         io.emit('checkOut' , msg)
+    })
+
+    socket.on('statusDelivery' , (msg)=>{
+        io.emit("statusDelivery" , msg)
+    })
 
     socket.on("disconnect", () => {
     });

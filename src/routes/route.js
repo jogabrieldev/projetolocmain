@@ -281,6 +281,7 @@ route.post("/api/checkin" ,validateCheckIn , validate, authenticateToken, (req ,
 route.get('/api/checkin/:idMoto' ,authenticateToken ,(req ,res)=>{
    controllerCheckInAndCheckOut.getCheckInOpen(req ,res)
 })
+
 route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
   controllerCheckInAndCheckOut.toCheckOut(req ,res)
 })
@@ -344,7 +345,7 @@ route.put("/api/contrato/:id" , (req ,res)=>{
   logistcgController.updateContratoWithGoods(req ,res)
 })
 
-route.patch('/api/updatestatus/:id', (req ,res)=>{
+route.patch('/api/updatestatusdelivery/:id', (req ,res)=>{
    controllerDelivery.updateStatusDelivery(req ,res)
 })
  route.get('/api/getdelivery' , authenticateToken, (req ,res)=>{

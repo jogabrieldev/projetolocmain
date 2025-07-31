@@ -27,29 +27,29 @@ import { autoRegister as validVehicles } from '../../model/modelsVehicles.js';
         return true
     }),
 
-    body('checDtch')
-    .notEmpty().withMessage("A data é obrigatória.")
-    .bail()
-    .custom(value => {
+    // body('checDtch')
+    // .notEmpty().withMessage("A data é obrigatória.")
+    // .bail()
+    // .custom(value => {
       
-      const datePart = value.split(' ')[0]; 
+    //   const datePart = value.split(' ')[0]; 
 
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(datePart)) {
-        throw new Error('Data de cadastro inválida.');
-      }
+    //   if (!/^\d{4}-\d{2}-\d{2}$/.test(datePart)) {
+    //     throw new Error('Data de cadastro inválida.');
+    //   }
 
-      const [y, m, d] = datePart.split('-').map(Number);
-      const dataCadastro = new Date(y, m - 1, d);
+    //   const [y, m, d] = datePart.split('-').map(Number);
+    //   const dataCadastro = new Date(y, m - 1, d);
 
-      const hoje = new Date();
-      const hoje0 = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+    //   const hoje = new Date();
+    //   const hoje0 = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
 
-      if (dataCadastro.getTime() !== hoje0.getTime()) {
-        throw new Error('Data de cadastro deve ser igual à data de hoje.');
-      }
+    //   if (dataCadastro.getTime() !== hoje0.getTime()) {
+    //     throw new Error('Data de cadastro deve ser igual à data de hoje.');
+    //   }
 
-      return true;
-    }),
+    //   return true;
+    // }),
 
 ]
 
