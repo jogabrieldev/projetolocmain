@@ -37,8 +37,7 @@ async getContratosPorLocacao(belocode) {
     throw error;
   }
 }
-
-async getContratoAndUpdate(id , body){
+async getContratoAndUpdate(id , contrato){
     const query = `
     UPDATE bensloc
     SET belocontr = $1
@@ -47,7 +46,7 @@ async getContratoAndUpdate(id , body){
   `;
 
   try {
-    const result = await client.query(query, [body.trim(), id]);
+    const result = await client.query(query, [contrato.trim(), id]);
     return result.rows[0]; // Retorna o contrato atualizado
   } catch (error) {
     console.error("Erro ao atualizar contrato do bem:", error);

@@ -17,12 +17,13 @@ export const autoRegister = {
         caaukmat,
         caaustat,
         caausitu,
+        caauvenc,
         caaudtca,
         
       } = data;
 
-      const insert = `INSERT INTO cadauto (caaucode, caauplac, caauchss, caaurena, caaumaca, caaumode, caaucor, caautico, caauloca, caaukmat, caaustat,caausitu, caaudtca) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 , $12 , $13) RETURNING *`;
+      const insert = `INSERT INTO cadauto (caaucode, caauplac, caauchss, caaurena, caaumaca, caaumode, caaucor, caautico, caauloca, caaukmat, caaustat,caausitu, caauvenc, caaudtca) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 , $12 , $13 , $14) RETURNING *`;
 
       const values = [
         caaucode,
@@ -37,8 +38,8 @@ export const autoRegister = {
         caaukmat,
         caaustat,
         caausitu,
+        caauvenc,
         caaudtca,
-       
       ];
 
       const result = await dataClient.query(insert, values);
@@ -128,6 +129,29 @@ export const autoRegister = {
       throw error;
     }
   },
+
+  verificarVeiculoComMotorsitaExterno: async(id)=>{
+     try {
+            const checkQuery = "SELECT COUNT(*) FROM servexte WHERE seexveic = $1";
+            const checkResult = await dataClient.query(checkQuery, [id]);
+
+           return parseInt(checkResult.rows[0].count) > 0;
+        } catch (error) {
+           console.error("Erro ao verificar dependências do Motorista com entrega:",error);
+           throw error;
+      }
+  },
+  // verificarCheckIN: async(id)=>{
+  //    try {
+  //           const checkQuery = "SELECT COUNT(*) FROM servexte WHERE seexmoto = $1";
+  //           const checkResult = await dataClient.query(checkQuery, [id]);
+
+  //          return parseInt(checkResult.rows[0].count) > 0;
+  //       } catch (error) {
+  //          console.error("Erro ao verificar dependências do Motorista com entrega:",error);
+  //          throw error;
+  //     }
+  // },
 
   updateAuto: async (id, updateData) => {
     try {

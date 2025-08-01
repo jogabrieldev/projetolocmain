@@ -19,16 +19,14 @@ export const validateBens = [
   }),
 
   // dtStatus
-  body('dtStatus').custom((value) => {
-    const date = new Date(value);
-    if (!value || isNaN(date.getTime())) {
-      throw new Error('Data de status inválida.');
-    }
-    const hojeStr = new Date().toISOString().split('T')[0];
-    const dtStatusStr = date.toISOString().split('T')[0];
-    if (dtStatusStr !== hojeStr) {
+body('dtStatus').custom((value) => {
+    const hoje = new Date().toISOString().split('T')[0]; // "2025-07-31"
+    const dataRecebida = new Date(value).toISOString().split('T')[0];
+
+    if (dataRecebida !== hoje) {
       throw new Error('A data de status deve ser igual à data atual.');
     }
+
     return true;
   }),
 
@@ -72,4 +70,7 @@ export const validateBens = [
     }
     return true;
   }),
+
 ];
+
+  

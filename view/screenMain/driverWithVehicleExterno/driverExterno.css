@@ -1,0 +1,21 @@
+.tableDriverExternoWithVehicle{
+    font-size: 0.85rem;
+  color: #000;
+}
+.tableDriverExternoWithVehicle td,
+.tableDriverExternoWithVehicle th{
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.tableDriverExternoWithVehicle th{
+  background-color:#1f2937;
+  color:#ffffff;
+}
+
+.tableDriverExternoWithVehicle td{
+    background-color:#f8f9fa;
+   color: #212529;
+   word-break: break-word;
+  white-space: normal;
+}

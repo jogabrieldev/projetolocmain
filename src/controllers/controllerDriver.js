@@ -117,12 +117,22 @@ export const movementOfDriver = {
   async deleteOfDriver(req, res) {
     const { id } = req.params;
      try {
+
+      if(!id){
+         return res.status(400).json({message:"ID do motorista não foi passado"})
+      }
+
       const verificarEntregas = await driverRegister.verificarEntregaComMotorista(id);
       if (verificarEntregas) {
         return res.status(400).json({
           message:
             "Não é possível excluir. O motorista tem entregas pendentes ou está em entrega.",
         });
+      }
+
+      const verificarMotoristaExterno = await driverRegister.verificarVeiculoComMotorsitaExterno(id)
+      if(verificarMotoristaExterno){
+        return res.status(400).json({message:"Não e possivel excluir. O motorista esta vinculado ao seu veiculo externo"})
       }
       const deleteMotorista = await driverRegister.deleteDriver(id);
 

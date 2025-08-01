@@ -99,6 +99,11 @@ async getAutomovelByCode(req, res) {
       if(!id){
         return res.status(400).json({message: 'Não foi passado o ID do veiculo'})
       }
+       
+      const verificarMotoristaExterno = await autoRegister.verificarVeiculoComMotorsitaExterno(id)
+         if(verificarMotoristaExterno){
+              return res.status(400).json({message:"Não e possivel excluir. O Veiculo esta vinculado ao seu motorista externo"})
+            }
 
       const deletedAuto = await autoRegister.deleteAuto(id);
 

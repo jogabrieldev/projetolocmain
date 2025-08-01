@@ -1,5 +1,8 @@
 import { body } from 'express-validator';
 import { autoRegister } from '../../model/modelsVehicles.js';
+import { parseISO, addDays, isAfter } from 'date-fns';
+
+
 
 export const validateAutomovel = [
 
@@ -45,4 +48,35 @@ export const validateAutomovel = [
 
       return true;
     }),
+   
+   body('caaukmat')
+  .notEmpty().withMessage('Obrigatório informar o KM atual do veículo.')
+  .isNumeric().withMessage('O KM atual deve ser um número.')
+  .custom((value) => {
+    const km = Number(value);
+    
+    if (km < 0) {
+      throw new Error('O KM atual não pode ser negativo.');
+    }
+    
+    if (km === -2000) {
+      throw new Error('Valor -2000 não é permitido para o KM atual.');
+    }
+
+    return true;
+  }),
+
+
+    body('caauvenc')
+    .notEmpty().withMessage('Obrigatorio passar a data de vencimento do veiculo')
+    .custom((value) => {
+    const dataInformada = parseISO(value); // Transforma string em objeto Date
+    const dataMinima = addDays(new Date(), 10); // Data atual + 10 dias
+
+    if (!isAfter(dataInformada, dataMinima)) {
+      throw new Error('A data de vencimento deve ser pelo menos 10 dias no futuro');
+    }
+
+    return true;
+  })
 ];

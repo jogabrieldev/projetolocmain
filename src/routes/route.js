@@ -8,6 +8,8 @@ import { validateAutomovel } from "../middleware/validators/validVehicles.js";
 import { controllerLinkVehicleWithDriver } from "../controllers/controllerLinkDriverVehicle.js"
 import { validateCheckIn } from "../middleware/validators/validCheckIn.js";
 import {validateCheckInOpen} from "../middleware/validators/validCheckIn.js"
+import { validateLocationGoods } from "../middleware/validators/validLocationGoods.js";
+import{validateLocationVehicle} from "../middleware/validators/validLocationVehicle.js"
 import { validate } from "../middleware/validators.js";
 import  authenticateToken from '../middleware/authMiddleware.js'
 import {authSystemValidade} from "../controllers/authController.js";
@@ -180,7 +182,7 @@ route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
  route.post('/api/drive/auth' , (req , res)=>{
    authSystemValidade.loginMotorista(req ,res)
  })
- route.get('/api/driver/:motoristaid' , (req ,res)=>{
+ route.get('/api/driver/:motoristaid' , authenticateToken, (req ,res)=>{
     movementOfDriver.getDriverByCode(req ,res)
  })
  route.get('/api/listingdriver' , authenticateToken, (req , res)=>{
@@ -204,7 +206,7 @@ route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
  route.get('/api/automovel/search' , authenticateToken, (req ,res)=>{
    movementAuto.getAutomovelByCode(req ,res)
  });
- route.get("/api/automo/:code" , (req ,res)=>{
+ route.get("/api/automo/:code" , authenticateToken, (req ,res)=>{
   movementAuto.getCodeVehicle(req , res)
  })
  route.get('/api/listauto', authenticateToken, (req , res)=>{
@@ -216,7 +218,7 @@ route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
  route.delete('/api/cadauto/:id',  authenticateToken, (req ,res)=>{
   movementAuto.deleteOfAuto(req , res)
  }); 
- route.patch('/api/automo/:id' , (req ,res)=>{
+ route.patch('/api/automo/:id' , authenticateToken, (req ,res)=>{
    movementAuto.updateStatusVehicle(req , res)
  });
 
@@ -291,7 +293,7 @@ route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
  route.get('/api/generateNumber' , (req , res)=>{
    location.gerarNumeroLocacao(req , res)
  });
- route.post('/api/datalocation' , authenticateToken, (req , res)=>{
+ route.post('/api/datalocation' ,validateLocationGoods,validate, authenticateToken, (req , res)=>{
   location.dataLocacao(req , res)
  });
  route.post("/api/novobem/" , authenticateToken , (req ,res)=>{
@@ -321,7 +323,7 @@ route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
 
 
  // LOCAÇÃO VEICULOS
- route.post('/api/locacaoveiculo' , (req ,res)=>{
+ route.post('/api/locacaoveiculo' ,validateLocationVehicle, validate, authenticateToken,   (req ,res)=>{
   controllerLocationVehicle.dataLocacaoVehicle(req ,res)
  })
  route.get('/api/locacaoveiculo' , (req , res)=>{
@@ -329,6 +331,10 @@ route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
  })
  route.delete('/api/locacaoveiculo/:id' ,authenticateToken , (req ,res)=>{
    controllerLocationVehicle.deleteLocationVehicles(req ,res)
+ })
+
+ route.patch('/api/contratoveiculo/:id' , authenticateToken, (req , res)=>{
+  controllerLocationVehicle.updateContrato(req ,res)
  })
     
 

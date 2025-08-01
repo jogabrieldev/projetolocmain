@@ -84,7 +84,7 @@ async function loadVehicles() {
    
     const veiculoMap = new Map();
 
-    const veiculosFiltrados = veiculos.filter(item => item.caaustat === 'Disponivel' && item.caauloca === 'Sim');
+    const veiculosFiltrados = veiculos.filter(item => item.caaustat === 'Disponível' && item.caauloca === 'Sim');
 
     // Preenche os dois selects
     ['veiculo1', 'veiculo2'].forEach(selectId => {
@@ -360,7 +360,6 @@ async function locationTheVehicle() {
          );
       });
 
-
       if(camposInvalidos){
          Toastify({
          text: "Preencha todos os campos obrigatórios dos veículos corretamente.",
@@ -370,20 +369,14 @@ async function locationTheVehicle() {
          position: "center",
          backgroundColor: "red",
        }).showToast();
-         return; // impede o envio
+         return; 
       }
 
-    await gerarContratoVeiculos();
-    const contratoHTML = document.querySelector(".contratoLocationVehicle").innerHTML.trim();
-    if(!contratoHTML){
-       return;
-    }
-
-    const payloadLocationVehicle = {
+     const payloadLocationVehicle = {
       tipo: "veiculo",
       client: dateLocation,
       veiculos: veiculos,
-      contrato: contratoHTML
+      contrato: ''
     };
     
      const token = localStorage.getItem('token')
@@ -393,11 +386,13 @@ async function locationTheVehicle() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify(payloadLocationVehicle),
     });
-
-    const errorData = await res.json();
+      
+   const errorData = await res.json();
+   const velocode = errorData.result[0]?.velocode;
   
    if (res.ok) {
     Toastify({
@@ -407,18 +402,40 @@ async function locationTheVehicle() {
       position: "center",
       backgroundColor: "green",
     }).showToast();
+    
+   await gerarContratoVeiculos();
+   const contratoHTML = document.querySelector(".contratoLocationVehicle").innerHTML.trim();
+   if(!contratoHTML)return;
 
+   const updateContratoRes = await fetch(`/api/contratoveiculo/${velocode}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      contrato: contratoHTML,
+    })
+  });
+
+  if (!updateContratoRes.ok) {
+    Toastify({
+      text: "Contrato não pôde ser salvo!",
+      duration: 4000,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red"
+    }).showToast();
+    return;
+  }
 
     const codeVehicles = veiculos.map(v => v.code);
 
-    console.log('veiculo' , codeVehicles)
-
-    // Atualiza todos os veículos em paralelo
     const updateRequests = codeVehicles.map(async code =>
       await fetch(`/api/automo/${code}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json",
-          Authorization:token
+          Authorization: `Bearer ${localStorage.getItem('token')}`
          },
         body: JSON.stringify({ caaustat: "Veiculo Locado" }),
       }).then(res => res.json())
@@ -429,28 +446,39 @@ async function locationTheVehicle() {
 
     updateResults.forEach(result => {
       if (result.error) {
-        console.error(`Erro ao atualizar veículo ${result.code}: ${result.message}`);
         Toastify({
-          text: `Erro ao atualizar status do veículo ${result.code}`,
+          text: `Erro ao atualizar status do veículo ${result.message}`,
           duration: 4000,
           backgroundColor: "red",
         }).showToast();
-        return;
       }
     });
 
-     gerarContratoVeiculos()
      clearFields();
   }else {
+     if (!res.ok) {
+     const errors = errorData.errors || [];
+
+     if (Array.isArray(errors) && errors.length > 0) {
+        errors.forEach(err => {
+         Toastify({
+         text: err.message,
+         gravity: "top",
+         position: "center",
+         duration: 4000,
+         backgroundColor: "red",
+        }).showToast();
+    });
+   } else {
       Toastify({
-        text: errorData.error || "Erro na locação de veiculo!",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-    }
+       text: errorData.error || "Erro na locação de veiculo!",
+       duration: 3000,
+       backgroundColor: "red",
+     }).showToast();
+  }
+  return; 
+}
+  }
   } catch (error) {
     console.error('Erro location veiculos' , error)
 

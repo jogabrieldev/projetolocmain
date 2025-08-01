@@ -128,14 +128,14 @@ export const movementClient = {
       const temDependencia = await clientRegister.verificarDependenciaCliente(id);
       if (temDependencia) {
         return res.status(400).json({
-          message: "Não e possivel excluir. O cliente tem locação",
+          message: "Não e possivel excluir. O cliente tem locação em ABERTO.",
         });
       }
 
       const verifiqueFilial = await clientRegister.verifiqueFilial(id)
     
       if(verifiqueFilial){
-        return res.status(400).json({message:'O cliente possui filiais no nosso sistema'})
+        return res.status(400).json({message:'O cliente possui filiais no nosso sistema! Verificar antes de apagar'})
       }
 
       const deleteComponent = await clientRegister.deleteClient(id);

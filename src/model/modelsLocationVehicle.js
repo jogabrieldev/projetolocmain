@@ -164,8 +164,26 @@ async deleteLocationVehicles(numeroLocacao){
     }
 },
 
-async updateStatusLocationVehicles(){
-     
+async updateContratoVeiculo(velocodigo, contrato) {
+  const query = `
+    UPDATE autoloc
+    SET velocontr = $1
+    WHERE velocode = $2
+  `;
+
+  try {
+    const result = await locationAuto.query(query, [contrato, velocodigo]);
+
+    if (result.rowCount === 0) {
+      throw new Error("Veículo com esse código não encontrado.");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Erro ao atualizar contrato do veículo:", error);
+    throw error;
+  }
 }
 
-}
+
+};

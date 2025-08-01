@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded' , function(){
           if (mainContent) {
              mainContent.innerHTML = html;
              getDriverWithVehicle();
+            
            }
         } catch (error) {
                 
@@ -20,6 +21,54 @@ document.addEventListener('DOMContentLoaded' , function(){
      })
    }
 })
+async function dataDriver(codeMoto){
+   try {
+      const response = await fetch(`/api/driver/${codeMoto}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro HTTP: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data.motorista)
+      console.log('nome do motorista' , data?.motorista?.motonome)
+      return data?.motorista?.motonome;
+
+      
+    } catch (error) {
+      console.error("Erro ao buscar dados do motorista:", error);
+      return null;
+    };
+  };
+
+async function dataVehicle(codeVeic){
+  try {
+    const response = await fetch(`/api/automo/${codeVeic}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro HTTP: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log(data.veiculo)
+    return data?.veiculo?.caauplac || "Veículo não encontrado";
+  } catch (error) {
+    console.error("Erro ao buscar dados do veículo:", error);
+    return null;
+  }
+}
 
 
 async function getDriverWithVehicle() {
@@ -55,11 +104,11 @@ async function getDriverWithVehicle() {
       wrapper.className = "table-responsive";
 
       const tabela = document.createElement("table");
-      tabela.className = "table table-sm table-hover table-striped table-bordered";
+      tabela.className = "table table-sm table-hover table-striped table-bordered tableDriverExternoWithVehicle";
 
       const cabecalho = tabela.createTHead();
       const linhaCabecalho = cabecalho.insertRow();
-      const colunas = ["ID", "Código do Motorista", "Código do Veículo", "Data de Vinculação"];
+      const colunas = [, "Nome do Motorista", "Veiculo com motorista", "Data de Vinculação"];
 
       colunas.forEach((coluna) => {
         const th = document.createElement("th");
@@ -70,13 +119,15 @@ async function getDriverWithVehicle() {
 
       const corpo = tabela.createTBody();
 
-      vinculacoes.forEach((item) => {
+       for (const item of vinculacoes) {
         const linha = corpo.insertRow();
 
+        // Buscar nome do motorista com base no código
+        const nomeMotorista = await dataDriver(item.seexmoto) || `Motorista #${item.seexmoto}`;
+        const veiculo = await dataVehicle(item.seexveic) || `Veiculo #${item.seexveic}`
         const dados = [
-          item.seexid,
-          item.seexmoto,
-          item.seexveic,
+          nomeMotorista,
+          veiculo,
           new Date(item.seexdata).toLocaleString("pt-BR", {
             day: "2-digit",
             month: "2-digit",
@@ -91,7 +142,7 @@ async function getDriverWithVehicle() {
           td.textContent = valor || "";
           td.classList.add("text-center", "align-middle", "text-break", "px-2", "py-1");
         });
-      });
+      }
 
       wrapper.appendChild(tabela);
       container.appendChild(wrapper);

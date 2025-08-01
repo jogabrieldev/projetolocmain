@@ -31,9 +31,6 @@ import { mecanismDelivey } from "../model/modelsDelivery.js";
 
              const checkInsAbertos = await movimentCheckInAndCheckOut.getCheckInOpen(payloadCheckin.checMoto, "Em uso");
 
-             
-
-
              io.emit("checkIn" , listVehicle , checkInsAbertos)
            }
 

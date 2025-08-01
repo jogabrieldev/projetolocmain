@@ -315,6 +315,9 @@ async function checkOut(idMoto , token) {
             
             setTimeout(()=>{
                 finisihCheckOutRunTime(checkOut.checveic)
+                 document.getElementById('caminhaoCheckOut').value = ""
+            document.getElementById('checObsVt').value = ""
+            document.getElementById('kmVt').value = ""
             },100)
           
            }

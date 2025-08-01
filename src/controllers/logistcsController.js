@@ -84,13 +84,13 @@ class logistcgController {
    async updateContratoWithGoods(req ,res){
       try {
         const {id} = req.params;
-        const {body} = req.body;
+        const {contrato} = req.body;
 
-        if(!id || !body){
+        if(!id || !contrato){
           return res.status(400).json({message:"É necessário passar o ID e o corpo da requisição"})
         }
 
-        const result = await logistcsModel.getContratoAndUpdate(id , body);
+        const result = await logistcsModel.getContratoAndUpdate(id , contrato);
 
         if(!result){
           return res.status(404).json({message:"Contrato não encontrado ou não atualizado"})

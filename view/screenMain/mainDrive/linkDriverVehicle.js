@@ -141,7 +141,17 @@ async function linkDriverWithVehicleSubmit(codeMoto , nameMoto) {
             position: "center",
             backgroundColor: "green",
            }).showToast();
-           
+             
+           setTimeout(()=>{
+            const veicExterno = document.getElementById('veicExterno');
+             if(veicExterno){
+               veicExterno.disabled = false
+               document.getElementById('idMoto').value = ""
+             }
+               
+           },100)
+             
+             
           }else{
             Toastify({
             text: "Erro para vincular o motorista ao veiculo! ",

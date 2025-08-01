@@ -678,17 +678,9 @@ async function validateFamilyBensPending() {
       },
     });
 
-    if (!locationResponse.ok) {
-      Toastify({
-        text: result?.message || "Erro ao carregar locações para analise.",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-      return;
-    }
+    if (!locationResponse.ok) return
+    
+    
     const resultLocation = await locationResponse.json();
     
     console.log('result' , resultLocation)

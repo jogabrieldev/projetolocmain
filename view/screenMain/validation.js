@@ -804,6 +804,12 @@ function  validationFormAutomovel(){
         statAuto:{
           required: true
         },
+        situAuto:{
+          required:true
+        },
+         dtVenci:{
+              required:true
+            },
         dtCadAuto:{
            required:true,
            date: true
@@ -846,6 +852,12 @@ function  validationFormAutomovel(){
             },
             statAuto:{
               required: "OBRIGATORIO"
+            },
+             situAuto:{
+               required:"OBRIGATORIO"
+            },
+            dtVenci:{
+              required:"OBRIGATORIO"
             },
             dtCadAuto:{
                required:"OBRIGATORIO",

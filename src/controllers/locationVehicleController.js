@@ -9,6 +9,7 @@ async dataLocacaoVehicle(req ,res){
        
  try {
           
+  // console.log('req body' , req.body)
     const isLocacaoVeiculo = req.body;
   
      const veiculo = isLocacaoVeiculo.veiculos
@@ -16,83 +17,10 @@ async dataLocacaoVehicle(req ,res){
      const dateClient = isLocacaoVeiculo.client
 
      const localization = isLocacaoVeiculo.client.localization
-     
-       if(!localization){
-         return res.status(400).json({error: 'Insira um endereço para a locação'})
-       }
 
-       if(!isLocacaoVeiculo.contrato|| null){
-         return res.status(400).json({error:'Erro para enviar o contrato'})
-       }
-       const contrato = isLocacaoVeiculo.contrato
-     
-       if (!dateClient||dateClient.client.length < 2) {
-        return res.status(400).json({ error: "CPF do cliente é obrigatório." });
-      }
-
-      console.log('veiculo' , veiculo)
-
-        const ClientDate = dateClient.client[1].replace(/\D/g, ''); 
-
-     let cliente = null;
-
-if (ClientDate.length === 11) {
-  
-  cliente = await LocacaoModel.buscarClientePorCPF(ClientDate);
-} else if (ClientDate.length === 14) {
+     const cliente = req.clienteValidado;
+      
  
-  cliente = await LocacaoModel.buscarClientePorCnpj(ClientDate);
-} else {
-  return res.status(400).json({ error: "Formato de CPF ou CNPJ inválido." });
-}
-
-if (!cliente) {
-  return res.status(404).json({ error: "Cliente não encontrado no banco de dados." });
-}
-    //   // Verificações de data
-      if (!dateClient.cllodtlo || !dateClient.cllodtdv) {
-        return res.status(400).json({ error: "Data de locação e devolução são obrigatórias." });
-      }
-  
-      const dataLocDate = new Date(dateClient.cllodtlo);
-      const dataDevoDate = new Date(dateClient.cllodtdv);
-  
-      if (isNaN(dataLocDate) || isNaN(dataDevoDate)) {
-        return res.status(400).json({ error: "Formato de data inválido." });
-      }
-  
-      // Normalizar datas para comparar apenas a parte da data (sem hora)
-      const normalizar = (data) => new Date(data.getFullYear(), data.getMonth(), data.getDate());
-  
-      const dataLocNormalizada = normalizar(dataLocDate);
-      const dataDevoNormalizada = normalizar(dataDevoDate);
-
-      if (dataDevoNormalizada <= dataLocNormalizada) {
-        return res.status(400).json({ error: "A data de devolução deve ser posterior à data da locação." });
-      }
-       
-      const feriados = [
-        "01-01", // Confraternização Universal
-        "04-18", // Sexta-feira Santa
-        "04-21", // Tiradentes
-        "05-01", // Dia do Trabalho
-        "09-07", // Independência do Brasil
-        "10-12", // Nossa Senhora Aparecida
-        "11-02", // Finados
-        "11-15", // Proclamação da República
-        "12-25"  // Natal
-      ];
-
-      const formatDiaMes = (data) => {
-      const dia = String(data.getDate()).padStart(2, "0");
-      const mes = String(data.getMonth() + 1).padStart(2, "0");
-      return `${mes}-${dia}`;
-    };
-
-    const dataDevoDiaMes = formatDiaMes(dataDevoNormalizada);
-    if (feriados.includes(dataDevoDiaMes)) {
-      return res.status(400).json({ error: `A data de devolução (${dataDevoDate}) cai em um feriado. Escolha outra data.` });
-    }
 
        const locationClient = await LocacaoModel.criarLocacao({
         cllonmlo: dateClient.cllonmlo,
@@ -121,9 +49,16 @@ if (!cliente) {
            return res.status(400).json({message: "Preencha todos os campos referente ao veiculo corretamente"})
         
         }
-        await modelsLocationAuto.registerLocationAuto(veiculo, contrato, locationClient)
+
+          const contrato = req.body.contrato || null;
+        const result = await modelsLocationAuto.registerLocationAuto(veiculo, contrato, locationClient)
+        if(!result){
+           return res.status().status(400).json({message: "Erro para locar o veiculo"})
+        }
+
+        console.log('result' , result)
     
-        return res.status(200).json({message: 'Locaçaõ do veiculo feita com sucesso!' , success:true })
+        return res.status(200).json({message: 'Locaçaõ do veiculo feita com sucesso!' , success:true , result})
     } catch (error) {
       console.error('Erro no locaçãp veiculo' , error)
       res.status(500).json({message: 'Erro no servidor'})
@@ -167,6 +102,27 @@ if (!cliente) {
 
        res.status(500).json({message: 'Erro no server para deletar'})
     }
+  },
+  async updateContrato(req, res) {
+  const { id } = req.params; // velocode
+  const { contrato } = req.body;
+
+  console.log("Recebido PUT contrato:", req.params.id, req.body.contrato);
+
+
+  if (!contrato || contrato.trim() === "") {
+    return res.status(400).json({ error: "Contrato não pode estar vazio." });
   }
+
+  try {
+    const result = await modelsLocationAuto.updateContratoVeiculo(id, contrato);
+
+    return res.status(200).json({ message: "Contrato atualizado com sucesso!", success: true , result });
+  } catch (error) {
+    console.error("Erro ao atualizar contrato:", error);
+    return res.status(500).json({ error: "Erro interno ao atualizar contrato." });
+  }
+}
+
 
 }

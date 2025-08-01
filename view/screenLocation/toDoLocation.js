@@ -281,35 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  socketContainerLocation.on(
-    "updateRunTimeRegisterLocation",
-    (listLocation) => {
-      const listaLocacoes = listLocation.map((locacao) => {
-        if (locacao.bens.length > 0) {
-          return locacao.bens.map((bem) => ({
-            idClient: locacao.clloid,
-            numeroLocacao: locacao.cllonmlo || "Não definido",
-            nomeCliente: locacao.clloclno || "Não definido",
-            cpfCliente: locacao.cllocpf || "Não definido",
-            dataLocacao: formatDate(locacao.cllodtlo),
-            dataDevolucao: formatDate(locacao.cllodtdv),
-            formaPagamento: locacao.cllopgmt || "Não definido",
-            codigoBem: bem.belocodb || "-",
-            produto: bem.belobem || "Nenhum bem associado",
-            quantidade: bem.beloqntd || "-",
-            status: bem.belostat || "Não definido",
-            observacao: bem.beloobsv || "Sem observação",
-            dataInicio: formatDate(bem.belodtin),
-            dataFim: formatDate(bem.belodtfi),
-          }));
-        } else {
-          return [];
-        }
-      });
-
-      renderTable(listaLocacoes);
-    }
-  );
+ 
 
   socketContainerLocation.on("updateRunTimeFamilyBens", (updatedFamily) => {
     carregarFamilias();
@@ -327,6 +299,150 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+function renderTable(data) {
+
+  console.log('Dados para ' , data)
+ 
+  const tableDiv = document.querySelector(".tableLocation");
+;
+
+  const container = document.createElement("div");
+  container.style.display = "flex";
+  container.style.justifyContent = "space-between";
+  container.style.alignItems = "center";
+  container.style.marginBottom = "10px";
+
+  const title = document.createElement("h2");
+  title.textContent = "Locaçaõ de Bens";
+  title.style.margin = "0";
+
+  const messageFilter = document.createElement("span");
+  messageFilter.id = "messsageFilter";
+  messageFilter.style.display = "none";
+
+  const resetFilterBtn = document.createElement("button");
+  resetFilterBtn.id = "resetFilterBtn";
+  resetFilterBtn.style.display = "none";
+  resetFilterBtn.textContent = "Remover Filtro";
+
+  container.appendChild(title);
+  container.appendChild(messageFilter);
+  container.appendChild(resetFilterBtn);
+  // container.appendChild(searchBtn);
+
+  tableDiv.appendChild(container);
+
+  const table = document.createElement("table");
+  table.classList.add("tableLocationAll");
+
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+
+  const headers = [
+    "Selecionar",
+    "Número de Locação",
+    "Status",
+    "Nome do Cliente",
+    "Data da Locação",
+    "Data de Devolução",
+    "Forma de Pagamento",
+    "Familia do bem",
+    "Descrição",
+    "Quantidade",
+    "Observação",
+    "Data Início",
+    "Data Final",
+    "Visualizar"
+  ];
+
+  headers.forEach((text) => {
+    const th = document.createElement("th");
+    th.textContent = text;
+    headerRow.appendChild(th);
+  });
+
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+
+  data.forEach((locacao) => {
+    const row = document.createElement("tr");
+
+    const checkboxTd = document.createElement("td");
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.classList.add("locacao-checkbox");
+    checkbox.value = JSON.stringify(locacao);
+    checkboxTd.appendChild(checkbox);
+    row.appendChild(checkboxTd);
+  
+
+    [
+      "numeroLocacao",
+      "status",
+      "nomeCliente",
+      "dataLocacao",
+      "dataDevolucao",
+      "formaPagamento",
+      "codigoBem",
+      "produto",
+      "quantidade",
+      "observacao",
+      "dataInicio",
+      "dataFim",
+    ].forEach((key) => {
+      const td = document.createElement("td");
+      td.textContent = locacao[key];
+      row.appendChild(td);
+    });
+
+     const visualizarTd = document.createElement("td");
+    const visualizarBtn = document.createElement("button");
+    visualizarBtn.classList.add("btn", "btn-sm", "btn-success");
+    visualizarBtn.textContent = "Visualizar";
+    if(visualizarBtn){
+       visualizarBtn.addEventListener("click", () => {
+      showContratoLocationGoods(locacao)
+     
+       });
+    }
+    visualizarTd.appendChild(visualizarBtn);
+  row.appendChild(visualizarTd);
+
+    tbody.appendChild(row);
+  });
+
+  if (data.length === 0) {
+    const emptyRow = document.createElement("tr");
+    const emptyTd = document.createElement("td");
+    emptyTd.colSpan = "14";
+    emptyTd.style.textAlign = "center";
+    emptyTd.textContent = "Nenhuma locação encontrada.";
+    emptyRow.appendChild(emptyTd);
+    tbody.appendChild(emptyRow);
+  }
+
+
+  table.appendChild(tbody);
+  tableDiv.appendChild(table);
+
+  const checkboxes = document.querySelectorAll(".locacao-checkbox");
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", (event) => {
+      const locacaoData = JSON.parse(event.target.value);
+      const isChecked = event.target.checked;
+
+      document.querySelectorAll(".locacao-checkbox").forEach((cb) => {
+        if (JSON.parse(cb.value).numeroLocacao === locacaoData.numeroLocacao) {
+          cb.checked = isChecked;
+        }
+      });
+    });
+  });
+}
+
 
 function interationSystemLocation() {
   const btnOutPageLocation = document.getElementById("buttonExitLocation");
@@ -853,6 +969,38 @@ function clearFields() {
   document.getElementById("mailClient").value = "";
 }
 
+function carregamentoEmTempoReal(){
+    socketContainerLocation.on(
+    "updateRunTimeRegisterLocation",
+    (listLocation) => {
+      const listaLocacoes = listLocation.map((locacao) => {
+        if (locacao.bens.length > 0) {
+          return locacao.bens.map((bem) => ({
+            idClient: locacao.clloid,
+            numeroLocacao: locacao.cllonmlo || "Não definido",
+            nomeCliente: locacao.clloclno || "Não definido",
+            cpfCliente: locacao.cllocpf || "Não definido",
+            dataLocacao: formatDate(locacao.cllodtlo),
+            dataDevolucao: formatDate(locacao.cllodtdv),
+            formaPagamento: locacao.cllopgmt || "Não definido",
+            codigoBem: bem.belocodb || "-",
+            produto: bem.belobem || "Nenhum bem associado",
+            quantidade: bem.beloqntd || "-",
+            status: bem.belostat || "Não definido",
+            observacao: bem.beloobsv || "Sem observação",
+            dataInicio: formatDate(bem.belodtin),
+            dataFim: formatDate(bem.belodtfi),
+          }));
+        } else {
+          return [];
+        }
+      });
+
+      renderTable(listaLocacoes);
+    }
+  );
+}
+
 // ENVIO DA LOCAÇÃO FINALIZADA
 async function handleSubmit() {
   atualizarData("dataLoc");
@@ -1190,23 +1338,6 @@ async function handleSubmit() {
       return;
     }
 
-    try {
-      await gerarContrato();
-      const contratoHTML = document.querySelector(".contrato").innerHTML.trim();
-      bens.forEach((bem) => {
-        bem.contrato = contratoHTML;
-      });
-    } catch (err) {
-      Toastify({
-        text: "Erro ao gerar contrato, verifique os dados do cliente ou bens.",
-        duration: 4000,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-      return;
-    }
-
     const payload = {
       numericLocation,
       userClientValidade,
@@ -1227,7 +1358,14 @@ async function handleSubmit() {
       },
       body: JSON.stringify(payload),
     });
-    const errorData = await response.json();
+
+    let errorData = {};
+    const isJson = response.headers.get("content-type")?.includes("application/json");
+
+   if (isJson) {
+     errorData = await response.json();
+  }
+    const velocode = errorData.locationGoods[0]?.belocode;
 
     if (response.ok && response.status === 200) {
       Toastify({
@@ -1242,7 +1380,33 @@ async function handleSubmit() {
       const content = document.querySelector(".content");
       if (content) esconderElemento(content);
 
-      gerarContrato();
+       await gerarContrato();
+       const contratoHTML = document.querySelector(".contrato").innerHTML.trim();
+       bens.forEach((bem) => {
+        bem.contrato = contratoHTML;
+       });
+
+       const updateContratoRes = await fetch(`/api/contrato/${velocode}`, {
+        method: "PUT",
+       headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+       body: JSON.stringify({
+        contrato: contratoHTML,
+       })
+    });
+
+     if (!updateContratoRes.ok) {
+       Toastify({
+      text: "Contrato não pôde ser salvo!",
+      duration: 4000,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red"
+    }).showToast();
+    return;
+  }
 
       setTimeout(() => {
         clearFields();
@@ -1250,16 +1414,31 @@ async function handleSubmit() {
         atualizarData("dataLoc");
         preencheraResiduo("residuoSelect");
       }, 500);
+
+    } else {
+    
+    const errors = errorData.errors || [];
+
+    if (Array.isArray(errors) && errors.length > 0) {
+      errors.forEach(err => {
+        Toastify({
+          text: err.message,
+          gravity: "top",
+          position: "center",
+          duration: 4000,
+          backgroundColor: "red",
+        }).showToast();
+      });
     } else {
       Toastify({
-        text: errorData.error || "Erro para gerar a locação!",
+        text: errorData.error || "Erro na locação da caçamba!",
         duration: 3000,
-        close: true,
         gravity: "top",
         position: "center",
         backgroundColor: "red",
       }).showToast();
     }
+  }
   } catch (error) {
     console.error("Erro ao enviar os dados:", error);
     Toastify({
@@ -1470,19 +1649,20 @@ async function gerarContrato() {
 
   const divBtn = document.createElement("div");
   divBtn.className = "text-center mt-4 d-flex justify-content-center gap-2";
+  divBtn.id= "btnContrato";
 
   const btnVoltar = document.createElement("button");
   btnVoltar.id = "voltar";
   btnVoltar.className = "btn btn-light";
   btnVoltar.innerHTML = `<i class="bi bi-arrow-left"></i> Voltar`;
 
-  const btnSalvar = document.createElement("button");
+   const btnSalvar = document.createElement("button");
   btnSalvar.id = "baixarPdf";
   btnSalvar.className = "btn btn-success";
   btnSalvar.innerHTML = `<i class="bi bi-arrow-down-circle-fill me-2"></i>Baixar PDF`;
 
   divBtn.appendChild(btnVoltar);
-  divBtn.appendChild(btnSalvar);
+   divBtn.appendChild(btnSalvar);
   container.appendChild(divBtn);
   contratoDiv.appendChild(container);
 

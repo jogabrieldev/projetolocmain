@@ -58,7 +58,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
     
     <!-- Formulário de Cadastro -->
     <div class="formCadAuto container py-4" style="display: none;">
-      <form class="foorm border border-secondary-subtle rounded-4 p-4 shadow-sm">
+      <form class="foorm rounded-4 p-4 h-75">
         <div class="row g-3">
           <div class="col-md-3">
             <label for="codeAuto" class="form-label">Código</label>
@@ -129,6 +129,13 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
               <option value="Externo">Externo</option>
             </select>
           </div>
+
+           <div class="col-md-4">
+            <label for="dtVenci" class="form-label">Data de vencimento</label>
+            <input type="date" class="form-control" name="dtVenci" id="dtVenci" required/>
+          </div>
+
+
 
           <div class="col-md-4">
             <label for="pdLocCar" class="form-label">Pode ser Locado</label>

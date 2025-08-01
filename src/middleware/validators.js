@@ -1,18 +1,21 @@
 
 import { validationResult } from "express-validator";
 
-export const validate = (req , res, next)=>{
-     
-     const error = validationResult(req)
+export const validate = (req, res, next) => {
+  const errors = validationResult(req);
 
-     if(error.isEmpty()){
-         return next()
-     }
+  if (errors.isEmpty()) {
+    return next();
+  }
 
-     const  verifiqueError = []
-     error.array().map((err)=> verifiqueError.push({[err.type]: err.msg}))
+  const formattedErrors = errors.array().map(err => ({
+    field: err.param,
+    message: err.msg
+  }));
 
-     return res.status(400).json({
-        errors: verifiqueError
-     })
-}
+  console.log("Erros de validação:", formattedErrors);
+
+  return res.status(400).json({
+    errors: formattedErrors
+  });
+};

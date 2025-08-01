@@ -97,7 +97,6 @@ function renderTable(data) {
  
   const tableDiv = document.querySelector(".tableLocation");
 
-  tableDiv.innerHTML = "";
 
   const container = document.createElement("div");
   container.style.display = "flex";
@@ -326,6 +325,8 @@ async function showContratoLocationGoods(locacao) {
         }
       });
     }
+
+    
     const btnBaixarPdf = document.getElementById("baixarPdf");
   if (btnBaixarPdf) {
     btnBaixarPdf.addEventListener("click", () => {

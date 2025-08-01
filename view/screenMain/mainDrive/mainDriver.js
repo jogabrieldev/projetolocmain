@@ -399,14 +399,13 @@ function registerNewDriver() {
             backgroundColor: "green",
           }).showToast();
 
-          // Limpar o formulário após o sucesso
+        
           document.querySelector(".formRegisterDriver").reset();
         } else {
-          // 👇 aqui tratamos erros de validação do express-validator
-          if (result?.errors && Array.isArray(result.errors)) {
-            // junta todas as mensagens em uma string
+        
+        if (result?.errors && Array.isArray(result.errors)) {
             const mensagens = result.errors
-              .map((err) => `${err.msg}`)
+              .map((err) => `• ${err.message || err.msg}`)
               .join("\n");
 
             Toastify({
@@ -417,7 +416,7 @@ function registerNewDriver() {
               position: "center",
               backgroundColor: "red",
             }).showToast();
-          } else {
+          }else {
             // 👇 caso seja outro tipo de erro
             Toastify({
               text: result?.message || "Erro ao cadastrar motorista.",

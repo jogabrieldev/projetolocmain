@@ -6,8 +6,8 @@ export const validateForn = [
   // Nome do fornecedor
   body("fornName")
     .trim()
-    .isLength({ min: 3 })
-    .withMessage("O nome do fornecedor é obrigatório e deve conter pelo menos 3 letras."),
+    .isLength({ min: 5 })
+    .withMessage("O nome do fornecedor é obrigatório e deve conter pelo menos 5 letras."),
 
   // CNPJ (assincrono: verificar duplicado no banco)
   body("fornCnpj")

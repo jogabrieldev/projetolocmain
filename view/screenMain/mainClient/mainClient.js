@@ -163,6 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const mainContent = document.querySelector("#mainContent");
         if (mainContent) {
           mainContent.innerHTML = html;
+          getFilialData()
           maskFieldClient();
           initTipoClienteHandler();
           interationSystemClient();
@@ -569,18 +570,19 @@ async function registerNewClient() {
           dateAtualInField("dtCad");
         }else{
 
-          if (result.errors && Array.isArray(result.errors)) {
-            // Mostrar todas as mensagens de erro que vieram do backend
-            result.errors.forEach((err) => {
-              Toastify({
-                text: err.msg,
-                duration: 3000,
-                close: true,
-                gravity: "top",
-                position: "center",
-                backgroundColor: "red",
-              }).showToast();
-            });
+        if (result?.errors && Array.isArray(result.errors)) {
+            const mensagens = result.errors
+              .map((err) => `• ${err.message || err.msg}`)
+              .join("\n");
+
+            Toastify({
+              text: mensagens,
+              duration: 5000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "red",
+            }).showToast();
           } else {
             Toastify({
               text: result?.message || "Erro ao cadastrar Cliente.",

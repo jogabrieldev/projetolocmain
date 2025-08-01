@@ -254,7 +254,8 @@ async function registerNewVehicles() {
         caauloca: document.querySelector("#pdLocCar").value.trim(),
         caaustat: document.querySelector("#statAuto").value.trim(),
         caaudtca: document.querySelector("#dtCadAuto").value,
-        caausitu: document.querySelector("#situAuto").value.trim()
+        caausitu: document.querySelector("#situAuto").value.trim(),
+        caauvenc: document.querySelector("#dtVenci").value
       };
 
       try {
@@ -285,7 +286,7 @@ async function registerNewVehicles() {
     
           if (result?.errors && Array.isArray(result.errors)) {
             const mensagens = result.errors
-              .map((err) => `• ${err.msg}`)
+              .map((err) => `• ${err.message || err.msg}`)
               .join("\n");
 
             Toastify({
@@ -297,7 +298,7 @@ async function registerNewVehicles() {
               backgroundColor: "red",
             }).showToast();
           } else {
-            // 👇 caso seja outro tipo de erro
+         
             Toastify({
               text: result?.message || "Erro ao cadastrar automovel.",
               duration: 3000,

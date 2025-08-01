@@ -1,19 +1,20 @@
 import { body } from 'express-validator';
 import { clientRegister } from '../../model/modelsClient.js'; 
+import { differenceInYears, isValid, parseISO } from 'date-fns';
 import fetch from 'node-fetch';
 
 export const validateClient = [
-  // Nome entre 3 e 100 caracteres
+ 
   body('clieName')
     .isLength({ min: 3, max: 100 })
     .withMessage('Nome deve ter entre 3 e 100 caracteres.'),
 
-  // Email válido e máximo de 150 caracteres
+  
   body('clieMail')
     .isEmail().withMessage('E-mail inválido.')
     .isLength({ max: 150 }).withMessage('E-mail deve ter no máximo 150 caracteres.'),
 
-  // CEP formato brasileiro
+  
   body('clieCep')
     .matches(/^\d{5}-?\d{3}$/)
     .withMessage('CEP inválido.')
@@ -31,11 +32,10 @@ export const validateClient = [
       return true;
     }),
 
-  // CPF ou CNPJ opcional, mas se vier deve ter tamanho correto
+ 
   body('clieCpf').optional().isLength({ max: 14 }).withMessage('CPF inválido.'),
   body('clieCnpj').optional().isLength({ max: 18 }).withMessage('CNPJ inválido.'),
 
-  // Validação de dtCad
   body('dtCad').custom(value => {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(value) || isNaN(new Date(value).getTime())) {
       throw new Error('Data de Cadastro inválida.');
@@ -50,26 +50,43 @@ export const validateClient = [
     return true;
   }),
 
-  // Validação de dtNasc
-  body('dtNasc').custom((value, { req }) => {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(value) || isNaN(new Date(value).getTime())) {
-      throw new Error('Data de Nascimento inválida.');
-    }
-    const [yCad, mCad, dCad] = req.body.dtCad.split('-').map(Number);
-    const [yNasc, mNasc, dNasc] = value.split('-').map(Number);
-    const dataCadastro = new Date(yCad, mCad - 1, dCad);
-    const dataNascimento = new Date(yNasc, mNasc - 1, dNasc);
-    const hoje = new Date();
-    const hoje0 = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+ body('dtNasc').custom((value, { req }) => {
+  // Verifica o formato e validade da data
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    throw new Error('Data de Nascimento inválida.');
+  }
 
-    if (dataNascimento.getTime() >= hoje0.getTime()) {
-      throw new Error('Data de Nascimento não pode ser maior ou igual à data de hoje.');
-    }
-    if (dataNascimento.getTime() > dataCadastro.getTime()) {
-      throw new Error('Data de Nascimento não pode ser posterior à Data de Cadastro.');
-    }
-    return true;
-  }),
+  const dataNascimento = parseISO(value);
+  if (!isValid(dataNascimento)) {
+    throw new Error('Data de Nascimento inválida.');
+  }
+
+  const dataCadastro = req.body.dtCad
+    ? parseISO(req.body.dtCad)
+    : new Date(); // fallback para hoje
+
+  if (!isValid(dataCadastro)) {
+    throw new Error('Data de Cadastro inválida.');
+  }
+
+ 
+  if (dataNascimento >= new Date()) {
+    throw new Error('Data de Nascimento não pode ser no futuro.');
+  }
+
+ 
+  if (dataNascimento > dataCadastro) {
+    throw new Error('Data de Nascimento não pode ser posterior à Data de Cadastro.');
+  }
+
+
+  const idade = differenceInYears(dataCadastro, dataNascimento);
+  if (idade < 18) {
+    throw new Error('É necessário ter pelo menos 18 anos.');
+  }
+
+  return true;
+}),
 
   body().custom((_, { req }) => {
     const tipoCliente = (req.body.clieTpCl || '').toLowerCase();

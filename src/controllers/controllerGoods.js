@@ -7,6 +7,8 @@ export const movementGoods = {
   async registerBens(req, res) {
   try {
     const data = req.body;
+
+    console.log('Dados recebidos para registro:', data);
   
     if (!data) {
       return res.status(400).json({ message: "Nenhum dado enviado" });

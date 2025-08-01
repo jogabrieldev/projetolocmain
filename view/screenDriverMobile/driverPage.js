@@ -84,6 +84,10 @@ async function verifiqueID(motoristaId) {
   try {
     const response = await fetch(`/api/driver/${motoristaId}`, {
       method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     });
     const res = await response.json();
     if (res.success === true) {
@@ -163,7 +167,7 @@ async function getAllCar() {
       (carro) => carro.caaustat === "Disponível" && carro.caausitu === "Interno"
     );
 
-    console.log('Carros' ,carrosAtivos)
+    
 
     const select = document.getElementById("caminhao");
     if (select) {
@@ -222,18 +226,8 @@ async function listDeliveryForDriver() {
     });
 
     const data = await response.json();
-    if (!response.ok) {
-      Toastify({
-        text: "Erro para listar entregas desse motorista!",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-      return
-    }
-
+    if (!response.ok) return
+      
     const entrega = data.entrega;
 
 
