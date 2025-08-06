@@ -312,10 +312,9 @@ ORDER BY c.clloid;`
 
       const resultadosBens = [];
 
-      // Atualizando os bens existentes
       for (const bem of bens) {
         const {
-          belocode, // Se existir, é um bem para UPDATE
+          belocode, 
           codeBen,
           produto,
           dataInicio,
@@ -325,7 +324,6 @@ ORDER BY c.clloid;`
         } = bem;
 
         if (belocode) {
-          // Verificando se o bem já existe no banco de dados
           const bemExistente = await dataLocation.query(
             `SELECT * FROM bensloc WHERE belocode = $1`,
             [belocode]
@@ -360,7 +358,6 @@ ORDER BY c.clloid;`
         }
       }
 
-      // Comitando as mudanças
       await dataLocation.query("COMMIT");
 
       return {
@@ -457,7 +454,7 @@ async verificarLocacoesComBens(io) {
           console.log(`⚠️ Locação ${loc.numerolocacao} pendente há mais de 1h`);
         }
       } else {
-        console.log("✅ Nenhuma locação pendente há > 1h");
+        // console.log("✅ Nenhuma locação pendente há > 1h");
       }
     } catch (err) {
       console.error("Erro ao verificar locações pendentes:", err);

@@ -22,7 +22,7 @@
     </div>
 
     <div class="container py-3 bg-warning-subtle rounded shadow-sm">
-      <div class="showDelivery row g-3"></div>
+       <div class="showDelivery row g-3"></div>
     </div>
 
   <form id="formCheckIn" class="border mt-3">
@@ -53,7 +53,7 @@
   <h4 class="text-center">Faça o Check-Out</h4>
   <div class="mb-2">
     <label for="caminhaoCheckOut" class="form-label">Caminhão</label>
-     <input type="text" name="caminhaoCheckOut" class="form-control form-control-sm" id="caminhaoCheckOut" readonly="80">
+     <input type="text" name="caminhaoCheckOut" class="form-control form-control-sm" id="caminhaoCheckOut" maxlength ="80" readonly>
   </div>
 
   <div class="mb-2">
@@ -69,18 +69,86 @@
 
 
   <button type="button" id="submitCheckOut" class="btn btn-success btn-sm w-100">Fazer Check-Out</button>
-</form>
 
+   </form>
   </div>
 
-  <!-- Tela de Entregas (inicialmente oculta) -->
-  <!-- <div id="telaEntregas" style="display: none;">
-    <div class="text-center mb-4">
-      <h4 class="fw-bold">Entregas Pendentes</h4>
-      <p class="text-muted small">Painel do Motorista</p>
+  <!-- Modal de Confirmação QUE VAI ENTREGAR -->
+<div class="modal fade" id="modalConfirmAccept" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow">
+      <div class="modal-header bg-warning-subtle text-dark">
+        <h5 class="modal-title">Confirmar Aceite de Entrega</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong></strong> <span id="IdEntrega"></span></p>
+        <p><strong>Endereço:</strong> <span id="enderecoEntrega"></span></p>
+        <p><strong>Cliente:</strong> <span id="clienteEntrega"></span></p>
+        <p><strong>Data:</strong> <span id="dataEntrega"></span></p>
+        <p>Tem certeza que deseja aceitar essa entrega?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary text-dark" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success text-dark" id="buttonAcceptDelivery">Confirmar</button>
+      </div>
     </div>
- </div>  -->
-</section>
+  </div>
+</div>
+
+<!-- MODAL PARA FINALIZAR A ENTREGA -->
+   <div class="modal fade modalFinishLocation" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content border border-dark shadow-lg rounded-3">
+      <div class="modal-header bg-light border-bottom">
+        <h5 class="modal-title w-100 text-center fw-bold">
+          <i class="bi bi-file-earmark-text me-2"></i>Contrato de Finalização de Entrega
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body px-4 py-3">
+
+        <p class="mb-3">
+          <i class="bi bi-person-fill me-1 text-primary"></i><strong>Numero da locação:</strong> <span id="numeroDaLocacao"></span><br>
+          <i class="bi bi-person-fill me-1 text-primary"></i><strong>Cliente:</strong> <span id="nomeDoCliente"></span><br>
+          <i class="bi bi-person-fill me-1 text-success"></i><strong>Motorista:</strong> <span id="nomeDoMotorista"></span><br>
+          <i class="bi bi-geo-alt-fill me-1 text-danger"></i><strong>Entrega:</strong> <span id="destinoEntrega"></span><br>
+          <i class="bi bi-calendar-event-fill me-1 text-warning"></i><strong>Data:</strong> <span id="dataEntrega"></span>
+        </p>
+
+        <hr>
+
+        <p class="text-justify">
+          <i class="bi bi-pencil-square me-1"></i>
+          Declaro que finalizei a entrega do bem descrito acima no local e data indicados, cumprindo todas as normas e procedimentos estabelecidos pela empresa.
+        </p>
+
+        <p class="text-justify">
+          <i class="bi bi-exclamation-triangle-fill me-1 text-warning"></i>
+          Estou ciente de que eventuais divergências ou pendências devem ser reportadas imediatamente ao setor responsável, conforme termos do contrato de prestação de serviço.
+        </p>
+
+        <div class="form-check mt-4">
+          <input class="form-check-input" type="checkbox" id="confirmTermos">
+          <label class="form-check-label" for="confirmTermos">
+            <i class="bi bi-check-circle me-1 text-success"></i>Declaro que li e concordo com os termos acima.
+          </label>
+        </div>
+
+      </div>
+      <div class="modal-footer justify-content-between px-4 py-3">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="bi bi-x-circle me-1"></i>Cancelar
+        </button>
+        <button type="button" id="submitFinishDelivery" class="btn btn-success" disabled>
+          <i class="bi bi-check-circle-fill me-1"></i>Finalizar Entrega
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+ </section>
 
 
   <!-- Scripts -->

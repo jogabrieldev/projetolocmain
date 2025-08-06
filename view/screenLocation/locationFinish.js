@@ -304,9 +304,8 @@ async function showContratoLocationGoods(locacao) {
     if(status){
       const statusLocacao = locacao.status || "Não definido"
       status.innerHTML = `<p class = "text-center ">Status da Locação: <br> <strong>${statusLocacao}</strong></p>`;
-    }
+    };
     
-    // Lógica do botão voltar (reaproveita do HTML retornado)
     const btnVoltar = contratoDiv.querySelector("#voltar");
     if (btnVoltar) {
       btnVoltar.addEventListener("click", () => {
@@ -324,7 +323,7 @@ async function showContratoLocationGoods(locacao) {
           containerBtn.classList.add("flex");
         }
       });
-    }
+    };
 
     
     const btnBaixarPdf = document.getElementById("baixarPdf");
@@ -352,8 +351,8 @@ async function showContratoLocationGoods(locacao) {
       position: "center",
       backgroundColor: "red",
     }).showToast();
-  }
-}
+  };
+};
 
 
 
@@ -367,7 +366,7 @@ async function filterTable() {
       window.location.href = "/index.html";
     }, 2000);
     return;
-  }
+  };
 
   try {
     const response = await fetch("/api/locationFinish", {
@@ -380,7 +379,7 @@ async function filterTable() {
 
     if (!response.ok) {
       throw new Error(`Erro ao buscar locações. Status: ${response.status}`);
-    }
+    };
 
     const dataFinish = await response.json();
     const locacoes = dataFinish.locacoes || [];
@@ -393,7 +392,6 @@ async function filterTable() {
       .value.trim();
     const nameClient = document.getElementById("nameClientSearch").value.trim();
 
-    // Verifica quantos campos foram preenchidos
     const camposPreenchidos = [
       numberLocation,
       statusLocation,
@@ -498,8 +496,8 @@ async function filterTable() {
     });
   } catch (error) {
     console.error("Erro ao buscar e filtrar locações:", error);
-  }
-}
+  };
+};
 
 // BOTÃO DELETAR LOCAÇÃO
 function deletarLocation() {
@@ -609,8 +607,8 @@ function deletarLocation() {
             position: "center",
             backgroundColor: "red",
           }).showToast();
-        }
-      }
+        };
+      };
     } catch (error) {
       console.error("Erro ao excluir locação:", error);
       Toastify({
@@ -621,9 +619,9 @@ function deletarLocation() {
         position: "center",
         backgroundColor: "red",
       }).showToast();
-    }
-  }
-}
+    };
+  };
+};
 // Editar Locação
 
 function editLocation() {

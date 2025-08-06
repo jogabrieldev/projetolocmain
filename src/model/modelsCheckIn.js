@@ -1,3 +1,4 @@
+import { th } from "date-fns/locale";
 import { client as dataCheckIn } from "../database/userDataBase.js";
 
 export const movimentCheckInAndCheckOut = {
@@ -40,7 +41,44 @@ export const movimentCheckInAndCheckOut = {
      }
   },
 
+  async getChack(idMoto){
+      try {
+         const query = `SELECT * FROM checmtve WHERE checmoto = $1 AND checstat = 'Em uso' ORDER BY checid DESC LIMIT 1` 
+          const values = [idMoto]
+          const result = await dataCheckIn.query(query , values)
+          if(result){
+            return result.rows
+          }
+      } catch (error) {
+         console.error('Erro para veificar check-in' , error)
+          throw error
+      }
+  },
+
+  async getCheckInOpenForDriver(idMoto) {
+  try {
+    const query = `
+      SELECT * FROM checmtve 
+      WHERE checmoto = $1 AND checstat = 'Em uso'
+      ORDER BY checid DESC
+      LIMIT 1
+    `;
+    const values = [idMoto];
+    const result = await dataCheckIn.query(query, values);
+
+    if (result.rows.length > 0) {
+      return result.rows;
+    }
+
+    return []; 
+  } catch (error) {
+    console.error('Erro para verificar check-In:', error);
+    throw error;
+  }
+},
+  
  
+
  async toDoCheckOut(id , body){
   try {
     const query = `

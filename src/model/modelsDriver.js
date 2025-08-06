@@ -1,4 +1,4 @@
-// const dataBaseM = require('../database/dataBaseSgt')
+
 import { client as userDbDriver } from "../database/userDataBase.js";
 
 export const crudRegisterDriver = {
@@ -81,6 +81,20 @@ export const crudRegisterDriver = {
       }
     } catch (error) {
       console.error("Erro em listar ID dos motoristas:", error.message);
+      throw error;
+    }
+  },
+
+   async getPasswordByDrive(){
+    try {
+      const query = "SELECT motopasw FROM cadmoto";
+      const result = await userDbDriver.query(query);
+      console.log(result.rows)
+      
+      return result.rows;
+
+    } catch (error) {
+      console.error("Erro ao buscar senha do motorista:", error.message);
       throw error;
     }
   },
@@ -248,4 +262,5 @@ export const crudRegisterDriver = {
       throw error;
     }
   },
+
 };

@@ -59,7 +59,49 @@ import { mecanismDelivey } from "../model/modelsDelivery.js";
         }
     },
 
-  
+  async getCheck(req ,res){
+      try {
+         const {code} = req.params
+         if(!code){
+           return res.status(400).json({message:"Codigo do motorista não informado"})
+         }
+
+         const check = await movimentCheckInAndCheckOut.getChack(code)
+         if(!check || check.length === 0){
+           return res.status(400).json({message:"Nenhum check-in encontrado para esse motorista"})
+         }
+
+         return res.status(200).json({success:true ,  check})
+      } catch (error) {
+          console.error('Erro ao buscar check-in' , error)
+          return res.status(500).json({message:"Erro no server ao buscar check-in"})
+      }
+  },
+
+ async getCheckInOpenForDriver(req, res) {
+    try {
+      const idMoto = req.params.idMoto;
+
+    if (idMoto) {
+      const verificar = await movimentCheckInAndCheckOut.getCheckInOpenForDriver(idMoto);
+
+      if (!verificar || verificar.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Não encontrei nenhum check-in ativo para este motorista."
+        });
+      }
+
+      return res.status(200).json({ success: true, verificar: verificar });
+    }
+
+    return res.status(400).json({ message: "ID do motorista não informado" });
+  } catch (error) {
+    console.error('Erro ao buscar check-in:', error);
+    return res.status(500).json({ message: "Erro interno ao buscar check-in" });
+  }
+},
+
  async toCheckOut(req, res) {
   try {
     const { id } = req.params; // ID do check-in aberto

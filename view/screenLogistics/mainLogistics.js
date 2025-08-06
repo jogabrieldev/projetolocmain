@@ -761,7 +761,7 @@ async function loadingDriver() {
 
   const driver = await response.json();
 
-  const avalibleDrivers = driver.filter((d) => d.motostat === "Disponivel");
+  const avalibleDrivers = driver.filter((d) => d.motostat === "Disponível");
 
   const divContainerDriver = document.querySelector(".linkDrive");
   if (divContainerDriver) {
@@ -1198,6 +1198,8 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
     const cliente = await buscarClientePorNome(nomeCliente, token);
     if (!cliente) return false;
 
+    console.log('cliente lcouocc' , cliente)
+
     const confirmacao = confirm(
       `Deseja vincular o bem ${bemId} ao cliente ${nomeCliente} (Locação ${locacaoEncontrada.cllonmlo})?`
     );
@@ -1222,6 +1224,8 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
         }
     }
 
+    console.log('payloadLogistcs' , payloadLogistcs)
+
     // Envio dos dados da locação
     const response = await fetch("/logistics", {
       method: "POST",
@@ -1230,6 +1234,8 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
       },
       body: JSON.stringify({payloadLogistcs}),
     });
+
+    console.log('resposta vincular' , response)
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -1268,8 +1274,7 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
      }
 
     //  await atualizarStatus('/api/contrato/:id' , {})
-    await atualizarStatus(
-        `/api/updatestatuslocation/${codeLocation}`,
+    await atualizarStatus(`/api/updatestatuslocation/${codeLocation}`,
         { belostat: "Em Locação" },
         "Erro ao atualizar status da locação",
         token
@@ -1282,7 +1287,11 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
       }
 
       const contratoAtualResponse = await fetch(`/api/contrato/${codeLocation}` , {
-        method: "GET"
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       });
 if (!contratoAtualResponse.ok) {
   throw new Error("Não foi possível buscar o contrato atual.");
@@ -1352,7 +1361,7 @@ const responseUpdateContrato = await fetch(`/api/contrato/${codeLocation}`, {
   headers: {
     "Content-Type": "application/json",
   },
-  body: JSON.stringify({ body: contratoAtualizado }),
+  body: JSON.stringify({ contrato: contratoAtualizado }),
 });
 
 if (!responseUpdateContrato.ok) {

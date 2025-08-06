@@ -200,7 +200,7 @@ async getbensByCode(req, res) {
       return res.status(400).json({ message: "Dados inválidos" });
     }
 
-    const statusValidos = ["Disponível", "Locado", "A destino do cliente"];
+    const statusValidos = ["Disponível", "Locado", "A destino do cliente" , "Esta com cliente"];
     if (!statusValidos.includes(bensstat)) {
       return res.status(400).json({ message: "Status inválido!" });
     }

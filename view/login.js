@@ -48,8 +48,7 @@ function loginUserCenter() {
         if (response.token) {
           localStorage.setItem("token", response.token);
           localStorage.setItem("tipoUsuario", response.tipo);
-           
-          localStorage.setItem('user' , response.user)
+          localStorage.setItem('user' , response.user);
 
           Toastify({
             text: "Login com sucesso",

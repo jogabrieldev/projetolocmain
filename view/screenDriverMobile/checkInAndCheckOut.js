@@ -34,10 +34,7 @@ async function updateStatusVehicle(id , body){
       }
 };
 
-
-
 async function checkIn(){
-
 
 let userId = localStorage.getItem('user')
 const token = localStorage.getItem('token')
@@ -74,7 +71,6 @@ let user= userId
             checKmat:quilometrosAt,
             checMoto:user
          }
-         console.log('payload' , payloadCheckin)
 
          if(payloadCheckin){
             const idVeic = payloadCheckin.checVeic
@@ -88,22 +84,10 @@ let user= userId
             })
 
 
-        const result = await data.json()
-
-        console.log('resultado' , result)
-            
+        const result = await data.json()   
         if(data.status === 200 || data.ok){
-            // Toastify({
-            // text: "CHECK-IN feito com sucesso",
-            // duration: 3000,
-            // close: true,
-            // gravity: "top",
-            // position: "center",
-            // backgroundColor: "green",
-            // }).showToast();
-
+          
             setTimeout(()=>{
-            // getVehicleWithDriver(result?.checkin?.checveic)
             updateStatusVehicle(idVeic , {caaustat:"Esta com Motorista!"})
             document.getElementById('caminhao').value = ""
             document.getElementById('checObs').value = ""
@@ -155,16 +139,18 @@ let user= userId
   };
 };
 
-async function getVehicleWithDriver(code) {
+async function getVehicleWithDriver(code , token) {
     try {
         const response = await fetch(`/api/automo/${code}`,{
           method:'GET',
           headers:{
-             "content-type":"application/json"
-          }
+             "content-type":"application/json",
+              Authorization: `Bearer ${token}`
+          },
+          
         })
         const result = await response.json()
-
+        
         if(response.ok && result.success === true){
            return result.veiculo
         }
@@ -199,9 +185,8 @@ function finalizarCheckOut(idVeiculo) {
 function finisihCheckOutRunTime(){
    const socket = io()
    socket.on("checkOut", async(listVehicle)=>{
-    console.log('lista lifa' , listVehicle)
-        finisihCheckOut(listVehicle.caaucode)
-   } )  
+      finisihCheckOut(listVehicle.caaucode)
+   })  
 }
 
 async function getCheck() {
@@ -217,38 +202,59 @@ async function getCheck() {
         Authorization: `Bearer ${token}`
       }
     });
-
+   
      const result = await response.json();
+
+      if (!response.ok) {
+      Toastify({
+        text: result.message || "Erro ao verificar check-in.",
+        duration: 4000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        style: {
+        background: "ORANGE"
+        }
+      }).showToast();
+      return; // não prossegue
+    }
      const check = result?.verificar[0]
      const status = check?.checstat
-     console.log(status)
 
-       if(response.ok && status === "Em uso"){
+      if(!check || !status)return
+ 
+       if(status === "Em uso"){
 
         const inputCaminhao = document.getElementById('caminhao');
          if (inputCaminhao) {
-           inputCaminhao.disabled = true; // Torna o campo somente leitura
+           inputCaminhao.disabled = true; 
           }
-        return checkOut(idMotorista, token)
-         
+          return check
        
        }else if(status === "Finalizado"){
           getAllCar()
        }
-   console.log(result)
+
     
     } catch (error) {
-      console.error('Erro para verificar se o motorista tem pendendica' , error)
-    }
-}
+      console.error('Erro ao verificar check-in:', error);
+    Toastify({
+      text: "Erro inesperado ao verificar check-in.",
+      duration: 4000,
+      gravity: "top",
+      position: "right",
+      style: {
+        background: "#f44336"
+      }
+    }).showToast();
+  };
+};
 
 
 async function checkOut(idMoto , token) {
 
   try {
-    
-    const inputVehicle = document.getElementById("caminhaoCheckOut");
-    if (!idMoto || !token) return;
+      if (!idMoto || !token) return;
 
     const response = await fetch(`/api/checkin/${idMoto}`, {
       method: "GET",
@@ -260,35 +266,15 @@ async function checkOut(idMoto , token) {
 
     const result = await response.json();
     const check = result?.verificar[0]
-    
+
     const status = check.checstat
     
    if (response.ok && Array.isArray(result.verificar) && status === "Em uso"){
       
-
-      const vehicle = await getVehicleWithDriver(check.checveic);
-      if (vehicle &&  inputVehicle) {
-       inputVehicle.value = `${vehicle.caaumaca} - ${vehicle.caauplac}`;
-      }
-     
-      const btnSubmitCheckOut = document.getElementById('submitCheckOut')
-      if(btnSubmitCheckOut){
-         btnSubmitCheckOut.addEventListener('click' ,async ()=>{
-
           const observacao =  document.getElementById('checObsVt')?.value
           const quilometrosAt = document.getElementById('kmVt')?.value
 
-          if(!quilometrosAt){
-             Toastify({
-             text: "E obrigatorio preecher a quilometragem!",
-             duration: 3000,
-             close: true,
-             gravity: "top",
-             position: "center",
-             backgroundColor:"orange",
-            }).showToast();
-            return
-          }
+      
              const response = await fetch(`/api/checkin/${check.checid}` ,{
                method:'PUT',
                headers:{
@@ -303,7 +289,7 @@ async function checkOut(idMoto , token) {
              console.log('resposta server' , response)
              console.log('resultado' , result)
        
-             if(response.ok){
+             if(response.ok && checkOut.checstat === "Finalizado"){
              Toastify({
              text: "CHECK-OUT feito com sucesso!",
              duration: 3000,
@@ -314,19 +300,15 @@ async function checkOut(idMoto , token) {
             }).showToast();
             
             setTimeout(()=>{
-                finisihCheckOutRunTime(checkOut.checveic)
-                 document.getElementById('caminhaoCheckOut').value = ""
+            finisihCheckOutRunTime(checkOut.checveic)
+            document.getElementById('caminhaoCheckOut').value = ""
             document.getElementById('checObsVt').value = ""
             document.getElementById('kmVt').value = ""
             },100)
           
-           }
-         });
+           };
+       
       };
-
-    } else {
-      console.warn("Nenhuma veiuculo pendente");
-    }
 
   } catch (error) {
     console.error('Erro ao executar checkOut:', error);

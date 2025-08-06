@@ -9,7 +9,8 @@ import { controllerLinkVehicleWithDriver } from "../controllers/controllerLinkDr
 import { validateCheckIn } from "../middleware/validators/validCheckIn.js";
 import {validateCheckInOpen} from "../middleware/validators/validCheckIn.js"
 import { validateLocationGoods } from "../middleware/validators/validLocationGoods.js";
-import{validateLocationVehicle} from "../middleware/validators/validLocationVehicle.js"
+import{validateLocationVehicle} from "../middleware/validators/validLocationVehicle.js";
+import { validDeliveryFinish } from "../middleware/validators/validDeliveryFinish.js";
 import { validate } from "../middleware/validators.js";
 import  authenticateToken from '../middleware/authMiddleware.js'
 import {authSystemValidade} from "../controllers/authController.js";
@@ -243,50 +244,54 @@ route.delete("/residuo/:id" , (req , res)=>{
 
 route.post('/api/destination' , (req ,res)=>{
   controllerDestination.insertDestination(req,res)
-})
+});
 
 route.get('/api/destination' , (req ,res)=>{
   controllerDestination.getDestination(req ,res)
-})
+});
 
 route.get('/api/destination/:code' , (req ,res)=>{
   controllerDestination.getDestinationByCode(req,res)
-})
+});
 
 route.delete('/api/destination/:id' , (req,res)=>{
   controllerDestination.deleteDestination(req ,res)
-})
+});
 
 route.put('/api/destination/:iddestination' , (req ,res)=>{
   controllerDestination.updateDestination(req ,res)
-})
+});
 
 //VINCULAR VEICULO COM MOTORISTA EXTERNO
 
 route.post('/api/linkdriver' , (req , res)=>{
    controllerLinkVehicleWithDriver.registerLinkVehicleWithDriver(req , res)
-})
+});
 
 route.get('/api/listdriverexterno' , (req , res)=>{
    controllerLinkVehicleWithDriver.getAllDriverExternoWithVehicle(req ,res)
-})
+});
 
 route.get('/api/drivercar/:id' , (req ,res)=>{
    controllerLinkVehicleWithDriver.getVehicleTheDriver(req ,res)
-})
+});
 
 // checkIN checkOut
 
 route.post("/api/checkin" ,validateCheckIn , validate, authenticateToken, (req ,res)=>{
   controllerCheckInAndCheckOut.toDoCheckIn(req ,res)
-})
+});
 route.get('/api/checkin/:idMoto' ,authenticateToken ,(req ,res)=>{
-   controllerCheckInAndCheckOut.getCheckInOpen(req ,res)
-})
+   controllerCheckInAndCheckOut.getCheckInOpenForDriver(req ,res)
+});
+
+route.get('/api/checkinmoto/:code' ,authenticateToken, (req,res)=>{
+  controllerCheckInAndCheckOut.getCheck(req ,res)
+});
 
 route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
   controllerCheckInAndCheckOut.toCheckOut(req ,res)
-})
+});
 
 
  //locação Bens
@@ -325,17 +330,17 @@ route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
  // LOCAÇÃO VEICULOS
  route.post('/api/locacaoveiculo' ,validateLocationVehicle, validate, authenticateToken,   (req ,res)=>{
   controllerLocationVehicle.dataLocacaoVehicle(req ,res)
- })
+ });
  route.get('/api/locacaoveiculo' , (req , res)=>{
    controllerLocationVehicle.getLocationVehicles(req ,res)
- })
+ });
  route.delete('/api/locacaoveiculo/:id' ,authenticateToken , (req ,res)=>{
    controllerLocationVehicle.deleteLocationVehicles(req ,res)
- })
+ });
 
  route.patch('/api/contratoveiculo/:id' , authenticateToken, (req , res)=>{
   controllerLocationVehicle.updateContrato(req ,res)
- })
+ });
     
 
  // DELIVERY LOCATION 
@@ -345,22 +350,26 @@ route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
 
 route.get("/api/contrato/:id",(req , res)=>{
   logistcgController.getAll(req ,res)
-})
+});
 
 route.put("/api/contrato/:id" , (req ,res)=>{
   logistcgController.updateContratoWithGoods(req ,res)
-})
+});
 
 route.patch('/api/updatestatusdelivery/:id', (req ,res)=>{
    controllerDelivery.updateStatusDelivery(req ,res)
-})
+});
  route.get('/api/getdelivery' , authenticateToken, (req ,res)=>{
   controllerDelivery.getDate(req ,res)
  });
 
  route.get("/api/deliverydriver/:id" , (req ,res)=>{
    controllerDelivery.getDataLocationDriver(req ,res)
- })
+ });
+
+ route.post("/api/deliveryfinish" , validDeliveryFinish , validate, authenticateToken , (req,res)=>{
+    controllerDelivery.finishProcessDelivery(req ,res)
+ });
 
  export {route}
 

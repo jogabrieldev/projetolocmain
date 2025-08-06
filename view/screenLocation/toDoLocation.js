@@ -302,8 +302,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function renderTable(data) {
 
-  console.log('Dados para ' , data)
- 
   const tableDiv = document.querySelector(".tableLocation");
 ;
 
@@ -616,6 +614,14 @@ function interationSystemLocation() {
     btnSearchLocation.addEventListener("click", () => {
       filterTable();
     });
+  }
+
+  const btnExitContrato = document.getElementById('voltar')
+  if(btnExitContrato){
+     btnExitContrato.addEventListener('click',()=>{
+        carregamentoEmTempoReal();
+     })
+
   }
 }
 
@@ -1449,8 +1455,8 @@ async function handleSubmit() {
       position: "center",
       backgroundColor: "red",
     }).showToast();
-  }
-}
+  };
+};
 
 // CONTRATO COM OS DADOS A LOCAÇÃO
 async function gerarContrato() {
@@ -1671,7 +1677,7 @@ async function gerarContrato() {
     mostrarElemento(document.querySelector(".tableLocation"));
     mostrarElemento(document.querySelector(".btnInitPageMainLoc"));
   });
-}
+};
 
 // cadastrar o cliente pela a tela de locação
 function registerClientPageLocation() {

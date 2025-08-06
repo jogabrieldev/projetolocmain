@@ -227,5 +227,4 @@ export const movementOfDriver = {
       return res.status(500).json({ message: "Erro no servidor para atualizar status motorista" });
     }
   },
-
 };

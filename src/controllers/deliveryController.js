@@ -1,5 +1,5 @@
 import { mecanismDelivey } from "../model/modelsDelivery.js";
-
+import { goodsRegister as updateBem } from "../model/modelsGoods.js";
 
 const controllerDelivery = {
 
@@ -24,10 +24,12 @@ const controllerDelivery = {
              return res.status(400).json({message:"E obrigatorio passar o ID do motorista"})
            }
             const result = await mecanismDelivey.getDataLocationForDriver(id)
-            if(!result){
+            if(!result || result.length == 0){
               return res.status(400).json({message:"Ainda não a entregas para esse motorista"})
             }
+
            return res.status(200).json({message:"Entrega encontrada para esse motorista" ,success:true , entrega:result})
+           
         } catch (error) {
             console.error('Erro para listar entregas para esse motorista' , error)
             return  res.status(500).json({messsage:'Erro no server para listar entregas desse motorista' ,success:false})
@@ -38,8 +40,6 @@ const controllerDelivery = {
          try {
              const {id} = req.params
              const {body} = req.body
-
-             console.log(id , body)
 
              if(!id || !body){
                return res.status(400).json({message:"E obrigatorio enviar o ID e a informação de atualização"})
@@ -62,6 +62,46 @@ const controllerDelivery = {
             console.error('Erro para atualizar o status da entrega' , error)
             return res.status(500).json({message:"Erro no servidor para atualizar status" ,  success:false})
          }
+     },
+
+     async finishProcessDelivery(req ,res){
+      try {
+         const payload= req.body
+         if(!payload){
+          return res.status(400).json({message:"E obrigatorio enviar a entrega , numero da locação e o nome do motorista "})
+         }
+         if(!payload.enfiStat || payload.enfiStat === ""){
+           payload.enfiStat = "Finalizado"
+         }
+
+         console.log('CORPO' , payload)
+
+         const result = await mecanismDelivey.finishDelivery(payload)
+         if(!result){
+           return res.status(400).json({message:"Erro ao finalizar entrega" , success:false , })
+         }
+
+         const updateStatus = await mecanismDelivey.updateStatusDelivery(payload.enfiLoca , payload.enfiStat)
+         if(!updateStatus){
+            return res.status(400).json({message:"Erro ao atualizar o status da entrega"})
+         }
+
+         const socket = req.app.get("socketio")
+          if(socket){
+            socket.emit('statusDelivey' , result)
+          }
+
+          const updateStatusGoods = await updateBem.updateStatus(payload.enfiBem , "Esta com cliente")
+          if(!updateStatusGoods){
+            return res.status(400).json({message:"Erro ao atualizar o status do bem"})
+          }
+
+         return res.status(200).json({message:'Entrega finalizada com sucesso' , success:true , entrega:result})
+      } catch (error) {
+        console.error("Erro ao finalizar entrega" , error )
+        return res.status(500).json({message:"Erro no servidor ao finalizar entrega" , success:false})
+      }
+        
      }
 
 }

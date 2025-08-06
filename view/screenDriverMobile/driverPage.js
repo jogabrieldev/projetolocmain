@@ -1,63 +1,91 @@
-
-
 document.addEventListener("DOMContentLoaded", async function () {
-  
-  // finisihCheckOut()
+  const check = await getCheck();
+  if (check) {
+    const token = localStorage.getItem("token");
+    const inputVehicle = document.getElementById("caminhaoCheckOut");
+
+    const vehicle = await getVehicleWithDriver(check.checveic, token);
+    if (vehicle && inputVehicle) {
+      inputVehicle.value = `${vehicle.caaumaca} - ${vehicle.caauplac}`;
+    }
+  }
+  verifiqueCheck();
   valueSelect();
-  initSocketCheckIn()
-  getCheck();
+  initSocketCheckIn();
   checkIn();
   listDeliveryForDriver();
   addNameDriver();
-  toAcceptDeliveryNow()
+  toAcceptDeliveryNow();
+  initCheckOut();
 });
 
 function valueSelect() {
   const selectCar = document.getElementById("caminhao");
   if (selectCar) {
     selectCar.addEventListener("click", getAllCar());
-}
+  }
 }
 
-// function finisihCheckOut(){
-//    const socket = io()
-//    socket.on("checkOut", async(listVehicle)=>{
-//     console.log('lista lifa' , listVehicle)
-//         finisihCheckOut(listVehicle.caaucode)
-//    } )  
-// }
-
-function initSocketCheckIn(){
-   const socket = io(); // conecta ao servidor
+function initSocketCheckIn() {
+  const socket = io(); // conecta ao servidor
 
   socket.on("checkIn", async (listVehicle, checkin) => {
     console.log("Novo check-in recebido via socket!", listVehicle, checkin);
-    console.log('lista' , listVehicle)
-  
+    console.log("lista", listVehicle);
+
     Toastify({
-      text: `Novo Check-In! Veículo ${listVehicle.caauplac || "sem placa"} com motorista.`,
+      text: `Novo Check-In! Veículo ${
+        listVehicle.caauplac || "sem placa"
+      } com motorista.`,
       duration: 3000,
       close: true,
       gravity: "top",
       position: "center",
       backgroundColor: "green",
     }).showToast();
-   
 
+    const inputVehicle = document.getElementById("caminhaoCheckOut");
+    const vehicle = await getVehicleWithDriver(listVehicle.caaucode);
+    if (vehicle && inputVehicle) {
+      inputVehicle.value = "";
+      inputVehicle.value = `${vehicle.caaumaca} - ${vehicle.caauplac}`;
+    }
+
+    const inputCaminhao = document.getElementById("caminhao");
+    if (inputCaminhao) {
+      inputCaminhao.disabled = true; // Torna o campo somente leitura
+    }
+
+    getAllCar();
+  });
+}
+
+function initCheckOut() {
+  const submitCheckOut = document.getElementById("submitCheckOut");
+  if (submitCheckOut) {
+    submitCheckOut.addEventListener("click", async (event) => {
+      event.preventDefault();
       const inputVehicle = document.getElementById("caminhaoCheckOut");
-      const vehicle = await getVehicleWithDriver(listVehicle.caaucode)
-      if (vehicle && inputVehicle) {
-        inputVehicle.value = ""
-       inputVehicle.value = `${vehicle.caaumaca} - ${vehicle.caauplac}`;
+      const quilometrosAt = document.getElementById("kmVt").value;
+      const observacao = document.getElementById("checObsVt").value;
+      const token = localStorage.getItem("token");
+      const idMoto = localStorage.getItem("user");
+
+      if (!inputVehicle.value || !quilometrosAt) {
+        Toastify({
+          text: "Preencha os campos do veiculo e de quilometragem!",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+        return;
       }
 
-        const inputCaminhao = document.getElementById('caminhao');
-         if (inputCaminhao) {
-           inputCaminhao.disabled = true; // Torna o campo somente leitura
-          }
-    
-    getAllCar(); 
-  });
+      await checkOut(idMoto, token);
+    });
+  }
 }
 
 function isTokenExpired(token) {
@@ -78,7 +106,7 @@ function formatarData(dataISO) {
     month: "2-digit",
     year: "numeric",
   });
-};
+}
 
 async function verifiqueID(motoristaId) {
   try {
@@ -105,8 +133,8 @@ async function verifiqueID(motoristaId) {
   } catch (error) {
     console.error("Erro ao buscar motorista");
     return false;
-  };
-};
+  }
+}
 
 async function addNameDriver() {
   try {
@@ -143,8 +171,73 @@ async function addNameDriver() {
       backgroundColor: "red",
     }).showToast();
     return;
-  };
-};
+  }
+}
+
+async function SearchNameDriverLogado(id) {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token || !id) return;
+    const response = await fetch(`/api/driver/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const result = await response.json();
+    console.log("result", result);
+    if (result.success === true) {
+      return result.motorista.motonome;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("Erro ao buscar motorista logado");
+    return false;
+  }
+}
+
+async function verifiqueCheck() {
+  try {
+    const userId = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
+
+    if (!userId || !token) return;
+
+    const response = await fetch(`/api/checkinmoto/${userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar check-in: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('data' , data)
+    const check = data.check[0];
+    if (check && check.checstat === "Em uso") {
+      document.querySelectorAll(".toAcceptDelivery").forEach((btn) => {
+        btn.disabled = false;
+      });
+      return true;
+    } else {
+      // Garante que continue desabilitado se não estiver "Em uso"
+      document.querySelectorAll(".toAcceptDelivery").forEach((btn) => {
+        btn.disabled = true;
+      });
+      return false;
+    }
+  } catch (error) {
+    console.error("Erro ao verificar check-in:", error);
+    return false;
+  }
+}
 
 async function getAllCar() {
   try {
@@ -160,14 +253,11 @@ async function getAllCar() {
     });
 
     const carros = await response.json();
-    console.log('carros' , carros)
-
+    console.log("carros", carros);
 
     const carrosAtivos = carros.filter(
       (carro) => carro.caaustat === "Disponível" && carro.caausitu === "Interno"
     );
-
-    
 
     const select = document.getElementById("caminhao");
     if (select) {
@@ -183,14 +273,15 @@ async function getAllCar() {
     }
   } catch (error) {
     console.error("Erro na aplicação para buscar carros:", error);
-  };
-};
+  }
+}
 
 let idDelivery = "";
-let idBem = ""
-async function listDeliveryForDriver() {
+let idBem = "";
 
-  updateRuntimeStatusDelivery()
+async function listDeliveryForDriver() {
+  updateRuntimeStatusDelivery();
+
   try {
     const token = localStorage.getItem("token");
     const motoristaId = localStorage.getItem("user");
@@ -198,7 +289,7 @@ async function listDeliveryForDriver() {
 
     if (!token || !motoristaId || !container) return;
 
-    if (!token || isTokenExpired(token)) {
+    if (isTokenExpired(token)) {
       Toastify({
         text: "Sessão expirada. Faça login novamente.",
         duration: 3000,
@@ -225,13 +316,14 @@ async function listDeliveryForDriver() {
       },
     });
 
+    if (!response.ok) return;
+    console.log("Resposta" , response)
+
     const data = await response.json();
-    if (!response.ok) return
-      
-    const entrega = data.entrega;
-
-
-    if (entrega.length === 0) {
+    console.log("resposta", data);
+    const entregas = data.entrega;
+    console.log('entrega'  ,entregas)
+    if (!entregas || entregas.length === 0) {
       container.innerHTML = `
         <div class="col-12 text-center">
           <i class="bi bi-truck-flatbed fs-1 text-muted"></i>
@@ -239,51 +331,70 @@ async function listDeliveryForDriver() {
         </div>`;
       return;
     }
-    
-    idDelivery = entrega?.loficode;
-    idBem = entrega?.lofiidbe;
 
-    let botoes = "";
+    const nomeMotorista = await SearchNameDriverLogado(motoristaId);
+    if (!nomeMotorista) return;
 
-    const statusEntrega = entrega.lofistat;
+    for (const entrega of entregas) {
+      idDelivery = entrega.loficode;
+      idBem = entrega.lofiidbe;
 
-    if (statusEntrega === "Entrega aceita") {
-      botoes = `<button class="btn btn-warning w-75 finishDelivery">Finalizar</button>`;
-    } else {
-      botoes = `<button class="btn btn-success w-75 toAcceptDelivery" disabled>Aceitar</button>`;
-    }
+      let nomeClient = "";
+      let clientPhone = "";
 
-    let nomeClient = "";
-    let clientPhone = "";
+      const cliecode = entrega.lofiidcl;
 
-    const cliecode = entrega.lofiidcl;
+      const clientRes = await fetch(`/api/client/${cliecode}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-    const clientRes = await fetch(`/api/client/${cliecode}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+      if (clientRes.ok) {
+        const cliente = await clientRes.json();
 
-    if (clientRes.ok) {
-      const cliente = await clientRes.json();
-
-      if (Array.isArray(cliente) && clientRes.length > 0) {
-        const client = cliente[0];
-        nomeClient = client.clienome || "Sem nome";
-        clientPhone = client.cliecelu || "Não passado";
+        if (Array.isArray(cliente) && cliente.length > 0) {
+          nomeClient = cliente[0].clienome || "Sem nome";
+          clientPhone = cliente[0].cliecelu || "Não passado";
+        } else if (cliente?.clienome) {
+          nomeClient = cliente.clienome;
+          clientPhone = cliente.cliecelu || "Não passado";
+        }
       }
 
-      nomeClient = cliente.clienome || "Sem nome";
-      clientPhone = cliente.cliecelu || "Não passado";
+      let botoes = "";
+      const statusEntrega = entrega.lofistat;
+
+      if (statusEntrega === "Entrega aceita") {
+        botoes = `<button 
+          class="btn btn-warning w-75 finishDelivery"
+          data-location="${entrega.lofiidlo}"
+          data-cliente="${nomeClient}"
+          data-id="${entrega.loficode}"
+          data-localization="${entrega.loficep} - ${entrega.lofirua} - ${entrega.loficida}"
+          data-dataloc="${entrega.lofidtlo}"
+          data-bem="${entrega.lofiidbe}"
+          data-moto="${nomeMotorista}">
+          Finalizar
+        </button>`;
+      } else {
+        botoes = `<button class="btn btn-success w-75 toAcceptDelivery" 
+        data-id="${entrega.loficode}"
+        data-bem="${entrega.lofiidbe}"
+        data-endereco=" ${entrega.loficep} - ${entrega.lofirua} - ${entrega.lofibair} - ${entrega.loficida}"
+        data-cliente="${nomeClient}"
+        data-dataloc="${formatarData(entrega.lofidtlo)}">Aceitar</button>`;
+      }
 
       const card = document.createElement("div");
       card.className = "col-md-6 col-lg-4";
 
-     card.innerHTML = `
-  <div class="card border-0 shadow-sm h-100" data-entrega-id="${entrega.lofiidlo}">
-
+      card.innerHTML = `
+        <div class="card border-0 shadow-sm h-100" data-entrega-id="${
+          entrega.lofiidlo
+        }">
           <div class="card-body">
             <h5 class="card-title">
               <i class="bi bi-box-seam-fill text-primary"></i>
@@ -299,25 +410,53 @@ async function listDeliveryForDriver() {
               entrega.lofidtdv
             )}</p>
             <p class="mb-1"><i class="bi bi-person-fill text-info"></i> Cliente: ${nomeClient}</p>
-            <p class="mb-1"><i class="bi bi-telephone-fill"></i> Telefone do Cliente:${clientPhone}</p>
+            <p class="mb-1"><i class="bi bi-telephone-fill"></i> Telefone do Cliente: ${clientPhone}</p>
             <p class="mb-0"><i class="bi bi-credit-card-fill text-warning"></i> Pagamento: ${
               entrega.lofipgmt
             }</p>
             <br>
-            <div class = "d-flex flex-row justify-content-center w-100">
-             ${botoes}
+            <div class="d-flex flex-row justify-content-center w-100">
+              ${botoes}
             </div>
           </div>
-        </div> `;
+        </div>`;
+
       container.appendChild(card);
 
       const btnAceitar = card.querySelector(".toAcceptDelivery");
       if (btnAceitar) {
-        btnAceitar.addEventListener("click", (event) =>
-          toAcceptDeliveryNow(event)
+        btnAceitar.disabled = true
+       btnAceitar.addEventListener("click", (event) => {
+       const btn = event.currentTarget;
+    
+       idDelivery = btn.dataset.id;
+       idBem = btn.dataset.bem;
+
+       document.getElementById("IdEntrega").textContent = btn.dataset.id;
+       document.getElementById("enderecoEntrega").textContent = btn.dataset.endereco;
+       document.getElementById("clienteEntrega").textContent = btn.dataset.cliente;
+       document.getElementById("dataEntrega").textContent = btn.dataset.dataloc;
+
+   
+        const modal = new bootstrap.Modal(document.getElementById("modalConfirmAccept"));
+        modal.show();
+       });
+
+       const btnConfirmModal = document.getElementById("buttonAcceptDelivery");
+        btnConfirmModal.onclick = (event) => {
+        toAcceptDeliveryNow(event);
+        };
+
+     }
+
+      const btnFinish = card.querySelector(".finishDelivery");
+      if (btnFinish) {
+        btnFinish.addEventListener("click", (event) =>
+          finishDelivery(event.currentTarget)
         );
-      }
-    }
+      };
+    };
+    await verifiqueCheck()
   } catch (error) {
     console.error("Erro na listagem de entregas:", error);
     document.querySelector(".showDelivery").innerHTML = `
@@ -325,24 +464,32 @@ async function listDeliveryForDriver() {
   };
 };
 
+
+
 // ATUALIZAR EM TEMPO REAL PARA MOSTRAR O BOTÃO NA TELA FINALIZAR
-async function  updateRuntimeStatusDelivery() {
-  const socket = io()
-    socket.on('statusDelivey', (entregaAtualizada) => {
-  console.log('Atualização recebida via socket:', entregaAtualizada);
+async function updateRuntimeStatusDelivery() {
+  const socket = io();
 
-  // Localize o card da entrega pelo ID
-  const card = document.querySelector(`.card-title:contains("Entrega #${entregaAtualizada.lofiidlo}")`)?.closest(".card-body");
-  if (card) {
-    const btnFinalizar = card.querySelector(".finishDelivery");
-    const btnAceitar = card.querySelector(".toAcceptDelivery");
+  socket.on("statusDelivey", (entregaAtualizada) => {
+    console.log("Atualização recebida via socket:", entregaAtualizada);
 
-    if (btnAceitar) btnAceitar.classList.add("d-none");
-    if (btnFinalizar) btnFinalizar.classList.add("d-flex");
-  }
-});
+    // Localize o card da entrega pelo ID (usando o texto da entrega)
+    let cardBody = null;
+    document.querySelectorAll(".card-title").forEach((card) => {
+      if (card.textContent.includes(`Entrega #${entregaAtualizada.lofiidlo}`)) {
+        cardBody = card.closest(".card-body");
+      }
+    });
+
+    if (cardBody) {
+      const btnFinalizar = cardBody.querySelector(".finishDelivery");
+      const btnAceitar = cardBody.querySelector(".toAcceptDelivery");
+
+      if (btnAceitar) btnAceitar.classList.add("d-none");
+      if (btnFinalizar) btnFinalizar.classList.remove("d-none");
+    }
+  });
 }
-
 
 async function updateStatusGoods(idBem) {
   try {
@@ -376,12 +523,13 @@ async function updateStatusGoods(idBem) {
       position: "center",
       backgroundColor: "red",
     }).showToast();
-  };
-};
+  }
+}
 
+// Esta função será chamada ao clicar no botão "Aceitar Entrega" da modal
 async function toAcceptDeliveryNow(event) {
   try {
-    const token = localStorage.getItem("token"); // ou da onde você armazena
+    const token = localStorage.getItem("token");
 
     if (!token || !idDelivery) {
       throw new Error("Token ou ID da entrega não encontrado");
@@ -390,13 +538,14 @@ async function toAcceptDeliveryNow(event) {
     const response = await fetch(`/api/updatestatusdelivery/${idDelivery}`, {
       method: "PATCH",
       headers: {
-        "content-type": "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ body: "Entrega aceita" }),
     });
+
     if (!response.ok) {
       Toastify({
-        text: "Erro para aceitar essa entrega",
+        text: "Erro ao aceitar essa entrega! Verifique.",
         duration: 3000,
         close: true,
         gravity: "top",
@@ -407,7 +556,7 @@ async function toAcceptDeliveryNow(event) {
     }
 
     Toastify({
-      text: "Entrega aceita pelo o motorista!",
+      text: "Entrega aceita pelo motorista!",
       duration: 3000,
       close: true,
       gravity: "top",
@@ -415,28 +564,165 @@ async function toAcceptDeliveryNow(event) {
       backgroundColor: "green",
     }).showToast();
 
+     const modalEl = document.getElementById("modalConfirmAccept");
+    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+    if (modalInstance) {
+      modalInstance.hide();
+    }
+   
+    await listDeliveryForDriver()
+    
     const btnAceitar = event.target;
-    const cardBody = btnAceitar.closest(".card-body");
+    btnAceitar.classList.add("d-none");
 
-    const btnFinalizar = cardBody.querySelector(".finishDelivery");
+    const card = btnAceitar.closest(".card");
+    const btnFinalizar = card?.querySelector(".finishDelivery");
+    if (btnFinalizar) {
+     btnFinalizar.classList.remove("d-none");
+    }
 
-    if (btnAceitar) btnAceitar.classList.add("d-none");
-  
-    if (btnFinalizar) btnFinalizar.classList.add("d-flex");
-
-    updateStatusGoods(idBem);
+    // Atualiza o status dos bens (se necessário)
+    if (typeof updateStatusGoods === "function") {
+      updateStatusGoods(idBem);
+    }
 
   } catch (error) {
-    console.error("Erro para atualizar status da entrega", error);
-  };
-};
+    console.error("Erro ao atualizar status da entrega:", error);
+  }
+}
 
-//  function finishDelivery () {
-//      const btnFinishDelivery =  document.getElementById('finishDelivery')
-//      if(btnFinishDelivery){
-//         btnFinishDelivery.addEventListener("click", async ()=>{
-//              const response = await fetch('')
-//         })
-//      }
-// }
 
+function finishDelivery(button) {
+  const modalFinishDeliveryEl = document.querySelector(".modalFinishLocation");
+  if (modalFinishDeliveryEl) {
+    const idDelivery = button.getAttribute("data-id");
+    const idNumeroLocacao = button.getAttribute("data-location");
+    console.log(idNumeroLocacao, idDelivery);
+    const localization = button.getAttribute("data-localization");
+    const nomeCliente = button.getAttribute("data-cliente");
+    const dataLocacao = button.getAttribute("data-dataLoc");
+    const idBem = button.getAttribute("data-bem");
+    const dataFormatada = new Date(dataLocacao).toLocaleString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+      timeZone: "America/Sao_Paulo",
+    });
+    const nomeMotorista = button.getAttribute("data-moto");
+
+    console.log(
+      "localizatio",
+      localization,
+      idDelivery,
+      nomeCliente,
+      nomeMotorista,
+      dataFormatada
+    );
+
+    document.getElementById("nomeDoCliente").textContent = nomeCliente;
+    document.getElementById("numeroDaLocacao").textContent = idNumeroLocacao;
+    document.getElementById("destinoEntrega").textContent = localization;
+    document.getElementById("dataEntrega").textContent = dataFormatada;
+    document.getElementById("nomeDoMotorista").textContent = nomeMotorista;
+
+    const buttonFinish = document.getElementById("submitFinishDelivery");
+    const checkBoxValid = document.getElementById("confirmTermos");
+
+    if (checkBoxValid && buttonFinish && idDelivery) {
+      checkBoxValid.addEventListener("change", () => {
+        if (checkBoxValid.checked) {
+          buttonFinish.removeAttribute("disabled");
+        } else {
+          buttonFinish.setAttribute("disabled", "true");
+        }
+      });
+    }
+
+    const modal = new bootstrap.Modal(modalFinishDeliveryEl);
+    modal.show();
+
+    if (!idDelivery || !idNumeroLocacao || !nomeMotorista) return;
+
+    console.log("button", buttonFinish);
+    if (buttonFinish) {
+      buttonFinish.addEventListener("click", async () => {
+        submitDataFinishDelivery(
+          idDelivery,
+          idNumeroLocacao,
+          nomeMotorista,
+          idBem,
+          button
+        );
+      });
+    }
+  }
+}
+
+// enviar dados da modal de finalização da entrega
+async function submitDataFinishDelivery(idDelivery,idNumeroLocacao,nomeMotorista,idBem,button) {
+  try {
+    const token = localStorage.getItem("token");
+
+    const payload = {
+      enfiLoca: idDelivery,
+      enfiNmlo: idNumeroLocacao,
+      enfiNmMt: nomeMotorista,
+      enfiBem: idBem,
+    };
+
+    console.log("Payload", payload);
+    if (!payload || !token) return;
+
+    const response = await fetch("/api/deliveryfinish", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      Toastify({
+        text: "Erro ao finalizar entrega! verifique",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+      return;
+    }
+    const result = await response.json();
+    if (response.ok && result.success === true) {
+      Toastify({
+        text: "Entrega finalizada com sucesso!",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "green",
+      }).showToast();
+
+      // 🔥 Remove o card do DOM
+      const card = button.closest(".col-md-6"); // ou ".col-md-6.col-lg-4" dependendo da estrutura
+      if (card) {
+        card.remove();
+      }
+
+      // Fecha a modal
+      const modalEl = document.querySelector(".modalFinishLocation");
+      const modal = bootstrap.Modal.getInstance(modalEl);
+      if (modal) {
+        modal.hide();
+      }
+    }
+
+    console.log("Resposta do servidor:", response);
+  } catch (error) {
+    console.error("Erro para enviar dados de finalização de entrega", error);
+  }
+}

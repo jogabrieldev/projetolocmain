@@ -16,18 +16,6 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.static(path.join(__dirname, 'view')));
 
-// Rota para login
-// app.get('/', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-// });
-
-// Rota para main.html (SPA principal)
-// app.get('/main', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'dist', 'main.html'));
-// });
-
-
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(route);

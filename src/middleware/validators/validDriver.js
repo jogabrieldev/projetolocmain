@@ -1,6 +1,7 @@
 import { body } from "express-validator";
 import { crudRegisterDriver as validDriver } from "../../model/modelsDriver.js"; 
 import { differenceInYears, isValid, parseISO } from 'date-fns';
+import bcrypt from "bcrypt";
 import fetch from "node-fetch"; 
 
 export const validateMotorista = [
@@ -81,6 +82,7 @@ export const validateMotorista = [
 
   
   body("motoPasw")
-    .isLength({ min: 6 })
-    .withMessage("A senha é obrigatória e deve ter pelo menos 6 caracteres."),
+    .notEmpty()
+    .isLength({ min: 6 }).withMessage("A senha é obrigatória e deve ter pelo menos 6 caracteres.")
+    
 ];

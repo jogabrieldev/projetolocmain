@@ -1,3 +1,4 @@
+
 import {client} from '../database/userDataBase.js';
 const delivery = client
 
@@ -17,11 +18,11 @@ const mecanismDelivey = {
 
     async getDataLocationForDriver(id){
          try {
-             const query = `SELECT * FROM locafim WHERE lofiidmt = $1 `
+             const query = `SELECT * FROM locafim WHERE lofiidmt = $1 AND lofistat IN ('Pendente' , 'Entrega aceita') `
              const value = [id]
              const result = await delivery.query(query , value)
 
-             return result.rows[0]
+             return result.rows
          } catch (error) {
             console.error("Não foi encontrado entrega para esse motorista")
             throw error 
@@ -41,7 +42,28 @@ const mecanismDelivey = {
             console.error('Erro para atualizar o status da entrega')
             throw error
         }
-    }
+    },
+
+    async finishDelivery(payload) {
+           
+        try {
+          const {enfiLoca , enfiStat , enfiNmlo , enfiNmMt  ,enfiBem} = payload
+          
+          const query = `INSERT INTO entrfins(enfiloca , enfistat , enfinmlo , enfinmmt , enfibem)VALUES($1 , $2 , $3 , $4 , $5) RETURNING enfiid`
+
+          const values = [enfiLoca ,enfiStat ,enfiNmlo , enfiNmMt , enfiBem]
+
+          const result = await delivery.query(query ,values)
+          if(result.rows.length > 0){
+             return result.rows[0]
+          }
+        } catch (error) {
+            console.error("Erro ao finalizar entrega" , error)
+             throw new Error("Erro ao finalizar entrega" , error);
+        }
+    },
+
+
 }
 
 export {mecanismDelivey} 
