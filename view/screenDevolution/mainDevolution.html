@@ -6,8 +6,73 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
         aria-label="Fechar" style="width: 32px; height: 32px;" id="outPageDevolution">
        <i class="bi bi-x fs-5"></i>
      </button>
+       
+     <!-- <div class="">
+       <h3>Devoluções do Dia</h3>
+      </div> -->
 
-    <div class="devolutionTheDay mt-4">
-
+     <div class="devolutionTheDay mt-5">
+        <!-- Tabela do dia para de devolução  -->
     </div>
+
+  <div class="popupBackDrop position-fixed top-0 start-0 w-100 h-100 bg-dark opacity-50" style="display: none; z-index: 1050;"></div>
+
+  <div class="detailsTheDevolution position-fixed  top-50 start-50 translate-middle bg-white border rounded-4 p-4 shadow-lg w-100 mx-3 flex-column" style="display: none; max-width: 500px; z-index: 1055;">
+
+  
+    <div class="text-center mb-4">
+      <h5 class="fw-bold text-dark">
+       <i class="bi bi-shield-fill-check text-dark"></i>Detalhes para devolução
+     </h5>
+     <p class="text-muted mb-0 small">Analise a devolução</p>
+   </div>
+
+  
+<div class="mb-3 position-relative">
+  <label class="form-label d-block text-muted">
+    <i class="bi bi-person-circle"></i> Nome do cliente
+  </label>
+  <span id="nameClient" class="form-control-plaintext ps-4"></span>
+</div>
+
+
+<div class="mb-4 position-relative">
+  <label class="form-label d-block text-muted">
+    <i class="bi bi-ui-checks me-1"></i> Caçamba
+  </label>
+  <span id="nameGoods" class="form-control-plaintext ps-4"></span>
+</div>
+
+
+<div class="mb-4 position-relative">
+  <label class="form-label d-block text-muted">
+    <i class="bi bi-ui-checks me-1"></i> Numero de locação
+  </label>
+  <span id="numberLocation" class="form-control-plaintext ps-4"></span>
+</div>
+
+<div class="mb-4 position-relative">
+  <label class="form-label d-block text-muted">
+    <i class="bi bi-geo-alt-fill me-2"></i>Endereço
+  </label>
+  <span id="ruaDevolution" class="form-control-plaintext ps-4">rua</span>
+   <span id="cepDevolution" class="form-control-plaintext ps-4">cep</span>
+   <span id="cidaDevolution" class="form-control-plaintext ps-4">cidade</span>
+   <span id="bairroDevolution" class="form-control-plaintext ps-4">cidade</span>
+</div>
+
+
+  <!-- Botões -->
+  <div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+    <button class="btn btn-primary w-100 w-sm-50 text-dark submitSearchClient">
+       <i class="bi bi-person-up me-2 text-dark"></i> Enviar para motorista
+    </button>
+    <button class="btn btn-light w-100 w-sm-50 outPageDetailsDevolution">
+      <i class="bi bi-arrow-left me-1"></i> Voltar
+    </button>
+  </div>
+ </div>
+
+ <div></div>
+
 </section>

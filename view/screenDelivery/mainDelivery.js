@@ -186,7 +186,6 @@ function renderTableDelivery() {
     }
 
     deliveryData.forEach((item) => {
-      console.log(item)
       const cliente = clientData.find((c) => c.cliecode === item.lofiidcl);
       if(!cliente){
         Toastify({

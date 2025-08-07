@@ -5,7 +5,7 @@ import { validateForn } from "../middleware/validators/validFornecedor.js";
 import { validateMotorista } from "../middleware/validators/validDriver.js"
 import { validateProduto } from "../middleware/validators/validProduct.js";
 import { validateAutomovel } from "../middleware/validators/validVehicles.js";
-import { controllerLinkVehicleWithDriver } from "../controllers/controllerLinkDriverVehicle.js"
+import { controllerLinkVehicleWithDriver } from "../controllers/controllerLinkDriverVehicle.js";
 import { validateCheckIn } from "../middleware/validators/validCheckIn.js";
 import {validateCheckInOpen} from "../middleware/validators/validCheckIn.js"
 import { validateLocationGoods } from "../middleware/validators/validLocationGoods.js";
@@ -23,13 +23,13 @@ import {movementOfTypeProd} from "../controllers/controllerTypeProd.js";
 import {movementOfDriver} from '../controllers/controllerDriver.js';
 import { movementAuto } from '../controllers/automovelController.js';
 import {location} from '../controllers/locationController.js';
-import logistcgController from '../controllers/logistcsController.js'
+import logistcgController from '../controllers/logistcsController.js';
 import { controllerDelivery } from "../controllers/deliveryController.js";
 import { movementResiduo } from "../controllers/residuoController.js";
 import { controllerDestination } from "../controllers/controllerDestination.js";
-import{controllerLocationVehicle} from "../controllers/locationVehicleController.js"
+import{controllerLocationVehicle} from "../controllers/locationVehicleController.js";
 import { controllerCheckInAndCheckOut } from "../controllers/controllerCheckIn.js";
-
+import { controllerDevolution } from "../controllers/controllerDevolution.js";
 
 const route = express.Router()
 
@@ -343,7 +343,7 @@ route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
  });
     
 
- // DELIVERY LOCATION 
+ // LOGISTICA
  route.post('/logistics' , (req , res)=>{
   logistcgController.submitDateForLogistcs(req ,res)
 });
@@ -356,6 +356,7 @@ route.put("/api/contrato/:id" , (req ,res)=>{
   logistcgController.updateContratoWithGoods(req ,res)
 });
 
+// PROCESSO DE ENTREGA
 route.patch('/api/updatestatusdelivery/:id', (req ,res)=>{
    controllerDelivery.updateStatusDelivery(req ,res)
 });
@@ -370,6 +371,13 @@ route.patch('/api/updatestatusdelivery/:id', (req ,res)=>{
  route.post("/api/deliveryfinish" , validDeliveryFinish , validate, authenticateToken , (req,res)=>{
     controllerDelivery.finishProcessDelivery(req ,res)
  });
+
+ // DEVOLUÇÃO
+
+ route.get("/api/devolution" , (req , res)=>{
+   controllerDevolution.getDevolution(req ,res)
+ });
+
 
  export {route}
 

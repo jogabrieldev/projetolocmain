@@ -24,14 +24,13 @@ app.use("/" , routeEscreen);
 
 const server = http.createServer(app);
 
-// Configurar Socket.IO
+
 const io = new Server(server, {
     cors: {
-        origin: "*", // Permite qualquer conexão
+        origin: "*", 
     },
 });
 
-// Adicionar Socket.IO ao objeto req para acesso nas rotas
 app.use((req, res, next) => {
     req.sock = io;
     next();

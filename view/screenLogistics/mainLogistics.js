@@ -747,6 +747,59 @@ async function validateFamilyBensPending() {
   }
 }
 
+async function quantidadeDeEntregaMotorista(codeDriver) {
+   try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`/api/deliverydriver/${codeDriver}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok){
+        Toastify({
+        text: `Erro para verificar entregas do motorista!`,
+        duration: 4000,
+        gravity: "top",
+        position: "center",
+        style: {
+          background: "red", 
+          color: "#000",
+        },
+      }).showToast();
+      throw new Error("Erro ao buscar entregas");
+     
+    } 
+
+    const data = await response.json();
+
+    const totalEntregas = Array.isArray(data.entrega) ? data.entrega.length : 0;
+
+    if (totalEntregas > 0) {
+      Toastify({
+        text: `🚚 Motorista selecionado tem ${totalEntregas} entrega(s) pendente(s)!`,
+        duration: 4000,
+        gravity: "top",
+        position: "center",
+        style: {
+          background: "#ffc107", 
+          color: "#000",
+        },
+      }).showToast();
+    }
+
+  } catch (error) {
+    console.error("Erro ao buscar quantidade de entregas:", error);
+    Toastify({
+      text: "Motorisa não tem entregas pendentes!",
+      duration: 4000,
+      style: { background: "green" },
+    }).showToast();
+  }
+}
+
 // CARREGAR MOTORISTA DISPONIVEIS
 async function loadingDriver() {
   const token = localStorage.getItem("token");
@@ -761,7 +814,7 @@ async function loadingDriver() {
 
   const driver = await response.json();
 
-  const avalibleDrivers = driver.filter((d) => d.motostat === "Disponível");
+  const avalibleDrivers = driver.filter((d) => d.motostat === "Disponível" || d.motostat === "Entrega destinada");
 
   const divContainerDriver = document.querySelector(".linkDrive");
   if (divContainerDriver) {
@@ -815,6 +868,13 @@ async function loadingDriver() {
       checkbox.dataset.driver = JSON.stringify(motorista);
 
       checkboxCell.appendChild(checkbox);
+
+      checkbox.addEventListener("change", () => {
+      if (checkbox.checked) {
+       quantidadeDeEntregaMotorista(motorista.motocode);
+     }
+});
+
 
       linha.insertCell().textContent = motorista.motonome;
       linha.insertCell().textContent = motorista.motostat;

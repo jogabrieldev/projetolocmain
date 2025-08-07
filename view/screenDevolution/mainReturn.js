@@ -46,92 +46,218 @@ document.addEventListener('DOMContentLoaded', () => {
              }
          })
       }
-  }
-  
-  async function getdeliveryForDevolution() {
-    const token = localStorage.getItem('token'); 
-    try {
-      const [deliveryRes, clientsRes] = await Promise.all([
-        fetch('/api/getdelivery', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        }),
-        fetch('/api/listclient', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
+
+
+      const outPageDetailsDevolution = document.querySelector(".outPageDetailsDevolution")
+      if(outPageDetailsDevolution){
+        outPageDetailsDevolution.addEventListener("click" , ()=>{
+            const backDrop = document.querySelector('.popupBackDrop')
+            if(backDrop) backDrop.style.display = "none"
+
+            const popUp = document.querySelector(".detailsTheDevolution")
+            if(popUp) popUp.style.display = "none"
+           
+
         })
-      ]);
-  
-      if (!deliveryRes.ok || !clientsRes.ok) {
-        console.log('Erro ao buscar dados.');
-        return;
       }
-  
-      const location = await deliveryRes.json();
-      const clients = await clientsRes.json();
-  
-      const hoje = new Date().toISOString().split('T')[0];
-  
-      const devolucoesHoje = location.filter(loc => {
-        const dataDevolucao = loc.lofidtdv?.split('T')[0];
-        return dataDevolucao === hoje;
-      });
-  
-      const container = document.querySelector('.devolutionTheDay');
-  
-      if (devolucoesHoje.length === 0) {
-        container.innerHTML = '<p>Nenhuma devolução marcada para hoje.</p>';
-        return;
-      }
-  
-      let tabelaHTML = `
-        <table class="table table-bordered">
-          <thead class="table-light">
-            <tr>
-              <th style="width: 80px;">ID</th>
-              <th>ID Locação</th>
-              <th>Bem</th>
-              <th>Cliente</th>
-              <th>Forma Pgto</th>
-              <th>Data Locação</th>
-              <th>Data Devolução</th>
-              <th>Detalhes</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
-  
-      devolucoesHoje.forEach(loc => {
-        const cliente = clients.find(cl => cl.cliecode === loc.lofiidcl);
-        const nomeCliente = cliente ? cliente.clienome : 'Cliente não encontrado';
-  
-        tabelaHTML += `
-          <tr>
-            <td>${loc.loficode}</td>
-            <td>${loc.lofiidlo}</td>
-            <td>${loc.lofiidbe}</td>
-            <td>${nomeCliente}</td>
-            <td>${loc.lofipgmt}</td>
-            <td>${new Date(loc.lofidtlo).toLocaleDateString()}</td>
-            <td class="text-danger fw-bold">${new Date(loc.lofidtdv).toLocaleDateString()}</td>
-            <td>
-              <button class="btn btn-sm btn-success btn-details" data-id="${loc.loficode}">Detalhes</button>
-            </td>
-          </tr>
-        `;
-      });
-  
-      tabelaHTML += '</tbody></table>';
-      container.innerHTML = tabelaHTML;
-  
-    } catch (error) {
-      console.error('Erro ao buscar devoluções:', error);
-    }
   }
   
+
+   async function searchNameClient(cliecode){
+     try {
+        const token = localStorage.getItem('token')
+         const response = await fetch(`/api/client/${cliecode}`,{
+           method:"GET",
+           headers:{
+             "content-type": "application/json",
+             Authorization: `Bearer ${token}`
+           }
+         })
+        if(response.ok){
+          
+           const result = await response.json()
+           const nameClient = result.clienome
+           return nameClient
+         }
+         
+     } catch (error) {
+       console.error("Erro ao buscar cliente")
+     };
+  };
+
+  async function searchNameGoods(idBem){
+       
+   try {
+        const token = localStorage.getItem('token')
+         const response = await fetch(`/api/bens/${idBem}`,{
+           method:"GET",
+           headers:{
+             "content-type": "application/json",
+             Authorization: `Bearer ${token}`
+           }
+         })
+        if(response.ok){
+          
+           const result = await response.json()
+           if(result){ 
+              const goods = result.bem
+              const nameGoods = goods.bensnome
+              return nameGoods
+           }
+           
+         }
+         
+     } catch (error) {
+       console.error("Erro ao buscar bem")
+     };
+  }
+
+  async function getdeliveryForDevolution() {
+  const token = localStorage.getItem('token');
+  const container = document.querySelector('.devolutionTheDay');
+
+  if (!token || isTokenExpired(token)) {
+    Toastify({
+      text: "Sessão expirada. Faça login novamente.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
+
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      window.location.href = "/index.html";
+    }, 2000);
+    return;
+  }
+
+
+  container.innerHTML = ''; 
+
+  try {
+    const response = await fetch('/api/devolution', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      console.log('Erro ao buscar devoluções.');
+      return;
+    }
+
+    const data = await response.json();
+    const devolucoesHoje = data.devolution;
+
+    if (!devolucoesHoje || devolucoesHoje.length === 0) {
+      const noData = document.createElement('p');
+      noData.textContent = 'Nenhuma devolução marcada para hoje.';
+      container.appendChild(noData);
+      return;
+    }
+
+    // Cria a tabela
+    const table = document.createElement('table');
+    table.className = 'table table-bordered';
+
+    const thead = document.createElement('thead');
+    thead.className = 'table-light';
+    const headRow = document.createElement('tr');
+    const headers = [ 'ID Locação', 'Bem', 'Cliente', 'Forma Pgto', , 'Data Devolução', 'Detalhes'];
+
+    headers.forEach(text => {
+      const th = document.createElement('th');
+      th.textContent = text;
+      if (text === 'ID') th.style.width = '80px';
+      headRow.appendChild(th);
+    });
+
+    thead.appendChild(headRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+
+    devolucoesHoje.forEach( async loc => {
+      const tr = document.createElement('tr');
+
+      const tdLocacao = document.createElement('td');
+      tdLocacao.textContent = loc.lofiidlo;
+      tr.appendChild(tdLocacao);
+
+      const tdBem = document.createElement('td');
+      tdBem.textContent = loc.lofiidbe;
+      tr.appendChild(tdBem);
+
+      const tdCliente = document.createElement('td');
+      const nomeClient = await searchNameClient(loc.lofiidcl)
+      tdCliente.textContent = nomeClient || loc.lofiidcl;
+      tr.appendChild(tdCliente);
+
+      const tdPgto = document.createElement('td');
+      tdPgto.textContent = loc.lofipgmt || '-';
+      tr.appendChild(tdPgto);
+
+      const tdDataDev = document.createElement('td');
+      tdDataDev.textContent = new Date(loc.lofidtdv).toLocaleDateString();
+      tdDataDev.classList.add('text-danger', 'fw-bold');
+      tr.appendChild(tdDataDev);
+
+      const tdDetalhes = document.createElement('td');
+      const btnDetalhes = document.createElement('button');
+      btnDetalhes.className = 'btn btn-sm btn-success btn-details';
+      btnDetalhes.textContent = 'Detalhes';
+      btnDetalhes.location = loc;
+      tdDetalhes.appendChild(btnDetalhes);
+      tr.appendChild(tdDetalhes);
+
+      btnDetalhes.addEventListener("click" , (event)=>{
+         detailsForDevolution(event)
+      })
+
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    container.appendChild(table);
+
+  } catch (error) {
+    console.error('Erro ao buscar devoluções:', error);
+  };
+};
+
+async function detailsForDevolution(event) {
+  
+    try {
+      const button = event.currentTarget
+     const locationDevolution = button.location;
+
+       const backDrop = document.querySelector('.popupBackDrop')
+      if(backDrop){
+        backDrop.style.display = 'flex'
+      }
+ 
+
+      const popUp = document.querySelector('.detailsTheDevolution')
+       if(popUp){
+        popUp.style.display = 'flex'
+     }
+
+     if(locationDevolution){
+          document.getElementById('nameClient').textContent = await searchNameClient(locationDevolution?.lofiidcl) || locationDevolution?.lofiidcl
+          document.getElementById("nameGoods").textContent = await searchNameGoods(locationDevolution?.lofiidbe) ||  locationDevolution?.lofiidbe
+          document.getElementById("numberLocation").textContent = locationDevolution?.enfinmlo
+          document.getElementById("cepDevolution").textContent = locationDevolution?.loficep || "Não foi passado"
+          document.getElementById("ruaDevolution").textContent = locationDevolution?.lofirua
+          document.getElementById("cidaDevolution").textContent = locationDevolution?.loficida || "Não foi passado"
+          document.getElementById("bairroDevolution").textContent = locationDevolution?.lofibair || "Não foi passado"
+     }
+     
+         
+    } catch (error) {
+      
+    }
+}

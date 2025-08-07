@@ -560,7 +560,11 @@ function interationSystemLocation() {
     registerClientPageLocationIn.addEventListener("click", () => {
       const containerForm = document.querySelector(".LocRegisterClient");
       if (containerForm) {
-        mostrarElemento(containerForm);
+       
+        mostrarElemento(containerForm) 
+        containerForm.style.justifyContent = "center"
+        containerForm.style.flexDirection = "column"
+        
       }
 
       const containerMain = document.querySelector(".container");
@@ -1765,41 +1769,25 @@ function registerClientPageLocation() {
       }
 
       const formDataLocation = {
-        clieCode: document.querySelector("#clieCodeLoc").value.trim(), // Código
-        clieName: document.querySelector("#clieNameLoc").value.trim(), // Nome Completo
-        clieTpCl: document.querySelector("#clieTiCliLoc").value, // Tipo de Cliente
-        clieCpf: document
-          .querySelector("#cpfClientLoc")
-          .value.trim()
-          .replace(/\D/g, ""), // CPF
-        clieCnpj: document
-          .querySelector("#cnpjClientLoc")
-          .value.trim()
-          .replace(/\D/g, ""), // CNPJ
-        clieCelu: document
-          .querySelector("#clieCeluLoc")
-          .value.trim()
-          .replace(/\D/g, ""), // Celular
-        dtNasc: document.querySelector("#dtNascLoc").value, // Data de Nascimento
-        dtCad: document.querySelector("#dtCadLoc").value, // Data de Cadastro
-        clieCep: document
-          .querySelector("#clieCepLoc")
-          .value.trim()
-          .replace(/\D/g, ""), // CEP
-        clieRua: document.querySelector("#clieRuaLoc").value.trim(), // Rua
-        clieCity: document.querySelector("#clieCityLoc").value.trim(), // Cidade
-        clieEstd: document.querySelector("#clieEstdLoc").value.trim(), // Estado
-        clieMail: document.querySelector("#clieMailLoc").value.trim(), // E-mail
-        clieBanc: document.querySelector("#clieBancLoc").value.trim(), // Banco
-        clieAgen: document.querySelector("#clieAgenLoc").value.trim(), // Agência
-        clieCont: document.querySelector("#clieContLoc").value.trim(), // Conta
-        cliePix: document.querySelector("#cliePixLoc").value.trim(), // Chave Pix
+        clieCode: document.querySelector("#clieCodeLoc").value.trim(), 
+        clieName: document.querySelector("#clieNameLoc").value.trim(), 
+        clieTpCl: document.querySelector("#clieTiCliLoc").value, 
+        clieCpf: document.querySelector("#cpfClientLoc").value.trim().replace(/\D/g, ""),
+        clieCnpj: document.querySelector("#cnpjClientLoc").value.trim().replace(/\D/g, ""), 
+        clieCelu: document.querySelector("#clieCeluLoc").value.trim().replace(/\D/g, ""), 
+        dtNasc: document.querySelector("#dtNascLoc").value, 
+        dtCad: document.querySelector("#dtCadLoc").value, 
+        clieCep: document.querySelector("#clieCepLoc").value.trim().replace(/\D/g, ""), 
+        clieRua: document.querySelector("#clieRuaLoc").value.trim(),
+        clieCity: document.querySelector("#clieCityLoc").value.trim(), 
+        clieEstd: document.querySelector("#clieEstdLoc").value.trim(), 
+        clieMail: document.querySelector("#clieMailLoc").value.trim(),
+        clieBanc: document.querySelector("#clieBancLoc").value.trim(), 
+        clieAgen: document.querySelector("#clieAgenLoc").value.trim(), 
+        clieCont: document.querySelector("#clieContLoc").value.trim(), 
       };
 
-      if (
-        formDataLocation.clieTpCl === "Pessoa Jurídica" &&
-        formDataLocation.cnpj === ""
-      ) {
+      if (formDataLocation.clieTpCl === "Pessoa Jurídica" && formDataLocation.cnpj === "") {
         Toastify({
           text: "O Cliente e uma pessoa jurídica adicione o CNPJ dele. OBRIGATORIO",
           duration: 4000,

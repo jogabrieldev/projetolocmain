@@ -115,7 +115,6 @@ async getNumberLocationCheck(){
   },
 
   
-
   async buscarClientePorCPF(cpf) {
     const query = `SELECT cliecode, clienome , cliecpf FROM cadclie WHERE cliecpf = $1; `;
     const { rows } = await dataLocation.query(query, [cpf]);

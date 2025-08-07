@@ -5,7 +5,6 @@ const secretKey = process.env.JWT_SECRET_KEY
 
 export const authSystemValidade = {
 
-  
   async registerUserSystem(req ,res ){
       
       try {
