@@ -641,15 +641,17 @@ async function frontLocationVeiculos() {
         "Content-Type": "application/json"
       },
     });
+    console.log("locacao" , response)
+     const dataFinish = await response.json();
 
     if (response.status === 404) {
       document.querySelector(
         ".tableLocation"
-      ).innerHTML = `<p style="text-align:center;">Nenhuma locação encontrada.</p>`;
+      ).innerHTML = `<p style="text-align:center;" class ="text-dark">${dataFinish.message}}</p>`;
       return;
     }
 
-    const dataFinish = await response.json();
+   
     const locacoes = dataFinish.locacoes || [];
 
     console.log('locaco veiculos' , locacoes)

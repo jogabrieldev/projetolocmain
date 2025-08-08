@@ -1,8 +1,8 @@
-<section class="containerAppLocation d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded position-relative"
-  style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid white; ">
+<section class="containerAppLocation d-flex flex-column justify-content-between bg-white bg-opacity-75 text-white shadow rounded position-relative"
+  style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid #1d5e1d; ">
 
    <button type="button" 
-       class="btn btn-outline-danger btn-sm p-0 position-absolute top-0 end-0 mt-2 me-1 rounded-circle d-flex  align-items-center justify-content-center" 
+       class="btn btn-danger text-dark btn-sm p-0 position-absolute top-0 end-0 mt-2 me-4 rounded-circle d-flex  align-items-center justify-content-center" 
        aria-label="Fechar" style="width: 32px; height: 32px;" id="buttonExitLocation">
        <i class="bi bi-x fs-5"></i>
    </button>
@@ -14,22 +14,22 @@
 
   <div class="btnInitPageMainLoc d-flex flex-wrap justify-content-center align-items-center gap-3 mb-3">
     <button class="registerLocation btn btn-primary text-dark fw-semibold">
-      Incluir
+      <i class="bi bi-plus-lg me-2"></i>Adicionar
     </button>
     <button class="buttonDeleteLocation btn btn-danger text-dark fw-semibold">
-      Excluir
+      <i class="bi bi-trash me-2"></i>Excluir
     </button>
     <button class="buttonEditLocation btn btn-warning text-dark fw-semibold">
-      Editar
+      <i class="bi bi-pencil me-2"></i>Editar
     </button>
     <button
-      class="searchloc btn btn-light text-dark fw-semibold "
+      class="searchloc btn btn-light text-dark fw-semibold border"
     > <i class="bi bi-search me-2"></i>
       Buscar
     </button>
 
      <button class="registerLocation btn btn-primary text-dark fw-semibold buttonLoadLocationVihicle">
-      locação de Veiculos
+      <i class="bi bi-truck-flatbed me-2"></i>locação de Veiculos
     </button>
   </div>
 
@@ -120,7 +120,7 @@
     <div class="col-12 d-flex justify-content-between">
       <button
         type="button"
-        class="registerClientPageLocation btn btn-primary fw-semibold px-4 py-2 shadow-sm btn-sm"
+        class="registerClientPageLocation btn btn-warning fw-semibold px-4 py-2 shadow-sm btn-sm"
         id="registerClientPageLocation"
       >
         <i class="bi bi-person-plus-fill me-2"></i> Cadastrar Cliente
@@ -128,7 +128,7 @@
 
        <button
         type="button"
-        class="btn btn-primary fw-semibold px-4 py-2 shadow-sm btn-sm"
+        class="btn btn-warning fw-semibold px-4 py-2 shadow-sm btn-sm"
         id="addlocalization"
       >
        <i class="bi bi-plus-circle"></i>
@@ -293,8 +293,8 @@
          </div>
 
          <div class="decisionHeader p-3 d-flex justify-content-between gap-3">
-            <button class="btnAtivGoods btn btn-warning w-50">Caçambas</button>
-            <button class="btn btn-light w-50 btnAtiLocationVehicle">Veiculos</button>
+            <button class="btnAtivGoods btn btn-success w-50">Caçambas</button>
+            <button class="btn btn-light text-dark fw-semibold border w-50 btnAtiLocationVehicle">Veiculos</button>
          </div>
      </div>
      
@@ -414,7 +414,7 @@
 
     <!-- Seção de Bens para locação -->
   <div class="containerGoodsloc d-none p-3 rounded shadow-sm mb-3 border">
-     <div class="p-2 bg-secondary rounded shadow-sm w-100" style="overflow-x: auto;">
+     <div class="p-2 bg-white rounded shadow-lg w-100" style="overflow-x: auto;">
         <!-- Cabeçalhos -->
         <div class="row gx-2 gy-1 mb-2 flex-nowrap align-items-center">
           <div class="col-2">

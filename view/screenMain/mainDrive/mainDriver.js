@@ -318,6 +318,8 @@ function registerNewDriver() {
         motoPasw: document.querySelector("#motoPasw").value.trim(),
       };
 
+      console.log('log' , formData)
+
       const datas = [
         { key: "motoDtvc", label: "Data de Vencimento" },
         { key: "motoDtnc", label: "Data de Nascimento" },

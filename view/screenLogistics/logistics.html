@@ -1,15 +1,18 @@
-<section class=" containerLogistica d-flex flex-column justify-content-between  bg-secondary text-white shadow p-2 rounded" style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1.2%; border: 2px solid white;">
+<section class=" containerLogistica d-flex flex-column justify-content-between  bg-white text-white shadow p-2 rounded position-relative" style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1.2%; border: 2px solid #1d5e1d;">
     <div class=" logisticsMainTop d-flex justify-content-between align-items-start mb-2" style="height: 70px; gap: 0.5%;">
       
-      <div class=" orders  bg-secondary border border-white overflow-auto" style="width: 60%; height: 255px">
+      <div class=" orders  bg-white border border-#1d5e1d overflow-auto" style="width: 60%; height: 255px">
         <!-- table de locação pendente -->
       </div>
   
-      <button class="btn p-1 ms-2" id="btnFilter" title="Filtrar Locações" style="background: none; border: none; font-size: 24px; color: #333;">
-        <i class="bi bi-filter"></i>
-      </button>
+    <button type="button" 
+       class="btn btn-danger text-dark btn-sm p-0 position-absolute top-0 end-0 mt-2 me-4 rounded-circle d-flex  align-items-center justify-content-center" 
+       aria-label="Fechar" style="width: 32px; height: 32px;" id="btnFilter">
+       <i class="bi bi-x fs-5"></i>
+    </button>
+
   
-      <div class=" need d-flex flex-column bg-secondary border border-white p-2 text-white" style="width: 50%; height: 200px;">
+      <div class=" need d-flex flex-column bg-white border border-#1d5e1d p-2 text-white" style="width: 50%; height: 200px;">
         <h5>Necessidade vs Disponibilidade</h5>
         <!-- Conteúdo da necessidade -->
       </div>
@@ -20,25 +23,25 @@
       <div class=" validadeFamily overflow-auto border border-white" style="width: 65%; height: 270px;">
         <!-- validadeFamily -->
       </div>
-      <div class="linkDrive overflow-auto border border-white p-2" style="width: 50%; height: 270px;">
+      <div class="linkDrive overflow-auto border border-#1d5e1d p-2" style="width: 50%; height: 270px;">
         <h5>Motoristas</h5>
         <!-- linkDrive -->
       </div> 
     </div>
   </section>
   
-  <section class="modal d-flex flex-column justify-content-between bg-secondary text-white shadow p-4 rounded align-items-center"
-  style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 8%; border: 2px solid white; overflow-y: auto;">
+  <section class="modal d-flex flex-column justify-content-between bg-white text-white shadow p-4 rounded align-items-center"
+  style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 8%; border: 2px solid #1d5e1d; overflow-y: auto;">
   
   <div class="modal-dialog modal-dialog-scrollable m-0 w-100 h-100">
     <div class="modal-content border-0 shadow rounded-3 h-100">
 
       <!-- Cabeçalho -->
-      <div class="modal-header bg-primary text-white">
+      <div class="modal-header bg-white text-dark">
         <h5 class="modal-title d-flex align-items-center gap-2">
           <i class="bi bi-list-check"></i> Detalhes da Locação
         </h5>
-        <button type="button" class="btn-close btn-close-danger OutScreenLinkGoods" aria-label="Fechar"></button>
+        <button type="button" class="btn-close btn-close-danger btn-danger text-dark OutScreenLinkGoods" aria-label="Fechar"></button>
       </div>
 
       <!-- Corpo -->
@@ -68,13 +71,7 @@
         </div>
       </div>
 
-      <!-- Rodapé -->
-      <!-- <div class="modal-footer bg-light">
-        <button class="btn btn-outline-secondary OutScreenLinkGoods">
-          <i class="bi bi-arrow-left-circle"></i> Voltar
-        </button>
-      </div> -->
-
+     
     </div>
   </div>
 </section>

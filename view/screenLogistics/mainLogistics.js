@@ -758,22 +758,33 @@ async function quantidadeDeEntregaMotorista(codeDriver) {
       },
     });
 
-    if (!response.ok){
+    console.log("res" , response)
+    const data = await response.json();
+
+    
+     if(response.status === 400){
         Toastify({
-        text: `Erro para verificar entregas do motorista!`,
+        text: data.message || "Motorista não possui nenhuma entrega em aberto!",
         duration: 4000,
         gravity: "top",
         position: "center",
         style: {
-          background: "red", 
+          background: "#ffc107", 
           color: "#000",
         },
       }).showToast();
-      throw new Error("Erro ao buscar entregas");
-     
-    } 
-
-    const data = await response.json();
+     } else{
+        Toastify({
+        text: data.message,
+        duration: 4000,
+        gravity: "top",
+        position: "center",
+        style: {
+          background: "#ffc107", 
+          color: "#000",
+        },
+      }).showToast();
+     }
 
     const totalEntregas = Array.isArray(data.entrega) ? data.entrega.length : 0;
 
@@ -793,9 +804,9 @@ async function quantidadeDeEntregaMotorista(codeDriver) {
   } catch (error) {
     console.error("Erro ao buscar quantidade de entregas:", error);
     Toastify({
-      text: "Motorisa não tem entregas pendentes!",
+      text: "Erro no server",
       duration: 4000,
-      style: { background: "green" },
+      style: { background: "red" },
     }).showToast();
   }
 }

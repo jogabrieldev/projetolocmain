@@ -1,8 +1,8 @@
-<section class="containerAppDriver  d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded position-relative"
-style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid white;">
+<section class="containerAppDriver  d-flex flex-column justify-content-between bg-white bg-opacity-75 text-white shadow rounded position-relative"
+style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid #1d5e1d;">
 
     <button type="button" 
-        class="btn btn-outline-danger btn-sm p-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center" 
+        class="btn btn-danger text-dark btn-sm p-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center" 
         aria-label="Fechar" style="width: 32px; height: 32px;" id="buttonExitDriver">
       <i class="bi bi-x fs-5"></i>
    </button>
@@ -12,10 +12,10 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
     </div>
   
     <div class="btnInitPageMain d-flex justify-content-center gap-3 mb-4">
-      <button class="registerDriver text-dark fw-semibold btn btn-primary">Incluir</button>
-      <button class="buttonDeleteDriver btn btn-danger text-dark fw-semibold">Excluir</button>
-      <button class="buttonEditDriver btn btn-warning text-dark fw-semibold">Editar</button>
-      <button class="btn btn-warning text-dark fw-semibold" id="buttonLinkDriverExterno">Vincular veiculo externo</button>
+      <button class="registerDriver text-dark fw-semibold btn btn-primary"><i class="bi bi-plus-lg me-2"></i>Adicionar</button>
+      <button class="buttonDeleteDriver btn btn-danger text-dark fw-semibold"><i class="bi bi-trash me-2"></i>Excluir</button>
+      <button class="buttonEditDriver btn btn-warning text-dark fw-semibold"><i class="bi bi-pencil me-2"></i>Editar</button>
+      <button class="btn btn-warning text-dark fw-semibold" id="buttonLinkDriverExterno"><i class="bi bi-truck-flatbed me-2"></i>Vincular veiculo externo</button>
       <button class="btn btn-light text-dark fw-semibold" id="searchDriver"><i class="bi bi-search me-2"></i>Buscar</button>
     </div>
 
@@ -69,7 +69,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
 </div>
   
 <!-- Cadastro de motorista form -->
-<div class="RegisterDriver container py-4 rounded-3 shadow-sm" style="display: none;">
+<div class="RegisterDriver container py-4 rounded-3 " style="display: none;">
   <form class="formRegisterDriver" class="rounded-4 p-4">
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-2">
     
@@ -256,7 +256,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
 
     <!-- FORMULARIO DE EDIÇÃO -->
 
-    <div class="containerFormEditDriver container border border-secondary-subtle rounded-3 py-4 px-3" style="display: none;">
+    <div class="containerFormEditDriver container  rounded-3 py-4 px-3" style="display: none;">
     <form class="formEditDriver">
     <div class="row g-3">
 

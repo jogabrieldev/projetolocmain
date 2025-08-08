@@ -1,8 +1,8 @@
-<section class="containerAppFabri d-flex flex-column justify-content-between bg-secondary bg-opacity-75 text-white shadow rounded position-relative"
-style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid white;">
+<section class="containerAppFabri d-flex flex-column justify-content-between bg-white bg-opacity-75 text-white shadow rounded position-relative"
+style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1%; padding: 5px; border: 2px solid #1d5e1d;">
 
    <button type="button" 
-        class="btn btn-outline-danger btn-sm p-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center" 
+        class="btn btn-danger text-dark btn-sm p-0 position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center" 
         aria-label="Fechar" style="width: 32px; height: 32px;" id="buttonExitFabri">
       <i class="bi bi-x fs-5"></i>
    </button>
@@ -12,10 +12,10 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
     </div>
   
     <div class="btnMainPageFabri d-flex justify-content-center gap-3 mb-4">
-      <button class="btn btn-primary text-dark fw-semibold registerFabri">Incluir</button>
-      <button class="btn btn-danger text-dark fw-semibold buttonDeleteFabri">Excluir</button>
-      <button class="btn btn-warning text-dark fw-semibold buttonEditFabri">Editar</button>
-      <button class="btn btn-light text-dark fw-semibold" id="searchFamilyGoods"><i class="bi bi-search me-2"></i>Buscar</button>
+      <button class="btn btn-primary text-dark fw-semibold registerFabri"><i class="bi bi-plus-lg me-2"></i>Adicionar</button>
+      <button class="btn btn-danger text-dark fw-semibold buttonDeleteFabri"><i class="bi bi-trash me-2"></i>Excluir</button>
+      <button class="btn btn-warning text-dark fw-semibold buttonEditFabri"><i class="bi bi-pencil me-2"></i>Editar</button>
+      <button class="btn btn-light text-dark fw-semibold border" id="searchFamilyGoods"><i class="bi bi-search me-2"></i>Buscar</button>
     </div>
 
 
@@ -52,7 +52,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
 
   
     <div class="formRegisterFabri" style="display: none">
-      <form class="formRegisterFabricante border border-secondary-subtle rounded-3 p-4 shadow-sm">
+      <form class="formRegisterFabricante  rounded-3 p-4 ">
         <div class="row g-3">
   
           <div class="col-md-3">
@@ -140,7 +140,7 @@ style="display: none; width: 76%; height: 550px; margin-left: 22%; margin-top: 1
   
     <!-- FORMULARIO EDIÇÃO -->
     <div class="editFabri container mt-4" style="display: none">
-      <form class="formEditFabri row g-3 border border-secondary-subtle rounded-3 p-4 shadow-sm">
+      <form class="formEditFabri row g-3  rounded-3 p-4">
         <div class="col-12 col-md-6">
           <label for="editFabeCode" class="form-label">Código</label>
           <input

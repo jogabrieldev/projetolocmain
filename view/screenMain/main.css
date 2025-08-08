@@ -3,7 +3,7 @@ body{
     margin: 0px;
     font-size: 15px;
     font-family: Arial, Helvetica, sans-serif;
-    background-color:   darkgrey;
+    background-color: #F8F9FA
 }
 input{
     height: 23px;
@@ -13,7 +13,7 @@ input{
 /* Cabeçalho */
 .containerHeader{
     height: 117px;
-    background-color:  #6c757d;
+    /* background-color:  #6c757d; */
     display: flex;
     justify-content: space-between;
     position: sticky;
@@ -22,7 +22,7 @@ input{
     border-radius: 10px;
 }
 .information {
-  background-color: #6c757d;
+  background-color:#14532d; /* fundo claro */
   font-size: 15px !important;
   padding: 0.4rem 0.9rem !important;
   border: 2px solid white;
@@ -74,19 +74,20 @@ input{
   width: 21%;
   height: 100vh;
   padding: 10px;
-  background-color: #6c757d;
+  background-color:#14532d;
   box-shadow: 7px 0 4px rgba(0, 0, 0, 0.2);
   overflow-y: auto;
   z-index: 1040;
 }
 
 .workButton button {
-    transition: all 0.3s ease-in-out;
-  }
+  transition: all 0.3s ease-in-out;
+}
 
   .workButton button:hover {
     transform: translateX(5px);
-    background-color: rgba(255, 255, 255, 0.1);
+     background-color: #ffffff ;
+     color: black;
   }
 
   /* Remove margens e padding dos itens do submenu */
@@ -170,11 +171,11 @@ table {
     table-layout: fixed;  
     border: 2px solid white;
   }
-  
+
   th, td {
     padding: 15px; 
     text-align: left;
-    border: 1.5px solid #ddd; 
+    border: 1.5px solid black; 
     width: 150px;
   }
   
@@ -187,6 +188,29 @@ table {
     background-color:rgb(29, 29, 29);
     color: white;
   }
+
+  .form-check-input {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  border: 2px solid #1d5e1d; 
+  border-radius: 4px;
+  background-color: white; 
+  transition: all 0.2s ease-in-out;
+}
+
+
+.form-check-input:hover {
+  border-color: #242115; 
+  box-shadow: 0 0 5px rgba(230, 226, 213, 0.8);
+}
+
+
+.form-check-input:checked {
+  background-color: #1d5e1d; 
+  border-color: #1d5e1d;
+}
+
   
 .welcome-container.hidden {
   opacity: 0;
@@ -210,6 +234,7 @@ table {
   white-space: nowrap;
   overflow: hidden;
   animation: typing 2.5s steps(30, end), blink-caret 0.7s step-end infinite;
+  color: black;
 }
 
 @keyframes typing {

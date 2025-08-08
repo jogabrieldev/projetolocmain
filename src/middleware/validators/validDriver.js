@@ -57,8 +57,26 @@ export const validateMotorista = [
   return true;
 }),
 
+body("motoDtch").custom((value, { req }) => {
+  const dataEmissao = parseISO(value);
+  if (!isValid(dataEmissao)) {
+    throw new Error("Data de emissão inválida.");
+  }
 
- 
+  const dataNascimento = parseISO(req.body.motoDtnc);
+  if (!isValid(dataNascimento)) {
+    throw new Error("Data de nascimento inválida para validação.");
+  }
+
+  const diferenca = differenceInYears(dataEmissao, dataNascimento);
+  if (diferenca < 18) {
+    throw new Error("A data de emissão deve ter no mínimo 18 anos após a data de nascimento.");
+  }
+
+  return true;
+}),
+
+
   body("motoMail")
     .isEmail()
     .withMessage("E-mail inválido. Insira um e-mail no formato correto."),

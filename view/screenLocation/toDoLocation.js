@@ -314,6 +314,7 @@ function renderTable(data) {
   const title = document.createElement("h2");
   title.textContent = "Locaçaõ de Bens";
   title.style.margin = "0";
+  title.style.alignItems = "center"
 
   const messageFilter = document.createElement("span");
   messageFilter.id = "messsageFilter";
