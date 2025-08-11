@@ -16,7 +16,14 @@ document.addEventListener('DOMContentLoaded' , function(){
             
            }
         } catch (error) {
-                
+           Toastify({
+           text: "Erro para carregar a pagina",
+           duration: 4000,
+           close: true,
+           gravity: "top",
+           position: "center",
+           backgroundColor: "red",
+          }).showToast();
          }
      })
    }

@@ -118,7 +118,7 @@ function getFilialData() {
     !cidaFili &&
     !bairFili
   ) {
-    return null; // Nenhuma filial foi preenchida
+    return null; 
   }
 
   if (
@@ -259,7 +259,7 @@ async function interationSystemClient() {
       }
       return;
     });
-  }
+  };
 
   const buttonOutPageClient = document.querySelector(".btnOutInit");
 
@@ -286,7 +286,7 @@ async function interationSystemClient() {
       }
       return;
     });
-  }
+  };
 
   const buttonOutPageEdit = document.querySelector(".outPageEditClient");
   if (buttonOutPageEdit) {
@@ -313,7 +313,7 @@ async function interationSystemClient() {
 
       return;
     });
-  }
+  };
 
   const buttonToBack = document.getElementById("buttonExitClient");
   if (buttonToBack) {
@@ -328,7 +328,7 @@ async function interationSystemClient() {
       }
     });
     return;
-  }
+  };
 
   const btnAddFilial = document.querySelector(".btnAddFili");
   if (btnAddFilial) {
@@ -339,13 +339,13 @@ async function interationSystemClient() {
       }
     });
   }
-}
+};
 
+// CADASTRAR CLIENTE
 async function registerNewClient() {
   dateAtualInField("dtCad");
-  document
-    .querySelector(".btnRegisterClient")
-    .addEventListener("click", async (event) => {
+
+  document.querySelector(".btnRegisterClient").addEventListener("click", async (event) => {
       event.preventDefault();
       const token = localStorage.getItem("token");
 
@@ -368,13 +368,9 @@ async function registerNewClient() {
       if (!$("#formRegisterClient").valid()) {
         return;
       }
-      const clieCep = document
-        .querySelector("#clieCep")
-        .value.replace(/\D/g, "");
+      const clieCep = document.querySelector("#clieCep").value.replace(/\D/g, "");
       try {
-        const response = await fetch(
-          `https://viacep.com.br/ws/${clieCep}/json/`
-        );
+        const response = await fetch(`https://viacep.com.br/ws/${clieCep}/json/`);
 
         if (!response.ok) {
           throw new Error("Erro ao buscar o CEP.");
@@ -389,7 +385,7 @@ async function registerNewClient() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
           return;
         }
@@ -419,38 +415,25 @@ async function registerNewClient() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
         return;
       }
 
-      // Captura os valores do formulário após o preenchimento
       const dataFilial = getFilialData();
       const formData = {
         clieCode: document.querySelector("#clieCode").value.trim(),
         clieName: document.querySelector("#clieName").value.trim(),
         clieTpCl: document.querySelector("#clieTiCli").value.trim(),
-        clieCpf: document
-          .querySelector("#clieCpf")
-          .value.trim()
-          .replace(/\D/g, ""), // <-- Limpa CPF
-        clieCnpj: document
-          .querySelector("#clieCnpj")
-          .value.trim()
-          .replace(/\D/g, ""),
+        clieCpf: document.querySelector("#clieCpf").value.trim().replace(/\D/g, ""), 
+        clieCnpj: document.querySelector("#clieCnpj").value.trim().replace(/\D/g, ""),
         dtCad: document.querySelector("#dtCad").value,
         dtNasc: document.querySelector("#dtNasc").value,
-        clieCelu: document
-          .querySelector("#clieCelu")
-          .value.trim()
-          .replace(/\D/g, ""),
+        clieCelu: document.querySelector("#clieCelu").value.trim().replace(/\D/g, ""),
         clieCity: document.querySelector("#clieCity").value.trim(),
         clieEstd: document.querySelector("#clieEstd").value.trim(),
         clieRua: document.querySelector("#clieRua").value.trim(),
-        clieCep: document
-          .querySelector("#clieCep")
-          .value.trim()
-          .replace(/\D/g, ""),
+        clieCep: document.querySelector("#clieCep").value.trim().replace(/\D/g, ""),
         clieMail: document.querySelector("#clieMail").value.trim(),
         clieBanc: document.querySelector("#clieBanc").value.trim(),
         clieAgen: document.querySelector("#clieAgen").value.trim(),
@@ -464,10 +447,10 @@ async function registerNewClient() {
           duration: 4000,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
         return;
-      }
+      };
 
       if (formData.clieTpCl === "Pessoa Física" && formData.clieCpf === "") {
         Toastify({
@@ -475,7 +458,7 @@ async function registerNewClient() {
           duration: 4000,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
         return;
       }
@@ -504,11 +487,11 @@ async function registerNewClient() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
           return;
         }
-      }
+      };
 
       const [yNasc, mNasc, dNasc] = formData.dtNasc.split("-").map(Number);
       const dtNasc = new Date(yNasc, mNasc - 1, dNasc);
@@ -531,7 +514,6 @@ async function registerNewClient() {
         return;
       }
 
-      // 5.3) dtNasc deve ser anterior ou igual a dtCad
       if (dtNasc.getTime() > formData.dtCad) {
         Toastify({
           text: "Data de Nascimento não pode ser maior que a data de cadastro.",
@@ -563,7 +545,7 @@ async function registerNewClient() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
 
           document.querySelector("#formRegisterClient").reset();
@@ -581,7 +563,7 @@ async function registerNewClient() {
               close: true,
               gravity: "top",
               position: "center",
-              backgroundColor: "red",
+              backgroundColor: "#f44336",
             }).showToast();
           } else {
             Toastify({
@@ -590,7 +572,7 @@ async function registerNewClient() {
               close: true,
               gravity: "top",
               position: "center",
-              backgroundColor: response.status === 409 ? "orange" : "red",
+              backgroundColor: response.status === 409 ? "orange" : "#f44336",
             }).showToast();
           }
          }
@@ -602,13 +584,13 @@ async function registerNewClient() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
       }
     });
 
   validationFormClient();
-}
+};
 
 // LISTAGEM DE CLIENTES
 async function fetchListClientes() {
@@ -649,7 +631,7 @@ async function fetchListClientes() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
 
       document.querySelector(".listClient").innerHTML =
@@ -784,12 +766,12 @@ async function fetchListClientes() {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
     document.querySelector(".listClient").innerHTML =
       "<p>Erro ao carregar clientes.</p>";
-  }
-}
+  };
+};
 
 // BUSCAR CLIENTE ESPECIFICO
 async function searchClient() {
@@ -820,7 +802,7 @@ async function searchClient() {
     btnClearFilter.textContent = "Limpar filtro";
     btnClearFilter.className =
       "btn btn-secondary w-25 aling align-items: center;";
-    btnClearFilter.style.display = "none"; // fica oculto até uma busca ser feita
+    btnClearFilter.style.display = "none";
     bensListDiv.parentNode.insertBefore(btnClearFilter, bensListDiv);
 
     btnClearFilter.addEventListener("click", () => {
@@ -832,7 +814,7 @@ async function searchClient() {
 
       fetchListClientes();
     });
-  }
+  };
 
   const btnSubmitSearchClient = document.querySelector(".submitSearchClient");
   if (btnSubmitSearchClient) {
@@ -841,9 +823,7 @@ async function searchClient() {
       const valueCpf = document.getElementById("searchCpf").value.trim();
       const valueCnpj = document.getElementById("searchCnpj").value.trim();
 
-      const preenchidos = [cliecode, valueCpf, valueCnpj].filter(
-        (valor) => valor !== ""
-      );
+      const preenchidos = [cliecode, valueCpf, valueCnpj].filter((valor) => valor !== "");
 
       if (preenchidos.length === 0) {
         Toastify({
@@ -855,7 +835,7 @@ async function searchClient() {
           backgroundColor: "red",
         }).showToast();
         return;
-      }
+      };
 
       if (preenchidos.length > 1) {
         Toastify({
@@ -892,9 +872,9 @@ async function searchClient() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
-          // Exibe botão limpar filtro
+          
           btnClearFilter.style.display = "inline-block";
 
           renderClientesTable(data.cliente);
@@ -908,7 +888,7 @@ async function searchClient() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
         }
       } catch (error) {
@@ -923,10 +903,10 @@ async function searchClient() {
         }).showToast();
       }
     });
-  }
-}
+  };
+};
 
-//RENDERIZAR TABELA PATHERS
+//RENDERIZAR TABELA CLIENTE
 function renderClientesTable(clientes) {
   const clientesListDiv = document.querySelector(".listClient");
   clientesListDiv.innerHTML = "";
@@ -1039,9 +1019,9 @@ function renderClientesTable(clientes) {
 
   wrapper.appendChild(tabela);
   clientesListDiv.appendChild(wrapper);
-}
+};
 
-// //deletar cliente
+ //deletar cliente
 function deleteClient() {
   const buttonDeleteClient = document.querySelector(".buttonDeleteClient");
   buttonDeleteClient.addEventListener("click", async () => {
@@ -1055,10 +1035,10 @@ function deleteClient() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
-    }
+    };
 
     const clienteSelecionado = JSON.parse(selectedCheckbox.dataset.cliente);
     const clienteId = clienteSelecionado.cliecode;
@@ -1103,14 +1083,14 @@ function deleteClient() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "#1d5e1d",
         }).showToast();
 
         clientRow.remove();
       } else {
         if (response.status === 400) {
           Toastify({
-            text: data.message, // Mensagem retornada do backend
+            text: data.message, 
             duration: 3000,
             close: true,
             gravity: "top",
@@ -1125,7 +1105,7 @@ function deleteClient() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
         }
       }
@@ -1137,14 +1117,14 @@ function deleteClient() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
-    }
-  }
-}
+    };
+  };
+};
 
 function editarCliente() {
-  // Botão para iniciar a edição
+  
   const editButtonClient = document.querySelector(".buttonEditClient");
   editButtonClient.addEventListener("click", () => {
     const selectedCheckbox = document.querySelector(
@@ -1158,10 +1138,10 @@ function editarCliente() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
-    }
+    };
 
     const listClient = document.querySelector(".listClient");
     if (listClient) {
@@ -1233,8 +1213,8 @@ function editarCliente() {
               if (hiddenInput) {
                 hiddenInput.value = valor;
               }
-            }
-          }
+            };
+          };
         } else {
           elemento.value = valor || "";
         }
@@ -1256,12 +1236,9 @@ function editarCliente() {
     cepInput.addEventListener("input", async () => {
       const clieCep = cepInput.value.replace(/\D/g, "");
 
-      // Só executa a busca se tiver 8 dígitos
       if (clieCep.length === 8) {
         try {
-          const response = await fetch(
-            `https://viacep.com.br/ws/${clieCep}/json/`
-          );
+          const response = await fetch(`https://viacep.com.br/ws/${clieCep}/json/`);
 
           if (!response.ok) throw new Error("Erro ao buscar o CEP");
 
@@ -1274,7 +1251,7 @@ function editarCliente() {
               close: true,
               gravity: "top",
               position: "center",
-              backgroundColor: "red",
+              backgroundColor: "#f44336",
             }).showToast();
 
             if (ruaField) ruaField.value = "";
@@ -1305,7 +1282,7 @@ function editarCliente() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
         }
       } else {
@@ -1314,7 +1291,7 @@ function editarCliente() {
         if (stateField) stateField.value = "";
       }
     });
-  }
+  };
 
   // Função para enviar os dados atualizados
   async function editAndUpdateOfClient() {
@@ -1386,9 +1363,7 @@ function editarCliente() {
       };
 
       try {
-        const confirmedEdition = confirm(
-          `Tem certeza de que deseja ATUALIZAR os dados desse Cliente?`
-        );
+        const confirmedEdition = confirm(`Tem certeza de que deseja ATUALIZAR os dados desse Cliente?`);
         if (!confirmedEdition) return;
 
         const response = await fetch(`/api/updateclient/${clientIdParsed}`, {
@@ -1407,7 +1382,7 @@ function editarCliente() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
 
           formEditClient.reset();
@@ -1419,7 +1394,7 @@ function editarCliente() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
         }
       } catch (error) {
@@ -1430,10 +1405,10 @@ function editarCliente() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
       }
     });
-  }
+  };
   editAndUpdateOfClient();
-}
+};

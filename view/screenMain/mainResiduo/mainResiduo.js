@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded' , ()=>{
             }else {
           console.error("#mainContent não encontrado no DOM");
           return;
-        } 
+        };
 
          const containerAppResiduo = document.querySelector('.containerAppResiduo')
 
@@ -73,14 +73,15 @@ document.addEventListener('DOMContentLoaded' , ()=>{
         }).showToast();
            console.error('Erro na chamada do "CONTENT RESIDUO"');
          }
-        })
-    }
+        });
+    };
 
     socketResiduo.on("updateRunTimeResiduo", (residuo) => {
     getAllResiduo();
   });
-})
+});
 
+//INTERAÇÃO
 function interationSystemResiduo(){
      
     const btnRegisterResiduo = document.querySelector('.registerResiduo')
@@ -103,8 +104,8 @@ function interationSystemResiduo(){
                 listResiduo.classList.remove('flex')
                 listResiduo.classList.add('hidden')
              }
-        })
-    }
+        });
+    };
 
     const btnOutInitResiduo = document.querySelector('.btnOutInitResiduo')
     if(btnOutInitResiduo){
@@ -127,8 +128,8 @@ function interationSystemResiduo(){
                 listResiduo.classList.remove('hidden')
                 listResiduo.classList.add('flex')
              }
-      })
-    }
+      });
+    };
 
     const exitSectionResiduo = document.getElementById('buttonExitResiduo')
     if(exitSectionResiduo){
@@ -139,10 +140,11 @@ function interationSystemResiduo(){
                 containerAppResiduo.classList.remove('flex')
                 containerAppResiduo.classList.add('hidden')
             }
-        })
-    }
-}
+        });
+    };
+};
 
+// CADASTRO DE RESIDUO
  async function registerNewResiduo(){
     const btnRegisterResiduo = document.querySelector('.btnRegisterResiduo')
     if(btnRegisterResiduo){
@@ -159,7 +161,7 @@ function interationSystemResiduo(){
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
            return
         }
@@ -176,13 +178,13 @@ function interationSystemResiduo(){
            const result = await response.json();
 
            if(response.ok){
-              Toastify({
+            Toastify({
             text: "Residuo cadastrado com sucesso!",
             duration: 3000,
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
           document.getElementById('formRegisterResiduo').reset()
          }else{
@@ -192,7 +194,7 @@ function interationSystemResiduo(){
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: response.status === 409 ? "orange" : "red",
+            backgroundColor: response.status === 409 ? "orange" : "#f44336",
           }).showToast();
          }
             } catch (error) {
@@ -203,24 +205,25 @@ function interationSystemResiduo(){
                close: true,
                gravity: "top",
                position: "center",
-              backgroundColor: 'red'
+              backgroundColor: '#f44336'
               }).showToast()
            }
         });
     };
 };
 
+//LISTAR TODOS OS RESIDUOS
 async function getAllResiduo() {
   try {
     const res = await fetch('/residuo', {
       method: 'GET'
     });
 
-    const data = await res.json(); // resposta completa com list e success
-    const residuo = data.list || []; // pega o array de resíduos
+    const data = await res.json(); 
+    const residuo = data.list || []; 
 
     const listResiduo = document.querySelector('.listResiduo');
-    listResiduo.innerHTML = ''; // limpa conteúdo anterior
+    listResiduo.innerHTML = ''; 
 
     const wrapper = document.createElement('div');
     wrapper.className = "table-responsive";
@@ -284,11 +287,12 @@ async function getAllResiduo() {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: 'red'
+      backgroundColor: '#f44336'
     }).showToast();
   };
 };
 
+//DELETAR
 async function deleteResiduo() {
     
    const btnDeleteProd = document.querySelector(".buttonDeleteResiduo");
@@ -304,7 +308,7 @@ async function deleteResiduo() {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
     return;
   }
@@ -320,7 +324,7 @@ async function deleteResiduo() {
   }
      await deleteElement(residuoId , selectedCheckbox.closest("tr") )
   })
-
+//DELETE
  async function deleteElement(id , rowResi) {
       
     try {
@@ -339,7 +343,7 @@ async function deleteResiduo() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "green",
+        backgroundColor: "#1d5e1d",
       }).showToast();
 
       rowResi.remove();
@@ -351,7 +355,7 @@ async function deleteResiduo() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
     }
       } catch (error) {
@@ -362,11 +366,11 @@ async function deleteResiduo() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
     }
   };
- }
+ };
 };
 
 

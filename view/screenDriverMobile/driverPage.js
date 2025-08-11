@@ -317,12 +317,10 @@ async function listDeliveryForDriver() {
     });
 
     if (!response.ok) return;
-    console.log("Resposta" , response)
 
     const data = await response.json();
-    console.log("resposta", data);
+    
     const entregas = data.entrega;
-    console.log('entrega'  ,entregas)
     if (!entregas || entregas.length === 0) {
       container.innerHTML = `
         <div class="col-12 text-center">
@@ -397,7 +395,7 @@ async function listDeliveryForDriver() {
         }">
           <div class="card-body">
             <h5 class="card-title">
-              <i class="bi bi-box-seam-fill text-primary"></i>
+              <i class="bi bi-truck"></i>
               Entrega #${entrega.lofiidlo}
             </h5>
             <p class="mb-1"><i class="bi bi-geo-alt-fill text-danger"></i> ${
@@ -406,9 +404,7 @@ async function listDeliveryForDriver() {
             <p class="mb-1"><i class="bi bi-calendar-check text-success me-2"></i>Data da Locação: ${formatarData(
               entrega.lofidtlo
             )}</p>
-            <p class="mb-1"><i class="bi bi-calendar-check text-success me-2"></i>Data da Devolução: ${formatarData(
-              entrega.lofidtdv
-            )}</p>
+           
             <p class="mb-1"><i class="bi bi-person-fill text-info"></i> Cliente: ${nomeClient}</p>
             <p class="mb-1"><i class="bi bi-telephone-fill"></i> Telefone do Cliente: ${clientPhone}</p>
             <p class="mb-0"><i class="bi bi-credit-card-fill text-warning"></i> Pagamento: ${
@@ -597,7 +593,6 @@ function finishDelivery(button) {
   if (modalFinishDeliveryEl) {
     const idDelivery = button.getAttribute("data-id");
     const idNumeroLocacao = button.getAttribute("data-location");
-    console.log(idNumeroLocacao, idDelivery);
     const localization = button.getAttribute("data-localization");
     const nomeCliente = button.getAttribute("data-cliente");
     const dataLocacao = button.getAttribute("data-dataLoc");

@@ -356,12 +356,12 @@ async function showDetails(codigo) {
     containerBtnpage.style.display = "flex";
     containerBtnpage.style.padding = "8px";
     containerBtnpage.style.gap = "20px";
-    containerBtnpage.style.justifyContent = "start";
+    containerBtnpage.style.justifyContent = "center";
 
     const voltarBtn = document.createElement("button");
     voltarBtn.innerHTML = `<i class="bi bi-arrow-left-circle"></i> Voltar`;
     voltarBtn.className =
-      "btn btn-outline-secondary d-flex align-items-center gap-1 mt-2 text-white";
+      "btn btn-secondary d-flex align-items-center gap-1 mt-2 text-dark w-25";
     voltarBtn.classList.add("btnOutDelivery");
 
     voltarBtn.addEventListener("click", () => {
@@ -373,7 +373,7 @@ async function showDetails(codigo) {
 
     const imprimir = document.createElement("button");
     imprimir.innerHTML = `<i class="bi bi-printer"></i> Imprimir`;
-    imprimir.className = "btn btn-success d-flex align-items-center gap-1 mt-2";
+    imprimir.className = "btn btn-success d-flex align-items-center gap-1 mt-2 w-25";
     imprimir.classList.add("btnImprimirDelivery");
 
     imprimir.addEventListener("click", () => {

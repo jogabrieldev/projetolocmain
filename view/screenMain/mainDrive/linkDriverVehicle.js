@@ -45,7 +45,7 @@ function linkDriverExternoWithVehicle(){
          linkDriverVehicle.style.display = "none";
         popUpLinkDriverVehicle.style.display = "none";
       })
-    }
+    };
     
     if (buttonLinkDriverExterno && linkDriverVehicle && popUpLinkDriverVehicle) {
     buttonLinkDriverExterno.addEventListener("click", () => {
@@ -61,7 +61,7 @@ function linkDriverExternoWithVehicle(){
         backgroundColor: "red",
       }).showToast();
       return;
-    }
+    };
       const motoristaSelecionado = JSON.parse(selectedCheckbox.dataset.motorista);
 
        if (motoristaSelecionado.motositu !== "Externo") {
@@ -83,7 +83,7 @@ function linkDriverExternoWithVehicle(){
       close: true,
       gravity: "top",
       position: "center",
-     backgroundColor: "red",
+     backgroundColor: "#f44336",
       }).showToast();
      return;
     }
@@ -117,7 +117,7 @@ async function linkDriverWithVehicleSubmit(codeMoto , nameMoto) {
           backgroundColor: "orange",
         }).showToast();
         return;
-      }
+      };
               
          try {
           const response = await fetch('/api/linkdriver'  ,{
@@ -139,14 +139,16 @@ async function linkDriverWithVehicleSubmit(codeMoto , nameMoto) {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
            }).showToast();
              
            setTimeout(()=>{
             const veicExterno = document.getElementById('veicExterno');
              if(veicExterno){
-               veicExterno.disabled = false
+               veicExterno.disabled = true
                document.getElementById('idMoto').value = ""
+               document.getElementById("veicExterno").value = ""
+               document.getElementById('popUpLinkDriverVehicle').style.display = "none"
              }
                
            },100)
@@ -159,7 +161,7 @@ async function linkDriverWithVehicleSubmit(codeMoto , nameMoto) {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
            }).showToast();
           }
      } catch (error) {
@@ -170,10 +172,10 @@ async function linkDriverWithVehicleSubmit(codeMoto , nameMoto) {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
            }).showToast();
-     }
-        })
-    }
+     };
+        });
+    };
     
 }

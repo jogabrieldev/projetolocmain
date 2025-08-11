@@ -100,9 +100,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         await listarVeiculos();
-      } catch (error) {}
+      } catch (error) {
+         Toastify({
+          text: "Erro na pagina",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+      }
     });
-  }
+  };
 
   socketAutomovel.on("updateRunTimeAutomovel", (veiculos) => {
     listarVeiculos();
@@ -137,7 +146,7 @@ function interationSystemVehicles() {
         listingAutomo.classList.add("hidden");
       }
     });
-  }
+  };
 
   const btnOutCadAuto = document.querySelector(".btnOutCadAuto");
   if (btnOutCadAuto) {
@@ -164,7 +173,7 @@ function interationSystemVehicles() {
         listingAutomo.classList.add("flex");
       }
     });
-  }
+  };
 
   const btnOutCadAutoEdit = document.querySelector(".btnOutCadAutoEdit");
   if (btnOutCadAutoEdit) {
@@ -191,7 +200,7 @@ function interationSystemVehicles() {
         listingAutomo.classList.add("flex");
       }
     });
-  }
+  };
 
   const buttonExitAuto = document.getElementById("buttonExitAuto");
   if (buttonExitAuto) {
@@ -208,14 +217,13 @@ function interationSystemVehicles() {
         informative.textContent = "Sessão ativa";
       }
     });
-  }
-}
+  };
+};
 
+//CADASTRAR VEICULOS
 async function registerNewVehicles() {
   dateAtualInField("dtCadAuto");
-  document
-    .querySelector(".cadAutomo")
-    .addEventListener("click", async (event) => {
+  document.querySelector(".cadAutomo").addEventListener("click", async (event) => {
       event.preventDefault();
 
       const token = localStorage.getItem("token");
@@ -240,7 +248,7 @@ async function registerNewVehicles() {
       if (!$(".foorm").valid()) {
         return;
       }
-      // Captura os valores do formulário
+
       const formData = {
         caaucode: document.querySelector("#codeAuto").value.trim(),
         caauplac: document.querySelector("#placAuto").value.toUpperCase(),
@@ -277,7 +285,7 @@ async function registerNewVehicles() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
           document.querySelector(".foorm").reset();
           dateAtualInField("dtCadAuto");
@@ -295,7 +303,7 @@ async function registerNewVehicles() {
               close: true,
               gravity: "top",
               position: "center",
-              backgroundColor: "red",
+              backgroundColor: "#f44336",
             }).showToast();
           } else {
          
@@ -305,10 +313,10 @@ async function registerNewVehicles() {
               close: true,
               gravity: "top",
               position: "center",
-              backgroundColor: response.status === 409 ? "orange" : "red",
+              backgroundColor: response.status === 409 ? "orange" : "#f44336",
             }).showToast();
-          }
-        }
+          };
+        };
       } catch (error) {
         console.error("Erro ao enviar formulário:", error);
         Toastify({
@@ -317,12 +325,12 @@ async function registerNewVehicles() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
-      }
+      };
     });
   validationFormAutomovel();
-}
+};
 
 //listagem de veiculos
 async function listarVeiculos() {
@@ -363,7 +371,7 @@ async function listarVeiculos() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -461,13 +469,13 @@ async function listarVeiculos() {
     } else {
       veiculosListDiv.innerHTML =
         "<p class='text-light'>Nenhum veículo cadastrado.</p>";
-    }
+    };
   } catch (error) {
     console.error("Erro ao carregar veículos:", error);
     document.querySelector(".listingAutomo").innerHTML =
       "<p class='text-light'>Erro ao carregar veículos.</p>";
-  }
-}
+  };
+};
 
 // PESQUISAR VEICULO
 
@@ -509,7 +517,7 @@ async function searchVehicles() {
       document.getElementById("placVehicles").value = "";
       listarVeiculos();
     });
-  }
+  };
 
   const btnSearchVehicle = document.querySelector(".submitSearchVehicle");
   if (btnSearchVehicle) {
@@ -517,9 +525,7 @@ async function searchVehicles() {
       const codeInput = document.getElementById("codeVehicle").value.trim();
       const placInput = document.getElementById("placVehicles").value.trim();
 
-      const filterField = [codeInput, placInput].filter(
-        (value) => value !== ""
-      );
+      const filterField = [codeInput, placInput].filter((value) => value !== "");
 
       if (filterField.length === 0) {
         Toastify({
@@ -528,7 +534,7 @@ async function searchVehicles() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
         return;
       }
@@ -539,7 +545,7 @@ async function searchVehicles() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
         return;
       }
@@ -560,22 +566,20 @@ async function searchVehicles() {
         const data = await response.json();
 
         if (response.ok && data.veiculo?.length > 0) {
-          console.log("Resultados encontrados:", data.produto);
-
+        
           Toastify({
             text: "O tipo de familia de bem foi encontrado com sucesso!.",
             duration: 3000,
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
-          // Exibe botão limpar filtro
+          
           btnClearFilter.style.display = "inline-block";
-          // Atualiza a tabela com os bens filtrados
+          
           renderVeiculosTable(data.veiculo);
 
-          // Fecha o pop-up após a busca (opcional)
           if (popUpSearch) popUpSearch.style.display = "none";
           if (backdrop) backdrop.style.display = "none";
         } else {
@@ -585,9 +589,9 @@ async function searchVehicles() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
-        }
+        };
       } catch (error) {
         console.error("Erro ao buscar veiculo:", error);
         Toastify({
@@ -596,12 +600,12 @@ async function searchVehicles() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
       }
     });
-  }
-}
+  };
+};
 
 // renderizar tabela
 function renderVeiculosTable(veiculos) {
@@ -701,7 +705,7 @@ function renderVeiculosTable(veiculos) {
 
   wrapper.appendChild(tabela);
   veiculosListDiv.appendChild(wrapper);
-}
+};
 
 // DELETAR VEICULOS
 function deleteVehicles() {
@@ -717,17 +721,15 @@ function deleteVehicles() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
-    }
+    };
 
     const veiculoSelecionado = JSON.parse(selectedCheckbox.dataset.veiculo);
     const veiculoId = veiculoSelecionado.caaucode;
 
-    const confirmacao = confirm(
-      `Tem certeza de que deseja excluir o veículo com código ${veiculoId}?`
-    );
+    const confirmacao = confirm(`Tem certeza de que deseja excluir o veículo com código ${veiculoId}?`);
     if (!confirmacao) {
       return;
     }
@@ -771,14 +773,14 @@ function deleteVehicles() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "#1d5e1d",
         }).showToast();
 
         autoRow.remove();
       } else {
         if (response.status === 400) {
           Toastify({
-            text: data.message, // Mensagem retornada do backend
+            text: data.message,
             duration: 3000,
             close: true,
             gravity: "top",
@@ -793,10 +795,10 @@ function deleteVehicles() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
-        }
-      }
+        };
+      };
     } catch (error) {
       console.error("Erro ao excluir veículo:", error);
       Toastify({
@@ -805,11 +807,11 @@ function deleteVehicles() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
-    }
-  }
-}
+    };
+  };
+};
 
 // EDITAR AUTOMOVEL
 function editVehicles() {
@@ -826,7 +828,7 @@ function editVehicles() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -849,12 +851,10 @@ function editVehicles() {
       containerEditForm.classList.add("flex");
     }
 
-    // Exibir o formulário de edição e ocultar a listagem
     document.querySelector(".editFormAuto").style.display = "flex";
     document.querySelector(".btnInitAutoPageMain").style.display = "none";
     document.querySelector(".listingAutomo").style.display = "none";
 
-    // Pegar os dados do veículo selecionado
     const autoData = selectedCheckbox.dataset.veiculo;
 
     if (!autoData) {
@@ -864,8 +864,7 @@ function editVehicles() {
 
     try {
       const autoSelecionado = JSON.parse(autoData);
-      console.log("veiculo", autoSelecionado);
-
+    
       const campos = [
         { id: "codeAutoEdit", valor: autoSelecionado.caaucode },
         { id: "placAutoEdit", valor: autoSelecionado.caauplac },
@@ -888,10 +887,10 @@ function editVehicles() {
             elemento.value = formatDateInput(valor);
           } else {
             elemento.value = valor || "";
-          }
+          };
         } else {
           console.warn(`Elemento com ID '${id}' não encontrado.`);
-        }
+        };
 
         let valorFormatado = (valor || "").trim();
         if (elemento.tagName === "SELECT") {
@@ -902,21 +901,20 @@ function editVehicles() {
             elemento.value = valorFormatado;
 
             if (id === "tpCombusAutoEdit") {
-              const hiddenInput = document.getElementById(
-                "tpCombusAutoEditHidden"
-              );
+              const hiddenInput = document.getElementById("tpCombusAutoEditHidden");
               if (hiddenInput) {
                 hiddenInput.value = valorFormatado;
               }
-            }
-          }
-        }
+            };
+          };
+        };
       });
     } catch (error) {
       console.error("Erro ao processar os dados do veículo:", error);
     }
   });
 
+  // EDITAR AUTOMOVEL
   async function editAndUpdateOfAuto() {
     const formEditAuto = document.querySelector(".foormEditVeicu");
 
@@ -962,7 +960,7 @@ function editVehicles() {
         caaudtca: document.getElementById("dtCadAutoEdit").value,
       };
 
-      const token = localStorage.getItem("token"); // Pega o token armazenado no login
+      const token = localStorage.getItem("token"); 
 
       if (!token || isTokenExpired(token)) {
         Toastify({
@@ -981,13 +979,10 @@ function editVehicles() {
         return;
       }
       try {
-        const confirmedEdition = confirm(
-          `Tem certeza de que deseja ATUALIZAR os dados desse veiculo?`
-        );
+        const confirmedEdition = confirm(`Tem certeza de que deseja ATUALIZAR os dados desse veiculo?`);
         if (!confirmedEdition) return;
 
-        const response = await fetch(
-          `/api/cadauto/${autoSelecionado.caaucode}`,
+        const response = await fetch(`/api/cadauto/${autoSelecionado.caaucode}`,
           {
             method: "PUT",
             headers: {
@@ -999,33 +994,33 @@ function editVehicles() {
         );
 
         if (response.ok) {
-          console.log("Atualização bem-sucedida");
+          
           Toastify({
             text: `Veículo '${autoSelecionado.caaucode}' atualizado com sucesso!`,
             duration: 3000,
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
 
           formEditAuto.reset();
         } else {
-          console.error("Erro ao atualizar veículo:", await response.text());
+           const errorMessage =  await response.json();
           Toastify({
-            text: "Erro ao atualizar veículo",
+            text:`${errorMessage}`|| "Erro ao atualizar veículo",
             duration: 3000,
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
         }
       } catch (error) {
         console.error("Erro na requisição:", error);
       }
     });
-  }
+  };
 
   editAndUpdateOfAuto();
-}
+};

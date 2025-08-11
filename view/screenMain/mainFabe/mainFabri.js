@@ -10,7 +10,7 @@ function isTokenExpired(token) {
 
 function addMetrosCubicos() {
   const inputCapa = document.getElementById('fabeCapa');
-  if (!inputCapa) return; // se o input não existe ainda, sai da função
+  if (!inputCapa) return; 
 
   inputCapa.addEventListener('input', () => {
     let somenteNumero = inputCapa.value.replace(/\D/g, '');
@@ -18,7 +18,6 @@ function addMetrosCubicos() {
   });
 
    inputCapa.addEventListener('focus', () => {
-    // ao focar, remove o m³ para o usuário editar livremente
     inputCapa.value = inputCapa.value.replace(/m³/, '');
   });
 };
@@ -27,20 +26,17 @@ function aplicarMetrosCubicosEdicao(valorNumero) {
   const inputEdit = document.getElementById('editFabeCapa');
   if (!inputEdit) return;
 
-  // 👉 Preenche o campo já com a unidade (ex.: vindo do banco apenas número)
   inputEdit.value = valorNumero ? `${valorNumero}m³` : '';
 
-  // Ao focar (quando clicar para editar): remove a unidade para facilitar a edição
   inputEdit.addEventListener('focus', () => {
     inputEdit.value = inputEdit.value.replace(/m³/, '');
   });
 
-  // Ao perder o foco (sair do campo): adiciona novamente a unidade
   inputEdit.addEventListener('blur', () => {
     let apenasNumero = inputEdit.value.replace(/\D/g, '');
     inputEdit.value = apenasNumero ? `${apenasNumero}m³` : '';
   });
-}
+};
 
 const socketFamilyBens = io();
 document.addEventListener("DOMContentLoaded", () => {
@@ -127,6 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// INTERAÇÃO
 function interationSystemFamilyBens() {
   const btnPageRegisterFabri = document.querySelector(".registerFabri");
   if (btnPageRegisterFabri) {
@@ -176,7 +173,7 @@ function interationSystemFamilyBens() {
       
       return;
     });
- }
+ };
   const btnOutOfRegister = document.querySelector(".btnOutInitFabri");
   if (btnOutOfRegister) {
     btnOutOfRegister.addEventListener("click", (event) => {
@@ -201,7 +198,7 @@ function interationSystemFamilyBens() {
         containerFormFabriRegister.classList.add("hidden");
       }
     });
-  }
+  };
 
   const btnExitFamilygoods = document.getElementById("buttonExitFabri");
   if(btnExitFamilygoods){
@@ -215,14 +212,13 @@ function interationSystemFamilyBens() {
           
       }
 
-
       const informative = document.querySelector('.information')
             if (informative) {
               informative.style.display = 'block';
               informative.textContent = 'Sessão ativa';
             }
     });
-  } 
+  };
  
   const btnOutInitFabriEdit = document.querySelector(".btnOutInitFabriEdit");
   if(btnOutInitFabriEdit){
@@ -247,10 +243,11 @@ function interationSystemFamilyBens() {
         containerFormFabriRegister.classList.add('hidden')
       }
     });
-  }
+  };
   
-}
+};
 
+// CADASTRAR FAMILIA DE BENS
 function registerNewFamilyBens() {
 
   document.querySelector(".cadFabri").addEventListener("click", async (event) => {
@@ -279,7 +276,6 @@ function registerNewFamilyBens() {
         return;
       }
 
-      // Captura os valores do formulário
       const formData = {
         fabeCode: document.querySelector("#fabeCode").value.trim(), // Código
         fabeDesc: document.querySelector("#fabeDesc").value.trim(), // Descrição
@@ -308,10 +304,9 @@ function registerNewFamilyBens() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
 
-          // Limpar o formulário após o sucesso
           document.querySelector(".formRegisterFabricante").reset();
         } else {
           Toastify({
@@ -320,7 +315,7 @@ function registerNewFamilyBens() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: response.status === 409 ? "orange" : "red",
+            backgroundColor: response.status === 409 ? "orange" : "#f44336",
           }).showToast();
         }
       } catch (error) {
@@ -331,7 +326,7 @@ function registerNewFamilyBens() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
       }
     });
@@ -376,7 +371,7 @@ async function fetchListFabricante() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -477,7 +472,7 @@ async function fetchListFabricante() {
     console.error("Erro ao carregar familia de bens:", error);
     document.querySelector(".listingFabri").innerHTML =
       "<p>Erro ao carregar familia de bens.</p>";
-  }
+  };
 };
 
 // buscar family bens
@@ -519,7 +514,7 @@ async function searchFamilyGoodsForId() {
       document.getElementById('codeFamilyBens').value = '';
       fetchListFabricante();
     });
-  }
+  };
 
  const btnSearchFamilyGoods = document.querySelector('.submitSearchFamilyGoods');
   if (btnSearchFamilyGoods) {
@@ -534,7 +529,7 @@ async function searchFamilyGoodsForId() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
        }).showToast();
       return;
     }
@@ -561,14 +556,13 @@ async function searchFamilyGoodsForId() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "#1d5e1d",
           }).showToast();
-          // Exibe botão limpar filtro
+      
           btnClearFilter.style.display = 'inline-block';
-          // Atualiza a tabela com os bens filtrados
+          
           renderFamilyGoodsTable(data.familyGoods);
 
-          // Fecha o pop-up após a busca (opcional)
           if (popUpSearch) popUpSearch.style.display = 'none';
           if(backdrop)backdrop.style.display = 'none'
 
@@ -579,7 +573,7 @@ async function searchFamilyGoodsForId() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
           }).showToast();
         }
       } catch (error) {
@@ -590,13 +584,14 @@ async function searchFamilyGoodsForId() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
           }).showToast();
       }
     });
   };
 };
 
+// RENDERIZAR TABELA 
 function renderFamilyGoodsTable(familyGoods) {
   const familyGoodsListDiv = document.querySelector(".listingFabri");
   familyGoodsListDiv.innerHTML = "";
@@ -672,7 +667,7 @@ function renderFamilyGoodsTable(familyGoods) {
       td.textContent = valor || "";
       td.classList.add("align-middle", "text-break");
 
-      const coluna = colunas[index + 1]; // Ignora "Selecionar"
+      const coluna = colunas[index + 1]; 
       if (["Código"].includes(coluna)) {
         td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
       } else {
@@ -685,7 +680,7 @@ function renderFamilyGoodsTable(familyGoods) {
   familyGoodsListDiv.appendChild(wrapper);
 };
 
-// //deletar fabricante
+// //deletar FAMILIA DE BEM
 function deleteFamilyGoods(){
 
     const btnDeleteFabri = document.querySelector(".buttonDeleteFabri");
@@ -700,10 +695,10 @@ function deleteFamilyGoods(){
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
     return;
-  }
+  };
 
   const fabricanteSelecionado = JSON.parse(selectedCheckbox.dataset.familyGoods);
   const fabricanteId = fabricanteSelecionado.fabecode;
@@ -717,7 +712,7 @@ function deleteFamilyGoods(){
 
   await deleteFabri(fabricanteId, selectedCheckbox.closest("tr"));
 });
-
+//DELETE
 async function deleteFabri(id, fabeRow) {
   const token = localStorage.getItem("token");
 
@@ -753,14 +748,14 @@ async function deleteFabri(id, fabeRow) {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "green",
+        backgroundColor: "#1d5e1d",
       }).showToast();
 
       fabeRow.remove();
     } else {
       if (response.status === 400) {
         Toastify({
-          text: data.message, // Mensagem retornada do backend
+          text: data.message, 
           duration: 3000,
           close: true,
           gravity: "top",
@@ -774,7 +769,7 @@ async function deleteFabri(id, fabeRow) {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
       }
     }
@@ -786,7 +781,7 @@ async function deleteFabri(id, fabeRow) {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
   };
  };
@@ -807,7 +802,7 @@ btnFormEditFabri.addEventListener("click", () => {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
     return;
   }
@@ -869,23 +864,18 @@ const containerEditForm = document.querySelector('.editFabri')
   const input = document.getElementById("editFabeCapa");
   if (!input) return;
 
-  // remove unidade ao focar
   input.addEventListener("focus", () => {
     input.value = input.value.replace(/m³/, "");
   });
 
-  // recoloca unidade ao sair do foco
   input.addEventListener("blur", () => {
     const num = input.value.replace(/\D/g, "");
     input.value = num ? num + "m³" : "";
   });
-}
+};
 
-// depois de popular o formulário de edição
 aplicarMascaraMetrosCubicosEdicao();
 
-
-    // Mostrar o formulário de edição e ocultar a lista
     const spaceEditFabri = document.querySelector(".editFabri");
     const btnMainPageFabri = document.querySelector(".btnMainPageFabri");
     const listingFabri = document.querySelector(".listingFabri");
@@ -976,10 +966,9 @@ async function editAndUpdateOfFabric() {
 
     try {
 
-      const confirmedEdition = confirm(
-        `Tem certeza de que deseja ATUALIZAR os dados dessa Familia de bem ?`
-        );
-          if (!confirmedEdition) return;
+      const confirmedEdition = confirm(`Tem certeza de que deseja ATUALIZAR os dados dessa Familia de bem ?`);
+        if (!confirmedEdition) return;
+
       const response = await fetch(`/api/updatefabe/${fabeIdParsed}`, {
         method: "PUT",
         headers: {
@@ -997,15 +986,33 @@ async function editAndUpdateOfFabric() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "#1d5e1d",
         }).showToast();
 
         formEditFabri.reset();
       } else {
-        console.error("Erro ao atualizar familia:", await response.text());
+        console.error("Erro ao atualizar familia:");
+         const errorResponse = await response.json();
+
+          Toastify({
+            text: errorResponse.message || "Erro ao atualizar familia de bens.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "#f44336",
+          }).showToast();
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
+       Toastify({
+          text: `Erro no server para atualizar familia de bens`,
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "#f44336",
+        }).showToast();
     }
   });
 };

@@ -107,12 +107,12 @@ document.addEventListener("DOMContentLoaded", () => {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "red",
         }).showToast();
         console.error("btnLoadProd não encontrado no DOM");
       }
     });
-  }
+  };
 
   socketProduto.on("updateRunTimeProduto", (produtos) => {
     fetchListProdutos();
@@ -123,6 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// INTERAÇÃO
 function interationSystemProduto() {
   const registerProd = document.querySelector(".registerProd");
   if (registerProd) {
@@ -143,7 +144,7 @@ function interationSystemProduto() {
         listingProd.classList.add("hidden");
       }
     });
-  }
+  };
 
   const btnExitProd = document.getElementById("buttonExitProd");
   if (btnExitProd) {
@@ -160,7 +161,7 @@ function interationSystemProduto() {
         informative.textContent = "Sessão ativa";
       }
     });
-  }
+  };
 
   const btnOutInitProd = document.querySelector(".btnOutInitProd");
 
@@ -186,7 +187,7 @@ function interationSystemProduto() {
         containerFormProd.classList.add("hidden");
       }
     });
-  }
+  };
 
   const btnOutEditForm = document.querySelector(".btnOutInitProdEdit");
   if (btnOutEditForm) {
@@ -212,14 +213,13 @@ function interationSystemProduto() {
       }
     });
   }
-}
+};
 
+// CADASTRAR PRODUTO 
 function registerNewProduto() {
   dateAtualInField("prodData");
 
-  document
-    .querySelector(".cadProd")
-    .addEventListener("click", async (event) => {
+  document.querySelector(".cadProd").addEventListener("click", async (event) => {
       event.preventDefault();
 
       const token = localStorage.getItem("token");
@@ -269,7 +269,6 @@ function registerNewProduto() {
         return;
       }
 
-      //  Converte “YYYY-MM-DD” para Date local e zera horas
       const [y, m, d] = formData.prodData.split("-").map(Number);
       const dtCd = new Date(y, m - 1, d);
       const hoje = new Date();
@@ -279,7 +278,6 @@ function registerNewProduto() {
         hoje.getDate()
       );
 
-      //  Regra: não pode ser futura
       if (dtCd.getTime() !== hoje0.getTime()) {
         Toastify({
           text: "Data de cadastro deve ser a data de hoje",
@@ -292,9 +290,7 @@ function registerNewProduto() {
         return;
       }
 
-      if (
-        !validarPrecoLiquidoMenorOuIgual(formData.prodPeli, formData.prodPebr)
-      ) {
+      if (!validarPrecoLiquidoMenorOuIgual(formData.prodPeli, formData.prodPebr)) {
         Toastify({
           text: "O preço líquido não pode ser maior que o preço bruto.",
           duration: 3000,
@@ -325,15 +321,14 @@ function registerNewProduto() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
 
           document.querySelector(".formRegisterProduto").reset();
           dateAtualInField("prodData");
         } else {
-          // 👇 aqui tratamos erros de validação do express-validator
+         
           if (result?.errors && Array.isArray(result.errors)) {
-            // junta todas as mensagens em uma string
             const mensagens = result.errors
               .map((err) => `• ${err.msg}`)
               .join("\n");
@@ -344,17 +339,17 @@ function registerNewProduto() {
               close: true,
               gravity: "top",
               position: "center",
-              backgroundColor: "red",
+              backgroundColor: "#f44336",
             }).showToast();
           } else {
-            // 👇 caso seja outro tipo de erro
+           
             Toastify({
               text: result?.message || "Erro ao cadastrar produto.",
               duration: 3000,
               close: true,
               gravity: "top",
               position: "center",
-              backgroundColor: response.status === 409 ? "orange" : "red",
+              backgroundColor: response.status === 409 ? "orange" : "#f44336",
             }).showToast();
           }
         }
@@ -366,12 +361,12 @@ function registerNewProduto() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
       }
     });
   validationFormProd();
-}
+};
 
 // Listagens de produtos
 async function fetchListProdutos() {
@@ -404,7 +399,6 @@ async function fetchListProdutos() {
     });
 
     const result = await response.json();
-    console.log("resultado", result);
 
     if (!response.ok) {
       Toastify({
@@ -413,7 +407,7 @@ async function fetchListProdutos() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -500,7 +494,7 @@ async function fetchListProdutos() {
           td.textContent = valor || "";
           td.classList.add("align-middle", "text-break");
 
-          const coluna = colunas[index + 1]; // Ignorando "Selecionar"
+          const coluna = colunas[index + 1]; 
           if (["Código", "Unidade", "Ativo"].includes(coluna)) {
             td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
           } else {
@@ -523,12 +517,12 @@ async function fetchListProdutos() {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
     document.querySelector(".listingProd").innerHTML =
       "<p>Erro ao carregar produtos.</p>";
-  }
-}
+  };
+};
 
 // pesquisar por produtos
 async function searchProduto() {
@@ -557,9 +551,8 @@ async function searchProduto() {
     btnClearFilter = document.createElement("button");
     btnClearFilter.id = "btnClearFilter";
     btnClearFilter.textContent = "Limpar filtro";
-    btnClearFilter.className =
-      "btn btn-secondary w-25 aling align-items: center;";
-    btnClearFilter.style.display = "none"; // fica oculto até uma busca ser feita
+    btnClearFilter.className = "btn btn-secondary w-25 aling align-items: center;";
+    btnClearFilter.style.display = "none"; 
     produtoListDiv.parentNode.insertBefore(btnClearFilter, produtoListDiv);
 
     btnClearFilter.addEventListener("click", () => {
@@ -568,7 +561,7 @@ async function searchProduto() {
       document.getElementById("codeProd").value = "";
       fetchListProdutos();
     });
-  }
+  };
 
   const btnSearchProduto = document.querySelector(".submitSearchProd");
   if (btnSearchProduto) {
@@ -582,7 +575,7 @@ async function searchProduto() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
         return;
       }
@@ -607,14 +600,13 @@ async function searchProduto() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
-          // Exibe botão limpar filtro
+       
           btnClearFilter.style.display = "inline-block";
-          // Atualiza a tabela com os bens filtrados
+        
           renderProdutoTable(data.produto);
 
-          // Fecha o pop-up após a busca (opcional)
           if (popUpSearch) popUpSearch.style.display = "none";
           if (backdrop) backdrop.style.display = "none";
         } else {
@@ -624,7 +616,7 @@ async function searchProduto() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
         }
       } catch (error) {
@@ -639,8 +631,8 @@ async function searchProduto() {
         }).showToast();
       }
     });
-  }
-}
+  };
+};
 
 // renderizar tabela
 function renderProdutoTable(produtos) {
@@ -742,7 +734,7 @@ function renderProdutoTable(produtos) {
 
   wrapper.appendChild(tabela);
   produtosListDiv.appendChild(wrapper);
-}
+};
 
 // deletar produto
 function deleteProduto() {
@@ -758,7 +750,7 @@ function deleteProduto() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -775,7 +767,7 @@ function deleteProduto() {
 
     await deleteProd(produtoId, selectedCheckbox.closest("tr"));
   });
-
+// Delete
   async function deleteProd(id, rowProd) {
     const token = localStorage.getItem("token");
 
@@ -813,7 +805,7 @@ function deleteProduto() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "#1d5e1d",
         }).showToast();
 
         rowProd.remove();
@@ -825,7 +817,7 @@ function deleteProduto() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
       }
     } catch (error) {
@@ -836,13 +828,12 @@ function deleteProduto() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
-    }
-  }
-}
+    };
+  };
+};
 // EDITAR PRODUTO
-
 function editProduto() {
   const editProdButton = document.querySelector(".buttonEditProd");
   editProdButton.addEventListener("click", (event) => {
@@ -859,7 +850,7 @@ function editProduto() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -947,7 +938,7 @@ function editProduto() {
       console.error("Erro ao fazer parse de data-bem:", error);
     }
   });
-
+// Enviar dados atualizados
   async function editAndUpdateOfProduct() {
     const formEditProd = document.querySelector(".editProd");
 
@@ -993,7 +984,7 @@ function editProduto() {
         prodativ: document.getElementById("editProdAtiv").value,
       };
 
-      const token = localStorage.getItem("token"); // Pega o token armazenado no login
+      const token = localStorage.getItem("token"); 
 
       if (!token || isTokenExpired(token)) {
         Toastify({
@@ -1033,7 +1024,7 @@ function editProduto() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
 
           formEditProd.reset();
@@ -1044,14 +1035,22 @@ function editProduto() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
           console.error("Erro ao atualizar produto:", await response.text());
         }
       } catch (error) {
-        console.error("Erro na requisição:", error);
+        console.error("Erro no server para atualizar produto:", error);
+        Toastify({
+            text: "Erro no server para atualizar produto",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "#f44336",
+          }).showToast();
       }
     });
   }
   editAndUpdateOfProduct();
-}
+};

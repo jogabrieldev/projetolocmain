@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// INTREÇÃO 
+// INTERAÇÃO 
 function interationSystemGoods(){
 
   const buttonRegisterGoods = document.querySelector("#registerGoods");
@@ -332,7 +332,7 @@ if (buttonOutGoods) {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -356,7 +356,7 @@ for (const { key, label } of datas) {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
     return;
   }
@@ -434,7 +434,7 @@ for (const { key, label } of datas) {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "#1d5e1d",
         }).showToast();
 
         document.querySelector("#formRegisterBens").reset();
@@ -451,20 +451,20 @@ for (const { key, label } of datas) {
               close: true,
               gravity: "top",
               position: "center",
-              backgroundColor: "red",
+              backgroundColor: "#f44336",
             }).showToast();
           }else {
-      // 👇 caso seja outro tipo de erro
+     
          Toastify({
           text: result?.message || "Erro ao cadastrar fornecedor.",
           duration: 3000,
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: response.status === 409 ? "orange" : "red",
+          backgroundColor: response.status === 409 ? "orange" : "#f44336",
           }).showToast();
        }
-    }
+    };
     } catch (error) {
       console.error("Erro ao enviar formulário:", error);
       Toastify({
@@ -473,7 +473,7 @@ for (const { key, label } of datas) {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
       
     }
@@ -520,7 +520,7 @@ async function fetchBens() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -632,7 +632,7 @@ async function fetchBens() {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
   }
 }
@@ -660,14 +660,14 @@ async function searchGoodsForId() {
      })
   }
 
-  // Cria o botão limpar filtro e adiciona antes da lista, se não existir
+ 
   let btnClearFilter = document.getElementById('btnClearFilter');
   if (!btnClearFilter) {
     btnClearFilter = document.createElement('button');
     btnClearFilter.id = 'btnClearFilter';
     btnClearFilter.textContent = 'Limpar filtro';
     btnClearFilter.className = 'btn btn-secondary w-25 aling align-items: center;';
-    btnClearFilter.style.display = 'none'; // fica oculto até uma busca ser feita
+    btnClearFilter.style.display = 'none'; 
     bensListDiv.parentNode.insertBefore(btnClearFilter, bensListDiv);
 
     btnClearFilter.addEventListener('click', () => {
@@ -679,7 +679,7 @@ async function searchGoodsForId() {
     
       fetchBens();
     });
-  }
+  };
 
   const btnSearchGoods = document.querySelector('.submitSearchGoods');
   if (btnSearchGoods) {
@@ -700,7 +700,7 @@ async function searchGoodsForId() {
         backgroundColor: "red",
        }).showToast();
       return;
-    }
+    };
 
       if (fieldFilled.length > 1) {
       Toastify({
@@ -737,14 +737,12 @@ async function searchGoodsForId() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "#1d5e1d",
           }).showToast();
-          // Exibe botão limpar filtro
+         
           btnClearFilter.style.display = 'inline-block';
-          // Atualiza a tabela com os bens filtrados
           renderBensTable(data.bens);
 
-          // Fecha o pop-up após a busca (opcional)
           if (popUpSearch) popUpSearch.style.display = 'none';
           if(backdrop)backdrop.style.display = 'none'
 
@@ -755,9 +753,9 @@ async function searchGoodsForId() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
           }).showToast();
-        }
+        };
       } catch (error) {
         console.error("Erro ao buscar bens:", error);
         Toastify({
@@ -766,17 +764,17 @@ async function searchGoodsForId() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
           }).showToast();
       }
     });
-  }
-}
+  };
+};
 
 // Função que cria a tabela com os bens,
 function renderBensTable(bens) {
   const bensListDiv = document.querySelector("#listingBens");
-  bensListDiv.innerHTML = ""; // limpa conteúdo atual
+  bensListDiv.innerHTML = ""; 
 
   if (bens.length === 0) {
     bensListDiv.innerHTML = "<p class='text-light'>Nenhum bem encontrado.</p>";
@@ -871,7 +869,7 @@ function renderBensTable(bens) {
 
   wrapper.appendChild(tabela);
   bensListDiv.appendChild(wrapper);
-}
+};
 
 // DELETAR BEM
 async function deleteGoodsSystem() {
@@ -888,7 +886,7 @@ async function deleteGoodsSystem() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -944,14 +942,14 @@ async function deleteBem(id, bemItem) {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "green",
+        backgroundColor: "#1d5e1d",
       }).showToast();
 
       bemItem.remove();
     } else {
       if (response.status === 400) {
         Toastify({
-          text: data.message, // Mensagem retornada do backend
+          text: data.message, 
           duration: 3000,
           close: true,
           gravity: "top",
@@ -959,23 +957,32 @@ async function deleteBem(id, bemItem) {
           backgroundColor: "orange",
         }).showToast();
       } else {
-        console.log("Erro para excluir:", data);
+        
         Toastify({
           text: "Erro na exclusão do Bem ",
           duration: 2000,
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
       }
-    }
+    };
   } catch (error) {
     console.error("erro ao excluir bem:", error);
-    alert("erro ao excluir o bem");
-  }
-}
+      Toastify({
+          text: "Erro no server na exclusão do Bem",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "#f44336",
+        }).showToast();
+      
+  };
+};
 
+// ATUALIZAR BEM
 async function updateGoodsSystem() {
 
   const editButton = document.querySelector("#buttonEdit");
@@ -995,10 +1002,10 @@ async function updateGoodsSystem() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
-    }
+    };
      
     const btnMainPage = document.querySelector("#btnPageListGoods");
        if(btnMainPage){
@@ -1105,10 +1112,10 @@ async function updateGoodsSystem() {
     }
   });
 
-   
   editAndUpdateOfBens()
-}
+};
 
+//ENVIAR A EDIÇÃO 
 async function editAndUpdateOfBens() {
 
   const token = localStorage.getItem("token");
@@ -1208,7 +1215,7 @@ async function editAndUpdateOfBens() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "#1d5e1d",
         }).showToast();
 
         formEditBens.reset();
@@ -1221,13 +1228,21 @@ async function editAndUpdateOfBens() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
       }
     } catch (error) {
-      console.error("Erro na requisição:", error);
+      console.error("Erro na atualização:", error);
+       Toastify({
+          text: "Erro no server ao atualizar bem! Verificar",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "#f44336",
+        }).showToast();
     }
   });
-}
+};
 
 

@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }).showToast();
       }
     });
-  }
+  };
 
   sokectDriver.on("updateRunTimeDriver", (motorista) => {
     fetchListMotorista();
@@ -118,6 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// INTERAÇÃO
 function interationSystemDriver() {
   const registerDriver = document.querySelector(".registerDriver");
   if (registerDriver) {
@@ -140,7 +141,7 @@ function interationSystemDriver() {
         btnPageMain.classList.add("hidden");
       }
     });
-  }
+  };
 
   const btnOutSectionDriver = document.getElementById("buttonExitDriver");
   if (btnOutSectionDriver) {
@@ -157,7 +158,7 @@ function interationSystemDriver() {
         informative.textContent = "Sessão ativa";
       }
     });
-  }
+  };
 
   const btnOutPageDrive = document.querySelector(".btnOutPageRegister");
   if (btnOutPageDrive) {
@@ -182,7 +183,7 @@ function interationSystemDriver() {
         btnPageMain.classList.add("flex");
       }
     });
-  }
+  };
 
   const btnOutformPageEdit = document.querySelector(".btnOutPageRegisterEdit");
   if (btnOutformPageEdit) {
@@ -209,13 +210,12 @@ function interationSystemDriver() {
         btnPageMain.classList.add("flex");
       }
     });
-  }
-}
+  };
+};
 
+// CADASTRAR MOTORISTA
 function registerNewDriver() {
-  document
-    .querySelector(".cadDriver")
-    .addEventListener("click", async (event) => {
+  document.querySelector(".cadDriver").addEventListener("click", async (event) => {
       event.preventDefault();
 
       const token = localStorage.getItem("token");
@@ -241,13 +241,9 @@ function registerNewDriver() {
         return;
       }
 
-      const cepDriver = document
-        .querySelector("#motoCep")
-        .value.replace(/\D/g, "");
+      const cepDriver = document.querySelector("#motoCep").value.replace(/\D/g, "");
       try {
-        const response = await fetch(
-          `https://viacep.com.br/ws/${cepDriver}/json/`
-        );
+        const response = await fetch(`https://viacep.com.br/ws/${cepDriver}/json/`);
 
         if (!response.ok) {
           throw new Error("Erro ao buscar o CEP.");
@@ -262,10 +258,10 @@ function registerNewDriver() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
           return;
-        }
+        };
 
         // Preenchendo os campos do formulário
         const ruaField = document.getElementById("motoRua");
@@ -292,7 +288,7 @@ function registerNewDriver() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
         return;
       }
@@ -318,8 +314,6 @@ function registerNewDriver() {
         motoPasw: document.querySelector("#motoPasw").value.trim(),
       };
 
-      console.log('log' , formData)
-
       const datas = [
         { key: "motoDtvc", label: "Data de Vencimento" },
         { key: "motoDtnc", label: "Data de Nascimento" },
@@ -333,7 +327,7 @@ function registerNewDriver() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
           return;
         }
@@ -351,8 +345,6 @@ function registerNewDriver() {
         hoje.getDate()
       );
 
-      // 5) Regras de negócio:
-      // 5.1) dtCad não pode ser futura
       if (dtVenci.getTime() <= hoje0.getTime()) {
         Toastify({
           text: "A data de vencimento da CNH tem que ser maior que a de hoje",
@@ -389,8 +381,7 @@ function registerNewDriver() {
         });
 
         const result = await response.json();
-        console.log("resposta" , response)
-
+        
         if (response.ok) {
           Toastify({
             text: "Motorista cadastrado com sucesso!",
@@ -398,7 +389,7 @@ function registerNewDriver() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
 
         
@@ -416,17 +407,17 @@ function registerNewDriver() {
               close: true,
               gravity: "top",
               position: "center",
-              backgroundColor: "red",
+              backgroundColor: "#f44336",
             }).showToast();
           }else {
-            // 👇 caso seja outro tipo de erro
+          
             Toastify({
               text: result?.message || "Erro ao cadastrar motorista.",
               duration: 3000,
               close: true,
               gravity: "top",
               position: "center",
-              backgroundColor: response.status === 409 ? "orange" : "red",
+              backgroundColor: response.status === 409 ? "orange" : "#f44336",
             }).showToast();
           }
         }
@@ -438,12 +429,12 @@ function registerNewDriver() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
-      }
+      };
     });
   validationFormMoto();
-}
+};
 
 //listagem de motorista
 async function fetchListMotorista() {
@@ -484,7 +475,7 @@ async function fetchListMotorista() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -592,7 +583,7 @@ async function fetchListMotorista() {
           td.textContent = valor || "";
           td.classList.add("align-middle", "text-break");
 
-          const coluna = colunas[index + 1]; // +1 por causa do checkbox
+          const coluna = colunas[index + 1];
           if (["Código", "Status"].includes(coluna)) {
             td.classList.add("text-center", "wh-nowrap", "px-2", "py-1");
           } else {
@@ -615,9 +606,8 @@ async function fetchListMotorista() {
     console.error("Erro ao carregar motoristas:", error);
     document.querySelector(".listingDriver").innerHTML =
       "<p>Erro ao carregar motoristas.</p>";
-  }
-}
-
+  };
+};
 
 // buscar motorista
 async function searchDriverForId() {
@@ -648,32 +638,28 @@ async function searchDriverForId() {
     btnClearFilter.textContent = "Limpar filtro";
     btnClearFilter.className =
       "btn btn-secondary w-25 aling align-items: center;";
-    btnClearFilter.style.display = "none"; // fica oculto até uma busca ser feita
+    btnClearFilter.style.display = "none"; 
     driverListDiv.parentNode.insertBefore(btnClearFilter, driverListDiv);
 
-    btnClearFilter.addEventListener("click", () => {
+    btnClearFilter.addEventListener("click", async () => {
       btnClearFilter.style.display = "none";
 
       document.getElementById("codeDriver").value = "";
       document.getElementById("statusInDriver").value = "";
       document.getElementById("situationInDriver").value = "";
 
-      fetchListMotorista();
+     await fetchListMotorista();
     });
-  }
+  };
 
   const btnSubmitSearchClient = document.querySelector(".submitSearchDriver");
   if (btnSubmitSearchClient) {
     btnSubmitSearchClient.addEventListener("click", async () => {
       const motocode = document.getElementById("codeDriver").value.trim();
       const valueStat = document.getElementById("statusInDriver").value.trim();
-      const valueSitu = document
-        .getElementById("situationInDriver")
-        .value.trim();
+      const valueSitu = document.getElementById("situationInDriver").value.trim();
 
-      const preenchidos = [motocode, valueStat, valueSitu].filter(
-        (valor) => valor !== ""
-      );
+      const preenchidos = [motocode, valueStat, valueSitu].filter((valor) => valor !== "");
 
       if (preenchidos.length === 0) {
         Toastify({
@@ -682,7 +668,7 @@ async function searchDriverForId() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
         return;
       }
@@ -722,9 +708,9 @@ async function searchDriverForId() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
-          // Exibe botão limpar filtro
+         
           btnClearFilter.style.display = "inline-block";
 
           renderMotoristasTable(data.driver);
@@ -738,7 +724,7 @@ async function searchDriverForId() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
         }
       } catch (error) {
@@ -749,12 +735,12 @@ async function searchDriverForId() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
       }
     });
-  }
-}
+  };
+};
 
 // RENDERIZAR A TABELA
 function renderMotoristasTable(motoristas) {
@@ -896,7 +882,7 @@ function deleteMotista() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -904,16 +890,14 @@ function deleteMotista() {
     const MotoristaSelecionado = JSON.parse(selectedCheckbox.dataset.motorista);
     const motoristaId = MotoristaSelecionado.motocode;
 
-    const confirmacao = confirm(
-      `Tem certeza de que deseja excluir o Fabricante com código ${motoristaId}?`
-    );
+    const confirmacao = confirm(`Tem certeza de que deseja excluir o Fabricante com código ${motoristaId}?`);
     if (!confirmacao) {
       return;
     }
 
     await deleteDriver(motoristaId, selectedCheckbox.closest("tr"));
   });
-
+ //DELETE
   async function deleteDriver(id, driverRow) {
     const token = localStorage.getItem("token");
 
@@ -952,12 +936,12 @@ function deleteMotista() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "#1d5e1d",
         }).showToast();
 
         driverRow.remove();
       } else {
-        // Caso o status seja 400, 404 ou outro erro do servidor
+      
         let errorMessage = "Erro ao excluir o motorista.";
 
         if (response.status === 400 || response.status === 404) {
@@ -981,12 +965,13 @@ function deleteMotista() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
-    }
-  }
-}
+    };
+  };
+};
 
+// EDITAR MOTORISTA
 function editDriver() {
   const btnFormEditDrive = document.querySelector(".buttonEditDriver");
   btnFormEditDrive.addEventListener("click", () => {
@@ -1001,7 +986,7 @@ function editDriver() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -1034,7 +1019,6 @@ function editDriver() {
 
     try {
       const motoristaSelecionado = JSON.parse(motoristaData);
-      console.log(motoristaSelecionado.motoctch);
       const campos = [
         { id: "editMotoCode", valor: motoristaSelecionado.motocode },
         { id: "editMotoNome", valor: motoristaSelecionado.motonome },
@@ -1060,7 +1044,7 @@ function editDriver() {
         const elemento = document.getElementById(id);
         if (elemento) {
           if (elemento.type === "date" && valor) {
-            // Formata a data para YYYY-MM-DD, caso seja necessário
+           
             const dataFormatada = new Date(valor).toISOString().split("T")[0];
             elemento.value = dataFormatada;
           } else {
@@ -1080,29 +1064,28 @@ function editDriver() {
                 if (hiddenInput) {
                   hiddenInput.value = valorFormatado;
                 }
-              }
-            }
-          }
+              };
+            };
+          };
 
           if (id === "motoSituEdit") {
             const hiddenInput = document.getElementById("motoSituEditHidden");
             if (hiddenInput) {
               hiddenInput.value = valorFormatado;
             }
-          }
+          };
 
           if (id === "editMotoStat") {
             const hiddenInput = document.getElementById("editMotoStatHidden");
             if (hiddenInput) {
               hiddenInput.value = valorFormatado;
             }
-          }
+          };
         } else {
           console.warn(`Elemento com ID '${id}' não encontrado.`);
         }
       });
 
-      // Mostrar o formulário de edição e ocultar a lista
       const spaceEditDriver = document.querySelector(
         ".containerFormEditDriver"
       );
@@ -1140,9 +1123,7 @@ function editDriver() {
 
       if (motoCep.length === 8) {
         try {
-          const response = await fetch(
-            `https://viacep.com.br/ws/${motoCep}/json/`
-          );
+          const response = await fetch(`https://viacep.com.br/ws/${motoCep}/json/`);
 
           if (!response.ok) throw new Error("Erro ao buscar o CEP");
 
@@ -1155,7 +1136,7 @@ function editDriver() {
               close: true,
               gravity: "top",
               position: "center",
-              backgroundColor: "red",
+              backgroundColor: "#f44336",
             }).showToast();
 
             if (ruaField) ruaField.value = "";
@@ -1186,18 +1167,18 @@ function editDriver() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
-        }
+        };
       } else {
         if (ruaField) ruaField.value = "";
         if (cityField) cityField.value = "";
         if (stateField) stateField.value = "";
       }
     });
-  }
-}
-
+  };
+};
+//EDITAR
 async function editAndUpdateOfDriver() {
   const formEditDrive = document.querySelector(".formEditDriver");
 
@@ -1270,10 +1251,9 @@ async function editAndUpdateOfDriver() {
     }
 
     try {
-      const confirmedEdition = confirm(
-        `Tem certeza de que deseja ATUALIZAR os dados desse Motorista?`
-      );
+      const confirmedEdition = confirm(`Tem certeza de que deseja ATUALIZAR os dados desse Motorista?`);
       if (!confirmedEdition) return;
+
       const response = await fetch(`/api/updatemoto/${motoIdParsed}`, {
         method: "PUT",
         headers: {
@@ -1290,7 +1270,7 @@ async function editAndUpdateOfDriver() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "#1d5e1d",
         }).showToast();
 
         formEditDrive.reset();
@@ -1302,9 +1282,9 @@ async function editAndUpdateOfDriver() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
-      }
+      };
     } catch (error) {
       Toastify({
         text: "Erro interno na requisição. Tente novamente.",
@@ -1312,8 +1292,8 @@ async function editAndUpdateOfDriver() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
-    }
+    };
   });
-}
+};

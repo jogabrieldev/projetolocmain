@@ -84,6 +84,7 @@ document.addEventListener('DOMContentLoaded' , function(){
   });
 });
 
+// INTERAÇÃO
 function interationSystemDestination(){
     const btnInitregisterDestination = document.querySelector('.registerDestination')
     if(btnInitregisterDestination){
@@ -105,8 +106,8 @@ function interationSystemDestination(){
                 listDestinationDescart.classList.remove('flex')
                 listDestinationDescart.classList.add('hidden')
              }
-        }) 
-    }
+        });
+    };
 
     const buttonExitDestination = document.getElementById('buttonExitDestination')
          if(buttonExitDestination){
@@ -116,8 +117,8 @@ function interationSystemDestination(){
                     containerAppDestination.classList.remove('flex')
                     containerAppDestination.classList.add('hidden')
                  }        
-          })
-       }
+          });
+       };
     
     const buttonExitPageRegister = document.querySelector('.btnOutInitDestination')
      if(buttonExitPageRegister){
@@ -163,17 +164,18 @@ function interationSystemDestination(){
                containerFormEditDestination.classList.add('hidden')
              }
 
-        })
-     }
+        });
+     };
 
      const btnSubmitEdit = document.querySelector('.btnSubmitEditDestination')
      if(btnSubmitEdit){
        btnSubmitEdit.addEventListener('click' , ()=>{
           editAndUpdateDestination()
        })
-     }
+     };
 };
 
+//CADASTRAR DESTINO
 function registerDestination(){
   const btnSubmitDestination =  document.querySelector('.btnRegisterDestination')
      if(btnSubmitDestination){
@@ -213,13 +215,13 @@ function registerDestination(){
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
             }).showToast();
             document.querySelector("#formRegisterDestination").reset()
          }else {
-          // 👇 aqui tratamos erros de validação do express-validator
+        
           if (result?.errors && Array.isArray(result.errors)) {
-            // junta todas as mensagens em uma string
+          
             const mensagens = result.errors
               .map((err) => `• ${err.msg}`)
               .join("\n");
@@ -230,20 +232,19 @@ function registerDestination(){
               close: true,
               gravity: "top",
               position: "center",
-              backgroundColor: "red",
+              backgroundColor: "#f44336",
             }).showToast();
           } else {
-            // 👇 caso seja outro tipo de erro
             Toastify({
               text: result?.message || "Erro ao cadastrar destino.",
               duration: 3000,
               close: true,
               gravity: "top",
               position: "center",
-              backgroundColor: response.status === 409 ? "orange" : "red",
+              backgroundColor: response.status === 409 ? "orange" : "#f44336",
             }).showToast();
-          }
-        }
+          };
+        };
 
            } catch (error) {
             console.log('Erro no server' , error)
@@ -292,7 +293,7 @@ async function getAllDestinationDescarte() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
 
       document.querySelector(".listDestinationDescart").innerHTML =
@@ -474,7 +475,7 @@ function deleteDestination() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "#1d5e1d",
         }).showToast();
 
         destinoRow.remove();
@@ -485,7 +486,7 @@ function deleteDestination() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
       }
     } catch (error) {
@@ -496,7 +497,7 @@ function deleteDestination() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
     };
   };
@@ -519,7 +520,7 @@ function deleteDestination() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
        }).showToast();
        return;
      }
@@ -593,7 +594,7 @@ function deleteDestination() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
        }).showToast();
       }
      
@@ -601,7 +602,7 @@ function deleteDestination() {
  };
 };
 
-
+//EDITAR
 async function editAndUpdateDestination() {
 
   const form = document.getElementById("formEditDestination");
@@ -641,32 +642,37 @@ async function editAndUpdateDestination() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "#1d5e1d",
         }).showToast();
 
         form.reset();
         form.removeAttribute("data-destination-id");
         document.querySelector(".containerFormEditDestination").style.display = "none";
 
-        // Aqui você pode recarregar a lista se tiver uma função para isso
-        // ex: carregarDestinos();
-
       } else {
         const error = await response.json();
+         Toastify({
+          text: `${error.message}` || "Errp ao atualizar destino",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "#f44336",
+        }).showToast();
         throw new Error(error.message || "Erro ao atualizar destino");
       }
 
     } catch (error) {
       console.error("Erro na atualização:", error);
       Toastify({
-        text: "Erro ao atualizar destino",
+        text: "Erro no server para atualizar destino",
         duration: 3000,
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
-    }
+    };
 };
 
 

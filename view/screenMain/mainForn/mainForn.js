@@ -233,12 +233,11 @@ function interationSystemForne() {
   });
 }
 
+// CADASTRAR FORNECEDOR
 function registerNewFornecedor() {
 
  dateAtualInField("fornDtcd")
-  document
-    .querySelector(".btnRegisterforn")
-    .addEventListener("click", async (event) => {
+  document.querySelector(".btnRegisterforn").addEventListener("click", async (event) => {
       event.preventDefault();
 
       const token = localStorage.getItem("token");
@@ -264,13 +263,9 @@ function registerNewFornecedor() {
         return;
       }
 
-      const cepforne = document
-        .querySelector("#fornCep")
-        .value.replace(/\D/g, "");
+      const cepforne = document.querySelector("#fornCep").value.replace(/\D/g, "");
       try {
-        const response = await fetch(
-          `https://viacep.com.br/ws/${cepforne}/json/`
-        );
+        const response = await fetch(`https://viacep.com.br/ws/${cepforne}/json/`);
 
         if (!response.ok) {
           throw new Error("Erro ao buscar o CEP.");
@@ -285,12 +280,11 @@ function registerNewFornecedor() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
           return;
         }
 
-        // Preenchendo os campos do formulário
         const ruaField = document.getElementById("fornRua");
         const cityField = document.getElementById("fornCity");
         const stateField = document.getElementById("fornEstd");
@@ -315,7 +309,7 @@ function registerNewFornecedor() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
         return;
       }
@@ -348,7 +342,7 @@ function registerNewFornecedor() {
           duration: 3000,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
         return;
       }
@@ -372,13 +366,13 @@ function registerNewFornecedor() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
 
           document.querySelector("#registerForn").reset();
           dateAtualInField("fornDtcd")
         } else {
-    // 👇 aqui tratamos erros de validação do express-validator
+  
          if (result?.errors && Array.isArray(result.errors)) {
             const mensagens = result.errors
               .map((err) => `• ${err.message || err.msg}`)
@@ -390,20 +384,20 @@ function registerNewFornecedor() {
               close: true,
               gravity: "top",
               position: "center",
-              backgroundColor: "red",
+              backgroundColor: "#f44336",
             }).showToast();
           } else {
-      // 👇 caso seja outro tipo de erro
+
          Toastify({
           text: result?.message || "Erro ao cadastrar fornecedor.",
           duration: 3000,
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: response.status === 409 ? "orange" : "red",
+          backgroundColor: response.status === 409 ? "orange" : "#f44336",
           }).showToast();
        }
-  }
+  };
       } catch (error) {
         console.error("Erro ao enviar formulário:", error);
        Toastify({
@@ -412,12 +406,12 @@ function registerNewFornecedor() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
       }
     });
   validationFormForne();
-}
+};
 
 // BUSCAR O FORNECEDOR
 async function searchFornecedorForId() {
@@ -442,14 +436,13 @@ async function searchFornecedorForId() {
      })
   }
 
-  // Cria o botão limpar filtro e adiciona antes da lista, se não existir
   let btnClearFilter = document.getElementById('btnClearFilter');
   if (!btnClearFilter) {
     btnClearFilter = document.createElement('button');
     btnClearFilter.id = 'btnClearFilter';
     btnClearFilter.textContent = 'Limpar filtro';
     btnClearFilter.className = 'btn btn-secondary w-25 aling align-items: center;';
-    btnClearFilter.style.display = 'none'; // fica oculto até uma busca ser feita
+    btnClearFilter.style.display = 'none'; 
     forneListDiv.parentNode.insertBefore(btnClearFilter, forneListDiv);
 
     btnClearFilter.addEventListener('click', () => {
@@ -461,7 +454,7 @@ async function searchFornecedorForId() {
     
      fetchListFornecedores();
     });
-  }
+  };
 
   const btnSearchFornecedor = document.querySelector('.submitSearchForne');
   if (btnSearchFornecedor) {
@@ -479,7 +472,7 @@ async function searchFornecedorForId() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
        }).showToast();
       return;
     }
@@ -519,14 +512,13 @@ async function searchFornecedorForId() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "#1d5e1d",
           }).showToast();
-          // Exibe botão limpar filtro
+         
           btnClearFilter.style.display = 'inline-block';
-          // Atualiza a tabela com os bens filtrados
+          
          renderFornecedorTable(data.fornecedor);
 
-          // Fecha o pop-up após a busca (opcional)
           if (popUpSearch) popUpSearch.style.display = 'none';
           if(backdrop)backdrop.style.display = 'none'
 
@@ -537,7 +529,7 @@ async function searchFornecedorForId() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
           }).showToast();
         }
       } catch (error) {
@@ -548,14 +540,14 @@ async function searchFornecedorForId() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
           }).showToast();
       }
     });
   };
 };
 
-// tabela padão
+// tabela padrão
 function renderFornecedorTable(fornecedores) {
   const fornecedoresListDiv = document.querySelector(".listingForn");
   fornecedoresListDiv.innerHTML = "";
@@ -647,9 +639,9 @@ function renderFornecedorTable(fornecedores) {
 
   wrapper.appendChild(tabela);
   fornecedoresListDiv.appendChild(wrapper);
-}
+};
 
-// lista de fornecedor
+// listagem de fornecedor
 async function fetchListFornecedores() {
   const token = localStorage.getItem("token");
 
@@ -660,7 +652,7 @@ async function fetchListFornecedores() {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
 
     localStorage.removeItem("token");
@@ -687,7 +679,7 @@ async function fetchListFornecedores() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
 
       document.querySelector(".listingForn").innerHTML =
@@ -808,12 +800,12 @@ async function fetchListFornecedores() {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
     document.querySelector(".listingForn").innerHTML =
       "<p>Erro ao carregar fornecedores.</p>";
-  }
-}
+  };
+};
 
 
 // deletar fornecedor
@@ -830,7 +822,7 @@ function deleteFornecedor() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -850,6 +842,7 @@ function deleteFornecedor() {
     await deleteForne(fornecedorId, selectedCheckbox.closest("tr"));
   });
 
+  //delete
   async function deleteForne(id, fornRow) {
     const token = localStorage.getItem("token");
 
@@ -886,7 +879,7 @@ function deleteFornecedor() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "#1d5e1d",
         }).showToast();
 
         fornRow.remove();
@@ -907,10 +900,10 @@ function deleteFornecedor() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
         }
-      }
+      };
     } catch (error) {
       Toastify({
         text: "Erro ao excluir Fornecedor. Tente novamente.",
@@ -918,14 +911,15 @@ function deleteFornecedor() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
-    }
-  }
-}
+    };
+  };
+};
 
+// editar fornecedor
 function editFornecedor() {
-  // atualização
+
   const editButtonForn = document.querySelector(".buttonEditForn");
 
   editButtonForn.addEventListener("click", (e) => {
@@ -941,7 +935,7 @@ function editFornecedor() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -997,7 +991,7 @@ function editFornecedor() {
         const elemento = document.getElementById(id);
         if (elemento) {
           if (elemento.type === "date" && valor) {
-            // Formata a data para YYYY-MM-DD, caso seja necessário
+        
             const dataFormatada = new Date(valor).toISOString().split("T")[0];
             elemento.value = dataFormatada;
           } else {
@@ -1025,12 +1019,9 @@ function editFornecedor() {
     cepInput.addEventListener("input", async () => {
       const fornCep = cepInput.value.replace(/\D/g, "");
 
-      // Só executa a busca se tiver 8 dígitos
       if (fornCep.length === 8) {
         try {
-          const response = await fetch(
-            `https://viacep.com.br/ws/${fornCep}/json/`
-          );
+          const response = await fetch(`https://viacep.com.br/ws/${fornCep}/json/`);
 
           if (!response.ok) throw new Error("Erro ao buscar o CEP");
 
@@ -1043,7 +1034,7 @@ function editFornecedor() {
               close: true,
               gravity: "top",
               position: "center",
-              backgroundColor: "red",
+              backgroundColor: "#f44336",
             }).showToast();
 
             if (ruaField) ruaField.value = "";
@@ -1074,16 +1065,16 @@ function editFornecedor() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
-        }
+        };
       } else {
         if (ruaField) ruaField.value = "";
         if (cityField) cityField.value = "";
         if (stateField) stateField.value = "";
       }
     });
-  }
+  };
 
   // função ENVIA O DADO ATUALIZADO
   async function editAndUpdateOfForn() {
@@ -1138,7 +1129,7 @@ function editFornecedor() {
         fornptsv: document.getElementById("editFornDisPro").value,
       };
 
-      const token = localStorage.getItem("token"); // Pega o token armazenado no login
+      const token = localStorage.getItem("token"); 
 
       if (!token || isTokenExpired(token)) {
         Toastify({
@@ -1179,7 +1170,7 @@ function editFornecedor() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
 
           formEditForn.reset();
@@ -1192,7 +1183,7 @@ function editFornecedor() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
 
         }
@@ -1204,12 +1195,12 @@ function editFornecedor() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
       }
     });
   }
   editAndUpdateOfForn();
-}
+};
 
 

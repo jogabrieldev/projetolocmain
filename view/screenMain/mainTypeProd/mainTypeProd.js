@@ -65,12 +65,17 @@ document.addEventListener('DOMContentLoaded' , ()=>{
   
                   await fetchListTypeProduct();
                  } catch (error) {
-                  
-                 }
-                 
-                
-          })
-       }
+                  Toastify({
+                  text: `Erro na pagina`,
+                  duration: 3000,
+                  close: true,
+                  gravity: "top",
+                  position: "center",
+                  backgroundColor: "red",
+                  }).showToast();
+               }  
+          });
+       };
        socketTypeProd.on("updateRunTimeTypeProduto", (tipoProduto) => {
         fetchListTypeProduct();
       });
@@ -78,12 +83,11 @@ document.addEventListener('DOMContentLoaded' , ()=>{
       socketTypeProd.on("updateRunTimeTableTypeProduto", (updatedTypeProduct) => {
         fetchListTypeProduct();
       });
-})
+});
 
-
+//INTERAÇÃO
 function interationSystemTypeProduct(){
-
-       
+  
 const btnRegisterTp = document.querySelector(".registerTipoProd");
 if(btnRegisterTp){
   btnRegisterTp.addEventListener("click", () => {
@@ -106,9 +110,7 @@ if(btnRegisterTp){
     }
   
   });
-
-}
-
+};
 
 const btnOutInitTp = document.querySelector(".btnOutInitTp");
 if(btnOutInitTp){
@@ -134,8 +136,7 @@ if(btnOutInitTp){
     }
     
   });
-}
-
+};
 
 const btnExitSectionTypeProd = document.getElementById("buttonExitTipoProd");
 if(btnExitSectionTypeProd){
@@ -155,7 +156,7 @@ if(btnExitSectionTypeProd){
             }
   });
   
-}
+};
 
 const btnOutInitTpEdit = document.querySelector(".btnOutInitTpEdit");
 if(btnOutInitTpEdit){
@@ -182,10 +183,10 @@ if(btnOutInitTpEdit){
     }
     
   });
-
- }
+ };
 };
 
+// REGISTRAR TIPO DE PRODUTO
 function registerNewTypeProduct(){
        
     document.querySelector(".cadTp").addEventListener("click", async (event) => {
@@ -213,7 +214,6 @@ function registerNewTypeProduct(){
       return;
     }
 
-    // Captura os valores do formulário
     const formData = {
       tpCode: document.querySelector("#tpCode").value.trim(), // Código
       tpDesc: document.querySelector("#tpDesc").value.trim(), // Descrição
@@ -244,10 +244,9 @@ function registerNewTypeProduct(){
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "#1d5e1d",
         }).showToast();
 
-        // Limpar o formulário após o sucesso
         document.querySelector(".formRegisterTipoProdu").reset();
 
       } else if(response.status === 409) {
@@ -267,9 +266,9 @@ function registerNewTypeProduct(){
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
-      }
+      };
     } catch (error) {
       console.error("Erro ao enviar formulário:", error);
       Toastify({
@@ -278,12 +277,12 @@ function registerNewTypeProduct(){
        close: true,
        gravity: "top",
        position: "center",
-       backgroundColor: "red",
+       backgroundColor: "#f44336",
       }).showToast();
     }
   });
   validationFormTipoProd();
-}
+};
 
 // listagem tipo de produto
 async function fetchListTypeProduct() {
@@ -317,7 +316,7 @@ async function fetchListTypeProduct() {
 
     const tipoProduto = await response.json();
     const tableWrapper = document.querySelector('.listingTipoProd');
-    tableWrapper.innerHTML = ""; // Limpa antes de adicionar a tabela
+    tableWrapper.innerHTML = ""; 
 
     if (tipoProduto.length > 0) {
       const wrapper = document.createElement("div");
@@ -406,11 +405,10 @@ async function fetchListTypeProduct() {
     console.error("Erro ao carregar tipos de produto:", error);
     document.querySelector(".listingTipoProd").innerHTML =
       "<p>Erro ao carregar tipo de produto.</p>";
-  }
-}
+  };
+};
 
 // pesquisar por tipo de produto
-
 async function searchTypeProduct(){
       
   const btnTypeProdSearch = document.getElementById('searchTypeProd');
@@ -439,7 +437,7 @@ async function searchTypeProduct(){
     btnClearFilter.id = 'btnClearFilter';
     btnClearFilter.textContent = 'Limpar filtro';
     btnClearFilter.className = 'btn btn-secondary w-25 aling align-items: center;';
-    btnClearFilter.style.display = 'none'; // fica oculto até uma busca ser feita
+    btnClearFilter.style.display = 'none';
     typeProdListDiv.parentNode.insertBefore(btnClearFilter, typeProdListDiv);
 
     btnClearFilter.addEventListener('click', () => {
@@ -449,7 +447,7 @@ async function searchTypeProduct(){
       document.getElementById('codeTypeProduct').value = '';
        fetchListTypeProduct();
     });
-  }
+  };
 
  const btnSearchTypeProd = document.querySelector('.submitSearchTypeProduct');
   if (btnSearchTypeProd) {
@@ -464,7 +462,7 @@ async function searchTypeProduct(){
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
        }).showToast();
       return;
     }
@@ -491,14 +489,13 @@ async function searchTypeProduct(){
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "#1d5e1d",
           }).showToast();
       
           btnClearFilter.style.display = 'inline-block';
-          // Atualiza a tabela com os bens filtrados
+         
           renderTypeProdTable(data.typeProduct);
 
-          // Fecha o pop-up após a busca (opcional)
           if (popUpSearch) popUpSearch.style.display = 'none';
           if(backdrop)backdrop.style.display = 'none'
 
@@ -509,7 +506,7 @@ async function searchTypeProduct(){
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
           }).showToast();
         }
       } catch (error) {
@@ -520,7 +517,7 @@ async function searchTypeProduct(){
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
           }).showToast();
       }
     });
@@ -531,7 +528,7 @@ async function searchTypeProduct(){
 
 function renderTypeProdTable(tipoProduto) {
   const tableWrapper = document.querySelector(".listingTipoProd");
-  tableWrapper.innerHTML = ""; // Limpa antes de adicionar a nova tabela
+  tableWrapper.innerHTML = ""; 
 
   if (tipoProduto.length === 0) {
     tableWrapper.innerHTML = "<p class='text-light'>Nenhum tipo de produto cadastrado.</p>";
@@ -632,7 +629,7 @@ btnDeleteTypeProd.addEventListener("click", async () => {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
     return;
   }
@@ -649,7 +646,7 @@ btnDeleteTypeProd.addEventListener("click", async () => {
 
   await deleteTypeProd(tyoeProdutoId, selectedCheckbox.closest("tr"));
 });
-
+//DELETE
 async function deleteTypeProd(id, rowProd) {
   const token = localStorage.getItem("token"); 
 
@@ -687,14 +684,14 @@ async function deleteTypeProd(id, rowProd) {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "green",
+        backgroundColor: "#1d5e1d",
       }).showToast();
 
       rowProd.remove();
     } else {
       if (response.status === 400) {
         Toastify({
-          text: data.message, // Mensagem retornada do backend
+          text: data.message,
           duration: 3000,
           close: true,
           gravity: "top",
@@ -708,10 +705,10 @@ async function deleteTypeProd(id, rowProd) {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
-      }
-    }
+      };
+    };
   } catch (error) {
     console.error("Erro ao excluir produto:", error);
     Toastify({
@@ -720,13 +717,13 @@ async function deleteTypeProd(id, rowProd) {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
-  }
-}
-}
+  };
+ };
+};
 
-  
+//EDITAR TIPO DE PRODUTO
 function EditTypeProduct(){
 
      const btnEditTp = document.querySelector(".buttonEditTipoProd");
@@ -742,10 +739,10 @@ btnEditTp.addEventListener("click", () => {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
     return;
-  }
+  };
      
   const btnMainPageFamiliGoods = document.querySelector(".btnMainPageTipoProd");
   if(btnMainPageFamiliGoods){
@@ -774,7 +771,6 @@ btnEditTp.addEventListener("click", () => {
   try {
     const typeProdutoSelecionado = JSON.parse(typeProdutoData);
 
-    // Campos e IDs correspondentes
     const campos = [
       { id: "editTpCode", valor: typeProdutoSelecionado.tiprcode },
       { id: "editTpDesc", valor: typeProdutoSelecionado.tiprdesc },
@@ -784,7 +780,6 @@ btnEditTp.addEventListener("click", () => {
       { id: "editTpCtct", valor: typeProdutoSelecionado.tiprctct },
     ];
 
-    // Atualizar valores no formulário
     campos.forEach(({ id, valor }) => {
       const elemento = document.getElementById(id);
       if (elemento) {
@@ -815,7 +810,7 @@ btnEditTp.addEventListener("click", () => {
     }
   } catch (error) {
     console.error("Erro ao fazer parse de data-bem:", error);
-  }
+  };
  });
 // //atualização
 async function editAndUpdateOfTypeProduct() {
@@ -860,13 +855,12 @@ async function editAndUpdateOfTypeProduct() {
       tiprctct: document.getElementById("editTpCtct").value,
     };
 
-    const token = localStorage.getItem("token"); // Pega o token armazenado no login
+    const token = localStorage.getItem("token"); 
 
     try {
-      const confirmedEdition = confirm(
-        `Tem certeza de que deseja ATUALIZAR os dados desse Tipo de produto?`
-        );
-          if (!confirmedEdition) return;
+      const confirmedEdition = confirm(`Tem certeza de que deseja ATUALIZAR os dados desse Tipo de produto?`);
+      if (!confirmedEdition) return;
+
       const response = await fetch(`/api/updatetypeprod/${typeProdIdParsed}`, {
         method: "PUT",
         headers: {
@@ -876,30 +870,45 @@ async function editAndUpdateOfTypeProduct() {
         body: JSON.stringify(updateTypeProduct),
       });
 
-      console.log("resposta:", response);
-
       if (response.ok) {
-        console.log("Atualização bem-sucedida");
-
+    
         Toastify({
           text: `Bem '${typeProdIdParsed}' Atualizado com sucesso!!`,
           duration: 3000,
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "#1d5e1d",
         }).showToast();
 
         formEditProd.reset();
       } else {
-        console.error("Erro ao atualizar produto:", await response.text());
+         const errorMessage =  await response.json()
+
+        Toastify({
+          text: `${errorMessage}`|| `Erro para atualizar o tipo de produto`,
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "#f44336",
+        }).showToast();
       }
     } catch (error) {
-      console.error("Erro na requisição:", error);
+      console.error("Erro no server para atualizar tipo de produto:", error);
+
+       Toastify({
+          text: "Erro no server para atualizar tipo de produto",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "#f44336",
+        }).showToast();
     }
   });
 };
-editAndUpdateOfTypeProduct();
+ editAndUpdateOfTypeProduct();
 };
 
 
