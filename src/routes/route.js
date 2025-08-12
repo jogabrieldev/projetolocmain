@@ -310,6 +310,7 @@ route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
  route.get('/api/location/:locacaoId', authenticateToken, (req, res) => {
   location.buscarLocacaoPorId(req, res);
 });
+
  route.get('/api/codefamilybens', authenticateToken,(req , res)=>{
    location.listarFamilias(req,res)
  });
@@ -350,6 +351,10 @@ route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
 
 route.get("/api/contrato/:id",(req , res)=>{
   logistcgController.getAll(req ,res)
+});
+
+route.get("/api/searchlocation/search" , authenticateToken, (req ,res)=>{
+  logistcgController.searchLocationForParams(req ,res)
 });
 
 route.put("/api/contrato/:id" , (req ,res)=>{

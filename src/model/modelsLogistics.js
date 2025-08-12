@@ -22,6 +22,34 @@ class logistcsModel  {
      }
     }
 
+    async searchLocationForParams(lofiidlo, lofistat, lofiidcl) {
+    try {
+      let query = "SELECT * FROM locafim WHERE 1=1";
+      const values = [];
+
+      if (lofiidlo) {
+        values.push(lofiidlo.trim());
+        query += ` AND lofiidlo = $${values.length}`;
+      }
+
+      if (lofistat) {
+        values.push(lofistat.trim());
+        query += ` AND lofistat ILIKE $${values.length}`;
+      }
+
+      if (lofiidcl) {
+        values.push(lofiidcl.trim());
+        query += ` AND cliecnpj ILIKE $${values.length}`;
+      }
+
+      const result = await client.query(query, values);
+      return result.rows; // retorna array, mesmo que só 1 bem
+    } catch (error) {
+      console.error("Erro ao buscar o cliente por filtros:", error.message);
+      throw error;
+    }
+  }
+
 async getContratosPorLocacao(belocode) {
        const query = `
         SELECT belocontr

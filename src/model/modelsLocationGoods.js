@@ -216,9 +216,9 @@ ORDER BY c.clloid;`
 } catch (error) {
   console.error("Erro ao buscar locações de bens:", error);
   throw error;
-}
+ }
 
- },
+},
 
   async buscarLocationPorId(id) {
     const query = `SELECT * FROM clieloc WHERE cllonmlo = $1`;

@@ -81,6 +81,28 @@ class logistcgController {
   }
    };
 
+   async searchLocationForParams(req ,res){
+   
+       const {lofiidlo, lofistat, lofiidcl} =req.query
+         
+        try {
+           if (!lofiidlo && !lofistat && !lofiidcl) {
+            return res.status(400).json({ message: "Dados da locação são obrigatorio para pesquisa." });
+         }
+          
+         const resultLocation = await logistcsModel.searchLocationForParams(lofiidcl,lofistat,lofiidcl)
+         console.log(resultLocation)
+          if(!resultLocation){
+           return res.status(404).json({message:"Não foi encontrado nenhuma locação com essa pesquisa! verifique"})
+          }
+          
+         return res.status(200).json({success:true , resultLocation});
+        } catch (error) {
+            console.error("Erro ao pesquisar por locação:", error);
+           return res.status(500).json({ message: "Erro ao pesquisar por locação" , success:false });
+         }
+   }
+
    async updateContratoWithGoods(req ,res){
       try {
         const {id} = req.params;

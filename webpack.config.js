@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 export default  {
   entry: {
     login: path.resolve(__dirname, "view", "login.js"),
-   main: path.resolve(__dirname, "view", "screenMain", "main.js"), // Arquivo principal do frontend
+    main: path.resolve(__dirname, "view", "screenMain", "main.js"), // Arquivo principal do frontend
   },
   
   output: {

@@ -3,15 +3,15 @@ function mostrarElemento(el) {
   if (el) {
     el.classList.remove("hidden");
     el.classList.add("flex");
-  }
-}
+  };
+};
 
 function esconderElemento(el) {
   if (el) {
     el.classList.remove("flex");
     el.classList.add("hidden");
-  }
-}
+  };
+};
 
 function maskFieldClientPageLocation() {
   $("#clieCepLoc").mask("00000-000");
@@ -19,7 +19,7 @@ function maskFieldClientPageLocation() {
   $("#clieCeluLoc").mask("(00) 00000-0000");
   $("#cnpjClientLoc").mask("00.000.000/0000-00");
   $("#cpfClientLoc").mask("000.000.000-00");
-}
+};
 
 async function obterNumeroLocacao() {
   try {
@@ -29,15 +29,15 @@ async function obterNumeroLocacao() {
 
     if (!response.ok) {
       throw new Error("Erro ao obter número de locação do servidor.");
-    }
+    };
 
     const data = await response.json();
     return data.numericLocation;
   } catch (error) {
     console.error("Erro ao gerar número de locação:", error);
     throw error;
-  }
-}
+  };
+};
 
 function atualizarData(date) {
   const agora = new Date();
@@ -49,7 +49,7 @@ function atualizarData(date) {
   const dataHoraFormatada = `${ano}-${mes}-${dia}`;
 
   document.getElementById(date).value = dataHoraFormatada;
-}
+};
 
 async function preencheraResiduo(id) {
   const fieldResi = document.getElementById(id);
@@ -75,8 +75,8 @@ async function preencheraResiduo(id) {
   } catch (error) {
     console.error("Erro na function AUXILIAR resi", error);
     return false;
-  }
-}
+  };
+};
 
 async function preencherFieldLocalDescarte(id) {
   try {
@@ -102,8 +102,8 @@ async function preencherFieldLocalDescarte(id) {
   } catch (error) {
     console.error("Erro ao preencher o campo de local de descarte", error);
     return false;
-  }
-}
+  };
+};
 
 // VERIFICA SE OS CAMPOS DOS CLIENTES ESTA OK
 function verificarPreenchimentoCliente() {
@@ -121,12 +121,11 @@ function verificarPreenchimentoCliente() {
     const input = document.getElementById(id);
     return input && input.value.trim() !== "";
   });
-}
+};
 
 function readOnlyFieldChange() {
-  document
-    .getElementById("clieTiCliLoc")
-    .addEventListener("change", function () {
+
+  document.getElementById("clieTiCliLoc").addEventListener("change", function () {
       const tipoCliente = this.value;
       const cpfField = document.getElementById("cpfClientLoc");
       const cnpjField = document.getElementById("cnpjClientLoc");
@@ -144,7 +143,7 @@ function readOnlyFieldChange() {
         cnpjField.readOnly = false;
       }
     });
-}
+};
 
 async function buscarLocalDescarte(id) {
   try {
@@ -163,8 +162,8 @@ async function buscarLocalDescarte(id) {
   } catch (error) {
     console.error("Erro ao buscar local de descarte", error);
     return null;
-  }
-}
+  };
+};
 
 const socketContainerLocation = io();
 
@@ -279,9 +278,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }).showToast();
       }
     });
-  }
-
- 
+  };
 
   socketContainerLocation.on("updateRunTimeFamilyBens", (updatedFamily) => {
     carregarFamilias();
@@ -300,147 +297,145 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-function renderTable(data) {
+// function renderTable(data) {
 
-  const tableDiv = document.querySelector(".tableLocation");
-;
+//   const tableDiv = document.querySelector(".tableLocation");
 
-  const container = document.createElement("div");
-  container.style.display = "flex";
-  container.style.justifyContent = "space-between";
-  container.style.alignItems = "center";
-  container.style.marginBottom = "10px";
+//   const container = document.createElement("div");
+//   container.style.display = "flex";
+//   container.style.justifyContent = "space-between";
+//   container.style.alignItems = "center";
+//   container.style.marginBottom = "10px";
 
-  const title = document.createElement("h2");
-  title.textContent = "Locaçaõ de Bens";
-  title.style.margin = "0";
-  title.style.alignItems = "center"
+//   const title = document.createElement("h2");
+//   title.textContent = "Locaçaõ de Bens";
+//   title.style.margin = "0";
+//   title.style.alignItems = "center"
 
-  const messageFilter = document.createElement("span");
-  messageFilter.id = "messsageFilter";
-  messageFilter.style.display = "none";
+//   const messageFilter = document.createElement("span");
+//   messageFilter.id = "messsageFilter";
+//   messageFilter.style.display = "none";
 
-  const resetFilterBtn = document.createElement("button");
-  resetFilterBtn.id = "resetFilterBtn";
-  resetFilterBtn.style.display = "none";
-  resetFilterBtn.textContent = "Remover Filtro";
+//   const resetFilterBtn = document.createElement("button");
+//   resetFilterBtn.id = "resetFilterBtn";
+//   resetFilterBtn.style.display = "none";
+//   resetFilterBtn.textContent = "Remover Filtro";
 
-  container.appendChild(title);
-  container.appendChild(messageFilter);
-  container.appendChild(resetFilterBtn);
-  // container.appendChild(searchBtn);
+//   container.appendChild(title);
+//   container.appendChild(messageFilter);
+//   container.appendChild(resetFilterBtn);
 
-  tableDiv.appendChild(container);
+//   tableDiv.appendChild(container);
 
-  const table = document.createElement("table");
-  table.classList.add("tableLocationAll");
+//   const table = document.createElement("table");
+//   table.classList.add("tableLocationAll");
 
-  const thead = document.createElement("thead");
-  const headerRow = document.createElement("tr");
+//   const thead = document.createElement("thead");
+//   const headerRow = document.createElement("tr");
 
-  const headers = [
-    "Selecionar",
-    "Número de Locação",
-    "Status",
-    "Nome do Cliente",
-    "Data da Locação",
-    "Data de Devolução",
-    "Forma de Pagamento",
-    "Familia do bem",
-    "Descrição",
-    "Quantidade",
-    "Observação",
-    "Data Início",
-    "Data Final",
-    "Visualizar"
-  ];
+//   const headers = [
+//     "Selecionar",
+//     "Número de Locação",
+//     "Status",
+//     "Nome do Cliente",
+//     "Data da Locação",
+//     "Data de Devolução",
+//     "Forma de Pagamento",
+//     "Familia do bem",
+//     "Descrição",
+//     "Quantidade",
+//     "Observação",
+//     "Data Início",
+//     "Data Final",
+//     "Visualizar"
+//   ];
 
-  headers.forEach((text) => {
-    const th = document.createElement("th");
-    th.textContent = text;
-    headerRow.appendChild(th);
-  });
+//   headers.forEach((text) => {
+//     const th = document.createElement("th");
+//     th.textContent = text;
+//     headerRow.appendChild(th);
+//   });
 
-  thead.appendChild(headerRow);
-  table.appendChild(thead);
+//   thead.appendChild(headerRow);
+//   table.appendChild(thead);
 
-  const tbody = document.createElement("tbody");
+//   const tbody = document.createElement("tbody");
 
-  data.forEach((locacao) => {
-    const row = document.createElement("tr");
+//   data.forEach((locacao) => {
+//     const row = document.createElement("tr");
 
-    const checkboxTd = document.createElement("td");
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.classList.add("locacao-checkbox");
-    checkbox.value = JSON.stringify(locacao);
-    checkboxTd.appendChild(checkbox);
-    row.appendChild(checkboxTd);
+//     const checkboxTd = document.createElement("td");
+//     const checkbox = document.createElement("input");
+//     checkbox.type = "checkbox";
+//     checkbox.classList.add("locacao-checkbox");
+//     checkbox.value = JSON.stringify(locacao);
+//     checkboxTd.appendChild(checkbox);
+//     row.appendChild(checkboxTd);
   
 
-    [
-      "numeroLocacao",
-      "status",
-      "nomeCliente",
-      "dataLocacao",
-      "dataDevolucao",
-      "formaPagamento",
-      "codigoBem",
-      "produto",
-      "quantidade",
-      "observacao",
-      "dataInicio",
-      "dataFim",
-    ].forEach((key) => {
-      const td = document.createElement("td");
-      td.textContent = locacao[key];
-      row.appendChild(td);
-    });
+//     [
+//       "numeroLocacao",
+//       "status",
+//       "nomeCliente",
+//       "dataLocacao",
+//       "dataDevolucao",
+//       "formaPagamento",
+//       "codigoBem",
+//       "produto",
+//       "quantidade",
+//       "observacao",
+//       "dataInicio",
+//       "dataFim",
+//     ].forEach((key) => {
+//       const td = document.createElement("td");
+//       td.textContent = locacao[key];
+//       row.appendChild(td);
+//     });
 
-     const visualizarTd = document.createElement("td");
-    const visualizarBtn = document.createElement("button");
-    visualizarBtn.classList.add("btn", "btn-sm", "btn-success");
-    visualizarBtn.textContent = "Visualizar";
-    if(visualizarBtn){
-       visualizarBtn.addEventListener("click", () => {
-      showContratoLocationGoods(locacao)
+//      const visualizarTd = document.createElement("td");
+//     const visualizarBtn = document.createElement("button");
+//     visualizarBtn.classList.add("btn", "btn-sm", "btn-success");
+//     visualizarBtn.textContent = "Visualizar";
+//     if(visualizarBtn){
+//        visualizarBtn.addEventListener("click", () => {
+//       showContratoLocationGoods(locacao)
      
-       });
-    }
-    visualizarTd.appendChild(visualizarBtn);
-  row.appendChild(visualizarTd);
+//        });
+//     }
+//     visualizarTd.appendChild(visualizarBtn);
+//    row.appendChild(visualizarTd);
 
-    tbody.appendChild(row);
-  });
+//     tbody.appendChild(row);
+//   });
 
-  if (data.length === 0) {
-    const emptyRow = document.createElement("tr");
-    const emptyTd = document.createElement("td");
-    emptyTd.colSpan = "14";
-    emptyTd.style.textAlign = "center";
-    emptyTd.textContent = "Nenhuma locação encontrada.";
-    emptyRow.appendChild(emptyTd);
-    tbody.appendChild(emptyRow);
-  }
+//   if (data.length === 0) {
+//     const emptyRow = document.createElement("tr");
+//     const emptyTd = document.createElement("td");
+//     emptyTd.colSpan = "14";
+//     emptyTd.style.textAlign = "center";
+//     emptyTd.textContent = "Nenhuma locação encontrada.";
+//     emptyRow.appendChild(emptyTd);
+//     tbody.appendChild(emptyRow);
+//   };
 
 
-  table.appendChild(tbody);
-  tableDiv.appendChild(table);
+//   table.appendChild(tbody);
+//   tableDiv.appendChild(table);
 
-  const checkboxes = document.querySelectorAll(".locacao-checkbox");
-  checkboxes.forEach((checkbox) => {
-    checkbox.addEventListener("change", (event) => {
-      const locacaoData = JSON.parse(event.target.value);
-      const isChecked = event.target.checked;
+//   const checkboxes = document.querySelectorAll(".locacao-checkbox");
+//   checkboxes.forEach((checkbox) => {
+//     checkbox.addEventListener("change", (event) => {
+//       const locacaoData = JSON.parse(event.target.value);
+//       const isChecked = event.target.checked;
 
-      document.querySelectorAll(".locacao-checkbox").forEach((cb) => {
-        if (JSON.parse(cb.value).numeroLocacao === locacaoData.numeroLocacao) {
-          cb.checked = isChecked;
-        }
-      });
-    });
-  });
-}
+//       document.querySelectorAll(".locacao-checkbox").forEach((cb) => {
+//         if (JSON.parse(cb.value).numeroLocacao === locacaoData.numeroLocacao) {
+//           cb.checked = isChecked;
+//         }
+//       });
+//     });
+//   });
+// };
 
 
 function interationSystemLocation() {
@@ -459,11 +454,9 @@ function interationSystemLocation() {
         continformation.textContent = "Sessão ativa";
       }
     });
-  }
+  };
 
-  const outPageSearchLocation = document.querySelector(
-    ".outPageSearchLocation"
-  );
+  const outPageSearchLocation = document.querySelector(".outPageSearchLocation");
   if (outPageSearchLocation) {
     outPageSearchLocation.addEventListener("click", () => {
       const containerSearch = document.querySelector(".searchLocation");
@@ -480,7 +473,7 @@ function interationSystemLocation() {
         mostrarElemento(containerAppLocation);
       }
     });
-  }
+  };
 
   const btnSearchLoc = document.querySelector(".searchloc");
   if (btnSearchLoc) {
@@ -492,7 +485,7 @@ function interationSystemLocation() {
         backdrop.style.display = "block";
       }
     });
-  }
+  };
 
   const btnAtivLocation = document.querySelector(".registerLocation");
   if (btnAtivLocation) {
@@ -512,7 +505,7 @@ function interationSystemLocation() {
         esconderElemento(btnPageMain);
       }
     });
-  }
+  };
 
   const btnAtivGoods = document.querySelector(".btnAtivGoods");
   if (btnAtivGoods) {
@@ -533,7 +526,7 @@ function interationSystemLocation() {
         textTypeLocation.innerHTML = "<b>Locação de Caçambas</b>";
       }
     });
-  }
+  };
 
   const buttonOutLocation = document.querySelector(".outLocation");
   if (buttonOutLocation) {
@@ -552,11 +545,9 @@ function interationSystemLocation() {
         textTypeLoc.innerHTML = "<b>Qual tipo de locação</b>";
       }
     });
-  }
+  };
 
-  const registerClientPageLocationIn = document.querySelector(
-    "#registerClientPageLocation"
-  );
+  const registerClientPageLocationIn = document.querySelector("#registerClientPageLocation");
   if (registerClientPageLocationIn) {
     registerClientPageLocationIn.addEventListener("click", () => {
       const containerForm = document.querySelector(".LocRegisterClient");
@@ -573,11 +564,9 @@ function interationSystemLocation() {
         esconderElemento(containerMain);
       }
     });
-  }
+  };
 
-  const btnOutPageRegisterClientLoc = document.querySelector(
-    ".btnOutPageRegisterClientLoc"
-  );
+  const btnOutPageRegisterClientLoc = document.querySelector(".btnOutPageRegisterClientLoc");
   if (btnOutPageRegisterClientLoc) {
     btnOutPageRegisterClientLoc.addEventListener("click", () => {
       const containerForm = document.querySelector(".LocRegisterClient");
@@ -590,7 +579,7 @@ function interationSystemLocation() {
         mostrarElemento(containerMain);
       }
     });
-  }
+  };
 
   const outEditLocation = document.querySelector(".outEditLocation");
   if (outEditLocation) {
@@ -612,12 +601,12 @@ function interationSystemLocation() {
         mostrarElemento(btnMainPage);
       }
     });
-  }
+  };
 
   const btnSearchLocation = document.querySelector(".submitSearchLocation");
   if (btnSearchLocation) {
     btnSearchLocation.addEventListener("click", () => {
-      filterTable();
+      searchLocation();
     });
   }
 
@@ -627,8 +616,8 @@ function interationSystemLocation() {
         carregamentoEmTempoReal();
      })
 
-  }
-}
+  };
+};
 
 //BUSCAR CLIENTE
 function searchClientForLocation() {
@@ -710,10 +699,7 @@ function searchClientForLocation() {
         if (clienteEncontrado.length === 1) {
           const cliente = clienteEncontrado[0];
 
-          const formatDoc = formatarCampo(
-            "documento",
-            cliente.cliecpf || cliente.cliecnpj
-          );
+          const formatDoc = formatarCampo("documento",cliente.cliecpf || cliente.cliecnpj);
           const formatCep = formatarCampo("cep", cliente.cliecep);
 
           document.querySelector("#nameClient").value = cliente.clienome || "";
@@ -733,14 +719,12 @@ function searchClientForLocation() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
+
         } else if (clienteEncontrado.length > 1) {
           clienteEncontrado.forEach((cliente) => {
-            const formatDoc = formatarCampo(
-              "documento",
-              cliente.cliecpf || cliente.cliecnpj
-            );
+            const formatDoc = formatarCampo("documento", cliente.cliecpf || cliente.cliecnpj);
             const formatCep = formatarCampo("cep", cliente.cliecep);
             const checkboxSelect = document.createElement("input");
             checkboxSelect.type = "checkbox";
@@ -781,14 +765,9 @@ function searchClientForLocation() {
 
             checkboxSelect.addEventListener("change", (event) => {
               if (event.target.checked) {
-                const formatDoc = formatarCampo(
-                  "documento",
-                  cliente.cliecpf || cliente.cliecnpj
-                );
+                const formatDoc = formatarCampo("documento",cliente.cliecpf || cliente.cliecnpj);
                 const formatCep = formatarCampo("cep", cliente.cliecep);
-                document
-                  .querySelectorAll('input[name="selectClient"]')
-                  .forEach((cb) => {
+                document.querySelectorAll('input[name="selectClient"]').forEach((cb) => {
                     if (cb !== event.target) cb.checked = false;
                   });
 
@@ -813,7 +792,7 @@ function searchClientForLocation() {
                   close: true,
                   gravity: "top",
                   position: "center",
-                  backgroundColor: "green",
+                  backgroundColor: "#1d5e1d",
                 }).showToast();
               }
             });
@@ -842,7 +821,7 @@ function searchClientForLocation() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
         }
       } catch (error) {
@@ -853,7 +832,7 @@ function searchClientForLocation() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
       }
     });
@@ -892,7 +871,7 @@ async function carregarFamilias() {
 
     if (!response.ok) {
       throw new Error("Erro ao buscar famílias de bens");
-    }
+    };
 
     const familias = await response.json();
 
@@ -919,8 +898,8 @@ async function carregarFamilias() {
         });
       } else {
         console.warn(`Select family${i} não encontrado no DOM.`);
-      }
-    }
+      };
+    };
   } catch (error) {
     console.error("Erro ao carregar famílias de bens:", error);
     Toastify({
@@ -929,10 +908,10 @@ async function carregarFamilias() {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
-  }
-}
+  };
+};
 
 // PRECHER A DESCRIÇÃO DE ACORDO COM O CODIGO DE FAMILIA
 function preencherProduto(index, familias) {
@@ -963,9 +942,10 @@ function preencherProduto(index, familias) {
       familiaSelecionadaEdit.fabedesc || "Sem nome definido";
   } else {
     inputProdutoEdit.value = "";
-  }
-}
+  };
+};
 
+// LIMPAR CAMPOS 
 function clearFields() {
   document.querySelector("#numeroLocation").value = "";
   document.querySelector("#client").value = "";
@@ -978,7 +958,8 @@ function clearFields() {
   document.getElementById("cityClient").value = "";
   document.getElementById("cepClient").value = "";
   document.getElementById("mailClient").value = "";
-}
+};
+
 
 function carregamentoEmTempoReal(){
     socketContainerLocation.on(
@@ -1036,7 +1017,7 @@ async function handleSubmit() {
     const dataFormatada = `${mes}-${dia}`;
 
     return feriadosFixos.includes(dataFormatada);
-  }
+  };
 
   const totalGrups = 4;
   const bens = [];
@@ -1070,7 +1051,7 @@ async function handleSubmit() {
         backgroundColor: "orange",
       }).showToast();
       return;
-    }
+    };
 
     // Verifica campos obrigatórios
     if (!codeBen || !quantidade || !dataInicioStr || !dataFimStr) {
@@ -1080,10 +1061,10 @@ async function handleSubmit() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
-    }
+    };
 
     // Verifica duplicidade
     if (codigosUsados.has(codeBen)) {
@@ -1093,10 +1074,10 @@ async function handleSubmit() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
-    }
+    };
 
     codigosUsados.add(codeBen);
 
@@ -1107,10 +1088,10 @@ async function handleSubmit() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
-    }
+    };
 
     const dataInicio = parseDataLocal(dataInicioStr);
     const dataFim = parseDataLocal(dataFimStr);
@@ -1128,7 +1109,7 @@ async function handleSubmit() {
         backgroundColor: "orange",
       }).showToast();
       return;
-    }
+    };
 
     if (isFeriado(dataFim)) {
       Toastify({
@@ -1140,7 +1121,7 @@ async function handleSubmit() {
         backgroundColor: "orange",
       }).showToast();
       return;
-    }
+    };
 
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
@@ -1158,7 +1139,7 @@ async function handleSubmit() {
         backgroundColor: "orange",
       }).showToast();
       return;
-    }
+    };
 
     if (dataFim <= dataInicio) {
       Toastify({
@@ -1170,7 +1151,7 @@ async function handleSubmit() {
         backgroundColor: "orange",
       }).showToast();
       return;
-    }
+    };
 
     bens.push({
       codeBen,
@@ -1182,7 +1163,7 @@ async function handleSubmit() {
       status: "Pendente",
       contrato: "",
     });
-  }
+  };
 
   if (bens.length === 0) {
     console.error("Nenhum grupo válido foi preenchido.");
@@ -1192,10 +1173,10 @@ async function handleSubmit() {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
     return;
-  }
+  };
 
   try {
     const numericLocation = await obterNumeroLocacao();
@@ -1210,8 +1191,7 @@ async function handleSubmit() {
     const dataDevoStr = document.getElementById("DataDevo")?.value || null;
     const pagament = document.getElementById("pagament")?.value || null;
     const residuo = document.getElementById("residuoSelect").value;
-    const localDescarte =
-      Number(document.getElementById("locDescarte").value) || null;
+    const localDescarte = Number(document.getElementById("locDescarte").value) || null;
 
     if (!dataDevoStr || !pagament) {
       Toastify({
@@ -1220,7 +1200,7 @@ async function handleSubmit() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "Red",
+        backgroundColor: "#f44336",
       }).showToast();
 
       return;
@@ -1233,10 +1213,10 @@ async function handleSubmit() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
-    }
+    };
 
     // const dataLoc = new Date(dataLocStr);
     const dataDevo = parseDataLocal(dataDevoStr);
@@ -1248,10 +1228,10 @@ async function handleSubmit() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
-    }
+    };
 
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
@@ -1296,7 +1276,7 @@ async function handleSubmit() {
         backgroundColor: "orange",
       }).showToast();
       return;
-    }
+    };
 
     const dadosInputsLoc = localStorage.getItem("dadosInputs");
 
@@ -1309,7 +1289,7 @@ async function handleSubmit() {
         backgroundColor: "#f44336",
       }).showToast();
       return;
-    }
+    };
 
     let dateSave;
     try {
@@ -1323,7 +1303,7 @@ async function handleSubmit() {
         backgroundColor: "#f44336",
       }).showToast();
       return;
-    }
+    };
     if (!residuo) {
       Toastify({
         text: "Selecione o residuo envolvido nessa Locação",
@@ -1334,7 +1314,7 @@ async function handleSubmit() {
         backgroundColor: "orange",
       }).showToast();
       return;
-    }
+    };
 
     if (!localDescarte || localDescarte === null) {
       Toastify({
@@ -1375,7 +1355,7 @@ async function handleSubmit() {
 
    if (isJson) {
      errorData = await response.json();
-  }
+  };
     const velocode = errorData.locationGoods[0]?.belocode;
 
     if (response.ok && response.status === 200) {
@@ -1385,7 +1365,7 @@ async function handleSubmit() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "green",
+        backgroundColor: "#1d5e1d",
       }).showToast();
 
       const content = document.querySelector(".content");
@@ -1403,21 +1383,19 @@ async function handleSubmit() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`
       },
-       body: JSON.stringify({
-        contrato: contratoHTML,
-       })
+       body: JSON.stringify({contrato: contratoHTML})
     });
 
      if (!updateContratoRes.ok) {
        Toastify({
-      text: "Contrato não pôde ser salvo!",
+      text: "Contrato não pôde ser salvo! locação inrregular",
       duration: 4000,
       gravity: "top",
       position: "center",
-      backgroundColor: "red"
-    }).showToast();
-    return;
-  }
+      backgroundColor: "#f44336"
+      }).showToast();
+      return;
+     };
 
       setTimeout(() => {
         clearFields();
@@ -1437,7 +1415,7 @@ async function handleSubmit() {
           gravity: "top",
           position: "center",
           duration: 4000,
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
       });
     } else {
@@ -1446,7 +1424,7 @@ async function handleSubmit() {
         duration: 3000,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
     }
   }
@@ -1458,7 +1436,7 @@ async function handleSubmit() {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
   };
 };
@@ -1656,7 +1634,7 @@ async function gerarContrato() {
     const p = document.createElement("p");
     p.textContent = "Nenhum item informado.";
     container.appendChild(p);
-  }
+  };
 
   const divBtn = document.createElement("div");
   divBtn.className = "text-center mt-4 d-flex justify-content-center gap-2";
@@ -1713,17 +1691,13 @@ function registerClientPageLocation() {
       if (!$("#formRegisterClientLoc").valid()) {
         return;
       }
-      const clieCep = document
-        .querySelector("#clieCepLoc")
-        .value.replace(/\D/g, "");
+      const clieCep = document.querySelector("#clieCepLoc").value.replace(/\D/g, "");
       try {
-        const response = await fetch(
-          `https://viacep.com.br/ws/${clieCep}/json/`
-        );
+        const response = await fetch(`https://viacep.com.br/ws/${clieCep}/json/`);
 
         if (!response.ok) {
           throw new Error("Erro ao buscar o CEP.");
-        }
+        };
 
         const data = await response.json();
 
@@ -1734,10 +1708,10 @@ function registerClientPageLocation() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
           return;
-        }
+        };
 
         // Preenchendo os campos do formulário
         const ruaField = document.getElementById("clieRuaLoc");
@@ -1767,7 +1741,7 @@ function registerClientPageLocation() {
           backgroundColor: "red",
         }).showToast();
         return;
-      }
+      };
 
       const formDataLocation = {
         clieCode: document.querySelector("#clieCodeLoc").value.trim(), 
@@ -1794,24 +1768,21 @@ function registerClientPageLocation() {
           duration: 4000,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
         return;
       }
 
-      if (
-        formDataLocation.clieTpCl === "Pessoa Física" &&
-        formDataLocation.cpf === ""
-      ) {
+      if (formDataLocation.clieTpCl === "Pessoa Física" && formDataLocation.cpf === "") {
         Toastify({
           text: "O Cliente e uma Pessoa Física adicione o CPF dele. OBRIGATORIO",
           duration: 4000,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
         return;
-      }
+      };
 
       const clieMail = formDataLocation.clieMail;
       const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -1822,10 +1793,10 @@ function registerClientPageLocation() {
           duration: 3000,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
         return;
-      }
+      };
 
       const datas = [
         { key: "dtCad", label: "Data de Cadastro" },
@@ -1840,11 +1811,11 @@ function registerClientPageLocation() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
           return;
-        }
-      }
+        };
+      };
 
       const [yCad, mCad, dCad] = formDataLocation.dtCad.split("-").map(Number);
       const [yNasc, mNasc, dNasc] = formDataLocation.dtNasc
@@ -1859,10 +1830,7 @@ function registerClientPageLocation() {
         hoje.getDate()
       );
 
-      if (
-        dtCad.getTime() > hoje0.getTime() ||
-        dtCad.getTime() < hoje0.getTime()
-      ) {
+      if (dtCad.getTime() > hoje0.getTime() || dtCad.getTime() < hoje0.getTime()){
         Toastify({
           text: "Data de Cadastro não pode ser maior  nem menor que a data de hoje.",
           duration: 3000,
@@ -1872,7 +1840,7 @@ function registerClientPageLocation() {
           backgroundColor: "orange",
         }).showToast();
         return;
-      }
+      };
 
       // 5.2) dtNasc não pode ser futura
       if (dtNasc.getTime() > hoje0.getTime()) {
@@ -1885,7 +1853,7 @@ function registerClientPageLocation() {
           backgroundColor: "orange",
         }).showToast();
         return;
-      }
+      };
 
       // 5.3) dtNasc deve ser anterior ou igual a dtCad
       if (dtNasc.getTime() > dtCad.getTime()) {
@@ -1898,7 +1866,7 @@ function registerClientPageLocation() {
           backgroundColor: "orange",
         }).showToast();
         return;
-      }
+      };
 
       try {
         const response = await fetch("/api/client/submit", {
@@ -1919,7 +1887,7 @@ function registerClientPageLocation() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
 
           document.querySelector("#formRegisterClientLoc").reset();
@@ -1930,9 +1898,9 @@ function registerClientPageLocation() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: response.status === 409 ? "orange" : "red",
+            backgroundColor: response.status === 409 ? "orange" : "#f44336",
           }).showToast();
-        }
+        };
       } catch (error) {
         console.error("Erro ao enviar formulário:", error);
         Toastify({
@@ -1941,11 +1909,11 @@ function registerClientPageLocation() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
       }
     });
-  }
+  };
 
   validationFormClientPageLocation();
-}
+};

@@ -39,9 +39,6 @@ async function frontLocation() {
     const dataFinish = await response.json();
     const locacoesFinishTable = dataFinish.locacoes || [];
 
-    console.log('locacao' , locacoesFinishTable)
-
-    // Limpa a tabela antes de popular os dados
     const table = document.querySelector(".tableLocation");
     if (table) {
       table.innerHTML = "";
@@ -50,7 +47,6 @@ async function frontLocation() {
       return;
     }
 
-    // Criar array unindo clientes e bens
     const listaLocacoes = locacoesFinishTable
       .map((locacao) => {
         if (locacao.bens.length > 0) {
@@ -85,18 +81,16 @@ async function frontLocation() {
     
       .flat(); 
 
-    renderTable(listaLocacoes); // Renderiza a tabela com os dados obtidos
+    renderTable(listaLocacoes); 
   } catch (error) {
     console.error("Erro ao gerar tabela de locação:", error);
-  }
-}
+  };
+};
 
 function renderTable(data) {
 
-  console.log('Dados para ' , data)
- 
   const tableDiv = document.querySelector(".tableLocation");
-
+  tableDiv.innerHTML = ""
 
   const container = document.createElement("div");
   container.style.display = "flex";
@@ -120,7 +114,6 @@ function renderTable(data) {
   container.appendChild(title);
   container.appendChild(messageFilter);
   container.appendChild(resetFilterBtn);
-  // container.appendChild(searchBtn);
 
   tableDiv.appendChild(container);
 
@@ -169,7 +162,6 @@ function renderTable(data) {
     checkboxTd.appendChild(checkbox);
     row.appendChild(checkboxTd);
   
-
     [
       "numeroLocacao",
       "status",
@@ -232,12 +224,16 @@ function renderTable(data) {
       });
     });
   });
-}
+};
 
+// buscar residuo
 async function buscarResiduo(id) {
   try {
     const result = await fetch(`/residuo/${id}`, {
-      method: 'GET'
+      method: 'GET',
+      headers:{
+        "content-type":"application/json"
+      }
     });
 
     const data = await result.json();
@@ -260,7 +256,6 @@ async function showContratoLocationGoods(locacao) {
   const contratoDiv = document.querySelector(".contrato");
   if (!contratoDiv) return;
 
-  // Oculta a tabela de locações e os botões
   const tableList = document.querySelector(".tableLocation");
   if (tableList) {
     tableList.classList.remove("flex");
@@ -274,7 +269,6 @@ async function showContratoLocationGoods(locacao) {
   }
 
   try {
-    // Busca contrato no backend
     const response = await fetch(`/api/contrato/${locacao.belocode}` , {
       method:'GET'
     });
@@ -356,8 +350,9 @@ async function showContratoLocationGoods(locacao) {
 
 
 
-//Filtar locação
-async function filterTable() {
+//pesquisar por locação
+async function searchLocation() {
+  
   const token = localStorage.getItem("token");
 
   if (!token || isTokenExpired(token)) {

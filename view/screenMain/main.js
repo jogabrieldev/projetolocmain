@@ -114,7 +114,6 @@ function validarPrecoLiquidoMenorOuIgual(precoLiquido, precoBruto) {
 
 
 
-
 function formatDateInput(dataISO) {
   if (!dataISO) return "";
   const data = new Date(dataISO);

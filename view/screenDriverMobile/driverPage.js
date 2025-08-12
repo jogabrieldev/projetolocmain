@@ -490,6 +490,8 @@ async function updateRuntimeStatusDelivery() {
 async function updateStatusGoods(idBem) {
   try {
     const token = localStorage.getItem("token");
+    if(!token)return
+
     const response = await fetch(`/api/updatestatus/${idBem}`, {
       method: "PUT",
       headers: {
@@ -510,17 +512,19 @@ async function updateStatusGoods(idBem) {
       }).showToast();
       return;
     }
+    return true
   } catch (error) {
     Toastify({
-      text: "erro no server em atualizar status",
+      text: "erro no server em atualizar status do bem",
       duration: 3000,
       close: true,
       gravity: "top",
       position: "center",
       backgroundColor: "red",
     }).showToast();
-  }
-}
+    return false
+  };
+};
 
 // Esta função será chamada ao clicar no botão "Aceitar Entrega" da modal
 async function toAcceptDeliveryNow(event) {
@@ -608,15 +612,7 @@ function finishDelivery(button) {
     });
     const nomeMotorista = button.getAttribute("data-moto");
 
-    console.log(
-      "localizatio",
-      localization,
-      idDelivery,
-      nomeCliente,
-      nomeMotorista,
-      dataFormatada
-    );
-
+    
     document.getElementById("nomeDoCliente").textContent = nomeCliente;
     document.getElementById("numeroDaLocacao").textContent = idNumeroLocacao;
     document.getElementById("destinoEntrega").textContent = localization;
@@ -702,8 +698,7 @@ async function submitDataFinishDelivery(idDelivery,idNumeroLocacao,nomeMotorista
         backgroundColor: "green",
       }).showToast();
 
-      // 🔥 Remove o card do DOM
-      const card = button.closest(".col-md-6"); // ou ".col-md-6.col-lg-4" dependendo da estrutura
+      const card = button.closest(".col-md-6"); 
       if (card) {
         card.remove();
       }
@@ -714,6 +709,8 @@ async function submitDataFinishDelivery(idDelivery,idNumeroLocacao,nomeMotorista
       if (modal) {
         modal.hide();
       }
+
+      
     }
 
     console.log("Resposta do servidor:", response);

@@ -127,8 +127,6 @@ export const location = {
     try {
       const locacaoFinish = await LocacaoModel.buscarTodasLocacoes();
 
-      console.log('locaca' , locacaoFinish)
-
       if (!locacaoFinish || locacaoFinish.length === 0) {
         return res.status(404).json({ message: 'Nenhuma locação encontrada' });
       }
