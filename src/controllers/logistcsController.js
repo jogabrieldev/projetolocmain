@@ -11,7 +11,7 @@ class logistcgController {
       const {payloadLogistcs} = req.body;
 
       if(!payloadLogistcs){
-        res.status(404).json({message:"Não foi passado nenhum dado"})
+        return res.status(404).json({message:"Não foi passado nenhum dado"})
       };
 
       if(!payloadLogistcs.bemId || !payloadLogistcs.idClient || !payloadLogistcs.driver || !payloadLogistcs.devolution || !payloadLogistcs.locationId ){
@@ -35,7 +35,7 @@ class logistcgController {
         if (io) {
         const listDelivery = await mecanismDelivey.getDateLocationFinish();
         if(listDelivery){
-      io.emit("updateRunTimeRegisterLinkGoodsLocation", listDelivery);
+        io.emit("updateRunTimeRegisterLinkGoodsLocation", listDelivery);
     }
   };
 

@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       socketLogistcs.on("updateRunTimeGoods", (updatedGood) => {
         validateFamilyBensPending();
-        needVsAvaible();
+       
       });
 
       socketLogistcs.on("updateRunTimeFamilyBens", (updatedFamily) => {
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       socketLogistcs.on("updateRunTimeRegisterLocation", () => {
         validateFamilyBensPending();
-        needVsAvaible();
+        
       });
       socketLogistcs.on("updateRunTimeDriver", () => {
         loadingDriver();

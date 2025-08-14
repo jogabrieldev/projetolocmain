@@ -31,10 +31,10 @@ const io = new Server(server, {
     },
 });
 
-app.use((req, res, next) => {
-    req.sock = io;
-    next();
-});
+// app.use((req, res, next) => {
+//     req.sock = io;
+//     next();
+// });
 
 app.set("socketio" , io)
 // Evento de conexão do Socket.IO
@@ -108,6 +108,7 @@ io.on("connection", (socket) => {
     })
 
     socket.on("disconnect", () => {
+           console.log(`Cliente desconectado: ${socket.id}`);
     });
 });
 await LocacaoModel.verificarLocacoesComBens(io)

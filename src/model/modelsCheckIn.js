@@ -25,22 +25,6 @@ export const movimentCheckInAndCheckOut = {
     }
  },
 
-  async getCheckInOpen(idMoto){
-      try {
-            const query = 'SELECT * FROM checmtve WHERE checmoto = $1 LIMIT 2'
-            const values = [idMoto]
-            const result = await dataCheckIn.query(query , values)
-
-             if (result.rows.length > 0) {
-               return result.rows
-             }
- 
-         } catch (error) {
-            console.error('Erro para verificar check-In')
-            throw error
-     }
-  },
-
   async getChack(idMoto){
       try {
          const query = `SELECT * FROM checmtve WHERE checmoto = $1 AND checstat = 'Em uso' ORDER BY checid DESC LIMIT 1` 

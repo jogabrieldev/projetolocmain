@@ -286,10 +286,6 @@ route.get('/api/checkin/:idMoto' ,authenticateToken ,(req ,res)=>{
    controllerCheckInAndCheckOut.getCheckInOpenForDriver(req ,res)
 });
 
-route.get('/api/checkinmoto/:code' ,authenticateToken, (req,res)=>{
-  controllerCheckInAndCheckOut.getCheck(req ,res)
-});
-
 route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
   controllerCheckInAndCheckOut.toCheckOut(req ,res)
 });

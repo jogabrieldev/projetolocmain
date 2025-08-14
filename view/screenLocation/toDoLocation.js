@@ -225,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (buttonSubmitLocationFinishVehicles) {
                   buttonSubmitLocationFinishVehicles.addEventListener(
                     "click",
-                    locationTheVehicle
+                    locationTheVehicle()
                   );
                 }
                 maskFieldLocalization();

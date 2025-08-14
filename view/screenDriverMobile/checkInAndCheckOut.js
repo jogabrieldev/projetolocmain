@@ -34,6 +34,8 @@ async function updateStatusVehicle(id , body){
       }
 };
 
+const socketCheck = io()
+// CHECKIN
 async function checkIn(){
 
 let userId = localStorage.getItem('user')
@@ -84,22 +86,31 @@ let user= userId
             })
 
 
-        const result = await data.json()   
-        if(data.status === 200 || data.ok){
-          
-            setTimeout(()=>{
-            updateStatusVehicle(idVeic , {caaustat:"Esta com Motorista!"})
-            document.getElementById('caminhao').value = ""
-            document.getElementById('checObs').value = ""
-            document.getElementById('kmAt').value = ""
-            document.querySelectorAll(".toAcceptDelivery").forEach(btn => {
-              btn.disabled = false;
-             });
+   const result = await data.json()   
+    if(data.status === 200 || data.ok){
+    Toastify({
+      text: "CHECK-IN feito com sucesso",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "green",
+    }).showToast();
 
-            },100)
+    // Delay de 3,5 segundos antes do reload
+    setTimeout(() => {
+      // Limpa os campos antes do reload
+      document.getElementById('caminhao').value = "";
+      document.getElementById('checObs').value = "";
+      document.getElementById('kmAt').value = "";
+      document.querySelectorAll(".toAcceptDelivery").forEach(btn => {
+        btn.disabled = false;
+      });
 
-           
-         }else{
+      // Recarrega a página
+       window.location.reload();
+      }, 3500); // 3,5s dá tempo do toast terminar
+     }else{
 
           if (result.errors && Array.isArray(result.errors)) {
             
@@ -161,34 +172,7 @@ async function getVehicleWithDriver(code , token) {
     };
 };
 
-function finalizarCheckOut(idVeiculo) {
-  const inputVehicle = document.getElementById('caminhaoCheckOut');
-  const inputObs = document.getElementById('checObsVt');
-  const inputKm = document.getElementById('kmVt');
-
-  // Atualiza o status do veículo para "Disponível"
-  if (idVeiculo) {
-    updateStatusVehicle(idVeiculo, { caaustat: "Disponivel" });
-  }
-
-  // Limpa os campos
-  if (inputVehicle) {
-    inputVehicle.value = "";
-    inputVehicle.readOnly = true; // ou inputVehicle.disabled = true;
-    inputVehicle.placeholder = "CHECK-OUT concluído — sem veículo";
-  }
-
-  if (inputObs) inputObs.value = "";
-  if (inputKm) inputKm.value = "";
-}
-
-function finisihCheckOutRunTime(){
-   const socket = io()
-   socket.on("checkOut", async(listVehicle)=>{
-      finisihCheckOut(listVehicle.caaucode)
-   })  
-}
-
+// VALIDAR CHECK-IN
 async function getCheck() {
     try {
       const idMotorista = localStorage.getItem('user');
@@ -202,7 +186,8 @@ async function getCheck() {
         Authorization: `Bearer ${token}`
       }
     });
-   
+      
+     console.log('resposta do check' , response)
      const result = await response.json();
 
       if (!response.ok) {
@@ -232,25 +217,25 @@ async function getCheck() {
           return check
        
        }else if(status === "Finalizado"){
-          getAllCar()
+          await getAllCar()
        }
 
     
     } catch (error) {
-      console.error('Erro ao verificar check-in:', error);
+
     Toastify({
       text: "Erro inesperado ao verificar check-in.",
       duration: 4000,
       gravity: "top",
       position: "right",
       style: {
-        background: "#f44336"
+        background: "red"
       }
     }).showToast();
   };
 };
 
-
+// PEGAR O CHECK-IN EM ABERTO E FAZER CHECK-OUT
 async function checkOut(idMoto , token) {
 
   try {
@@ -285,9 +270,7 @@ async function checkOut(idMoto , token) {
              })
 
              const result = await response.json()
-             const checkOut = result?.checkout
-             console.log('resposta server' , response)
-             console.log('resultado' , result)
+             const checkOut = result?.checkout || result;
        
              if(response.ok && checkOut.checstat === "Finalizado"){
              Toastify({
@@ -300,14 +283,13 @@ async function checkOut(idMoto , token) {
             }).showToast();
             
             setTimeout(()=>{
-            finisihCheckOutRunTime(checkOut.checveic)
             document.getElementById('caminhaoCheckOut').value = ""
             document.getElementById('checObsVt').value = ""
             document.getElementById('kmVt').value = ""
-            },100)
-          
+             
+            window.location.reload()
+            },3500)
            };
-       
       };
 
   } catch (error) {

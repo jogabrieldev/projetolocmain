@@ -50,8 +50,6 @@ const controllerDelivery = {
                return res.status(400).json({message:"Erro na atualização", success:false})
              }
 
-             console.log(result)
-
            const socket = req.app.get("socketio")
                if(socket){
                  socket.emit('statusDelivey' , result)
@@ -74,14 +72,13 @@ const controllerDelivery = {
            payload.enfiStat = "Finalizado"
          }
 
-         console.log('CORPO' , payload)
-
+         
          const result = await mecanismDelivey.finishDelivery(payload)
          if(!result){
            return res.status(400).json({message:"Erro ao finalizar entrega" , success:false , })
          }
-
-         const updateStatus = await mecanismDelivey.updateStatusDelivery(payload.enfiLoca , payload.enfiStat)
+          
+         const updateStatus = await mecanismDelivey.updateStatusDelivery(result.enfiloca , result.enfistat)
          if(!updateStatus){
             return res.status(400).json({message:"Erro ao atualizar o status da entrega"})
          }
@@ -91,7 +88,7 @@ const controllerDelivery = {
             socket.emit('statusDelivey' , result)
           }
 
-          const updateStatusGoods = await updateBem.updateStatus(payload.enfiBem , "Esta com cliente")
+          const updateStatusGoods = await updateBem.updateStatus(result.enfibem , "Esta com cliente")
           if(!updateStatusGoods){
             return res.status(400).json({message:"Erro ao atualizar o status do bem"})
           }

@@ -36,8 +36,10 @@ const mecanismDelivey = {
          const values = [body ,id]
 
          const result = await delivery.query(update , values)
+         console.log(result.rows)
           return result.rows[0]
 
+          
         } catch (error) {
             console.error('Erro para atualizar o status da entrega')
             throw error
@@ -49,7 +51,7 @@ const mecanismDelivey = {
         try {
           const {enfiLoca , enfiStat , enfiNmlo , enfiNmMt  ,enfiBem} = payload
           
-          const query = `INSERT INTO entrfins(enfiloca , enfistat , enfinmlo , enfinmmt , enfibem)VALUES($1 , $2 , $3 , $4 , $5) RETURNING enfiid`
+          const query = `INSERT INTO entrfins(enfiloca , enfistat , enfinmlo , enfinmmt , enfibem)VALUES($1 , $2 , $3 , $4 , $5) RETURNING *`
 
           const values = [enfiLoca ,enfiStat ,enfiNmlo , enfiNmMt , enfiBem]
 

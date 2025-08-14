@@ -8,6 +8,8 @@ import { mecanismDelivey } from "../model/modelsDelivery.js";
             
          const payloadCheckin = req.body
 
+         console.log('corpo' , payloadCheckin)
+
           if(!payloadCheckin){
             return res.status(400).json({message:'Falta ser passado as informações'})
            }
@@ -24,38 +26,21 @@ import { mecanismDelivey } from "../model/modelsDelivery.js";
            if(!newCheckIn){
              return res.status(400).json({message:"Erro para fazer esse CHECK_IN tente novemente"})
            }
+
+           console.log('new' , newCheckIn)
            
           const io = req.app.get("socketio")
            if(io){
             const listVehicle = await updateRuntime.updateStatus(payloadCheckin.checVeic , "Esta com Motorista!")
 
-             const checkInsAbertos = await movimentCheckInAndCheckOut.getCheckInOpen(payloadCheckin.checMoto, "Em uso");
+             io.emit("checkIn" , { vehicle:listVehicle } )
 
-             io.emit("checkIn" , listVehicle , checkInsAbertos)
            }
 
            return res.status(200).json({success:true , checkin: newCheckIn})
         } catch (error) {
             console.error('Erro para fazer checkin' ,error)
             return res.status(500).json({message:"Erro no sever para fazer checkin."})
-        }
-    },
-
-    async getCheckInOpen(req ,res){
-        try {
-            const idMoto = req.params.idMoto
-      
-             if(idMoto){
-              const verificar = await movimentCheckInAndCheckOut.getCheckInOpen(idMoto)
-              if(!verificar){
-                return res.status(400).json({message: "Não consegui encontrar nenhum registro desse motorista!"})
-              }
-             console.log('verificar', verificar)
-               return res.status(200).json({success:true , verificar:verificar })
-             }
-        } catch (error) {
-             console.error('não foi encontrado nenhum registro')
-             return res.status(500).json({message:"não foi encontrado nenhum registro"})
         }
     },
 
@@ -127,15 +112,12 @@ import { mecanismDelivey } from "../model/modelsDelivery.js";
     if (!atualizado) {
       return res.status(400).json({ message: 'Não foi possível finalizar o check-out!' });
     }
-    console.log('atualizado' , atualizado)
+    
     const socket = req.app.get("socketio")
     if(socket){
 
-        const statusVehicle = await updateRuntime.updateStatus(atualizado.checveic , "Disponível")
-          const checkInsFinish = await movimentCheckInAndCheckOut.getCheckInOpen(atualizado.checmoto, "Finalizado");
-
-          console.log('volta' ,checkInsFinish)
-      socket.emit('checkOut' , statusVehicle , checkInsFinish)
+      const statusVehicle = await updateRuntime.updateStatus(atualizado.checveic , "Disponível")
+      socket.emit('checkOut' , statusVehicle)
     }
 
     return res.status(200).json({ success: true, checkout: atualizado });
