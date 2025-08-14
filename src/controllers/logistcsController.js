@@ -10,57 +10,43 @@ class logistcgController {
     try {
       const {payloadLogistcs} = req.body;
 
-      console.log('Payload Logistica:' , payloadLogistcs)
-
       if(!payloadLogistcs){
         res.status(404).json({message:"Não foi passado nenhum dado"})
-      }
+      };
 
       if(!payloadLogistcs.bemId || !payloadLogistcs.idClient || !payloadLogistcs.driver || !payloadLogistcs.devolution || !payloadLogistcs.locationId ){
           return res.status(400).json({ message: "Falta informações para conclusão verifique!" });
-      }
-
-      const drive = await authDriver.getAllDriverId();
-      const codeValid = drive.map(item => item.motocode);
-      
-      if (!codeValid.includes(payloadLogistcs.driver)) {
-        return res.status(400).json({ message: "Código do motorista inválido." });
-      }
-      
-      const goods = await authGoods.getAllBemId()
-      const codeValidGoods = goods.map(item => item.benscode); 
-
-      if (!codeValidGoods.includes(payloadLogistcs.bemId)) {
-        return res.status(400).json({ message: "Código do Bem inválido." });
-        }
-      
-      const client = await authClient.getAllClientForId()
-      const codeValidClient = client.map(item=> item.cliecode)
-
-      if(!codeValidClient.includes(payloadLogistcs.idClient)){
-         return res.status(400).json({message:'Codigo do cliente e invalido'})
-      }
+      };
 
       const localization = payloadLogistcs.localization
 
       const result = await logistcsModel.submitDate(payloadLogistcs , localization);
      if(result){
+        const driver =await authDriver.updateStatusMoto(result?.lofiidmt  , "Entrega destinada")
+        if(!driver){
+          return res.status(409).json({message:"Erro em atualizar status do motorista" , success:false , driver})
+        }
+        const bem = await authGoods.updateStatus(result?.lofiidbe , "Locado")
+        if(!bem){
+          return res.status(409).json({message:"Erro em atualizar status do bem" , success:false ,  bem})
+        }
+        console.log(bem)
       const io = req.app.get("socketio");
         if (io) {
         const listDelivery = await mecanismDelivey.getDateLocationFinish();
         if(listDelivery){
       io.emit("updateRunTimeRegisterLinkGoodsLocation", listDelivery);
     }
-  }
+  };
 
   return res.status(200).json({ success:true , message:"Caçamba vinculada com sucesso" ,  result });
-}
+};
 
     } catch (error) {
       console.error('Erro Logistica Controller:' , error)
       res.status(500).json({ sucess: false, message: error.message });
-    }
-  }
+    };
+  };
   async getAll(req ,res){
       try {
          const {id}  = req.params;

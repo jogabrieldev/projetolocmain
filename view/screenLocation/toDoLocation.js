@@ -181,6 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (contentMain) {
               contentMain.innerHTML = html;
             }
+             frontLocation();
             interationSystemLocation();
             preencheraResiduo("residuoSelect");
             interationSystemLocationVehicle();
@@ -297,147 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// function renderTable(data) {
-
-//   const tableDiv = document.querySelector(".tableLocation");
-
-//   const container = document.createElement("div");
-//   container.style.display = "flex";
-//   container.style.justifyContent = "space-between";
-//   container.style.alignItems = "center";
-//   container.style.marginBottom = "10px";
-
-//   const title = document.createElement("h2");
-//   title.textContent = "Locaçaõ de Bens";
-//   title.style.margin = "0";
-//   title.style.alignItems = "center"
-
-//   const messageFilter = document.createElement("span");
-//   messageFilter.id = "messsageFilter";
-//   messageFilter.style.display = "none";
-
-//   const resetFilterBtn = document.createElement("button");
-//   resetFilterBtn.id = "resetFilterBtn";
-//   resetFilterBtn.style.display = "none";
-//   resetFilterBtn.textContent = "Remover Filtro";
-
-//   container.appendChild(title);
-//   container.appendChild(messageFilter);
-//   container.appendChild(resetFilterBtn);
-
-//   tableDiv.appendChild(container);
-
-//   const table = document.createElement("table");
-//   table.classList.add("tableLocationAll");
-
-//   const thead = document.createElement("thead");
-//   const headerRow = document.createElement("tr");
-
-//   const headers = [
-//     "Selecionar",
-//     "Número de Locação",
-//     "Status",
-//     "Nome do Cliente",
-//     "Data da Locação",
-//     "Data de Devolução",
-//     "Forma de Pagamento",
-//     "Familia do bem",
-//     "Descrição",
-//     "Quantidade",
-//     "Observação",
-//     "Data Início",
-//     "Data Final",
-//     "Visualizar"
-//   ];
-
-//   headers.forEach((text) => {
-//     const th = document.createElement("th");
-//     th.textContent = text;
-//     headerRow.appendChild(th);
-//   });
-
-//   thead.appendChild(headerRow);
-//   table.appendChild(thead);
-
-//   const tbody = document.createElement("tbody");
-
-//   data.forEach((locacao) => {
-//     const row = document.createElement("tr");
-
-//     const checkboxTd = document.createElement("td");
-//     const checkbox = document.createElement("input");
-//     checkbox.type = "checkbox";
-//     checkbox.classList.add("locacao-checkbox");
-//     checkbox.value = JSON.stringify(locacao);
-//     checkboxTd.appendChild(checkbox);
-//     row.appendChild(checkboxTd);
-  
-
-//     [
-//       "numeroLocacao",
-//       "status",
-//       "nomeCliente",
-//       "dataLocacao",
-//       "dataDevolucao",
-//       "formaPagamento",
-//       "codigoBem",
-//       "produto",
-//       "quantidade",
-//       "observacao",
-//       "dataInicio",
-//       "dataFim",
-//     ].forEach((key) => {
-//       const td = document.createElement("td");
-//       td.textContent = locacao[key];
-//       row.appendChild(td);
-//     });
-
-//      const visualizarTd = document.createElement("td");
-//     const visualizarBtn = document.createElement("button");
-//     visualizarBtn.classList.add("btn", "btn-sm", "btn-success");
-//     visualizarBtn.textContent = "Visualizar";
-//     if(visualizarBtn){
-//        visualizarBtn.addEventListener("click", () => {
-//       showContratoLocationGoods(locacao)
-     
-//        });
-//     }
-//     visualizarTd.appendChild(visualizarBtn);
-//    row.appendChild(visualizarTd);
-
-//     tbody.appendChild(row);
-//   });
-
-//   if (data.length === 0) {
-//     const emptyRow = document.createElement("tr");
-//     const emptyTd = document.createElement("td");
-//     emptyTd.colSpan = "14";
-//     emptyTd.style.textAlign = "center";
-//     emptyTd.textContent = "Nenhuma locação encontrada.";
-//     emptyRow.appendChild(emptyTd);
-//     tbody.appendChild(emptyRow);
-//   };
-
-
-//   table.appendChild(tbody);
-//   tableDiv.appendChild(table);
-
-//   const checkboxes = document.querySelectorAll(".locacao-checkbox");
-//   checkboxes.forEach((checkbox) => {
-//     checkbox.addEventListener("change", (event) => {
-//       const locacaoData = JSON.parse(event.target.value);
-//       const isChecked = event.target.checked;
-
-//       document.querySelectorAll(".locacao-checkbox").forEach((cb) => {
-//         if (JSON.parse(cb.value).numeroLocacao === locacaoData.numeroLocacao) {
-//           cb.checked = isChecked;
-//         }
-//       });
-//     });
-//   });
-// };
-
-
+// Interação do system location
 function interationSystemLocation() {
   const btnOutPageLocation = document.getElementById("buttonExitLocation");
   if (btnOutPageLocation) {
@@ -1655,7 +1516,8 @@ async function gerarContrato() {
   container.appendChild(divBtn);
   contratoDiv.appendChild(container);
 
-  btnVoltar.addEventListener("click", () => {
+  btnVoltar.addEventListener("click", async () => {
+    await frontLocation()
     esconderElemento(contratoDiv);
     mostrarElemento(document.querySelector(".tableLocation"));
     mostrarElemento(document.querySelector(".btnInitPageMainLoc"));

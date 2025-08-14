@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } catch (error) {
         console.error("Erro no carregamento DELIVERY");
-      }
+      };
 
       const informative = document.querySelector(".information");
       informative.style.display = "block";
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
         containerLogistica.classList.add("hidden");
       }
     });
-  }
+  };
 
   socketUpdateTableDelivey.on("updateRunTimeRegisterLinkGoodsLocation",async () => {
       await getAllDelivery();
@@ -93,8 +93,8 @@ function interationDelivey() {
         btnOut.classList.add("hidden");
       }
     });
-  }
-}
+  };
+};
 
 let deliveryData = [];
 let clientData = [];
@@ -124,8 +124,8 @@ async function getAllDelivery() {
     await getAllClients(); // Buscar clientes antes de preencher a tabela
   } catch (error) {
     console.error("Erro ao buscar as locações:", error);
-  }
-}
+  };
+};
 
 // Função para buscar clientes
 async function getAllClients() {
@@ -194,7 +194,7 @@ function renderTableDelivery() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
         }).showToast();
         return;
       }
@@ -226,7 +226,7 @@ function renderTableDelivery() {
       });
     });
   } else {
-    // Esconde o thead e a tabela
+    
     thead.style.display = "none";
     table.style.display = "none";
 
@@ -238,10 +238,10 @@ function renderTableDelivery() {
       message.style.fontSize = "18px";
       message.style.fontWeight = "bold";
       message.style.color = "#666";
-      table.parentNode.appendChild(message); // Adiciona após a tabela
+      table.parentNode.appendChild(message); 
     }
-  }
-}
+  };
+};
 
 let motoris = [];
 async function showDetails(codigo) {
@@ -273,8 +273,10 @@ async function showDetails(codigo) {
     if (!item) return;
 
     const cliente = clientData.find((c) => c.cliecode === item.lofiidcl);
+    if(!cliente)return
 
     const motorista = motoris.find((m) => m.motocode === item.lofiidmt);
+    if(!motorista)return
 
     const dataL = new Date(item.lofidtlo)
     const dataLocFormat = dataL.toLocaleDateString("pt-BR")
@@ -391,8 +393,8 @@ async function showDetails(codigo) {
     container.style.display = "block";
   } catch (error) {
     console.error("ERRO A MOSTRAR A TELA DE DETALHES DE ENTREGA:", error);
-  }
-}
+  };
+};
 
 // Pagina para imprimir a OS
 function printDelivery(element) {
@@ -496,11 +498,11 @@ function formatContentForPrint(innerHTML) {
   return innerHTML
     .replace(/delivery-section/g, "section")
     .replace(/delivery-grid/g, "grid");
-}
+};
 
 const btnDevolution = document.querySelector(".DevolutionDay");
 if (btnDevolution) {
   btnDevolution.addEventListener("click", () => {
     getdeliveryForDevolution();
   });
-}
+};

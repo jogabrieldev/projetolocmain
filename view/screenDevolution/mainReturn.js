@@ -8,10 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
               const responseDevol = await fetch('/devolution' , {
                 method: 'GET',
-                
               })
 
-              if (!responseDevol.ok) throw new Error(`Erro HTTP: ${responseDevol.status}`);
+           if (!responseDevol.ok) throw new Error(`Erro HTTP: ${responseDevol.status}`);
            const html = await responseDevol.text();
            const mainContent = document.querySelector('#mainContent');
            if (mainContent) {
@@ -28,11 +27,17 @@ document.addEventListener('DOMContentLoaded', () => {
              informative.textContent = "SESSÃO DEVOLUÇÃO";
            }
         } catch (error) {
-          
+          Toastify({
+          text: "Erro na pagina!.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+           position: "center",
+          backgroundColor: "#f44336",
+          }).showToast();
         }
-        
       });
-    }
+    };
   });
 
   function interationSystemDevolution(){
@@ -112,10 +117,10 @@ document.addEventListener('DOMContentLoaded', () => {
      };
   }
 
+  // pegar Devoluções 
   async function getdeliveryForDevolution() {
-  const token = localStorage.getItem('token');
-  const container = document.querySelector('.devolutionTheDay');
 
+  const token = localStorage.getItem('token');
   if (!token || isTokenExpired(token)) {
     Toastify({
       text: "Sessão expirada. Faça login novamente.",
@@ -133,9 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-
-  container.innerHTML = ''; 
-
   try {
     const response = await fetch('/api/devolution', {
       method: 'GET',
@@ -146,17 +148,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (!response.ok) {
-      console.log('Erro ao buscar devoluções.');
+      Toastify({
+      text: "Erro em buscar devoluções do dia!.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "#f44336",
+    }).showToast();
+      console.error('Erro ao buscar devoluções.');
       return;
     }
 
     const data = await response.json();
     const devolucoesHoje = data.devolution;
 
-    if (!devolucoesHoje || devolucoesHoje.length === 0) {
-      const noData = document.createElement('p');
-      noData.textContent = 'Nenhuma devolução marcada para hoje.';
-      container.appendChild(noData);
+  
+   const container = document.querySelector('.devolutionTheDay');
+   if(!container)return
+   container.innerHTML = ''; 
+
+   if(!devolucoesHoje || devolucoesHoje.length === 0) {
+      container.innerHTML = "<p class='text-danger text-center'> Nenhuma devolução encontrada pra hoje! </p>"
       return;
     }
 
@@ -226,9 +239,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   } catch (error) {
     console.error('Erro ao buscar devoluções:', error);
+    Toastify({
+      text: "Erro em buscar devoluções do dia!.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "#f44336",
+    }).showToast();
   };
 };
 
+// detalhes
 async function detailsForDevolution(event) {
   
     try {
@@ -240,7 +262,6 @@ async function detailsForDevolution(event) {
         backDrop.style.display = 'flex'
       }
  
-
       const popUp = document.querySelector('.detailsTheDevolution')
        if(popUp){
         popUp.style.display = 'flex'

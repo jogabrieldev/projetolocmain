@@ -398,13 +398,21 @@ async function fetchListTypeProduct() {
       wrapper.appendChild(tabela);
       tableWrapper.appendChild(wrapper);
     } else {
-      tableWrapper.innerHTML = "<p class='text-light'>Nenhum tipo de produto cadastrado.</p>";
+      tableWrapper.innerHTML = "<p class='text-dark'>Nenhum tipo de produto cadastrado.</p>";
     }
 
   } catch (error) {
     console.error("Erro ao carregar tipos de produto:", error);
+    Toastify({
+      text: "Erro na comunicação com o servidor para listar os tipos de produto.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "#f44336",
+    }).showToast();
     document.querySelector(".listingTipoProd").innerHTML =
-      "<p>Erro ao carregar tipo de produto.</p>";
+    "<p class='text-dark'>Erro ao carregar tipo de produto.</p>";
   };
 };
 

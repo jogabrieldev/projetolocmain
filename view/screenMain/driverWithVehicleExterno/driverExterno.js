@@ -154,7 +154,7 @@ async function getDriverWithVehicle() {
       wrapper.appendChild(tabela);
       container.appendChild(wrapper);
     } else {
-      container.innerHTML = "<p class='text-light'>Nenhum vínculo motorista/veículo encontrado.</p>";
+      container.innerHTML = "<p class='text-dark'>Nenhum vínculo motorista/veículo encontrado.</p>";
     }
 
   } catch (error) {

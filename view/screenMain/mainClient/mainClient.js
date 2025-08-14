@@ -635,7 +635,7 @@ async function fetchListClientes() {
       }).showToast();
 
       document.querySelector(".listClient").innerHTML =
-        "<p>Erro ao carregar clientes.</p>";
+        "<p class='text-dark'>Erro ao carregar clientes.</p>";
       return;
     }
 
@@ -756,7 +756,7 @@ async function fetchListClientes() {
       clientesListDiv.appendChild(wrapper);
     } else {
       clientesListDiv.innerHTML =
-        "<p class='text-light'>Nenhum cliente cadastrado.</p>";
+        "<p class='text-dark'>Nenhum cliente cadastrado.</p>";
     }
   } catch (error) {
     console.error("Erro ao carregar clientes:", error);
@@ -769,7 +769,7 @@ async function fetchListClientes() {
       backgroundColor: "#f44336",
     }).showToast();
     document.querySelector(".listClient").innerHTML =
-      "<p>Erro ao carregar clientes.</p>";
+      "<p class='text-dark'>Erro ao carregar clientes.</p>";
   };
 };
 

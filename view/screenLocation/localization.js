@@ -37,15 +37,19 @@ function maskFieldLocalization(){
       if(buttonSaveLocalization){
        buttonSaveLocalization.addEventListener('click' , async ()=>{
 
-         const localizationCep = document
-        .querySelector("#enderecoCepInput")
-        .value.replace(/\D/g, "");
+      const localizationCep = document.querySelector("#enderecoCepInput").value.replace(/\D/g, "");
       try {
-        const response = await fetch(
-          `https://viacep.com.br/ws/${localizationCep}/json/`
-        );
+        const response = await fetch(`https://viacep.com.br/ws/${localizationCep}/json/`);
 
         if (!response.ok) {
+          Toastify({
+            text: "Erro ao buscar o CEP passado! Verifique com cliente.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "#f44336",
+          }).showToast();
           throw new Error("Erro ao buscar o CEP.");
         }
 
@@ -93,7 +97,7 @@ function maskFieldLocalization(){
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
         return;
       }
@@ -107,9 +111,6 @@ function maskFieldLocalization(){
         const localizationCida = document.getElementById('enderecoCityInput').value.trim()
        const localizationRefe = document.getElementById('enderecoRefeInput').value.trim()
 
-      
-
-         
         const dateForSave = {
             localizationBairro,
             localizationCida,
@@ -129,9 +130,9 @@ function maskFieldLocalization(){
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
-          // limparCamposInputs()
+        
         }else{
             Toastify({
             text: "Token não fornecido! faça login novamente",
@@ -139,19 +140,25 @@ function maskFieldLocalization(){
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
-          
+          return 
         }
-        
-         return 
+       
      } catch (error) {
          console.erro('Erro para salvar os dados em cache', error)
+         Toastify({
+            text: "Erro para salvar os dados em cache",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "#f44336",
+          }).showToast();
     }
-
-     })
-   }       
-}
+     });
+   };       
+};
 
 function limparCamposInputs() {
   document.getElementById('enderecoRuaInput').value = '';
@@ -160,4 +167,4 @@ function limparCamposInputs() {
   document.getElementById('enderecoBairroInput').value = '';
   document.getElementById('enderecoCityInput').value = '';
   document.getElementById('enderecoRefeInput').value =""
-}
+};

@@ -466,12 +466,20 @@ async function fetchListFabricante() {
       wrapper.appendChild(tabela);
       familyGoodsListDiv.appendChild(wrapper);
     } else {
-      familyGoodsListDiv.innerHTML = "<p class='text-light'>Nenhuma familia de bens cadastrado.</p>";
+      familyGoodsListDiv.innerHTML = "<p class='text-dark'>Nenhuma familia de bens cadastrado.</p>";
     }
   } catch (error) {
     console.error("Erro ao carregar familia de bens:", error);
+     Toastify({
+      text: "Erro na comunicação com o servidor para listar familia de bens.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "#f44336",
+    }).showToast();
     document.querySelector(".listingFabri").innerHTML =
-      "<p>Erro ao carregar familia de bens.</p>";
+      "<p class='text-dark'>Erro ao carregar familia de bens.</p>";
   };
 };
 

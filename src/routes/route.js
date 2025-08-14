@@ -8,6 +8,7 @@ import { validateAutomovel } from "../middleware/validators/validVehicles.js";
 import { controllerLinkVehicleWithDriver } from "../controllers/controllerLinkDriverVehicle.js";
 import { validateCheckIn } from "../middleware/validators/validCheckIn.js";
 import {validateCheckInOpen} from "../middleware/validators/validCheckIn.js"
+import { validateSubmitDateForLogistics } from "../middleware/validators/validLogistcs.js";
 import { validateLocationGoods } from "../middleware/validators/validLocationGoods.js";
 import{validateLocationVehicle} from "../middleware/validators/validLocationVehicle.js";
 import { validDeliveryFinish } from "../middleware/validators/validDeliveryFinish.js";
@@ -345,7 +346,7 @@ route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
     
 
  // LOGISTICA
- route.post('/logistics' , (req , res)=>{
+ route.post('/logistics' , validateSubmitDateForLogistics,validate,  authenticateToken, (req , res)=>{
   logistcgController.submitDateForLogistcs(req ,res)
 });
 

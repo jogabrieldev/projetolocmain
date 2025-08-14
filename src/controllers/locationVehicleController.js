@@ -61,7 +61,7 @@ async dataLocacaoVehicle(req ,res){
         return res.status(200).json({message: 'Locaçaõ do veiculo feita com sucesso!' , success:true , result})
     } catch (error) {
       console.error('Erro no locaçãp veiculo' , error)
-      res.status(500).json({message: 'Erro no servidor'})
+      return res.status(500).json({message: 'Erro no servidor'})
     }
   },
 
@@ -71,12 +71,12 @@ async dataLocacaoVehicle(req ,res){
       const locacaoFinishVehicles = await modelsLocationAuto.buscarTodasLocacoes();
 
       if (!locacaoFinishVehicles|| locacaoFinishVehicles.length === 0) {
-        return res.status(404).json({ message: 'Nenhuma locação encontrada' });
+        return res.status(404).json({ message: 'Nenhuma locação de veiculos encontrada' , success:false });
       }
   
       return res.status(200).json({ locacoes: locacaoFinishVehicles }); 
     } catch (error) {
-      res.status(500).json({ error: "Erro ao buscar os dados de locação" });
+      return res.status(500).json({ error: "Erro ao buscar os dados de locação" });
     }
   },
 

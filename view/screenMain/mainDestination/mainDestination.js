@@ -295,9 +295,6 @@ async function getAllDestinationDescarte() {
         position: "center",
         backgroundColor: "#f44336",
       }).showToast();
-
-      document.querySelector(".listDestinationDescart").innerHTML =
-        "<p>Erro ao carregar destinos.</p>";
       return;
     }
 
@@ -389,20 +386,20 @@ async function getAllDestinationDescarte() {
       wrapper.appendChild(tabela);
       destinoListDiv.appendChild(wrapper);
     } else {
-      destinoListDiv.innerHTML = "<p class='text-light'>Nenhum destino cadastrado.</p>";
+      destinoListDiv.innerHTML = "<p class='text-dark'>Nenhum destino cadastrado.</p>";
     }
   } catch (error) {
     console.error("Erro ao carregar destinos:", error);
     Toastify({
-      text: "Erro de conexão com o servidor.",
+      text: "Erro de conexão com o servidor para listar destinos.",
       duration: 3000,
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
     document.querySelector(".listDestinationDescart").innerHTML =
-      "<p>Erro ao carregar destinos.</p>";
+      "<p class='text-dark'>Erro ao carregar destinos.</p>";
   };
 };
 

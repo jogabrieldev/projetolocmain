@@ -66,17 +66,41 @@ export const validateAutomovel = [
     return true;
   }),
 
-
-    body('caauvenc')
-    .notEmpty().withMessage('Obrigatorio passar a data de vencimento do veiculo')
+    body("caauchss")
+    .notEmpty().withMessage("Obrigatório informar o chassi.")
     .custom((value) => {
-    const dataInformada = parseISO(value); // Transforma string em objeto Date
-    const dataMinima = addDays(new Date(), 10); // Data atual + 10 dias
+      value = value.toUpperCase().trim();
+      if (value.length !== 17) throw new Error("Chassi deve ter 17 caracteres.");
+      if (/[IOQ]/.test(value)) throw new Error("Chassi não pode conter I, O ou Q.");
+      if (!/^[A-Z0-9]+$/.test(value)) throw new Error("Chassi deve conter apenas letras e números.");
+      return true;
+    }),
 
-    if (!isAfter(dataInformada, dataMinima)) {
-      throw new Error('A data de vencimento deve ser pelo menos 10 dias no futuro');
-    }
+  // RENAVAM
+  body("caaurena")
+    .notEmpty().withMessage("Obrigatório informar o RENAVAM.")
+    .custom((value) => {
+      value = value.replace(/\D/g, '');
+      if (value.length !== 11) throw new Error("RENAVAM deve ter 11 dígitos.");
+      if (/^(\d)\1+$/.test(value)) throw new Error("RENAVAM inválido.");
 
-    return true;
-  })
+      let renavamSemDV = value.slice(0, -1);
+      let soma = 0;
+      let multiplicador = 2;
+
+      for (let i = renavamSemDV.length - 1; i >= 0; i--) {
+        soma += parseInt(renavamSemDV[i]) * multiplicador;
+        multiplicador++;
+        if (multiplicador > 9) multiplicador = 2;
+      }
+
+      let resto = soma % 11;
+      let dvCalculado = (resto === 0 || resto === 1) ? 0 : (11 - resto);
+      if (dvCalculado !== parseInt(value.slice(-1))) {
+        throw new Error("RENAVAM inválido.");
+      }
+
+      return true;
+    }),
+
 ];

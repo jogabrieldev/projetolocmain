@@ -142,6 +142,7 @@ async getNumberLocationCheck(){
   c.clloid, 
   c.cllonmlo, 
   c.cllodtdv, 
+  c.clloidcl,
   c.cllodtlo, 
   c.cllopgmt, 
   c.clloclno, 
@@ -178,6 +179,7 @@ ORDER BY c.clloid;`
       locacao = {
         clloid: row.clloid,
         cllonmlo: row.cllonmlo,
+        clloidcl:row.clloidcl,
         cllodtdv: row.cllodtdv,
         cllodtlo: row.cllodtlo,
         cllopgmt: row.cllopgmt,

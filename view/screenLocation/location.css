@@ -41,9 +41,9 @@
   cursor: pointer;
 }
 
-/* Estilo base */
+/* Estilo check-Box */
 .locacao-checkbox {
-  appearance: none; /* remove o estilo padrão do navegador */
+  appearance: none; 
   width: 20px;
   height: 20px;
   cursor: pointer;
@@ -53,20 +53,32 @@
   transition: all 0.2s ease-in-out;
 }
 
-/* Hover */
 .locacao-checkbox:hover {
   border-color: #242115; 
   box-shadow: 0 0 5px rgba(230, 226, 213, 0.8);
 }
 
-/* Quando marcado */
 .locacao-checkbox:checked {
   background-color: #1d5e1d;
-  border-color: #1d5e1d;
+  border-color: #f1f8f1;
 }
 
 
-/* parte da Locação  */
+.locacao-checkbox:checked::after {
+  content: '✔'; /* símbolo de check */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 14px;
+}
+
+.locacao-checkbox:checked {
+  background-color: #1d5e1d;
+  border-color: #1d5e1d;
+} 
+
 .content {
   display: flex;
   flex-direction: column;
@@ -84,14 +96,13 @@
   height: 60%;
   max-height: 90vh;
   overflow-y: auto;
-  background-color: #f8f9fa; /* exemplo de fundo claro */
+  background-color: #f8f9fa; 
   border-radius: 12px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   flex-direction: column;
   justify-content: space-around;
 }
 
-/* Estilo para telas médias e grandes (desktop) */
 @media (min-width: 768px) {
   .containerMaps {
     width: 800px;
@@ -99,7 +110,6 @@
   }
 }
 
-/* Estilo para telas muito pequenas (opcional) */
 @media (max-width: 400px) {
   .containerMaps {
     width: 95%;
@@ -108,14 +118,12 @@
 }
 
 
-  .iframe-container {
+.iframe-container {
     width: 100%;
     height: 250px;
     background-color: #f0f0f0;
     border: 1px solid #ccc;
-  }
-
-/* Contrato finalizado  */
+}
 
 .tableContrato {
   overflow: auto;

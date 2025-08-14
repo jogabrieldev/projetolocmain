@@ -276,19 +276,20 @@ async function getAllResiduo() {
     } else {
       const mensagem = document.createElement('p');
       mensagem.textContent = 'Nenhum resíduo cadastrado.';
-      mensagem.className = 'text-muted text-center my-2';
+      mensagem.className = 'text-muted text-center my-2 text-dark';
       wrapper.appendChild(mensagem);
     }
   } catch (error) {
     console.error('Erro na listagem de resíduo:', error);
     Toastify({
-      text: "Erro no servidor",
+      text: "Erro no servidor para listar residuos ",
       duration: 3000,
       close: true,
       gravity: "top",
       position: "center",
       backgroundColor: '#f44336'
     }).showToast();
+     document.querySelector('.listResiduo').innerHTML = "<p class='text-dark'>Erro ao carregar residuos.</p>";
   };
 };
 

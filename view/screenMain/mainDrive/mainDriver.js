@@ -600,12 +600,20 @@ async function fetchListMotorista() {
       motoristaListDiv.appendChild(wrapper);
     } else {
       motoristaListDiv.innerHTML =
-        "<p class='text-light'>Nenhum motorista cadastrado.</p>";
+        "<p class='text-dark'>Nenhum motorista cadastrado.</p>";
     }
   } catch (error) {
     console.error("Erro ao carregar motoristas:", error);
+     Toastify({
+      text: "Erro na comunicação com o servidor para listar motorista.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "#f44336",
+    }).showToast();
     document.querySelector(".listingDriver").innerHTML =
-      "<p>Erro ao carregar motoristas.</p>";
+      "<p class='text-dark'>Erro ao carregar motoristas.</p>";
   };
 };
 

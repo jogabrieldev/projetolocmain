@@ -507,7 +507,7 @@ async function fetchListProdutos() {
       produtosListDiv.appendChild(wrapper);
     } else {
       produtosListDiv.innerHTML =
-        "<p class='text-light'>Nenhum produto cadastrado.</p>";
+        "<p class='text-dark'>Nenhum produto cadastrado.</p>";
     }
   } catch (error) {
     console.error("Erro ao carregar produtos:", error);
@@ -520,7 +520,7 @@ async function fetchListProdutos() {
       backgroundColor: "#f44336",
     }).showToast();
     document.querySelector(".listingProd").innerHTML =
-      "<p>Erro ao carregar produtos.</p>";
+      "<p class='text-dark'>Erro ao carregar produtos.</p>";
   };
 };
 

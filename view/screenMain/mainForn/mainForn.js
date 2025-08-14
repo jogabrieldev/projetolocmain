@@ -683,7 +683,7 @@ async function fetchListFornecedores() {
       }).showToast();
 
       document.querySelector(".listingForn").innerHTML =
-        "<p>Erro ao carregar fornecedores.</p>";
+        "<p class='text-dark'>Erro ao carregar fornecedores.</p>";
       return;
     }
 
@@ -790,7 +790,7 @@ async function fetchListFornecedores() {
       wrapper.appendChild(tabela);
       fornecedoresListDiv.appendChild(wrapper);
     } else {
-      fornecedoresListDiv.innerHTML = "<p class='text-light'>Nenhum fornecedor cadastrado.</p>";
+      fornecedoresListDiv.innerHTML = "<p class='text-dark'>Nenhum fornecedor cadastrado.</p>";
     }
   } catch (error) {
     console.error("Erro ao carregar fornecedores:", error);
@@ -803,7 +803,7 @@ async function fetchListFornecedores() {
       backgroundColor: "#f44336",
     }).showToast();
     document.querySelector(".listingForn").innerHTML =
-      "<p>Erro ao carregar fornecedores.</p>";
+      "<p class='text-dark'>Erro ao carregar fornecedores.</p>";
   };
 };
 

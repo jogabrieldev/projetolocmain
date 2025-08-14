@@ -30,9 +30,8 @@ async function frontLocation() {
     });
 
     if (response.status === 404) {
-      document.querySelector(
-        ".tableLocation"
-      ).innerHTML = `<p style="text-align:center;">Nenhuma locação encontrada.</p>`;
+      document.querySelector(".tableLocation"
+      ).innerHTML = `<p class="text-danger text-center">Nenhuma locação encontrada ate o momento.</p>`;
       return;
     }
 
@@ -47,8 +46,8 @@ async function frontLocation() {
       return;
     }
 
-    const listaLocacoes = locacoesFinishTable
-      .map((locacao) => {
+
+    const listaLocacoes = locacoesFinishTable.map((locacao) => {
         if (locacao.bens.length > 0) {
           return locacao.bens.map((bem) => ({
             idClient: locacao.clloid,
@@ -99,7 +98,7 @@ function renderTable(data) {
   container.style.marginBottom = "10px";
 
   const title = document.createElement("h2");
-  title.textContent = "Locaçaõ de Bens";
+  title.innerHTML = "<p class='text-dark'>Locaçaõ de Bens</p>";
   title.style.margin = "0";
 
   const messageFilter = document.createElement("span");
@@ -281,7 +280,7 @@ async function showContratoLocationGoods(locacao) {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
      throw new Error("Contrato não encontrado.");
        
@@ -343,7 +342,7 @@ async function showContratoLocationGoods(locacao) {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
   };
 };
@@ -400,7 +399,7 @@ async function searchLocation() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -440,7 +439,7 @@ async function searchLocation() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -510,7 +509,7 @@ function deletarLocation() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
         return;
       }
@@ -533,7 +532,7 @@ function deletarLocation() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
     }
   });
@@ -578,7 +577,7 @@ function deletarLocation() {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "green",
+          backgroundColor: "#1d5e1d",
         }).showToast();
 
         rowProd.remove();
@@ -600,7 +599,7 @@ function deletarLocation() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
         };
       };
@@ -612,7 +611,7 @@ function deletarLocation() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
     };
   };
@@ -635,7 +634,7 @@ function editLocation() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
           return;
         }
@@ -673,7 +672,7 @@ function editLocation() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "RED",
           }).showToast();
 
           localStorage.removeItem("token");
@@ -720,12 +719,13 @@ function editLocation() {
         }
         
       } catch (error) {
-        console.error('ERRO NA APLICAÇÃO' , error)
+        console.error('ERRO NA APLICAÇÃO PARA EDITAR LOCAÇÃO' , error)
       }
     });
-  }
-}
+  };
+};
 
+//PRECHER FORMULARIO DE EDIÇÃO
 function preencherFormularioDeEdicao(locacao) {
   document.getElementById("idLocation").value = locacao.cllonmlo;
 
@@ -754,8 +754,9 @@ function preencherFormularioDeEdicao(locacao) {
   });
 
   editarlocationFinish(locacao.cllonmlo);
-}
+};
 
+// FUNÇAÕ DE ENVIAR A EDIÇÃ
 function editarlocationFinish(id) {
   const token = localStorage.getItem("token");
 
@@ -832,7 +833,7 @@ function editarlocationFinish(id) {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "red",
+            backgroundColor: "#f44336",
           }).showToast();
           return;
         }
@@ -864,7 +865,7 @@ function editarlocationFinish(id) {
            close: true,
            gravity: "top",
            position: "center",
-           backgroundColor: "red",
+           backgroundColor: "#f44336",
         }).showToast();
        return;
      }
@@ -930,7 +931,7 @@ function editarlocationFinish(id) {
               close: true,
               gravity: "top",
               position: "center",
-              backgroundColor: "green",
+              backgroundColor: "#1d5e1d",
             }).showToast();
           }
         }
@@ -958,16 +959,17 @@ function editarlocationFinish(id) {
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#f44336",
         }).showToast();
       }
     });
-  }
-}
+  };
+};
 
+// ADICIONAR UM NOVO BEM A LOCAÇÃO
 async function addNewGoodsInLocation(novosBens, token) {
   if (novosBens.length > 0) {
-    console.log("Novos bens", novosBens);
+   
     try {
       const responseNovoBem = await fetch(`/api/novobem/`, {
         method: "POST",
@@ -988,7 +990,7 @@ async function addNewGoodsInLocation(novosBens, token) {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "green",
+        backgroundColor: "#1d5e1d",
       }).showToast();
     } catch (error) {
       console.error("🔥 Erro ao inserir novos bens:", error);
@@ -998,10 +1000,10 @@ async function addNewGoodsInLocation(novosBens, token) {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
     }
-  }
-}
+  };
+};
 
 

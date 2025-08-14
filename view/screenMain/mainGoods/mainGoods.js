@@ -621,7 +621,7 @@ async function fetchBens() {
       wrapper.appendChild(tabela);
       bensListDiv.appendChild(wrapper);
     } else {
-      bensListDiv.innerHTML = "<p class='text-light'>Nenhum bem cadastrado.</p>";
+      bensListDiv.innerHTML = "<p class='text-dark'>Nenhum bem cadastrado.</p>";
     }
 
   } catch (error) {
@@ -634,8 +634,10 @@ async function fetchBens() {
       position: "center",
       backgroundColor: "#f44336",
     }).showToast();
-  }
-}
+    document.querySelector("#listingBens").innerHTML =
+      "<p class='text-dark'>Erro ao carregar bens.</p>";
+  };
+};
 
 // BUSCAR POR CAÇAMBA
 async function searchGoodsForId() {

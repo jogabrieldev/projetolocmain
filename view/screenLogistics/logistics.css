@@ -249,7 +249,7 @@
 }
 
 .checkbox-motorista {
-  appearance: none; /* remove o estilo padrão do navegador */
+  appearance: none;
   width: 20px;
   height: 20px;
   cursor: pointer;
@@ -257,6 +257,7 @@
   border-radius: 4px;
   background-color: white;
   transition: all 0.2s ease-in-out;
+  position: relative;
 }
 
 /* Hover */
@@ -265,11 +266,22 @@
   box-shadow: 0 0 5px rgba(230, 226, 213, 0.8);
 }
 
-/* Quando marcado */
 .checkbox-motorista:checked {
   background-color: #1d5e1d;
-  border-color: #1d5e1d;
+  border-color: #f1f8f1;
 }
+
+
+.checkbox-motorista:checked::after {
+  content: '✔'; /* símbolo de check */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 14px;
+}
+
 .tableDriver tbody tr:hover {
   background-color: #dee2e6;
 }

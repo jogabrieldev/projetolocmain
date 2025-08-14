@@ -204,7 +204,7 @@ async function locationTheVehicle() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -218,7 +218,7 @@ async function locationTheVehicle() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -315,12 +315,12 @@ async function locationTheVehicle() {
     const veiculos = [];
 
     const veiculo1 = document.getElementById("veiculo1");
-    const modelo1 = document.getElementById("modelo1").value;
-    const placa1 = document.getElementById("placa1").value;
-    const horario1 = document.getElementById("time1").value;
-    const carga1 = document.getElementById("carga1").value;
-    const quantidade1 = document.getElementById("quantCacamba1").value;
-    const observa1 = document.getElementById('obs1').value
+    const modelo1 = document.getElementById("modelo1")?.value;
+    const placa1 = document.getElementById("placa1")?.value;
+    const horario1 = document.getElementById("time1")?.value;
+    const carga1 = document.getElementById("carga1")?.value;
+    const quantidade1 = document.getElementById("quantCacamba1")?.value;
+    const observa1 = document.getElementById('obs1')?.value
     if (veiculo1.value) {
       veiculos.push({
         code: veiculo1.value,
@@ -335,12 +335,12 @@ async function locationTheVehicle() {
     }
 
     const veiculo2 = document.getElementById("veiculo2");
-    const modelo2 = document.getElementById("modelo2").value;
-    const placa2 = document.getElementById("placa2").value;
+    const modelo2 = document.getElementById("modelo2")?.value;
+    const placa2 = document.getElementById("placa2")?.value;
     const horario2 = document.getElementById("time2")?.value;
-    const carga2 = document.getElementById("carga2").value;
+    const carga2 = document.getElementById("carga2")?.value;
     const quantidade2 = document.getElementById("quantCacamba2").value;
-    const observa2 = document.getElementById('obs2').value
+    const observa2 = document.getElementById('obs2')?.value
 
     if (veiculo2.value) {
       veiculos.push({
@@ -367,7 +367,7 @@ async function locationTheVehicle() {
          close: true,
          gravity: "top",
          position: "center",
-         backgroundColor: "red",
+         backgroundColor: "#f44336",
        }).showToast();
          return; 
       }
@@ -400,7 +400,7 @@ async function locationTheVehicle() {
       duration: 4000,
       gravity: "top",
       position: "center",
-      backgroundColor: "green",
+      backgroundColor: "#1d5e1d",
     }).showToast();
     
    await gerarContratoVeiculos();
@@ -413,9 +413,7 @@ async function locationTheVehicle() {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify({
-      contrato: contratoHTML,
-    })
+    body: JSON.stringify({contrato: contratoHTML})
   });
 
   if (!updateContratoRes.ok) {
@@ -424,7 +422,7 @@ async function locationTheVehicle() {
       duration: 4000,
       gravity: "top",
       position: "center",
-      backgroundColor: "red"
+      backgroundColor: "#f44336"
     }).showToast();
     return;
   }
@@ -449,7 +447,8 @@ async function locationTheVehicle() {
         Toastify({
           text: `Erro ao atualizar status do veículo ${result.message}`,
           duration: 4000,
-          backgroundColor: "red",
+          position: "center",
+          backgroundColor: "#f44336",
         }).showToast();
       }
     });
@@ -466,14 +465,14 @@ async function locationTheVehicle() {
          gravity: "top",
          position: "center",
          duration: 4000,
-         backgroundColor: "red",
+         backgroundColor: "#f44336",
         }).showToast();
     });
    } else {
       Toastify({
        text: errorData.error || "Erro na locação de veiculo!",
        duration: 3000,
-       backgroundColor: "red",
+       backgroundColor: "#f44336",
      }).showToast();
   }
   return; 
@@ -487,11 +486,12 @@ async function locationTheVehicle() {
         duration: 4000,
         gravity: "top",
         position: "right",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
   }
 }
 
+// contrato da locaçãoo do veiculo
  async function gerarContratoVeiculos() {
   const cpfCliente = document.getElementById("cpfClient")?.value || "Não informado";
   const nomeCliente = document.getElementById("nameClient")?.value || "Não informado";
@@ -609,9 +609,7 @@ async function locationTheVehicle() {
       }
     });
   };
-
 };
-
 
 //TABELA DE LOCAÇÃO
 async function frontLocationVeiculos() {
@@ -641,20 +639,19 @@ async function frontLocationVeiculos() {
         "Content-Type": "application/json"
       },
     });
-    console.log("locacao" , response)
+ 
      const dataFinish = await response.json();
 
     if (response.status === 404) {
       document.querySelector(
         ".tableLocation"
-      ).innerHTML = `<p style="text-align:center;" class ="text-dark">${dataFinish.message}}</p>`;
+      ).innerHTML = `<p class ="text-dark">${dataFinish.message}</p>`;
       return;
     }
 
    
     const locacoes = dataFinish.locacoes || [];
 
-    console.log('locaco veiculos' , locacoes)
 
     const table = document.querySelector(".tableLocation");
     if (!table) return;
@@ -697,7 +694,7 @@ async function frontLocationVeiculos() {
     console.error("Erro ao buscar locações com veículos:", error);
   }
 }
-
+// RENDERIZA A TABELA PADRÃO
 function renderTableVeiculos(data) {
   const tableDiv = document.querySelector(".tableLocation");
 
@@ -710,7 +707,7 @@ function renderTableVeiculos(data) {
   container.style.marginBottom = "10px";
 
   const title = document.createElement("h2");
-  title.textContent = "Locações de Veículos";
+  title.innerHTML = "< class='text-dark'>Locações de Veículos</p>";
 
   const messageFilter = document.createElement("span");
   messageFilter.id = "messsageFilter";
@@ -854,7 +851,7 @@ async function showContratoLocacao(locacao) {
   const destinoDescarte = await buscarLocalDescarte(locacao.descarte)
   if(!destinoDescarte || destinoDescarte === null){
      return
-  }
+  };
 
   const formatDate = (dateStr) => {
     if (!dateStr) return "-";
@@ -1092,8 +1089,8 @@ async function showContratoLocacao(locacao) {
       };
       html2pdf().set(opt).from(element).save();
     });
-  }
-}
+  };
+};
 
 
 

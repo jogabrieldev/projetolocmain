@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const mainContent = document.querySelector("#mainContent");
         if (mainContent) {
           mainContent.innerHTML = html;
-    
           locationPendente();
           needVsAvaible();
           validateFamilyBensPending();
@@ -29,9 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         informative.style.display = "block";
         informative.textContent = "SESSÃO LOGISTICA";
 
-        const containerLogistica = document.querySelector(
-          ".containerLogistica"
-        );
+        const containerLogistica = document.querySelector(".containerLogistica");
         if (containerLogistica) {
           containerLogistica.classList.remove("hidden");
           containerLogistica.classList.add("flex");
@@ -58,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } catch (error) {
         console.error("Erro ao carregar dados de logistica");
-      }
+      };
 
       socketLogistcs.on("updateGoodsTable", (updatedGood) => {
         validateFamilyBensPending();
@@ -89,11 +86,10 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       await locationPendente();
     });
-  }
+  };
 });
 
-//  my table location
-
+//TABELA DE LOCAÇÃO PENDENTE
 const vinculacoesPendentes = new Map();
 
 async function locationPendente() {
@@ -126,8 +122,7 @@ async function locationPendente() {
     });
 
     if (response.status === 404) {
-      document.querySelector(".orders").innerHTML =
-        "Nenhuma Locação encontrada";
+      document.querySelector(".orders").innerHTML ="<p class=' text-danger text-center'>Nenhuma Locação encontrada ainda!</p>";
       return;
     }
 
@@ -170,11 +165,9 @@ async function locationPendente() {
       }
     });
 
-    const filterStatusPendente = listaLocacoes.filter(
-      (locacao) => locacao.status === "Pendente"
-    );
+    const filterStatusPendente = listaLocacoes.filter((locacao) => locacao.status === "Pendente");
 
-    if (filterStatusPendente.length > 0) {
+  if (filterStatusPendente.length > 0) {
   const wrapper = document.createElement("div");
   wrapper.className = "table-responsive"; // Scroll em telas pequenas
 
@@ -201,7 +194,7 @@ async function locationPendente() {
     const th = document.createElement("th");
     th.textContent = text;
     th.scope = "col";
-    th.className = "px-1 py-1"; // padding reduzido
+    th.className = "px-1 py-1";
     headerRow.appendChild(th);
   });
   thead.appendChild(headerRow);
@@ -240,7 +233,7 @@ async function locationPendente() {
     values.forEach((text) => {
       const td = document.createElement("td");
       td.textContent = text;
-      td.className = "px-1 py-1"; // padding reduzido
+      td.className = "px-1 py-1";
       row.appendChild(td);
     });
 
@@ -276,21 +269,28 @@ async function locationPendente() {
   });
 
   table.appendChild(tbody);
-  wrapper.appendChild(table);     // << Envolto no div responsivo
-  tableDiv.appendChild(wrapper); // << Adicionado ao DOM
+  wrapper.appendChild(table);     
+  tableDiv.appendChild(wrapper); 
 
 } else {
   const msg = document.createElement("p");
-  msg.style.textAlign = "center";
-  msg.textContent = "Nenhuma locação pendente encontrada.";
+  msg.innerHTML = "<p class='text-danger text-center'>Nenhuma locação pendente encontrada.</p>";
   tableDiv.appendChild(msg);
 }
   } catch (error) {
     console.error("Erro para gerar tabela locação!!", error);
-  }
-}
+    Toastify({
+      text: "Erro no server para listar locações! Verifique.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "#f44336",
+    }).showToast();
+  };
+};
 
-// filtrar EM LOCAÇÃO
+// FILTAR LOCAÇÃO
 function filterLocation() {
   const buttonFilterInLocation = document.getElementById("btnFilter");
   if (buttonFilterInLocation) {
@@ -323,9 +323,9 @@ function filterLocation() {
         });
 
         if (response.status === 404) {
-          document.querySelector(".orders").innerHTML =
-            "Nenhuma Locação encontrada";
-        }
+          document.querySelector(".orders").innerHTML = "<p class='text-danger text-center'>Nenhuma Locação encontrada</p>";
+          return
+        };
 
         if (!response.ok) throw new Error("Erro ao buscar locações.");
 
@@ -439,7 +439,7 @@ function filterLocation() {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
           return;
         } else {
@@ -451,7 +451,7 @@ function filterLocation() {
             position: "center",
             backgroundColor: "orange",
           }).showToast();
-          locationPendente();
+          await locationPendente();
           return;
         }
       } catch (error) {
@@ -495,7 +495,7 @@ async function needVsAvaible(
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -546,11 +546,9 @@ async function needVsAvaible(
       thead.appendChild(headerRow);
       table.appendChild(thead);
 
-      // Corpo da tabela
       const tbody = document.createElement("tbody");
       const row = document.createElement("tr");
 
-      // Células com os valores
       const tdDisponivel = document.createElement("td");
       tdDisponivel.textContent = quantidadeDisponivel;
 
@@ -576,7 +574,6 @@ async function needVsAvaible(
         tdAcao.appendChild(btn);
       }
 
-      // Adiciona as células à linha
       [row, tdDisponivel, tdNecessario, tdFamilia, tdStatus, tdAcao].forEach(
         (td) => {
           if (td !== row) row.appendChild(td);
@@ -585,7 +582,6 @@ async function needVsAvaible(
       tbody.appendChild(row);
       table.appendChild(tbody);
 
-      // Adiciona a tabela à div
       divNeed.appendChild(table);
 
       const btnModal = document.querySelector(".openModal");
@@ -606,12 +602,17 @@ async function needVsAvaible(
       divDrive.innerHTML = "";
     }
   } catch (error) {
-    console.error(
-      "Erro ao buscar os dados para compara necessidade e disponibilidade",
-      error
-    );
-  }
-}
+    console.error("Erro ao buscar os dados para compara necessidade e disponibilidade",error);
+     Toastify({
+        text: "Erro ao buscar os dados para compara necessidade e disponibilidade! Verifique",
+        duration: 4000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "#f44336",
+      }).showToast();
+  };
+};
 
 // COMPARAÇÃO ENTRE DISPONIVEL E PENDENCIA
 async function validateFamilyBensPending() {
@@ -641,7 +642,7 @@ async function validateFamilyBensPending() {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -659,12 +660,12 @@ async function validateFamilyBensPending() {
     if (!listFamilyBens.ok) {
       Toastify({
         text:
-          result?.message || "Erro ao carregar familia de Bens para analise.",
+        result?.message || "Erro ao carregar familia de Bens para analise.",
         duration: 3000,
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return;
     }
@@ -683,7 +684,6 @@ async function validateFamilyBensPending() {
     
     const resultLocation = await locationResponse.json();
     
-    console.log('result' , resultLocation)
     const bensLoc = resultLocation.locacoes?.flatMap((loc) => loc.bens) || [];
 
     const resultadosPorFamilia = resultFamily.reduce((acc, familia) => {
@@ -694,13 +694,8 @@ async function validateFamilyBensPending() {
         (bem) => bem.bensstat === "Disponível" && bem.benscofa === codigoFamilia
       ).length;
 
-      // Contar pedidos pendentes para essa família
-     const pedidosPendentes = bensLoc
-    .filter(
-      (bem) =>
-        bem.belostat === "Pendente" && bem.belocodb === codigoFamilia
-    )
-    .reduce((total, bem) => total + Number(bem.beloqntd || 0), 0);
+     const pedidosPendentes = bensLoc.filter((bem) =>
+        bem.belostat === "Pendente" && bem.belocodb === codigoFamilia).reduce((total, bem) => total + Number(bem.beloqntd || 0), 0);
 
       acc[codigoFamilia] = {
         familiaDescrição,
@@ -744,12 +739,14 @@ async function validateFamilyBensPending() {
     `;
   } catch (error) {
     console.error("Erro ao validar os bens e pedidos:", error);
-  }
-}
+  };
+};
 
+// pegar a quantidade de entrega daquele motorista selecioando
 async function quantidadeDeEntregaMotorista(codeDriver) {
    try {
     const token = localStorage.getItem("token");
+    if(!token)return
     const response = await fetch(`/api/deliverydriver/${codeDriver}`, {
       method: "GET",
       headers: {
@@ -758,7 +755,7 @@ async function quantidadeDeEntregaMotorista(codeDriver) {
       },
     });
 
-    console.log("res" , response)
+ 
     const data = await response.json();
 
     
@@ -784,7 +781,7 @@ async function quantidadeDeEntregaMotorista(codeDriver) {
           color: "#000",
         },
       }).showToast();
-     }
+     };
 
     const totalEntregas = Array.isArray(data.entrega) ? data.entrega.length : 0;
 
@@ -799,17 +796,18 @@ async function quantidadeDeEntregaMotorista(codeDriver) {
           color: "#000",
         },
       }).showToast();
-    }
+    };
 
   } catch (error) {
     console.error("Erro ao buscar quantidade de entregas:", error);
     Toastify({
       text: "Erro no server",
       duration: 4000,
+      position: "center",
       style: { background: "red" },
     }).showToast();
-  }
-}
+  };
+};
 
 // CARREGAR MOTORISTA DISPONIVEIS
 async function loadingDriver() {
@@ -835,7 +833,7 @@ async function loadingDriver() {
   }
 
   if (avalibleDrivers.length > 0) {
-    // Wrapper responsivo da tabela (Bootstrap)
+   
     const wrapper = document.createElement("div");
     wrapper.className = "table-responsive";
 
@@ -901,10 +899,10 @@ async function loadingDriver() {
     divContainerDriver.appendChild(wrapper);
   } else {
     divContainerDriver.textContent = "Nenhum motorista disponível.";
-  }
-}
+  };
+};
 
-// MODAL PARA VINCULAR
+// MODAL PARA VINCULAR BEM/CAÇAMBA A LOCAÇÃO SELECIONADA 
 async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
   const token = localStorage.getItem("token");
 
@@ -931,10 +929,10 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
     return;
-  }
+  };
 
   const motoId = motoristasSelecionados[0];
 
@@ -1012,7 +1010,7 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
   if (conteiner) {
     conteiner.classList.remove("flex");
     conteiner.classList.add("hidden");
-  }
+  };
 
   // Lógica de vinculação dos bens
   let quantidadeVinculada = 0;
@@ -1041,7 +1039,7 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
           if (familias[familiaBem]) {
             familias[familiaBem].vinculados++;
           }
-        }
+        };
 
         if (quantidadeVinculada >= quantidadeLocacao) {
           document.querySelectorAll(".vincular-bem")
@@ -1053,7 +1051,7 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
             close: true,
             gravity: "top",
             position: "center",
-            backgroundColor: "green",
+            backgroundColor: "#1d5e1d",
           }).showToast();
         }
       }
@@ -1077,7 +1075,9 @@ async function abrirModal(cliente, familiaBem, quantidadeLocacao, codigo) {
 
 // pegar locações para logistica
 async function getAllLocationsForLogistics(token) {
-  const resunt = await fetch("/api/locationFinish", {
+
+try {
+    const resunt = await fetch("/api/locationFinish", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -1087,15 +1087,22 @@ async function getAllLocationsForLogistics(token) {
 
   if (!resunt.ok) {
     throw new Error("Erro ao obter dados da locacao");
-  }
+  };
 
   const locacao = await resunt.json();
-  return locacao;
-}
+  if(locacao) return locacao;
+  
+ } catch (error) {
+  console.error("Erro em buscar a locação para a logistica")
+  throw new Error("Erro em buscar a locação para a logistica");
+  
+ };
+};
 
-async function buscarClientePorNome(nomeCliente, token) {
+// PEGAR CLIENTE ENVOLCIDO
+async function buscarClientePorNome(cliecode, token) {
   try {
-    const response = await fetch("/api/listclient", {
+    const response = await fetch(`/api/client/${cliecode}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -1107,50 +1114,24 @@ async function buscarClientePorNome(nomeCliente, token) {
       throw new Error("Erro ao obter lista de clientes");
     }
 
-    const clientes = await response.json();
+    const cliente = await response.json();
+    console.log("clientes" , cliente)
+    if(cliente) return cliente
 
-    const clienteEncontrado = clientes.find((cliente) => {
-      const nomeClienteNormalizado = nomeCliente
-        .normalize("NFD")
-        .replace(/[̀-ͯ]/g, "")
-        .trim()
-        .toLowerCase();
-
-      const nomeBancoNormalizado = cliente.clienome
-        .normalize("NFD")
-        .replace(/[̀-ͯ]/g, "")
-        .trim()
-        .toLowerCase();
-
-      return nomeBancoNormalizado === nomeClienteNormalizado;
-    });
-    if (!clienteEncontrado) {
-      Toastify({
-        text: `Cliente "${nomeCliente}" não encontrado na base de dados!`,
-        duration: 4000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-      return null;
-    }
-
-    return clienteEncontrado;
   } catch (error) {
     console.error(error);
     Toastify({
-      text: "Erro ao buscar cliente.",
+      text: "Erro ao buscar cliente. Verifique",
       duration: 4000,
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
     return null;
-  }
-}
-
+  };
+};
+ //atualizar status no processo de vincular bem a locação
 async function atualizarStatus(url, body, mensagemErro, token) {
   const res = await fetch(url, {
     method: "PUT",
@@ -1166,9 +1147,10 @@ async function atualizarStatus(url, body, mensagemErro, token) {
     throw new Error(
       `${mensagemErro}: ${erroDetalhado.message || "Erro inesperado."}`
     );
-  }
-}
+  };
+};
 
+//contador para ver se subrimos a necessidade do cliente
 function atingiuQuantidadeSolicitada(locacao, familiaBem) {
   const bensFamilia = locacao.bens.filter((b) => b.beloben === familiaBem);
 
@@ -1183,6 +1165,7 @@ function atingiuQuantidadeSolicitada(locacao, familiaBem) {
   return vinculados >= quantidadeSolicitada;
 }
 
+// BUSCAR A CAÇAMBA/BEM PELO O CODIGO
 async function buscarBemPorCodigo(id, token) {
    try {
     const response = await fetch(`/api/bens/${id}`, {
@@ -1202,8 +1185,8 @@ async function buscarBemPorCodigo(id, token) {
    } catch (error) {
       console.error('Erro ao buscar o bem' , error)
       throw new error("Erro ao buscar o bem pelo o codigo")
-   }
-}
+   };
+};
 
 // vincular o bem a locação e atualizar status
 async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
@@ -1259,20 +1242,18 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
         close: true,
         gravity: "top",
         position: "center",
-        backgroundColor: "red",
+        backgroundColor: "#f44336",
       }).showToast();
       return false;
     }
 
-   
-    const nomeCliente = locacaoEncontrada.clloclno.trim();
-    const cliente = await buscarClientePorNome(nomeCliente, token);
+    const cliecode = locacaoEncontrada?.clloidcl;
+    const cliente = await buscarClientePorNome(cliecode, token);
     if (!cliente) return false;
 
-    console.log('cliente lcouocc' , cliente)
 
     const confirmacao = confirm(
-      `Deseja vincular o bem ${bemId} ao cliente ${nomeCliente} (Locação ${locacaoEncontrada.cllonmlo})?`
+      `Deseja vincular o bem ${bemId} ao cliente ${cliente.clienome} (Locação ${locacaoEncontrada.cllonmlo})?`
     );
     if (!confirmacao) return false;
 
@@ -1302,6 +1283,7 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization:`Bearer ${token}`
       },
       body: JSON.stringify({payloadLogistcs}),
     });
@@ -1310,47 +1292,28 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
 
     if (!response.ok) {
       const errorData = await response.json();
+        Toastify({
+        text: `${errorData.message} || "Erro ao vincular bem."`,
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "#f44336",
+      }).showToast();
       throw new Error(errorData.message || "Erro ao vincular bem.");
     }
-
-    // Atualização de status
-    await atualizarStatus(
-      `/api/updatestatus/${bemId}`,
-      {
-        bensstat: "Locado",
-      },
-      "Erro ao atualizar status do bem", 
-      token
-    );
-
-    const bemRow = document.querySelector(`[data-benscode="${bemId}"]`);
-    if (bemRow) {
-    const statusBem = bemRow.querySelector(".status-bem");
-    if (statusBem) statusBem.textContent = "Locado";
-    }
- 
-     await atualizarStatus(
-      `/api/updatestatusMoto/${motoId}`,
-      {
-        motostat: "Entrega destinada",
-      },
-      "Erro ao atualizar status do motorista",
-      token
-    );
-
-     const motoRow = document.querySelector(`[data-motocode="${motoId}"]`);
-      if (motoRow) {
-      const statusMoto = motoRow.querySelector(".status-moto");
-      if (statusMoto) statusMoto.textContent = "Entrega destinada";
-     }
-
-    //  await atualizarStatus('/api/contrato/:id' , {})
-    await atualizarStatus(`/api/updatestatuslocation/${codeLocation}`,
+    
+    try {
+        await atualizarStatus(`/api/updatestatuslocation/${codeLocation}`,
         { belostat: "Em Locação" },
         "Erro ao atualizar status da locação",
         token
       );
-
+    } catch (error) {
+       throw new Error("Erro para atualizar o status da locação!" , error);
+       
+    }
+   
       const locacaoRow = document.querySelector(`tr[data-locacao='${locacaoEncontrada.cllonmlo}']`);
        if (locacaoRow) {
        const statusLocacao = locacaoRow.querySelector("td:nth-child(3)");
@@ -1364,6 +1327,7 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
           Authorization: `Bearer ${token}`,
         },
       });
+
 if (!contratoAtualResponse.ok) {
   throw new Error("Não foi possível buscar o contrato atual.");
 }
@@ -1374,17 +1338,16 @@ const contratoHTML = contratoAtualData.result; // HTML como string
 const parser = new DOMParser();
 const contratoDoc = parser.parseFromString(contratoHTML, "text/html");
 
-// Localiza a tabela do contrato
+
 const bensVnculadoDiv = contratoDoc.querySelector(".bensVinculados");
 if (!bensVnculadoDiv) {
   throw new Error("container de bens não encontrada no contrato.");
 }
 bensVnculadoDiv.style.display = 'block'
-// Remove o thead antigo (se existir)
+
 const bemCard = document.createElement("div");
 bemCard.className = "card mb-3 shadow-sm";
 
-// Cabeçalho do card
 const bemHeader = document.createElement("div");
 bemHeader.className = "card-header bg-success text-white d-flex justify-content-between align-items-center";
 bemHeader.innerHTML = `
@@ -1417,15 +1380,12 @@ bemBody.innerHTML = `
   </table>
 `;
 
-// Monta o card
 bemCard.appendChild(bemHeader);
 bemCard.appendChild(bemBody);
 
-// Adiciona na área de bens vinculados
-bensVnculadoDiv.appendChild(bemCard);
+ bensVnculadoDiv.appendChild(bemCard);
 
-// Atualiza o contrato no servidor
-const contratoAtualizado = contratoDoc.body.innerHTML;
+ const contratoAtualizado = contratoDoc.body.innerHTML;
 
 const responseUpdateContrato = await fetch(`/api/contrato/${codeLocation}`, {
   method: "PUT",
@@ -1438,8 +1398,7 @@ const responseUpdateContrato = await fetch(`/api/contrato/${codeLocation}`, {
 if (!responseUpdateContrato.ok) {
   const erro = await responseUpdateContrato.json();
   throw new Error(erro.message || "Erro ao atualizar contrato.");
-}
-
+};
 
     Toastify({
       text: `Bem ${bemId} vinculado com sucesso!`,
@@ -1447,23 +1406,21 @@ if (!responseUpdateContrato.ok) {
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "green",
+      backgroundColor: "#1d5e1d",
     }).showToast();
 
     
-    
-   
   return true;
   } catch (error) {
     console.error("Erro ao vincular bem:", error);
     Toastify({
-      text: error.message || "Erro ao vincular o bem!",
+      text: error.message || "Erro ao vincular o bem no server!",
       duration: 4000,
       close: true,
       gravity: "top",
       position: "center",
-      backgroundColor: "red",
+      backgroundColor: "#f44336",
     }).showToast();
     return false;
-  }
-}
+  };
+};

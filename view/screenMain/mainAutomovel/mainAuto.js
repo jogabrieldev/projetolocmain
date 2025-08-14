@@ -32,7 +32,51 @@ function maskFieldveicu() {
       },
     });
   });
-}
+};
+
+function validarRenavam(renavam) {
+  // Remove caracteres não numéricos
+  renavam = renavam.replace(/\D/g, '');
+
+  // Deve ter exatamente 11 dígitos
+  if (renavam.length !== 11) return false;
+
+  // Verifica se todos os dígitos são iguais (ex.: 11111111111)
+  if (/^(\d)\1+$/.test(renavam)) return false;
+
+  // Calcula dígito verificador
+  let renavamSemDV = renavam.slice(0, -1);
+  let soma = 0;
+  let multiplicador = 2;
+
+  for (let i = renavamSemDV.length - 1; i >= 0; i--) {
+    soma += parseInt(renavamSemDV[i]) * multiplicador;
+    multiplicador++;
+    if (multiplicador > 9) multiplicador = 2;
+  }
+
+  let resto = soma % 11;
+  let dvCalculado = resto === 0 || resto === 1 ? 0 : (11 - resto);
+
+  return dvCalculado === parseInt(renavam.slice(-1));
+};
+
+function validarChassi(chassi) {
+  chassi = chassi.toUpperCase().trim();
+
+  // Deve ter 17 caracteres
+  if (chassi.length !== 17) return false;
+
+  // Não pode conter I, O ou Q
+  if (/[IOQ]/.test(chassi)) return false;
+
+  // Deve conter apenas letras e números
+  if (!/^[A-Z0-9]+$/.test(chassi)) return false;
+
+  return true; // Validação básica
+};
+
+
 
 const socketAutomovel = io();
 document.addEventListener("DOMContentLoaded", () => {
@@ -249,10 +293,39 @@ async function registerNewVehicles() {
         return;
       }
 
+     const chassiValido = validarChassi(document.querySelector("#chassAuto").value);
+
+     if (!chassiValido) {
+     Toastify({
+     text: "O formato que foi adicionado no campo CHASSI não é compatível!",
+     duration: 3000,
+     close: true,
+     gravity: "top",
+     position: "center",
+     backgroundColor: "#f44336",
+     }).showToast();
+     return;
+    }
+
+    const renavamValido = validarRenavam(document.querySelector("#renaAuto").value.trim());
+
+    if (!renavamValido) {
+      Toastify({
+      text: "O formato que foi adicionado no campo RENAVAM não é compatível!",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "#f44336",
+     }).showToast();
+    return;
+   }
+
+
       const formData = {
         caaucode: document.querySelector("#codeAuto").value.trim(),
         caauplac: document.querySelector("#placAuto").value.toUpperCase(),
-        caauchss: document.querySelector("#chassAuto").value,
+        caauchss: document.querySelector("#chassAuto").value.trim().toUpperCase(),
         caaurena: document.querySelector("#renaAuto").value.trim(),
         caaumaca: document.querySelector("#macaAuto").value.trim(),
         caaumode: document.querySelector("#modeAuto").value.trim(),
@@ -265,6 +338,9 @@ async function registerNewVehicles() {
         caausitu: document.querySelector("#situAuto").value.trim(),
         caauvenc: document.querySelector("#dtVenci").value
       };
+      
+       
+      console.log(formData)
 
       try {
         const response = await fetch("/api/cadauto", {
@@ -468,12 +544,12 @@ async function listarVeiculos() {
       veiculosListDiv.appendChild(wrapper);
     } else {
       veiculosListDiv.innerHTML =
-        "<p class='text-light'>Nenhum veículo cadastrado.</p>";
+        "<p class='text-dark'>Nenhum veículo cadastrado.</p>";
     };
   } catch (error) {
     console.error("Erro ao carregar veículos:", error);
     document.querySelector(".listingAutomo").innerHTML =
-      "<p class='text-light'>Erro ao carregar veículos.</p>";
+      "<p class='text-dark'>Erro ao carregar veículos.</p>";
   };
 };
 
@@ -947,17 +1023,17 @@ function editVehicles() {
 
       const updateAuto = {
         caaucode: document.getElementById("codeAutoEdit").value,
-        caauplac: document.getElementById("placAutoEdit").value,
+        caauplac: document.getElementById("placAutoEdit").value.trim(),
         caauchss: document.getElementById("chassAutoEdit").value,
         caaurena: document.getElementById("renaAutoEdit").value,
-        caaumaca: document.getElementById("macaAutoEdit").value,
-        caaumode: document.getElementById("modeAutoEdit").value,
-        caaucor: document.getElementById("corAutoEdit").value,
+        caaumaca: document.getElementById("macaAutoEdit").value.trim(),
+        caaumode: document.getElementById("modeAutoEdit").value.trim(),
+        caaucor: document.getElementById("corAutoEdit").value.trim(),
         caautico: document.getElementById("tpCombusAutoEdit").value,
-        caaukmat: document.getElementById("kmAtAutoEdit").value,
-        caaustat: document.getElementById("statAutoEdit").value,
-        caauloca: document.getElementById("pdLocCarEdit").value,
-        caaudtca: document.getElementById("dtCadAutoEdit").value,
+        caaukmat: document.getElementById("kmAtAutoEdit").value.trim(),
+        caaustat: document.getElementById("statAutoEdit").value.trim(),
+        caauloca: document.getElementById("pdLocCarEdit").value.trim(),
+        caaudtca: document.getElementById("dtCadAutoEdit").value
       };
 
       const token = localStorage.getItem("token"); 
