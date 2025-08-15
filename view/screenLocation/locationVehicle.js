@@ -295,8 +295,6 @@ async function locationTheVehicle() {
       return;
     }
 
-    console.log(dateSave);
-
     const dateLocation = {
       client: userClientValidade,
       cllonmlo: numericLocation,
@@ -636,7 +634,9 @@ async function frontLocationVeiculos() {
     const response = await fetch("/api/locacaoveiculo", {
       method: "GET",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Authorization:`Bearer${token}`
+
       },
     });
  

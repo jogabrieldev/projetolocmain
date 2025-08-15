@@ -327,9 +327,9 @@ route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
 
  // LOCAÇÃO VEICULOS
  route.post('/api/locacaoveiculo' ,validateLocationVehicle, validate, authenticateToken,   (req ,res)=>{
-  controllerLocationVehicle.dataLocacaoVehicle(req ,res)
+   controllerLocationVehicle.dataLocacaoVehicle(req ,res)
  });
- route.get('/api/locacaoveiculo' , (req , res)=>{
+ route.get('/api/locacaoveiculo' , authenticateToken, (req , res)=>{
    controllerLocationVehicle.getLocationVehicles(req ,res)
  });
  route.delete('/api/locacaoveiculo/:id' ,authenticateToken , (req ,res)=>{
@@ -346,7 +346,7 @@ route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
   logistcgController.submitDateForLogistcs(req ,res)
 });
 
-route.get("/api/contrato/:id",(req , res)=>{
+route.get("/api/contrato/:id", authenticateToken,(req , res)=>{
   logistcgController.getAll(req ,res)
 });
 
@@ -354,7 +354,7 @@ route.get("/api/searchlocation/search" , authenticateToken, (req ,res)=>{
   logistcgController.searchLocationForParams(req ,res)
 });
 
-route.put("/api/contrato/:id" , (req ,res)=>{
+route.put("/api/contrato/:id" , authenticateToken, (req ,res)=>{
   logistcgController.updateContratoWithGoods(req ,res)
 });
 

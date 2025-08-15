@@ -58,8 +58,6 @@ async function preencheraResiduo(id) {
       method: "GET",
     });
     const data = await res.json();
-    console.log("residuo", data);
-
     const lista = data.list;
 
     if (Array.isArray(lista) && fieldResi) {
@@ -225,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (buttonSubmitLocationFinishVehicles) {
                   buttonSubmitLocationFinishVehicles.addEventListener(
                     "click",
-                    locationTheVehicle()
+                    locationTheVehicle
                   );
                 }
                 maskFieldLocalization();
@@ -502,7 +500,7 @@ function searchClientForLocation() {
       }
 
       const token = localStorage.getItem("token");
-
+      if(!token)return
       try {
         const response = await fetch("/api/listclient", {
           method: "GET",
@@ -697,8 +695,8 @@ function searchClientForLocation() {
         }).showToast();
       }
     });
-  }
-}
+  };
+};
 
 // CARREGAR CODIGO DA FAMILIA
 async function carregarFamilias() {

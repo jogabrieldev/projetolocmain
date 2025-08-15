@@ -1,3 +1,18 @@
+// import { socket } from "../socket/socket.js";        
+// import "./mainClient/mainClient.js";               
+// import "./mainGoods/mainGoods.js"; 
+// import "./mainDrive/mainDriver.js"
+// import "./mainDrive/linkDriverVehicle.js"
+// import "./mainAutomovel/mainAuto.js"
+// import "./mainDestination/mainDestination.js"
+// import "./mainFabe/mainFabri.js"
+// import "./mainForn/mainForn.js"
+// import "./mainProd/mainProd.js"
+// import "./maskFields.js"
+// import "./validation.js"
+// import  "./mainResiduo/mainResiduo.js"
+// import "./mainTypeProd/mainTypeProd.js"
+
 function isDataValida(data) {
   const date = new Date(data);
   const ano = date.getFullYear();

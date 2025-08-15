@@ -744,6 +744,8 @@ async function validateFamilyBensPending() {
 
 // pegar a quantidade de entrega daquele motorista selecioando
 async function quantidadeDeEntregaMotorista(codeDriver) {
+
+   if(!codeDriver)return
    try {
     const token = localStorage.getItem("token");
     if(!token)return
@@ -758,10 +760,9 @@ async function quantidadeDeEntregaMotorista(codeDriver) {
  
     const data = await response.json();
 
-    
      if(response.status === 400){
         Toastify({
-        text: data.message || "Motorista não possui nenhuma entrega em aberto!",
+        text: `${data.message}` || "Motorista não possui nenhuma entrega em aberto!",
         duration: 4000,
         gravity: "top",
         position: "center",
@@ -772,7 +773,7 @@ async function quantidadeDeEntregaMotorista(codeDriver) {
       }).showToast();
      } else{
         Toastify({
-        text: data.message,
+        text: `${data.message}`,
         duration: 4000,
         gravity: "top",
         position: "center",
@@ -898,7 +899,7 @@ async function loadingDriver() {
     wrapper.appendChild(tabela);
     divContainerDriver.appendChild(wrapper);
   } else {
-    divContainerDriver.textContent = "Nenhum motorista disponível.";
+    divContainerDriver.innerHTML = "<p class='text-danger'>Nenhum motorista disponível.</p>";
   };
 };
 
@@ -1209,6 +1210,10 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
     return false;
   }
 
+  if(!bemId || !familiaBem || !motoId || !codeLocation){
+    throw new Error('Falta passar informações para finalizar processo da logistica')
+  };
+
   try {
 
     const bemResponse = await buscarBemPorCodigo(bemId, token)
@@ -1230,6 +1235,8 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
       throw new Error("Não foi possível localizar dados de locação.");
     }
 
+   console.log('PEGAR LOCALIZAÇÃO' ,locations.locacoes)
+
     const locacaoEncontrada = locations.locacoes.find((loc) =>
       loc.bens?.some((b) => String(b.belocode) === codeLocation)
     );
@@ -1246,7 +1253,8 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
       }).showToast();
       return false;
     }
-
+    
+    
     const cliecode = locacaoEncontrada?.clloidcl;
     const cliente = await buscarClientePorNome(cliecode, token);
     if (!cliente) return false;
@@ -1262,6 +1270,7 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
         familiaBem,
         idClient: cliente.cliecode,
         locationId: locacaoEncontrada.cllonmlo,
+        codeLocation:codeLocation,
         driver: motoId,
         pagament: locacaoEncontrada.cllopgmt,
         devolution: locacaoEncontrada.cllodtdv,
@@ -1303,23 +1312,6 @@ async function vincularBem(bemId, familiaBem, motoId, codeLocation) {
       throw new Error(errorData.message || "Erro ao vincular bem.");
     }
     
-    try {
-        await atualizarStatus(`/api/updatestatuslocation/${codeLocation}`,
-        { belostat: "Em Locação" },
-        "Erro ao atualizar status da locação",
-        token
-      );
-    } catch (error) {
-       throw new Error("Erro para atualizar o status da locação!" , error);
-       
-    }
-   
-      const locacaoRow = document.querySelector(`tr[data-locacao='${locacaoEncontrada.cllonmlo}']`);
-       if (locacaoRow) {
-       const statusLocacao = locacaoRow.querySelector("td:nth-child(3)");
-       if (statusLocacao) statusLocacao.textContent = "Em Locação";
-      }
-
       const contratoAtualResponse = await fetch(`/api/contrato/${codeLocation}` , {
         method: "GET",
         headers: {
@@ -1391,6 +1383,7 @@ const responseUpdateContrato = await fetch(`/api/contrato/${codeLocation}`, {
   method: "PUT",
   headers: {
     "Content-Type": "application/json",
+    Authorization:`Bearer ${token}`
   },
   body: JSON.stringify({ contrato: contratoAtualizado }),
 });

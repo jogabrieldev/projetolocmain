@@ -33,10 +33,24 @@ export default  {
           
         },
       },
+
+      {
+       test: /\.html$/i,
+       loader: "html-loader",
+      },
+
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
-      }
+      },
+      {
+  test: /\.(png|jpe?g|gif|svg)$/i,
+  type: "asset/resource",
+  generator: {
+    filename: "img/[name][ext]" // manda as imagens para dist/img/
+  }
+}
+
     ],
   },
   plugins: [
@@ -55,6 +69,8 @@ export default  {
       filename: "main.html",
       chunks: ["main"], // só inclui main.bundle.js
     }),
+
+    
   ],
   devServer: {
     static: path.join(__dirname, "dist"),
@@ -62,6 +78,10 @@ export default  {
     port: 9000,
     open: true,
   },
+  resolve: {
+  extensions: ['.js', '.json', '.css', '.html']
+}
+
 
   // resolve:{
   //   alias:{

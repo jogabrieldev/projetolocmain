@@ -388,6 +388,7 @@ async function listDeliveryForDriver() {
         data-cliente="${nomeClient}"
         data-dataloc="${formatarData(entrega.lofidtlo)}">Aceitar</button>`;
       }
+      console.log(entrega)
 
       const card = document.createElement("div");
       card.className = "col-md-6 col-lg-4";

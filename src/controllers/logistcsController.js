@@ -2,7 +2,7 @@ import logistcsModel from "../model/modelsLogistics.js";
 import{mecanismDelivey} from "../model/modelsDelivery.js"
 import { crudRegisterDriver as authDriver } from "../model/modelsDriver.js";
 import { goodsRegister as authGoods} from "../model/modelsGoods.js";
-import { clientRegister as authClient } from "../model/modelsClient.js";
+import { LocacaoModel as updateStatusLocation } from "../model/modelsLocationGoods.js";
 
 class logistcgController {
 
@@ -20,7 +20,7 @@ class logistcgController {
 
       const localization = payloadLogistcs.localization
 
-      const result = await logistcsModel.submitDate(payloadLogistcs , localization);
+    const result = await logistcsModel.submitDate(payloadLogistcs , localization);
      if(result){
         const driver =await authDriver.updateStatusMoto(result?.lofiidmt  , "Entrega destinada")
         if(!driver){
@@ -30,17 +30,22 @@ class logistcgController {
         if(!bem){
           return res.status(409).json({message:"Erro em atualizar status do bem" , success:false ,  bem})
         }
-        console.log(bem)
+        
+        const codeLocationTheGoods = await updateStatusLocation.updateBemStatus(result?.loficolo , "Em Locação")
+        if(!codeLocationTheGoods){
+           return res.status(409).json({message:"Erro em atualizar status da locação" , success:false})
+        }
+
       const io = req.app.get("socketio");
         if (io) {
         const listDelivery = await mecanismDelivey.getDateLocationFinish();
         if(listDelivery){
         io.emit("updateRunTimeRegisterLinkGoodsLocation", listDelivery);
-    }
+     }
   };
 
-  return res.status(200).json({ success:true , message:"Caçamba vinculada com sucesso" ,  result });
-};
+    return res.status(200).json({ success:true , message:"Caçamba vinculada com sucesso" ,  result });
+  };
 
     } catch (error) {
       console.error('Erro Logistica Controller:' , error)

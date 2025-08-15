@@ -4,22 +4,23 @@ class logistcsModel  {
    
     async submitDate(id , localization){
 
-        const { bemId, familiaBem,idClient,locationId, driver, pagament , devolution , status } = id
+        const { bemId, familiaBem,idClient,locationId, codeLocation, driver, pagament , devolution , status } = id
         const{rua , cep , bairro , refere , cidade, region }= localization
           
          try {
-            const query = `INSERT INTO locafim( lofiidbe, lofiidfa, lofiidcl, lofiidlo , lofiidmt , lofipgmt , lofidtdv, lofirua , loficep , lofibair , lofistat, lofirefe , loficida , lofiregi )
-            VALUES ($1, $2, $3, $4 , $5 , $6 , $7 , $8 , $9 , $10 , $11 , $12 ,$13 , $14)
+            const query = `INSERT INTO locafim( lofiidbe, lofiidfa, lofiidcl, lofiidlo , loficolo, lofiidmt , lofipgmt , lofidtdv, lofirua , loficep , lofibair , lofistat, lofirefe , loficida , lofiregi )
+            VALUES ($1, $2, $3, $4 , $5 , $6 , $7 , $8 , $9 , $10 , $11 , $12 ,$13 , $14 , $15)
             RETURNING *;`
   
-            const values = [bemId,familiaBem, idClient, locationId , driver , pagament , devolution , rua , cep , bairro , status, refere , cidade, region]
+            const values = [bemId,familiaBem, idClient, locationId , codeLocation, driver , pagament , devolution , rua , cep , bairro , status, refere , cidade, region]
   
             const result = await client.query(query , values)
             return result.rows[0]
             
      } catch (error) {
             console.error('erro model logistica:' , error)
-     }
+            throw new Error('Erro para vincular o bem a locação')
+     };
     }
 
     async searchLocationForParams(lofiidlo, lofistat, lofiidcl) {
@@ -47,7 +48,7 @@ class logistcsModel  {
     } catch (error) {
       console.error("Erro ao buscar o cliente por filtros:", error.message);
       throw error;
-    }
+    };
   }
 
 async getContratosPorLocacao(belocode) {
@@ -63,7 +64,7 @@ async getContratosPorLocacao(belocode) {
   } catch (error) {
     console.error("Erro ao buscar contratos:", error);
     throw error;
-  }
+  };
 }
 async getContratoAndUpdate(id , contrato){
     const query = `
@@ -79,7 +80,7 @@ async getContratoAndUpdate(id , contrato){
   } catch (error) {
     console.error("Erro ao atualizar contrato do bem:", error);
     throw error;
-  }
+  };
 }
 
 
