@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 carregarFamilias();
                 atualizarData("dataLoc");
                 atualizarData("dtCadLoc");
-                atualizarData("dtCadLoc");
+              
                 loadVehicles();
                 registerClientPageLocation();
                 saveLocalizationInCache();
@@ -831,16 +831,16 @@ function carregamentoEmTempoReal(){
             numeroLocacao: locacao.cllonmlo || "Não definido",
             nomeCliente: locacao.clloclno || "Não definido",
             cpfCliente: locacao.cllocpf || "Não definido",
-            dataLocacao: formatDate(locacao.cllodtlo),
-            dataDevolucao: formatDate(locacao.cllodtdv),
+            dataLocacao: formatDataPattersBr(locacao.cllodtlo),
+            dataDevolucao: formatDataPattersBr(locacao.cllodtdv),
             formaPagamento: locacao.cllopgmt || "Não definido",
             codigoBem: bem.belocodb || "-",
             produto: bem.belobem || "Nenhum bem associado",
             quantidade: bem.beloqntd || "-",
             status: bem.belostat || "Não definido",
             observacao: bem.beloobsv || "Sem observação",
-            dataInicio: formatDate(bem.belodtin),
-            dataFim: formatDate(bem.belodtfi),
+            dataInicio: formatDataPattersBr(bem.belodtin),
+            dataFim: formatDataPattersBr(bem.belodtfi),
           }));
         } else {
           return [];
@@ -1313,12 +1313,7 @@ async function gerarContrato() {
     return select?.options[select.selectedIndex]?.text || "Não informado";
   };
 
-  const formatDate = (dateStr) => {
-    if (!dateStr) return "-";
-    const d = new Date(dateStr);
-    return isNaN(d) ? "-" : d.toLocaleDateString("pt-BR");
-  };
-
+ 
   const cpfCliente = getValue("cpfClient");
   const nomeCliente = getValue("nameClient");
   const dataLocacao = getValue("dataLoc");
@@ -1436,8 +1431,8 @@ async function gerarContrato() {
         produto,
         quantidade: getValue(`quantidade${i}`),
         observacao: getValue(`observacao${i}`),
-        dataInicio: formatDate(getValue(`dataInicio${i}`)),
-        dataFim: formatDate(getValue(`dataFim${i}`)),
+        dataInicio: formatDataPattersBr(getValue(`dataInicio${i}`)),
+        dataFim: formatDataPattersBr(getValue(`dataFim${i}`)),
       });
     }
   }

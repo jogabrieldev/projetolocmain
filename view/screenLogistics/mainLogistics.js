@@ -149,16 +149,16 @@ async function locationPendente() {
           numeroLocacao: locacao.cllonmlo || "Não definido",
           nomeCliente: locacao.clloclno || "Não definido",
           cpfCliente: locacao.cllocpf || "Não definido",
-          dataLocacao: formatDate(locacao.cllodtlo),
-          dataDevolucao: formatDate(locacao.cllodtdv),
+          dataLocacao: formatDataPattersBr(locacao.cllodtlo),
+          dataDevolucao: formatDataPattersBr(locacao.cllodtdv),
           formaPagamento: locacao.cllopgmt || "Não definido",
           codigoBem: bem.belocodb || "-",
           produto: bem.belobem || "Nenhum bem associado",
           quantidade: bem.beloqntd || "-",
           status: bem.belostat || "Não definido",
           observacao: bem.beloobsv || "Sem observação",
-          dataInicio: formatDate(bem.belodtin),
-          dataFim: formatDate(bem.belodtfi),
+          dataInicio: formatDataPattersBr(bem.belodtin),
+          dataFim: formatDataPattersBr(bem.belodtfi),
         }));
       } else{
         return []
@@ -342,16 +342,16 @@ function filterLocation() {
               numeroLocacao: locacao.cllonmlo || "Não definido",
               nomeCliente: locacao.clloclno || "Não definido",
               cpfCliente: locacao.cllocpf || "Não definido",
-              dataLocacao: formatDate(locacao.cllodtlo),
-              dataDevolucao: formatDate(locacao.cllodtdv),
+              dataLocacao: formatDataPattersBr(locacao.cllodtlo),
+              dataDevolucao: formatDataPattersBr(locacao.cllodtdv),
               formaPagamento: locacao.cllopgmt || "Não definido",
               codigoBem: bem.belocodb || "-",
               produto: bem.belobem || "Nenhum bem associado",
               quantidade: bem.beloqntd || "-",
               status: bem.belostat || "Não definido",
               observacao: bem.beloobsv || "Sem observação",
-              dataInicio: formatDate(bem.belodtin),
-              dataFim: formatDate(bem.belodtfi),
+              dataInicio: formatDataPattersBr(bem.belodtin),
+              dataFim: formatDataPattersBr(bem.belodtfi),
             }));
           } else{
              return []
@@ -889,7 +889,7 @@ async function loadingDriver() {
       linha.insertCell().textContent = motorista.motonome;
       linha.insertCell().textContent = motorista.motostat;
       linha.insertCell().textContent = motorista.motoctch;
-      linha.insertCell().textContent = formatDate(motorista.motodtvc);
+      linha.insertCell().textContent = formatDataPattersBr(motorista.motodtvc);
       linha.insertCell().textContent = motorista.motorest;
       linha.insertCell().textContent = motorista.motoorem;
       linha.insertCell().textContent = motorista.motocelu;

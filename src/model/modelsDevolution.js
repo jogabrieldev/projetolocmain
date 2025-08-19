@@ -1,4 +1,4 @@
-import { client as devolution } from "../database/userDataBase.js";
+import { pool as devolution } from "../database/userDataBase.js";
 
 export const processDevolution = {
       

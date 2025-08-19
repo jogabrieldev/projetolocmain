@@ -1,5 +1,5 @@
 
-import { client as dataDestination } from "../database/userDataBase.js";
+import { pool as dataDestination } from "../database/userDataBase.js";
 
 
  export const movementDestination = {

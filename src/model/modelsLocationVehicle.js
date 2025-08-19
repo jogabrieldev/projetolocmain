@@ -1,5 +1,5 @@
-import { client } from "../database/userDataBase.js";
-const locationAuto = client;
+import { pool as locationAuto  } from "../database/userDataBase.js";
+
 
 export const modelsLocationAuto = {
       

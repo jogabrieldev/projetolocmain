@@ -206,14 +206,8 @@ function renderTableDelivery() {
                 <td>${cliente ? cliente.clienome : "Desconhecido"}</td>
                 <td>${item.lofiidlo}</td>
                 <td>${item.lofistat}</td>
-                <td>${new Date((item.lofidtlo)).toLocaleDateString('pt-BR' , {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric'
-                })}</td>
-                <td><button class="detalhes" onclick="showDetails(${
-                  item.loficode
-                })">Detalhes</button></td>
+                <td>${formatDataPattersBr((item.lofidtlo))}</td>
+                <td><button class="detalhes" onclick="showDetails(${item.loficode})">Detalhes</button></td>
             `;
 
       tbody.appendChild(tr);
@@ -278,11 +272,10 @@ async function showDetails(codigo) {
     const motorista = motoris.find((m) => m.motocode === item.lofiidmt);
     if(!motorista)return
 
-    const dataL = new Date(item.lofidtlo)
-    const dataLocFormat = dataL.toLocaleDateString("pt-BR")
+    
+    const dataLocFormat =  formatDataPattersBr(item.lofidtlo)
 
-    const dateD = new Date(item.lofidtdv);
-    const dataFormat = dateD.toLocaleDateString("pt-BR");
+    const dataFormat = formatDataPattersBr(item.lofidtdv);
 
     const container = document.querySelector(".containerDelivery");
     container.innerHTML = "";

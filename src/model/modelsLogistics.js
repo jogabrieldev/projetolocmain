@@ -1,6 +1,6 @@
-import {client} from "../database/userDataBase.js";
+import {pool} from "../database/userDataBase.js";
 
-class logistcsModel  {
+class LogistcsModel  {
    
     async submitDate(id , localization){
 
@@ -14,7 +14,7 @@ class logistcsModel  {
   
             const values = [bemId,familiaBem, idClient, locationId , codeLocation, driver , pagament , devolution , rua , cep , bairro , status, refere , cidade, region]
   
-            const result = await client.query(query , values)
+            const result = await pool.query(query , values)
             return result.rows[0]
             
      } catch (error) {
@@ -43,7 +43,7 @@ class logistcsModel  {
         query += ` AND cliecnpj ILIKE $${values.length}`;
       }
 
-      const result = await client.query(query, values);
+      const result = await pool.query(query, values);
       return result.rows; // retorna array, mesmo que só 1 bem
     } catch (error) {
       console.error("Erro ao buscar o cliente por filtros:", error.message);
@@ -59,7 +59,7 @@ async getContratosPorLocacao(belocode) {
       `;
 
   try {
-    const result = await client.query(query, [belocode]);
+    const result = await pool.query(query, [belocode]);
     return result.rows.map(row => row.belocontr);
   } catch (error) {
     console.error("Erro ao buscar contratos:", error);
@@ -75,7 +75,7 @@ async getContratoAndUpdate(id , contrato){
   `;
 
   try {
-    const result = await client.query(query, [contrato.trim(), id]);
+    const result = await pool.query(query, [contrato.trim(), id]);
     return result.rows[0]; // Retorna o contrato atualizado
   } catch (error) {
     console.error("Erro ao atualizar contrato do bem:", error);
@@ -86,4 +86,4 @@ async getContratoAndUpdate(id , contrato){
 
 };
 
-export default new logistcsModel()
+export default new LogistcsModel()

@@ -1,8 +1,6 @@
-import logistcsModel from "../model/modelsLogistics.js";
+import LogistcsModel from "../model/modelsLogistics.js";
 import{mecanismDelivey} from "../model/modelsDelivery.js"
-import { crudRegisterDriver as authDriver } from "../model/modelsDriver.js";
-import { goodsRegister as authGoods} from "../model/modelsGoods.js";
-import { LocacaoModel as updateStatusLocation } from "../model/modelsLocationGoods.js";
+import LogisticsService from "../service/logisticsService.js"
 
 class logistcgController {
 
@@ -18,23 +16,11 @@ class logistcgController {
           return res.status(400).json({ message: "Falta informações para conclusão verifique!" });
       };
 
-      const localization = payloadLogistcs.localization
 
-    const result = await logistcsModel.submitDate(payloadLogistcs , localization);
-     if(result){
-        const driver =await authDriver.updateStatusMoto(result?.lofiidmt  , "Entrega destinada")
-        if(!driver){
-          return res.status(409).json({message:"Erro em atualizar status do motorista" , success:false , driver})
-        }
-        const bem = await authGoods.updateStatus(result?.lofiidbe , "Locado")
-        if(!bem){
-          return res.status(409).json({message:"Erro em atualizar status do bem" , success:false ,  bem})
-        }
-        
-        const codeLocationTheGoods = await updateStatusLocation.updateBemStatus(result?.loficolo , "Em Locação")
-        if(!codeLocationTheGoods){
-           return res.status(409).json({message:"Erro em atualizar status da locação" , success:false})
-        }
+      const result = await LogisticsService.handleSubmit(payloadLogistcs);
+      if (!result) {
+        return res.status(409).json({ message: "Erro ao registrar logística" });
+      }
 
       const io = req.app.get("socketio");
         if (io) {
@@ -45,7 +31,7 @@ class logistcgController {
   };
 
     return res.status(200).json({ success:true , message:"Caçamba vinculada com sucesso" ,  result });
-  };
+  
 
     } catch (error) {
       console.error('Erro Logistica Controller:' , error)
@@ -60,7 +46,7 @@ class logistcgController {
             return res.status(400).json({message:"É necessário passar o ID da locação"})
           }
 
-          const result = await logistcsModel.getContratosPorLocacao(id)
+          const result = await LogistcsModel.getContratosPorLocacao(id)
           if(!result){
             return res.status(404).json({message:"Nenhum contrato encontrado para este ID"})
           }
@@ -81,7 +67,7 @@ class logistcgController {
             return res.status(400).json({ message: "Dados da locação são obrigatorio para pesquisa." });
          }
           
-         const resultLocation = await logistcsModel.searchLocationForParams(lofiidcl,lofistat,lofiidcl)
+         const resultLocation = await LogistcsModel.searchLocationForParams(lofiidcl,lofistat,lofiidcl)
          console.log(resultLocation)
           if(!resultLocation){
            return res.status(404).json({message:"Não foi encontrado nenhuma locação com essa pesquisa! verifique"})
@@ -103,7 +89,7 @@ class logistcgController {
           return res.status(400).json({message:"É necessário passar o ID e o corpo da requisição"})
         }
 
-        const result = await logistcsModel.getContratoAndUpdate(id , contrato);
+        const result = await LogistcsModel.getContratoAndUpdate(id , contrato);
 
         if(!result){
           return res.status(404).json({message:"Contrato não encontrado ou não atualizado"})

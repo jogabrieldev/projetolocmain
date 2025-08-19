@@ -1,4 +1,4 @@
-import { client as dataClient } from "../database/userDataBase.js";
+import { pool as dataClient } from "../database/userDataBase.js";
 
 export const clientRegister = {
   registerOfClient: async (data) => {

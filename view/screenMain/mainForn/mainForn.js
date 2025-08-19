@@ -619,7 +619,7 @@ function renderFornecedorTable(fornecedores) {
       fornecedor.fornagen,
       fornecedor.forncont,
       fornecedor.fornpix,
-      formatDate(fornecedor.forndtcd),
+      formatDataPattersBr(fornecedor.forndtcd),
       fornecedor.fornptsv,
     ];
 
@@ -769,7 +769,7 @@ async function fetchListFornecedores() {
           fornecedor.fornagen,
           fornecedor.forncont,
           fornecedor.fornpix,
-          formatDate(fornecedor.forndtcd),
+          formatDataPattersBr(fornecedor.forndtcd),
           fornecedor.fornptsv,
         ];
 

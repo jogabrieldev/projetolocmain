@@ -29,8 +29,7 @@ export const authSystemValidade = {
   async AuthLoginCenter(req, res) {
     try {
       const { username, password } = req.body;
-      console.log('corpo' ,  req.body)
-      
+     
       if (!username || !password ) {
         return res.status(400).json({ message: "Usuário e senha obrigatórios" });
       }

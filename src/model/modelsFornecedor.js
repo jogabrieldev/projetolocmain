@@ -1,5 +1,5 @@
 // const dataBaseM = require('../database/dataBaseSgt')
-import { client as userDbFo  } from "../database/userDataBase.js";
+import { pool as userDbFo  } from "../database/userDataBase.js";
 
 export const crudRegisterForn = {
   registerOfForn: async (data) => {

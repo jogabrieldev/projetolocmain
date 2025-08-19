@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function(){
 async function addNameDriverExterno(){
   try {
 
-    console.log('storage', localStorage)
     const userId = localStorage.getItem('user')
     const token = localStorage.getItem('token')
     const nameDriverScreen = document.getElementById('nomeMotorista')

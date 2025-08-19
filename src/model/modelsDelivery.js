@@ -1,6 +1,5 @@
 
-import {client} from '../database/userDataBase.js';
-const delivery = client
+import {pool as delivery} from '../database/userDataBase.js';
 
 const mecanismDelivey = {
      

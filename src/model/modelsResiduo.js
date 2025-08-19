@@ -1,4 +1,4 @@
-import {client as resi} from '../database/userDataBase.js'
+import {pool as resi} from '../database/userDataBase.js'
 
 export const moduleResiduo = {
 

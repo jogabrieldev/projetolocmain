@@ -1,5 +1,5 @@
 import { th } from "date-fns/locale";
-import { client as dataCheckIn } from "../database/userDataBase.js";
+import { pool as dataCheckIn } from "../database/userDataBase.js";
 
 export const movimentCheckInAndCheckOut = {
        
@@ -25,19 +25,25 @@ export const movimentCheckInAndCheckOut = {
     }
  },
 
-  async getChack(idMoto){
-      try {
-         const query = `SELECT * FROM checmtve WHERE checmoto = $1 AND checstat = 'Em uso' ORDER BY checid DESC LIMIT 1` 
-          const values = [idMoto]
-          const result = await dataCheckIn.query(query , values)
-          if(result){
-            return result.rows
-          }
-      } catch (error) {
-         console.error('Erro para veificar check-in' , error)
-          throw error
-      }
-  },
+async updateKmVehicle(quilimetro , code){
+   try { 
+        const updateKmQuery = `
+        UPDATE cadauto
+        SET caaukmat = $1
+        WHERE caaucode = $2
+        RETURNING *;
+      `;
+      const result = await dataCheckIn.query(updateKmQuery, [quilimetro, code]);
+        if (!result.rows || result.rows.length === 0) {
+      throw new Error(`Falha: veículo ${code} não encontrado ou KM não atualizado`);
+    }
+
+    return result.rows[0]; // retorna o veículo atualizado
+   } catch (error) {
+      console.error("Erro em atualizar o KM" , error)
+      throw new Error('Erro para atualizar km')
+   }
+ },
 
   async getCheckInOpenForDriver(idMoto) {
   try {

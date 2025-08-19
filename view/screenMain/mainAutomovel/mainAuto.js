@@ -340,8 +340,6 @@ async function registerNewVehicles() {
       };
       
        
-      console.log(formData)
-
       try {
         const response = await fetch("/api/cadauto", {
           method: "POST",
@@ -530,7 +528,7 @@ async function listarVeiculos() {
           v.caauloca,
           v.caaustat,
           v.caausitu,
-          formatDate(v.caaudtca),
+          formatDataPattersBr(v.caaudtca),
         ];
 
         dados.forEach((valor, index) => {
@@ -764,7 +762,7 @@ function renderVeiculosTable(veiculos) {
       v.caaukmat,
       v.caauloca,
       v.caaustat,
-      formatDate(v.caaudtca),
+      formatDataPattersBr(v.caaudtca),
     ];
 
     dados.forEach((valor, index) => {

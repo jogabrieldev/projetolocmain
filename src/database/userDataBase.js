@@ -1,11 +1,14 @@
-import {dbClient } from '../config/dbConfigClient.js'
-import pgk from 'pg'
-const {Pool} = pgk
+import { dbClient } from '../config/dbConfigClient.js';
+import pg from 'pg';
+const { Pool } = pg;
 
-const client = new Pool(dbClient )
-client.connect().then((res)=>{
-    console.log('conectou no db server03')
-        res.release()
-    }).catch((erro)=>{console.log('erro na conexao do cliente')})
-    
-export {client}
+const pool = new Pool(dbClient); // instância do pool
+
+// Opcional: testar a conexão
+pool.connect()
+  .then(() => console.log('Conectou no DB server03'))
+  .catch((err) => console.error('Erro na conexão do DB:', err));
+
+export { pool }; // exporta a instância, não a classe
+
+// export{}

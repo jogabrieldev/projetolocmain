@@ -1,5 +1,5 @@
 
-import { client as userDbDriver } from "../database/userDataBase.js";
+import { pool as userDbDriver } from "../database/userDataBase.js";
 
 export const crudRegisterDriver = {
   registerDriver: async (data) => {

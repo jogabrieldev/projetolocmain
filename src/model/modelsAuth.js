@@ -1,6 +1,6 @@
 
-import  {pool} from "../database/dataBaseSgt.js"
-import { client } from "../database/userDataBase.js";
+import  {poolSgt} from "../database/dataBaseSgt.js"
+import { pool } from "../database/userDataBase.js";
 import bcrypt from 'bcrypt'
 
 export const modelsAuthenticateUser = {
@@ -53,7 +53,7 @@ async registerUserPattersAuth(data) {
        empagen,
        emppix]
 
-      const result = await pool.query(query , values)
+      const result = await poolSgt.query(query , values)
 
       return result.rows
   
@@ -68,7 +68,7 @@ async  authenticateLogin(username, password) {
       const query = `SELECT * FROM cademp WHERE "empmail" = $1 LIMIT 1`;
       const values = [username];
 
-      const result = await pool.query(query, values);
+      const result = await poolSgt.query(query, values);
 
       if (result.rows.length === 0) {
           console.error("Usuario não encontrado.")
@@ -94,7 +94,7 @@ async  authenticateLogin(username, password) {
       const query = `SELECT * FROM cadmoto WHERE motomail = $1 LIMIT 1`;
       const values = [username];
 
-      const result = await client.query(query, values);
+      const result = await pool.query(query, values);
 
       if (result.rows.length === 0) {
           console.error("Usuario não encontrado.")

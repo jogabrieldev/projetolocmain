@@ -1,5 +1,5 @@
-// const dataBaseM = require('../database/dataBaseSgt')
-import {client as userDbTypeProd} from '../database/userDataBase.js';
+
+import {pool as userDbTypeProd} from '../database/userDataBase.js';
 
  export const crudRegisterTypeProd = {
      

@@ -1,4 +1,4 @@
-import { client as infoFili } from "../database/userDataBase.js";
+import { pool as infoFili } from "../database/userDataBase.js";
 
  export const dateFilial ={
      

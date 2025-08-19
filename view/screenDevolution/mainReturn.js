@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tr.appendChild(tdPgto);
 
       const tdDataDev = document.createElement('td');
-      tdDataDev.textContent = new Date(loc.lofidtdv).toLocaleDateString();
+      tdDataDev.textContent = formatDataPattersBr(loc.lofidtdv);
       tdDataDev.classList.add('text-danger', 'fw-bold');
       tr.appendChild(tdDataDev);
 

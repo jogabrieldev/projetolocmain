@@ -1,6 +1,6 @@
-// const db = require("../database/dataBaseSgt");
-import { client } from "../database/userDataBase.js";
-const dbGoods = client;
+
+import { pool as dbGoods } from "../database/userDataBase.js";
+// const dbGoods = pool;
 
 export const goodsRegister = {
   registerOfBens: async (data) => {

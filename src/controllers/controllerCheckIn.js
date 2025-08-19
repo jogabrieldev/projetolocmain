@@ -1,66 +1,59 @@
 import { movimentCheckInAndCheckOut } from "../model/modelsCheckIn.js";
 import { autoRegister as updateRuntime } from "../model/modelsVehicles.js";
 import { mecanismDelivey } from "../model/modelsDelivery.js";
+import { pool as dataCheckIn } from "../database/userDataBase.js";
+
  export const controllerCheckInAndCheckOut = {
        
-    async toDoCheckIn(req ,res){
-      try {
-            
-         const payloadCheckin = req.body
+    async toDoCheckIn(req, res) {
+    const client = await dataCheckIn.connect(); // pega conexão do pool
+    try {
+      await client.query("BEGIN"); // inicia transação
 
-         console.log('corpo' , payloadCheckin)
-
-          if(!payloadCheckin){
-            return res.status(400).json({message:'Falta ser passado as informações'})
-           }
-
-          if (!payloadCheckin.checStat || payloadCheckin.checStat.trim() === '') {
-             payloadCheckin.checStat = 'Em uso';
-            }
-
-            if(!payloadCheckin.checDtch || payloadCheckin.checDtch === ""){
-               payloadCheckin.checDtch = new Date()
-            }
-            
-           const newCheckIn =  await movimentCheckInAndCheckOut.toDoCheckIn(payloadCheckin)
-           if(!newCheckIn){
-             return res.status(400).json({message:"Erro para fazer esse CHECK_IN tente novemente"})
-           }
-
-           console.log('new' , newCheckIn)
-           
-          const io = req.app.get("socketio")
-           if(io){
-            const listVehicle = await updateRuntime.updateStatus(payloadCheckin.checVeic , "Esta com Motorista!")
-
-             io.emit("checkIn" , { vehicle:listVehicle } )
-
-           }
-
-           return res.status(200).json({success:true , checkin: newCheckIn})
-        } catch (error) {
-            console.error('Erro para fazer checkin' ,error)
-            return res.status(500).json({message:"Erro no sever para fazer checkin."})
-        }
-    },
-
-  async getCheck(req ,res){
-      try {
-         const {code} = req.params
-         if(!code){
-           return res.status(400).json({message:"Codigo do motorista não informado"})
-         }
-
-         const check = await movimentCheckInAndCheckOut.getChack(code)
-         if(!check || check.length === 0){
-           return res.status(400).json({message:"Nenhum check-in encontrado para esse motorista"})
-         }
-
-         return res.status(200).json({success:true ,  check})
-      } catch (error) {
-          console.error('Erro ao buscar check-in' , error)
-          return res.status(500).json({message:"Erro no server ao buscar check-in"})
+      const payloadCheckin = req.body;
+  
+      if (!payloadCheckin) {
+        return res.status(400).json({ message: "Falta ser passado as informações" });
       }
+
+      if (!payloadCheckin.checStat || payloadCheckin.checStat.trim() === "") {
+        payloadCheckin.checStat = "Em uso";
+      }
+
+      if (!payloadCheckin.checDtch || payloadCheckin.checDtch === "") {
+        payloadCheckin.checDtch = new Date();
+      }
+
+      const newCheckIn = await movimentCheckInAndCheckOut.toDoCheckIn(payloadCheckin);
+      if (!newCheckIn) throw new Error("Erro para fazer CHECK-IN");
+
+      const updatedKm = await movimentCheckInAndCheckOut.updateKmVehicle(
+        payloadCheckin.checKmat,
+        payloadCheckin.checVeic,
+      
+      );
+      if (!updatedKm) throw new Error("Falha ao atualizar KM do veículo");
+
+      const io = req.app.get("socketio");
+      if (io) {
+        const listVehicle = await updateRuntime.updateStatus(
+          payloadCheckin.checVeic,
+          "Está com Motorista!"
+        );
+        io.emit("checkIn", { vehicle: listVehicle });
+      }
+
+      await client.query("COMMIT"); // confirma todas alterações
+      return res.status(200).json({ success: true, checkin: newCheckIn });
+
+    } catch (error) {
+      await client.query("ROLLBACK"); // desfaz tudo se houver erro
+      console.error("Erro no check-in:", error);
+      return res.status(500).json({ message: "Erro no servidor para fazer check-in." });
+
+    } finally {
+      client.release(); // devolve conexão ao pool
+    }
   },
 
  async getCheckInOpenForDriver(req, res) {
@@ -87,45 +80,59 @@ import { mecanismDelivey } from "../model/modelsDelivery.js";
   }
 },
 
- async toCheckOut(req, res) {
+async toCheckOut(req, res) {
+  const client = await dataCheckIn.connect();
   try {
-    const { id } = req.params; // ID do check-in aberto
-    const {checkmvt, checobvt } = req.body;
+    await client.query("BEGIN");
 
-    if (!id) {
-      return res.status(400).json({ message: 'ID do check-in é obrigatório!' });
+    const { id } = req.params;
+    const { checkmvt, checobvt } = req.body;
+
+    if (!id || !checkmvt) {
+      throw new Error('Dados do check-out incompletos!');
     }
 
-    // Aqui você pode validar os campos obrigatórios
-    if (!checkmvt) {
-      return res.status(400).json({ message: 'Dados do check-out incompletos!' });
-    }
+    // Atualizar check-out usando a mesma conexão da transação
+    const atualizado = await movimentCheckInAndCheckOut.toDoCheckOut(
+      id,
+      {
+        checstat: 'Finalizado',
+        checkmvt,
+        checdtvt: new Date(),
+        checobvt
+      },
+      client
+    );
 
-    // Atualizar no banco
-    const atualizado = await movimentCheckInAndCheckOut.toDoCheckOut(id, {
-      checstat: 'Finalizado', 
-      checkmvt,               
-      checdtvt: new Date(),              
-      checobvt                
-    });
+    if (!atualizado) throw new Error('Não foi possível finalizar o check-out');
 
-    if (!atualizado) {
-      return res.status(400).json({ message: 'Não foi possível finalizar o check-out!' });
-    }
-    
-    const socket = req.app.get("socketio")
-    if(socket){
+    // Atualizar KM do veículo na mesma transação
+    const update = await movimentCheckInAndCheckOut.updateKmVehicle(
+      checkmvt,
+      atualizado.checveic,
+      client
+    );
+    if (!update) throw new Error("Falha ao atualizar KM do veículo");
 
-      const statusVehicle = await updateRuntime.updateStatus(atualizado.checveic , "Disponível")
-      socket.emit('checkOut' , statusVehicle)
+    await client.query("COMMIT"); // confirma tudo
+
+    // Emitir socket após commit
+    const socket = req.app.get("socketio");
+    if (socket) {
+      const statusVehicle = await updateRuntime.updateStatus(atualizado.checveic, "Disponível");
+      socket.emit('checkOut', statusVehicle);
     }
 
     return res.status(200).json({ success: true, checkout: atualizado });
 
   } catch (error) {
+    await client.query("ROLLBACK"); // desfaz tudo em caso de erro
     console.error('Erro no checkout:', error);
-    return res.status(500).json({ message: 'Erro interno no servidor.' });
+    return res.status(500).json({ message: error.message || 'Erro interno no servidor.' });
+  } finally {
+    client.release(); // libera conexão do pool
   }
 }
 
 }
+

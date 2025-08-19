@@ -1,4 +1,4 @@
-import { client as dataClient } from "../database/userDataBase.js";
+import { pool as dataClient } from "../database/userDataBase.js";
 
 export const autoRegister = {
 
@@ -141,18 +141,7 @@ export const autoRegister = {
            throw error;
       }
   },
-  // verificarCheckIN: async(id)=>{
-  //    try {
-  //           const checkQuery = "SELECT COUNT(*) FROM servexte WHERE seexmoto = $1";
-  //           const checkResult = await dataClient.query(checkQuery, [id]);
-
-  //          return parseInt(checkResult.rows[0].count) > 0;
-  //       } catch (error) {
-  //          console.error("Erro ao verificar dependências do Motorista com entrega:",error);
-  //          throw error;
-  //     }
-  // },
-
+ 
   updateAuto: async (id, updateData) => {
     try {
       const query = `UPDATE cadauto SET caauplac = $1, caauchss = $2, caaurena = $3, 

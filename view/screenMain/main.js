@@ -219,6 +219,24 @@ function formatarCampo(tipo, valor) {
   }
 };
 
+ function formatDataPattersBr(data) {
+  if (!data) return "";
+
+  // Se receber string ou timestamp, cria objeto Date
+  const dateObj = new Date(data);
+
+  if (isNaN(dateObj.getTime())) {
+    return ""; // Retorna vazio se não for uma data válida
+  }
+
+  const dia = String(dateObj.getDate()).padStart(2, '0');
+  const mes = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const ano = dateObj.getFullYear();
+
+  return `${dia}/${mes}/${ano}`;
+}
+
+
 
 
 document.addEventListener("DOMContentLoaded", () => {

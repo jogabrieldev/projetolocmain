@@ -53,8 +53,8 @@ async function frontLocation() {
             idClient: locacao.clloid,
             numeroLocacao: locacao.cllonmlo || "Não definido",
             nomeCliente: locacao.clloclno || "Não definido",
-            dataLocacao: formatDate(locacao.cllodtlo),
-            dataDevolucao: formatDate(locacao.cllodtdv),
+            dataLocacao: formatDataPattersBr(locacao.cllodtlo),
+            dataDevolucao: formatDataPattersBr(locacao.cllodtdv),
             formaPagamento: locacao.cllopgmt || "Não definido",
             descarte: locacao.cllodesc || "Não definido",
             cidade:locacao.cllocida|| "__",
@@ -69,8 +69,8 @@ async function frontLocation() {
             quantidade: bem.beloqntd || "-",
             status: bem.belostat || "Não definido",
             observacao: bem.beloobsv || "Sem observação",
-            dataInicio: formatDate(bem.belodtin),
-            dataFim: formatDate(bem.belodtfi),
+            dataInicio: formatDataPattersBr(bem.belodtin),
+            dataFim: formatDataPattersBr(bem.belodtfi),
           }));
            
          }else{
@@ -451,8 +451,8 @@ async function searchLocation() {
             idClient: locacao.clloid,
             numeroLocacao: locacao.cllonmlo || "Não definido",
             nomeCliente: locacao.clloclno || "Não definido",
-            dataLocacao: formatDate(locacao.cllodtlo),
-            dataDevolucao: formatDate(locacao.cllodtdv),
+            dataLocacao: formatDataPattersBr(locacao.cllodtlo),
+            dataDevolucao: formatDataPattersBr(locacao.cllodtdv),
             formaPagamento: locacao.cllopgmt || "Não definido",
             descarte: locacao.cllodesc || "Não definido",
             cidade:locacao.cllocida|| "__",
@@ -467,8 +467,8 @@ async function searchLocation() {
             quantidade: bem.beloqntd || "-",
             status: bem.belostat || "Não definido",
             observacao: bem.beloobsv || "Sem observação",
-            dataInicio: formatDate(bem.belodtin),
-            dataFim: formatDate(bem.belodtfi),
+            dataInicio: formatDataPattersBr(bem.belodtin),
+            dataFim: formatDataPattersBr(bem.belodtfi),
           }));
         } else {
           return [];
