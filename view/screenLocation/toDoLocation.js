@@ -179,7 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (contentMain) {
               contentMain.innerHTML = html;
             }
-             frontLocation();
+            frontLocation();
             interationSystemLocation();
             preencheraResiduo("residuoSelect");
             interationSystemLocationVehicle();
@@ -1218,6 +1218,7 @@ async function handleSubmit() {
     const velocode = errorData.locationGoods[0]?.belocode;
 
     if (response.ok && response.status === 200) {
+   
       Toastify({
         text: "Contrato de locação gerado com sucesso!",
         duration: 3000,
@@ -1342,8 +1343,8 @@ async function gerarContrato() {
     <p><i class="bi bi-credit-card"></i> <strong>CPF/CNPJ do Cliente:</strong> ${cpfCliente}</p>
     <p><i class="bi bi-recycle"></i> <strong>Resíduo Envolvido:</strong> ${residuo}</p>
     <p><i class="bi bi-credit-card-2-front"></i> <strong>Forma de Pagamento:</strong> ${pagamento}</p>
-    <p><i class="bi bi-calendar-check"></i> <strong>Data da Locação:</strong>  ${dataLocacao}</p>
-    <p><i class="bi bi-calendar-x"></i> <strong>Data de Devolução:</strong> ${dataDevolucao}</p>
+    <p><i class="bi bi-calendar-check"></i> <strong>Data da Locação:</strong>  ${formatDataPattersBr(dataLocacao)}</p>
+    <p><i class="bi bi-calendar-x"></i> <strong>Data de Devolução:</strong> ${formatDataPattersBr(dataDevolucao)}</p>
   `;
 
   const descarteDiv = document.createElement("div");

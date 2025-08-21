@@ -289,7 +289,31 @@ async function checkOut(idMoto , token) {
              
             window.location.reload()
             },3500)
-           };
+           } else{
+
+          if (result.errors && Array.isArray(result.errors)) {
+            
+             result.errors.forEach((err) => {
+              Toastify({
+                text: err.msg || "Erro para executar o CHECK-IN",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "red",
+              }).showToast();
+            });
+          } else {
+            Toastify({
+              text: result?.message || "Erro para fazer o check-in.",
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "red",
+            }).showToast();
+          };
+        };
       };
 
   } catch (error) {

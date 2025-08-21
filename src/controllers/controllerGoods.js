@@ -195,7 +195,8 @@ async getbensByCode(req, res) {
   try {
     const { bemId } = req.params;
     const { bensstat } = req.body;
-
+  
+    console.log('bem' , bemId , bensstat)
     if (!bemId || !bensstat) {
       return res.status(400).json({ message: "Dados inválidos" });
     }
@@ -205,7 +206,7 @@ async getbensByCode(req, res) {
       return res.status(400).json({ message: "Status inválido!" });
     }
     const result = await goodsRegister.updateStatus(bemId, bensstat);
-
+   console.log(result)
     if (!result) {
       return res.status(404).json({ message: "Bem não encontrado" });
     }

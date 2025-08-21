@@ -3,7 +3,7 @@ import { pool as dataCheckIn } from "../database/userDataBase.js";
 
 export const movimentCheckInAndCheckOut = {
        
-  async toDoCheckIn(data){
+  async toDoCheckIn(client  ,data){
     try {
          const {checMoto, checVeic,checDtch,checKmat,checStat ,checkObs} = data
          console.log(data)
@@ -16,7 +16,7 @@ export const movimentCheckInAndCheckOut = {
 
          const values = [ checMoto,checVeic,checDtch, checKmat,checStat , checkObs]
 
-         const result = await dataCheckIn.query(insert , values)
+         const result = await client.query(insert , values)
 
          return result.rows[0]
      } catch (error) {  
@@ -38,11 +38,25 @@ async updateKmVehicle(quilimetro , code){
       throw new Error(`Falha: veículo ${code} não encontrado ou KM não atualizado`);
     }
 
-    return result.rows[0]; // retorna o veículo atualizado
+    return result.rows[0];
    } catch (error) {
       console.error("Erro em atualizar o KM" , error)
       throw new Error('Erro para atualizar km')
    }
+ },
+
+ async getCheckIn(id , client){
+    try {
+        const query = `SELECT * from checmtve WHERE checid = $1`
+        const result =  await client.query(query  ,[id])
+        if(result.rows.length > 0){
+           return result.rows[0]
+        }
+        return null
+    } catch (error) {
+       console.error("Erro a buscar check-in")
+       throw error
+    }
  },
 
   async getCheckInOpenForDriver(idMoto) {
@@ -69,21 +83,19 @@ async updateKmVehicle(quilimetro , code){
   
  
 
- async toDoCheckOut(id , body){
+ async toDoCheckOut(id , body , client){
   try {
     const query = `
       UPDATE checmtve
-      SET checobse = $1,
-          checdtvt = $2,
-          checkmvt = $3,
-          checstat = $4,
-          checobvt = $5
-      WHERE checid = $6
+      SET checdtvt = $1,
+          checkmvt = $2,
+          checstat = $3,
+          checobvt = $4
+      WHERE checid = $5
       RETURNING *;
     `;
 
-    const values = [
-      body.checobse || null,      
+    const values = [    
       body.checdtvt,
       body.checkmvt,
       body.checstat,
@@ -91,7 +103,7 @@ async updateKmVehicle(quilimetro , code){
       id
     ];
 
-    const result = await dataCheckIn.query(query, values);
+    const result = await client.query(query, values);
     return result.rows[0];
 
   } catch (error) {

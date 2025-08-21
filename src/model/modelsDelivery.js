@@ -28,13 +28,13 @@ const mecanismDelivey = {
          }
     },
 
-    async updateStatusDelivery(id , body){
+    async updateStatusDelivery(client, id , body){
       try {
             const update = `UPDATE locafim SET lofistat = $1 WHERE loficode = $2 RETURNING *;`
              
          const values = [body ,id]
 
-         const result = await delivery.query(update , values)
+         const result = await client.query(update , values)
          console.log(result.rows)
           return result.rows[0]
 

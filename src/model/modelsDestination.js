@@ -61,6 +61,7 @@ async getCodeDestination(){
        const result =  await dataDestination.query(`SELECT dereid FROM cadderi`)
        if(!result){return}
        return result.rows
+       
 
    } catch (error) {
        console.error('Erro para buscar o codigo do descarte')

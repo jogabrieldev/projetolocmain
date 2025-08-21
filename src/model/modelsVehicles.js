@@ -108,6 +108,22 @@ export const autoRegister = {
   }
 },
 
+  async getQuilometragemVehicle(code){
+    try {
+         const query = `SELECT caaukmat FROM cadauto WHERE caaucode = $1`
+         const result = await dataClient.query(query, [code])
+         if (result.rows.length === 0) {
+          console.log("Nenhum veículo encontrado com o código:", code);
+         return null;
+         }
+
+        console.log("Quilometragem:", result.rows[0].caaukmat);
+       return result.rows[0].caaukmat;
+       } catch (error) {
+        console.error('Erro em pegar KM do veiculo')
+        throw error
+       };
+  },
   listAutos: async () => {
     try {
       const query = "SELECT * FROM cadauto";
@@ -172,7 +188,7 @@ export const autoRegister = {
     }
   },
 
-  updateStatus: async (Id, caaustat) => {
+  updateStatus: async (client ,Id, caaustat) => {
     try {
       const query = `
       UPDATE cadauto
@@ -182,7 +198,7 @@ export const autoRegister = {
   `;
 
       const values = [caaustat, Id];
-      const result = await dataClient.query(query, values);
+      const result = await client.query(query, values);
 
       return result.rows[0];
     } catch (error) {

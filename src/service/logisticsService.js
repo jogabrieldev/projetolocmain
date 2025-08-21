@@ -9,29 +9,29 @@ class LogisticsService {
   async handleSubmit(payload) {
     const client = await pool.connect();
     try {
-      await client.query("BEGIN"); // inicia transação
+      await client.query("BEGIN"); 
 
-      // 1️⃣ Inserir locação
       const result = await LogistcsModel.submitDate(payload, payload.localization);
       if (!result) throw new Error("Erro ao criar locação");
 
-    // 2️⃣ Atualizar status do motorista
-    const driverUpdated = await authDriver.updateStatusMoto(result.lofiidmt, "Entrega destinada");
+    const driverUpdated = await authDriver.updateStatusMoto( client ,result.lofiidmt, "Entrega destinada");
     if (!driverUpdated) throw new Error("Falha ao atualizar status do motorista");
 
-    // 3️⃣ Atualizar status do bem
-    const goodsUpdated = await authGoods.updateStatus(result.lofiidbe, "Locado");
+    const goodsUpdated = await authGoods.updateStatus(client ,result.lofiidbe, "Locado");
     if (!goodsUpdated) throw new Error("Falha ao atualizar status do bem");
 
-    // 4️⃣ Atualizar status da locação
-    const locationUpdated = await updateStatusLocation.updateBemStatus(result.loficolo, "Em Locação");
+    const locationUpdated = await updateStatusLocation.updateBemStatus(client , result.loficolo, "Em Locação");
     if (!locationUpdated) throw new Error("Falha ao atualizar status da locação");
-      await client.query("COMMIT"); // confirma todas alterações
+
+      await client.query("COMMIT"); 
       return result;
+
     } catch (error) {
-      await client.query("ROLLBACK"); // desfaz tudo se houver erro
+      
+      await client.query("ROLLBACK"); 
       console.error("Erro no handleSubmit:", error);
       throw error;
+
     } finally {
       client.release();
     }

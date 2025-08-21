@@ -200,7 +200,7 @@ route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
     movementOfDriver.updateStatusDriver(req ,res)
  });
 
-
+ 
  // Veiculo
  route.post('/api/cadauto', authenticateToken, validateAutomovel, validate, (req , res)=>{
   movementAuto.registerAuto(req, res)
@@ -359,13 +359,19 @@ route.put("/api/contrato/:id" , authenticateToken, (req ,res)=>{
 });
 
 // PROCESSO DE ENTREGA
-route.patch('/api/updatestatusdelivery/:id', (req ,res)=>{
-   controllerDelivery.updateStatusDelivery(req ,res)
-});
+
+// ENDPOINT PARA ATUALIZAR O STATUS ESPECIFICO DE UMA ENTREGA
+// route.patch('/api/updatestatusdelivery/:id', (req ,res)=>{
+//    controllerDelivery.updateStatusDelivery(req ,res)
+// });
+
  route.get('/api/getdelivery' , authenticateToken, (req ,res)=>{
   controllerDelivery.getDate(req ,res)
  });
-
+route.patch('/api/statusupdate/:id', authenticateToken, (req ,res)=>{
+  controllerDelivery.updateStatusAcceptDelivery(req ,res)
+})
+ 
  route.get("/api/deliverydriver/:id" , (req ,res)=>{
    controllerDelivery.getDataLocationDriver(req ,res)
  });

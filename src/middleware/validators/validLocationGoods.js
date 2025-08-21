@@ -58,19 +58,19 @@ export const validateLocationGoods = [
     })
     .withMessage("O número de locação gerado já existe! Acione o suporte."),
 
-  body("descarte")
-    .notEmpty().withMessage("Local de descarte é obrigatório.")
-    .custom(async (value) => {
-      const desc = await movementDestination.getCodeDestination();
-      const valid = desc.map(item => item.dereid);
+  // body("descarte")
+  //   .notEmpty().withMessage("Local de descarte é obrigatório.")
+  //   .custom(async (value) => {
+  //     const desc = await movementDestination.getCodeDestination();
+  //     const valid = desc.map(item => item.dereid);
 
-      if (!valid.includes(value)) {
-        return Promise.reject("Local de descarte não existe no banco de dados.");
-      }
+  //     if (!valid.includes(value)) {
+  //       return Promise.reject("Local de descarte não existe no banco de dados.");
+  //     }
 
-      return true;
-    })
-    .withMessage("Local de descarte não existe no banco de dados."),
+  //     return true;
+  //   })
+  //   .withMessage("Local de descarte não existe no banco de dados."),
 
   body("resi")
     .notEmpty().withMessage("Resíduo é obrigatório.")

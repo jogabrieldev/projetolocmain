@@ -388,8 +388,7 @@ async function listDeliveryForDriver() {
         data-cliente="${nomeClient}"
         data-dataloc="${formatarData(entrega.lofidtlo)}">Aceitar</button>`;
       }
-      console.log(entrega)
-
+      
       const card = document.createElement("div");
       card.className = "col-md-6 col-lg-4";
 
@@ -444,7 +443,7 @@ async function listDeliveryForDriver() {
 
        const btnConfirmModal = document.getElementById("buttonAcceptDelivery");
         btnConfirmModal.onclick = (event) => {
-        toAcceptDeliveryNow(event , token , idDelivery);
+        toAcceptDeliveryNow(event , token , idDelivery , idBem);
         };
 
      }
@@ -491,110 +490,57 @@ async function updateRuntimeStatusDelivery() {
   });
 };
 
-// Atualizar status do bem
-async function updateStatusGoods(idBem) {
-  try {
-    const token = localStorage.getItem("token");
-    if(!token)return
-
-    const response = await fetch(`/api/updatestatus/${idBem}`, {
-      method: "PUT",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ bensstat: "A destino do cliente" }),
-    });
-
-    if (!response.ok) {
-      Toastify({
-        text: "Status do bem não foi atualizado! verifique",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-      return;
-    }
-    return true
-  } catch (error) {
-    Toastify({
-      text: "erro no server em atualizar status do bem",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "red",
-    }).showToast();
-    return false
-  };
-};
-
 // Esta função será chamada ao clicar no botão "Aceitar Entrega" da modal
-async function toAcceptDeliveryNow(event , token , idDelivery) {
-  try {
-    const token = localStorage.getItem("token");
-   
-    if (!token || !idDelivery) {
-      throw new Error("Token ou ID da entrega não encontrado");
-    }
+async function toAcceptDeliveryNow(event,token, idDelivery, idBem) {
 
-    const response = await fetch(`/api/updatestatusdelivery/${idDelivery}`, {
+  console.log('id bem' , token)
+  try {
+    
+    if (!idDelivery || !idBem) throw new Error("Dados obrigatórios faltando!");
+    console.log(idDelivery)
+
+    const response = await fetch(`/api/statusupdate/${idDelivery}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ body: "Entrega aceita" }),
+      body: JSON.stringify({
+         status: "Entrega aceita", 
+         goodsId: idBem
+      })
     });
 
-    if (!response.ok) {
-      Toastify({
-        text: "Erro ao aceitar essa entrega! Verifique.",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-      return;
-    }
+    const data = await response.json();
+
+    if (!response.ok) throw new Error(data.message);
 
     Toastify({
-      text: "Entrega aceita pelo motorista!",
+      text: "Entrega aceita e bem atualizado!",
       duration: 3000,
-      close: true,
       gravity: "top",
       position: "center",
       backgroundColor: "green",
     }).showToast();
 
-     const modalEl = document.getElementById("modalConfirmAccept");
-    const modalInstance = bootstrap.Modal.getInstance(modalEl);
-    if (modalInstance) {
-      modalInstance.hide();
-    }
-   
-    await listDeliveryForDriver()
-    
+    // atualiza UI
+    await listDeliveryForDriver();
     const btnAceitar = event.target;
     btnAceitar.classList.add("d-none");
-
-    const card = btnAceitar.closest(".card");
-    const btnFinalizar = card?.querySelector(".finishDelivery");
-    if (btnFinalizar) {
-     btnFinalizar.classList.remove("d-none");
-    }
-
-    // Atualiza o status dos bens (se necessário)
-    if (typeof updateStatusGoods === "function") {
-      updateStatusGoods(idBem);
-    }
+    btnAceitar.closest(".card")?.querySelector(".finishDelivery")?.classList.remove("d-none");
 
   } catch (error) {
-    console.error("Erro ao atualizar status da entrega:", error);
+    console.error("Erro:", error);
+    Toastify({
+      text: "Erro ao aceitar entrega",
+      duration: 3000,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+    }).showToast();
   };
 };
+
 
 // finalizar a entrega deixar a caçamba no cliente
 function finishDelivery(button) {

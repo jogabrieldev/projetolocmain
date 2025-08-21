@@ -1,5 +1,7 @@
 import { mecanismDelivey } from "../model/modelsDelivery.js";
 import { goodsRegister as updateBem } from "../model/modelsGoods.js";
+import {deliveryService} from "../service/deliveryService.js"
+
 
 const controllerDelivery = {
 
@@ -62,45 +64,62 @@ const controllerDelivery = {
          }
      },
 
-     async finishProcessDelivery(req ,res){
-      try {
-         const payload= req.body
-         if(!payload){
-          return res.status(400).json({message:"E obrigatorio enviar a entrega , numero da locação e o nome do motorista "})
-         }
-         if(!payload.enfiStat || payload.enfiStat === ""){
-           payload.enfiStat = "Finalizado"
-         }
+async finishProcessDelivery(req, res) {
+  try {
+    const payload = req.body;
 
-         
-         const result = await mecanismDelivey.finishDelivery(payload)
-         if(!result){
-           return res.status(400).json({message:"Erro ao finalizar entrega" , success:false , })
-         }
-          
-         const updateStatus = await mecanismDelivey.updateStatusDelivery(result.enfiloca , result.enfistat)
-         if(!updateStatus){
-            return res.status(400).json({message:"Erro ao atualizar o status da entrega"})
-         }
+    if (!payload) {
+      return res.status(400).json({
+        message: "É obrigatório enviar a entrega, número da locação e o nome do motorista",
+        success: false,
+      });
+    }
 
-         const socket = req.app.get("socketio")
-          if(socket){
-            socket.emit('statusDelivey' , result)
-          }
+    const socket = req.app.get("socketio");
 
-          const updateStatusGoods = await updateBem.updateStatus(result.enfibem , "Esta com cliente")
-          if(!updateStatusGoods){
-            return res.status(400).json({message:"Erro ao atualizar o status do bem"})
-          }
+    // Chama o service que já trata toda a transação
+    const result = await deliveryService.finishDeliveryTransaction(payload, socket);
 
-         return res.status(200).json({message:'Entrega finalizada com sucesso' , success:true , entrega:result})
-      } catch (error) {
-        console.error("Erro ao finalizar entrega" , error )
-        return res.status(500).json({message:"Erro no servidor ao finalizar entrega" , success:false})
-      }
-        
-     }
+    return res.status(200).json(result);
 
+  } catch (error) {
+    console.error("Erro ao finalizar entrega", error);
+
+    return res.status(500).json({ message:"Erro no server para finalizar entrega", success: false });
+  }
+},
+
+  async updateStatusAcceptDelivery(req ,res){
+
+     try {
+       const {id} = req.params
+       const { goodsId ,status} = req.body
+
+       console.log(req.body)
+
+       if(!status || !id || !goodsId){
+        return res.status(400).json({message:'Não foi passado os dados obrigatorios! Verifique'})
+       }
+
+       const { updatedDelivery, updatedGoods } = await deliveryService.acceptDeliveryAndUpdateGoods(
+        id,
+        goodsId,
+        status,                    
+        "A destino do cliente"  
+      );
+       
+      return res.status(200).json({
+        message: "Status da entrega e do bem atualizados com sucesso!",
+        delivery: updatedDelivery,
+        goods: updatedGoods
+      });
+     
+    } catch (error) {
+      console.error('Erro para atualizar os status no momento de aceitar entrega')
+      return res.status(500).json({message:"Erro no server para atualizar status"})
+    }
+     
+  }
 }
 
 export {controllerDelivery}

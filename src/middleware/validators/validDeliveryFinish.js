@@ -27,5 +27,4 @@ export const validDeliveryFinish = [
         .notEmpty().withMessage("ID do bem é obrigatório.")
         .bail()
         
-    
 ]

@@ -253,7 +253,8 @@ async function buscarResiduo(id) {
 
 async function showContratoLocationGoods(locacao) {
   const contratoDiv = document.querySelector(".contrato");
-  if (!contratoDiv) return;
+  const token = localStorage.getItem('token')
+  if (!contratoDiv || !token) return;
 
   const tableList = document.querySelector(".tableLocation");
   if (tableList) {
@@ -269,7 +270,11 @@ async function showContratoLocationGoods(locacao) {
 
   try {
     const response = await fetch(`/api/contrato/${locacao.belocode}` , {
-      method:'GET'
+      method:'GET',
+      headers:{
+        "content-type":"application/json",
+        Authorization:`Bearer ${token}`
+      }
     });
     if (!response.ok){
 
@@ -287,7 +292,7 @@ async function showContratoLocationGoods(locacao) {
     } 
 
     const data = await response.json();
-    const contratoHTML = data.result; // deve conter o HTML salvo na coluna `belocontr`
+    const contratoHTML = data.result; 
 
     contratoDiv.innerHTML = contratoHTML;
     contratoDiv.style.display = "block";

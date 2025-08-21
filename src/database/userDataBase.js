@@ -9,6 +9,6 @@ pool.connect()
   .then(() => console.log('Conectou no DB server03'))
   .catch((err) => console.error('Erro na conexão do DB:', err));
 
-export { pool }; // exporta a instância, não a classe
+export { pool }; 
 
 // export{}

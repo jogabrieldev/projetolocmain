@@ -1,6 +1,5 @@
 import { LocacaoModel } from "../model/modelsLocationGoods.js";
-// import { moduleResiduo } from "../model/modelsResiduo.js";
-// import { movementDestination } from "../model/modelsDestination.js";
+import { serviceLocation } from "../service/locationService.js";
 
 export const location = {
 
@@ -18,65 +17,60 @@ export const location = {
     }
   },
 
-  async dataLocacao(req, res) {
-    const { userClientValidade, numericLocation, dataLoc, localization, resi, descarte, dataDevo, pagament, bens } = req.body;
-       
-    console.log('corpo' , req.body)
-    try {
-    
-       if(!bens || bens.length === 0) {
-        return res.status(400).json({ error: "Nenhum dado de bens enviado." });
-       }
+ async dataLocacao(req, res) {
+  const { userClientValidade, numericLocation, dataLoc, localization, resi, descarte, dataDevo, pagament, bens } = req.body;
 
-      if(!userClientValidade || userClientValidade.length < 2) {
-         return res.status(400).json({ error: "CPF/CNPJ e Nome do cliente é obrigatório." });
-      }
-
-      if(!numericLocation){
-        return res.status(400).json({error:"Numero de locação não foi gerado"})
-      }
-       
-       const cliente = req.clienteValidado;
-   
-      const locationClient = await LocacaoModel.criarLocacao({
-        cllonmlo: numericLocation,
-        clloidcl: cliente.cliecode,
-        cllodtdv: dataDevo,
-        cllodtlo: dataLoc,
-        cllopgmt: pagament,
-        clloclno: cliente.clienome,
-        cllocpcn: cliente.cliecpf || cliente.cliecnpj,
-        clloresi: resi,
-        cllodesc:descarte,
-        cllorua:localization.localizationRua,
-        cllobair:localization.localizationBairro,
-        cllocida:localization.localizationCida,
-        cllocep:localization.localizationCep,
-        cllorefe:localization.localizationRefe,
-        clloqdlt:localization.localizationQdLt
-      });
-      
-  
-      const locationGoods =  await LocacaoModel.inserirBens(bens, locationClient);
-      if(!locationGoods){
-        return res.status(400).json({ error: "Erro ao inserir bens na locação." });
-      }
-
-      
-      const listAllLocation = await LocacaoModel.buscarTodasLocacoes();
-      console.log("Lista de locações atualizada:", listAllLocation);
-  
-      const io = req.app.get("socketio");
-      if (io) {
-        io.emit("updateRunTimeRegisterLocation", listAllLocation);
-      }
-  
-      return res.status(200).json({ message: "Locação criada com sucesso." , success:true , locationGoods });
-    } catch (error) {
-      console.error("Erro ao criar locação:", error);
-      return res.status(500).json({ error: "Erro interno do servidor." });
+  try {
+    if (!bens || bens.length === 0) {
+      return res.status(400).json({ error: "Nenhum dado de bens enviado." });
     }
-  },
+
+    if (!userClientValidade || userClientValidade.length < 2) {
+      return res.status(400).json({ error: "CPF/CNPJ e Nome do cliente é obrigatório." });
+    }
+
+    if (!numericLocation) {
+      return res.status(400).json({ error: "Número de locação não foi gerado." });
+    }
+
+    const cliente = req.clienteValidado;
+
+    const { clloid, bens: locationGoods } = await serviceLocation.criarLocacaoComBens({
+      cllonmlo: numericLocation,
+      clloidcl: cliente.cliecode,
+      cllodtdv: dataDevo,
+      cllodtlo: dataLoc,
+      cllopgmt: pagament,
+      clloclno: cliente.clienome,
+      cllocpcn: cliente.cliecpf || cliente.cliecnpj,
+      clloresi: resi,
+      cllodesc: descarte,
+      cllorua: localization.localizationRua,
+      cllobair: localization.localizationBairro,
+      cllocida: localization.localizationCida,
+      cllocep: localization.localizationCep,
+      cllorefe: localization.localizationRefe,
+      clloqdlt: localization.localizationQdLt
+    }, bens);
+
+    const listAllLocation = await LocacaoModel.buscarTodasLocacoes();
+
+    const io = req.app.get("socketio");
+    if (io) {
+      io.emit("updateRunTimeRegisterLocation", listAllLocation);
+    }
+
+    return res.status(200).json({
+      message: "Locação criada com sucesso.",
+      success: true,
+      clloid,
+      locationGoods
+    });
+  } catch (error) {
+    console.error("Erro ao criar locação:", error);
+    return res.status(500).json({ error: "Erro interno do servidor." });
+  }
+},
 
   async getClientByCPF(req, res) {
     try {

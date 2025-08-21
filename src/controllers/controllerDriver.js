@@ -1,4 +1,6 @@
 import { crudRegisterDriver as driverRegister } from "../model/modelsDriver.js";
+import { goodsRegister } from "../model/modelsGoods.js";
+import { mecanismDelivey } from "../model/modelsDelivery.js";
 import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 
@@ -227,4 +229,5 @@ export const movementOfDriver = {
       return res.status(500).json({ message: "Erro no servidor para atualizar status motorista" });
     }
   },
+
 };

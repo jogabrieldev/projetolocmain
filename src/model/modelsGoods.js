@@ -206,7 +206,8 @@ export const goodsRegister = {
     }
   },
 
-  updateStatus: async (bemId, bensstat) => {
+  updateStatus: async (client ,goodsId, bensstat) => {
+    console.log('bens' , goodsId , 'status' , bensstat)
   try {
     const dataAtual = new Date();
     const dataFormatada = dataAtual.toISOString().split('T')[0]; // yyyy-mm-dd
@@ -219,8 +220,8 @@ export const goodsRegister = {
       RETURNING *;
     `;
 
-    const values = [bensstat, dataFormatada, horaFormatada, bemId];
-    const result = await dbGoods.query(query, values);
+    const values = [bensstat, dataFormatada, horaFormatada, goodsId];
+    const result = await client.query(query, values);
 
     return result.rows[0];
   } catch (error) {

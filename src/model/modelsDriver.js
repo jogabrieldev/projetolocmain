@@ -85,20 +85,6 @@ export const crudRegisterDriver = {
     }
   },
 
-   async getPasswordByDrive(){
-    try {
-      const query = "SELECT motopasw FROM cadmoto";
-      const result = await userDbDriver.query(query);
-      console.log(result.rows)
-      
-      return result.rows;
-
-    } catch (error) {
-      console.error("Erro ao buscar senha do motorista:", error.message);
-      throw error;
-    }
-  },
-
   async searchDriver(motocode, status, situacao) {
     try {
       let query = "SELECT * FROM cadmoto WHERE 1=1";
@@ -133,7 +119,7 @@ export const crudRegisterDriver = {
       const result = await userDbDriver.query(query, [id]);
 
       if (result && result.rows.length > 0) {
-        return result.rows[0]; // retorna um único motorista
+        return result.rows[0];
       }
 
       return null; // caso não encontre
@@ -155,21 +141,9 @@ export const crudRegisterDriver = {
     }
   },
 
-  verificarDepedenciaDeMotorista: async (id) => {
-    try {
-      const checkQuery = "SELECT COUNT(*) FROM cadauto WHERE caaumoto= $1";
-      const checkResult = await userDbDriver.query(checkQuery, [id]);
-
-      return parseInt(checkResult.rows[0].count) > 0;
-    } catch (error) {
-      console.error("Erro ao verificar dependências do Motorista:", error);
-      throw error;
-    }
-  },
-
   verificarEntregaComMotorista: async (id) => {
     try {
-      const checkQuery = "SELECT COUNT(*) FROM locafim WHERE lofiidmt = $1";
+      const checkQuery = "SELECT COUNT(*) FROM locafim WHERE lofiidmt = $1 AND lofistat = 'Pendente'";
       const checkResult = await userDbDriver.query(checkQuery, [id]);
 
       return parseInt(checkResult.rows[0].count) > 0;
@@ -244,7 +218,7 @@ export const crudRegisterDriver = {
     }
   },
 
-  updateStatusMoto: async (motoId, motostat) => {
+  updateStatusMoto: async (client ,motoId, motostat) => {
     try {
       const query = `
         UPDATE cadmoto
@@ -254,7 +228,7 @@ export const crudRegisterDriver = {
     `;
 
       const values = [motostat, motoId];
-      const result = await userDbDriver.query(query, values);
+      const result = await client.query(query, values);
 
       return result.rows[0];
     } catch (error) {
