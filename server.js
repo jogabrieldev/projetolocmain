@@ -6,7 +6,8 @@ import { Server } from "socket.io";
 import http from "http";
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import { LocacaoModel } from "./src/model/modelsLocationGoods.js";
+import { pool } from './src/database/userDataBase.js';
+import { notificationTheLocationPendiente } from './src/service/locationPendienteService.js';
 
 dotenv.config();
 
@@ -30,13 +31,10 @@ const io = new Server(server, {
     },
 });
 
-// app.use((req, res, next) => {
-//     req.sock = io;
-//     next();
-// });
+
 
 app.set("socketio" , io)
-// Evento de conexão do Socket.IO
+
 io.on("connection", (socket) => {
 
     socket.on("clienteAtualizado", (msg) => {
@@ -110,7 +108,8 @@ io.on("connection", (socket) => {
            console.log(`Cliente desconectado: ${socket.id}`);
     });
 });
-await LocacaoModel.verificarLocacoesComBens(io)
+
+ notificationTheLocationPendiente(io , pool)
 
 
 

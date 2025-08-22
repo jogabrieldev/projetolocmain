@@ -25,40 +25,7 @@ function valueSelect() {
   }
 }
 
-// function initSocketCheckIn() {
-//   const socket = io(); 
-
-//   socket.on("checkIn", async ({vehicle , checkIn}) => {
-//     console.log("Novo check-in recebido via socket!", vehicle, checkIn);
-   
-
-//     Toastify({
-//       text: `Novo Check-In! Veículo ${
-//       vehicle.caauplac || "sem placa"
-//       } com motorista.`,
-//       duration: 3000,
-//       close: true,
-//       gravity: "top",
-//       position: "center",
-//       backgroundColor: "green",
-//     }).showToast();
-
-//     const inputVehicle = document.getElementById("caminhaoCheckOut");
-//     const vehicle1 = await getVehicleWithDriver(vehicle.caaucode);
-//     if (vehicle1 && inputVehicle) {
-//       inputVehicle.value = "";
-//       inputVehicle.value = `${vehicle.caaumaca} - ${vehicle.caauplac}`;
-//     }
-
-//     const inputCaminhao = document.getElementById("caminhao");
-//     if (inputCaminhao) {
-//       inputCaminhao.disabled = true; // Torna o campo somente leitura
-//     }
-
-//      await getAllCar();
-//   });
-// }
-
+//INICIALIZADOR DE CHECK-OUT
 function initCheckOut() {
   const submitCheckOut = document.getElementById("submitCheckOut");
   if (submitCheckOut) {
@@ -131,10 +98,18 @@ async function verifiqueID(motoristaId) {
       return true;
     }
   } catch (error) {
-    console.error("Erro ao buscar motorista");
+     Toastify({
+        text: `Erro ao buscar motorista! Faça login novamente`,
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "green",
+      }).showToast();
+    console.error("Erro ao buscar motorista" , error);
     return false;
-  }
-}
+  };
+};
 
 // adicionar Nome do motorista no titulo
 async function addNameDriver() {
@@ -199,7 +174,7 @@ async function SearchNameDriverLogado(id) {
   } catch (error) {
     console.error("Erro ao buscar motorista logado");
     return false;
-  }
+  };
 }
 
 // VERIFICAR SE O MOTORISTA TEM CHECKIn EM ABERTO
@@ -292,7 +267,7 @@ async function listDeliveryForDriver() {
 
     if (!token || !motoristaId || !container) return;
 
-    if (isTokenExpired(token)) {
+    if (!isTokenExpired(token)) {
       Toastify({
         text: "Sessão expirada. Faça login novamente.",
         duration: 3000,

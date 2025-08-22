@@ -1035,6 +1035,7 @@ async function updateGoodsSystem() {
   
     try {
       const bemSelecionado = JSON.parse(bemData);
+      console.log('Seleção' , bemSelecionado)
   
       const campos = [
         { id: "codeEdit", valor: bemSelecionado.benscode },

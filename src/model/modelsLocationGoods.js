@@ -395,52 +395,10 @@ ORDER BY c.clloid;`
         }
       }
 
-      return resultados; // Retorna os bens inseridos
+      return resultados; 
     } catch (error) {
       console.error("Erro ao inserir novos bens:", error);
       throw error;
     }
   },
-
-async verificarLocacoesComBens(io) {
-
-  // executa no minuto zero de cada hora
-  cron.schedule("0 * * * *", async () => {
-    console.log("⏰ Verificando locações pendentes há > 1h...");
-
-    const query = `
-      SELECT DISTINCT 
-        b.beloidcl   AS clloid,
-        c.cllonmlo   AS numerolocacao,
-        TO_CHAR(MIN(c.cllohrat) , 'HH24:MI:SS') AS primeiroinicio
-      FROM bensloc b
-      JOIN clieloc c ON c.clloid = b.beloidcl
-      WHERE b.belostat = 'Pendente'
-        AND b.belodtin <= NOW() - INTERVAL '1 hour'
-      GROUP BY b.beloidcl, c.cllonmlo
-    `;
-
-    try {
-      const { rows } = await client.query(query);
-
-      if (rows.length > 0) {
-        for (const loc of rows) {
-          // envia para todos os clientes conectados
-            console.log("Dados recebidos do banco:", loc);
-          io.emit("locacaoPendenteHaMaisDe1h", {
-            clloid: loc.clloid,
-            numero: loc.numerolocacao,
-            desde: loc.primeiroinicio
-          });
-          console.log(`⚠️ Locação ${loc.numerolocacao} pendente há mais de 1h`);
-        }
-      } else {
-        // console.log("✅ Nenhuma locação pendente há > 1h");
-      }
-    } catch (err) {
-      console.error("Erro ao verificar locações pendentes:", err);
-    }
-  });
-}
-
 };

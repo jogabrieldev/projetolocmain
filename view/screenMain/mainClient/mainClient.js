@@ -1043,16 +1043,44 @@ function deleteClient() {
 
     const clienteSelecionado = JSON.parse(selectedCheckbox.dataset.cliente);
     const clienteId = clienteSelecionado.cliecode;
-
-    const confirmacao = confirm(
-      `Tem certeza de que deseja excluir o cliente com código ${clienteId}?`
-    );
-    if (!confirmacao) {
-      return;
-    }
-
+    if(!clienteId) return
+    Swal.fire({
+  title: `Excluir cliente ${clienteSelecionado.clienome}?`,
+  text: "Essa ação não poderá ser desfeita!",
+  icon: "warning",
+  iconColor: "#dc3545", // cor do ícone de alerta
+  showCancelButton: true,
+  confirmButtonText: "Excluir !",
+  cancelButtonText: "Cancelar",
+  reverseButtons: true,
+  background: "#f8f9fa", // cor de fundo clara
+  color: "#212529", // cor do texto
+  confirmButtonColor: "#dc3545", // vermelho Bootstrap
+  cancelButtonColor: "#6c757d", // cinza Bootstrap
+  buttonsStyling: true, // deixa os botões com estilo customizado
+  customClass: {
+    popup: "rounded-4 shadow-lg", // bordas arredondadas e sombra
+    title: "fw-bold text-danger", // título em negrito e vermelho
+    confirmButton: "btn btn-danger px-4", // botão vermelho estilizado
+    cancelButton: "btn btn-secondary px-4" // botão cinza estilizado
+  }
+}).then(async (result) => {
+  if (result.isConfirmed) {
     await deleteClient(clienteId, selectedCheckbox.closest("tr"));
-  });
+    Swal.fire({
+      title: "Excluído!",
+      text: "O cliente foi removido com sucesso.",
+      icon: "success",
+      confirmButtonColor: "#198754", // verde Bootstrap
+      confirmButtonText: "OK",
+      background: "#f8f9fa",
+      customClass: {
+        popup: "rounded-4 shadow-lg"
+      }
+    });
+   }
+ });
+ });
 
   // função para deletar
   async function deleteClient(id, clientRow) {
@@ -1296,112 +1324,112 @@ function editarCliente() {
 
   // Função para enviar os dados atualizados
   async function editAndUpdateOfClient() {
-    const formEditClient = document.querySelector("#formEditRegisterClient");
+  const formEditClient = document.querySelector("#formEditRegisterClient");
 
-    formEditClient.addEventListener("submit", async (event) => {
-      event.preventDefault();
+  formEditClient.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-      const token = localStorage.getItem("token");
-      if (!token || isTokenExpired(token)) {
+    const token = localStorage.getItem("token");
+    if (!token || isTokenExpired(token)) {
+      Toastify({
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+
+      localStorage.removeItem("token");
+      setTimeout(() => {
+        window.location.href = "/index.html";
+      }, 2000);
+      return;
+    }
+
+    const selectedCheckbox = document.querySelector(
+      'input[name="selectCliente"]:checked'
+    );
+
+    if (!selectedCheckbox) {
+      console.error("Nenhum cliente foi selecionado.");
+      return;
+    }
+
+    const clientId = selectedCheckbox.dataset.cliente;
+
+    if (!clientId) {
+      console.error("O atributo data-client está vazio ou inválido.");
+      return;
+    }
+
+    let clientIdParsed;
+    try {
+      clientIdParsed = JSON.parse(clientId).cliecode;
+    } catch (error) {
+      console.error("Erro ao fazer parse de clientId:", error);
+      return;
+    }
+
+    const updateClient = {
+      cliecode: document.getElementById("editClieCode").value,
+      clienome: document.getElementById("editClieName").value,
+      clietpcl: document.getElementById("EditClieTiCli").value,
+      cliecpf: document.getElementById("editClieCpf").value || null,
+      cliecnpj: document.getElementById("editClieCnpj").value || null,
+      cliedtcd: document.getElementById("editClieDtCad").value || null,
+      cliedtnc: document.getElementById("editClieDtNasc").value || null,
+      cliecelu: document.getElementById("editClieCelu").value,
+      cliecity: document.getElementById("editClieCity").value,
+      clieestd: document.getElementById("editClieEstd").value,
+      clierua: document.getElementById("editClieRua").value,
+      cliecep: document.getElementById("editClieCep").value,
+      cliemail: document.getElementById("editClieMail").value,
+      cliebanc: document.getElementById("editClieBanc").value,
+      clieagen: document.getElementById("editClieAgen").value,
+      cliecont: document.getElementById("editClieCont").value,
+      cliepix: document.getElementById("editCliePix").value,
+    };
+
+    try {
+      const result = await Swal.fire({
+        title: `Atualizar cliente ${clientIdParsed}?`,
+        text: "Você tem certeza de que deseja atualizar os dados deste cliente?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Atualizar",
+        cancelButtonText: "Cancelar",
+        reverseButtons: true,
+        confirmButtonColor: "#1d5e1d",
+        cancelButtonColor: "#d33"
+      });
+
+      if (!result.isConfirmed) return;
+
+      const response = await fetch(`/api/updateclient/${clientIdParsed}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updateClient),
+      });
+
+      if (response.ok) {
         Toastify({
-          text: "Sessão expirada. Faça login novamente.",
+          text: `Cliente '${clientIdParsed}' atualizado com sucesso!`,
           duration: 3000,
           close: true,
           gravity: "top",
           position: "center",
-          backgroundColor: "red",
+          backgroundColor: "#1d5e1d",
         }).showToast();
 
-        localStorage.removeItem("token");
-        setTimeout(() => {
-          window.location.href = "/index.html";
-        }, 2000);
-        return;
-      }
-
-      const selectedCheckbox = document.querySelector(
-        'input[name="selectCliente"]:checked'
-      );
-
-      if (!selectedCheckbox) {
-        console.error("Nenhum cliente foi selecionado.");
-        return;
-      }
-
-      const clientId = selectedCheckbox.dataset.cliente;
-
-      if (!clientId) {
-        console.error("O atributo data-client está vazio ou inválido.");
-        return;
-      }
-
-      let clientIdParsed;
-      try {
-        clientIdParsed = JSON.parse(clientId).cliecode;
-      } catch (error) {
-        console.error("Erro ao fazer parse de clientId:", error);
-        return;
-      }
-
-      const updateClient = {
-        cliecode: document.getElementById("editClieCode").value,
-        clienome: document.getElementById("editClieName").value,
-        clietpcl: document.getElementById("EditClieTiCli").value,
-        cliecpf: document.getElementById("editClieCpf").value || null,
-        cliecnpj: document.getElementById("editClieCnpj").value || null,
-        cliedtcd: document.getElementById("editClieDtCad").value || null,
-        cliedtnc: document.getElementById("editClieDtNasc").value || null,
-        cliecelu: document.getElementById("editClieCelu").value,
-        cliecity: document.getElementById("editClieCity").value,
-        clieestd: document.getElementById("editClieEstd").value,
-        clierua: document.getElementById("editClieRua").value,
-        cliecep: document.getElementById("editClieCep").value,
-        cliemail: document.getElementById("editClieMail").value,
-        cliebanc: document.getElementById("editClieBanc").value,
-        clieagen: document.getElementById("editClieAgen").value,
-        cliecont: document.getElementById("editClieCont").value,
-        cliepix: document.getElementById("editCliePix").value,
-      };
-
-      try {
-        const confirmedEdition = confirm(`Tem certeza de que deseja ATUALIZAR os dados desse Cliente?`);
-        if (!confirmedEdition) return;
-
-        const response = await fetch(`/api/updateclient/${clientIdParsed}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(updateClient),
-        });
-
-        if (response.ok) {
-          Toastify({
-            text: `Cliente '${clientIdParsed}' atualizado com sucesso!`,
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "#1d5e1d",
-          }).showToast();
-
-          formEditClient.reset();
-        } else {
-          const errorResponse = await response.json();
-          Toastify({
-            text: errorResponse.message || "Erro ao atualizar Cliente.",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "#f44336",
-          }).showToast();
-        }
-      } catch (error) {
-        console.error("Erro na requisição:", error);
+        formEditClient.reset();
+      } else {
+        const errorResponse = await response.json();
         Toastify({
-          text: "Erro interno na requisição. Tente novamente.",
+          text: errorResponse.message || "Erro ao atualizar Cliente.",
           duration: 3000,
           close: true,
           gravity: "top",
@@ -1409,7 +1437,18 @@ function editarCliente() {
           backgroundColor: "#f44336",
         }).showToast();
       }
-    });
-  };
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      Toastify({
+        text: "Erro interno na requisição. Tente novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "#f44336",
+      }).showToast();
+    }
+  });
+}
   editAndUpdateOfClient();
 };

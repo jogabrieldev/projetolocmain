@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
           mainContent.innerHTML = html;
           locationPendente();
           needVsAvaible();
+          btnExitSection();
           validateFamilyBensPending();
           loadingDriver();
           filterLocation();
@@ -88,6 +89,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 });
+
+// ARRUMAR PARA FECHAR SECTION
+function btnExitSection(){
+    const btnExit = document.getElementById('btnExitSection')
+    if(btnExit){
+      btnExit.addEventListener('click' , ()=>{
+          const containerLogistics = document.querySelector('.containerLogistica')
+          if(containerLogistics){
+            containerLogistics.style.display = 'none'
+            containerLogistics.classList.remove('d-flex')
+          }
+      });
+    } 
+};
 
 //TABELA DE LOCAÇÃO PENDENTE
 const vinculacoesPendentes = new Map();
