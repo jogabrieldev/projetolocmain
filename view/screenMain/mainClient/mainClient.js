@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
           searchClient();
           registerNewClient();
           dateAtualInField("dtCad");
-          deleteClient();
+          deleteClientSystem();
           editarCliente();
         } else {
           console.error("#mainContent não encontrado no DOM");
@@ -990,8 +990,8 @@ function renderClientesTable(clientes) {
       cliente.cliecode,
       cliente.clienome,
       docFormatado,
-      formatDate(cliente.cliedtcd),
-      formatDate(cliente.cliedtnc),
+      formatDataPattersBr(cliente.cliedtcd),
+      formatDataPattersBr(cliente.cliedtnc),
       telFormatado,
       cliente.cliecity,
       cliente.clieestd,
@@ -1023,8 +1023,10 @@ function renderClientesTable(clientes) {
 };
 
  //deletar cliente
-function deleteClient() {
+function deleteClientSystem() {
   const buttonDeleteClient = document.querySelector(".buttonDeleteClient");
+  if(!buttonDeleteClient) return
+
   buttonDeleteClient.addEventListener("click", async () => {
     const selectedCheckbox = document.querySelector(
       'input[name="selectCliente"]:checked'
@@ -1045,43 +1047,45 @@ function deleteClient() {
     const clienteId = clienteSelecionado.cliecode;
     if(!clienteId) return
     Swal.fire({
-  title: `Excluir cliente ${clienteSelecionado.clienome}?`,
-  text: "Essa ação não poderá ser desfeita!",
-  icon: "warning",
-  iconColor: "#dc3545", // cor do ícone de alerta
-  showCancelButton: true,
-  confirmButtonText: "Excluir !",
-  cancelButtonText: "Cancelar",
-  reverseButtons: true,
-  background: "#f8f9fa", // cor de fundo clara
-  color: "#212529", // cor do texto
-  confirmButtonColor: "#dc3545", // vermelho Bootstrap
-  cancelButtonColor: "#6c757d", // cinza Bootstrap
-  buttonsStyling: true, // deixa os botões com estilo customizado
-  customClass: {
-    popup: "rounded-4 shadow-lg", // bordas arredondadas e sombra
-    title: "fw-bold text-danger", // título em negrito e vermelho
-    confirmButton: "btn btn-danger px-4", // botão vermelho estilizado
-    cancelButton: "btn btn-secondary px-4" // botão cinza estilizado
-  }
-}).then(async (result) => {
-  if (result.isConfirmed) {
-    await deleteClient(clienteId, selectedCheckbox.closest("tr"));
-    Swal.fire({
-      title: "Excluído!",
-      text: "O cliente foi removido com sucesso.",
-      icon: "success",
-      confirmButtonColor: "#198754", // verde Bootstrap
-      confirmButtonText: "OK",
-      background: "#f8f9fa",
-      customClass: {
+    title: `Excluir cliente ${clienteSelecionado.clienome}?`,
+    text: "Essa ação não poderá ser desfeita!",
+    icon: "warning",
+    iconColor: "#dc3545", // cor do ícone de alerta
+    showCancelButton: true,
+    confirmButtonText: "Excluir !",
+    cancelButtonText: "Cancelar",
+    reverseButtons: true,
+    background: "#f8f9fa", // cor de fundo clara
+    color: "#212529", // cor do texto
+    confirmButtonColor: "#dc3545", // vermelho Bootstrap
+    cancelButtonColor: "#6c757d", // cinza Bootstrap
+    buttonsStyling: true, // deixa os botões com estilo customizado
+    customClass: {
+     popup: "rounded-4 shadow-lg", // bordas arredondadas e sombra
+     title: "fw-bold text-danger", // título em negrito e vermelho
+     confirmButton: "btn btn-danger px-4", // botão vermelho estilizado
+     cancelButton: "btn btn-secondary px-4" // botão cinza estilizado
+   }
+  }).then(async (result) => {
+   if (result.isConfirmed) {
+      const success = await deleteClient(clienteId, selectedCheckbox.closest("tr"));
+      if(success){
+        Swal.fire({
+        title: "Excluído!",
+        text: "O cliente foi removido com sucesso.",
+        icon: "success",
+        confirmButtonColor: "#198754", 
+        confirmButtonText: "OK",
+        background: "#f8f9fa",
+        customClass: {
         popup: "rounded-4 shadow-lg"
       }
     });
-   }
+    };
+   };
+  });
  });
- });
-
+};
   // função para deletar
   async function deleteClient(id, clientRow) {
     const token = localStorage.getItem("token");
@@ -1116,6 +1120,7 @@ function deleteClient() {
         }).showToast();
 
         clientRow.remove();
+        return true
       } else {
         if (response.status === 400) {
           Toastify({
@@ -1126,6 +1131,7 @@ function deleteClient() {
             position: "center",
             backgroundColor: "orange",
           }).showToast();
+          return false
         } else {
           console.log("Erro para excluir:", data);
           Toastify({
@@ -1136,6 +1142,7 @@ function deleteClient() {
             position: "center",
             backgroundColor: "#f44336",
           }).showToast();
+          return false
         }
       }
     } catch (error) {
@@ -1148,13 +1155,15 @@ function deleteClient() {
         position: "center",
         backgroundColor: "#f44336",
       }).showToast();
+      return false
     };
   };
-};
 
-function editarCliente() {
+//Editar o cliente
+ async function editarCliente() {
   
   const editButtonClient = document.querySelector(".buttonEditClient");
+  if(!editButtonClient) return
   editButtonClient.addEventListener("click", () => {
     const selectedCheckbox = document.querySelector(
       'input[name="selectCliente"]:checked'
@@ -1321,6 +1330,8 @@ function editarCliente() {
       }
     });
   };
+  await editAndUpdateOfClient();
+ };
 
   // Função para enviar os dados atualizados
   async function editAndUpdateOfClient() {
@@ -1449,6 +1460,5 @@ function editarCliente() {
       }).showToast();
     }
   });
-}
-  editAndUpdateOfClient();
 };
+ 

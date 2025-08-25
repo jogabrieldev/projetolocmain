@@ -876,6 +876,8 @@ function renderBensTable(bens) {
 // DELETAR BEM
 async function deleteGoodsSystem() {
   const deleteButton = document.querySelector("#buttonDelete");
+  if(!deleteButton) return 
+
   deleteButton.addEventListener("click", async () => {
     const selectedCheckbox = document.querySelector(
       'input[name="selectBem"]:checked'
@@ -895,18 +897,47 @@ async function deleteGoodsSystem() {
   
     const bemSelecionado = JSON.parse(selectedCheckbox.dataset.bem);
     const bemId = bemSelecionado.benscode;
-  
-    const confirmacao = confirm(
-      `Tem certeza de que deseja excluir o bem com código ${bemId}?`
-    );
-    if (!confirmacao) {
-      return;
+    if(!bemId) return
+    Swal.fire({
+    title: `Excluir Bem ${bemSelecionado.bensnome}?`,
+    text: "Essa ação não poderá ser desfeita!",
+    icon: "warning",
+    iconColor: "#dc3545", // cor do ícone de alerta
+    showCancelButton: true,
+    confirmButtonText: "Excluir !",
+    cancelButtonText: "Cancelar",
+    reverseButtons: true,
+    background: "#f8f9fa", // cor de fundo clara
+    color: "#212529", // cor do texto
+    confirmButtonColor: "#dc3545", // vermelho Bootstrap
+    cancelButtonColor: "#6c757d", // cinza Bootstrap
+    buttonsStyling: true, // deixa os botões com estilo customizado
+    customClass: {
+     popup: "rounded-4 shadow-lg", // bordas arredondadas e sombra
+     title: "fw-bold text-danger", // título em negrito e vermelho
+     confirmButton: "btn btn-danger px-4", // botão vermelho estilizado
+     cancelButton: "btn btn-secondary px-4" // botão cinza estilizado
+   }
+  }).then(async (result) => {
+   if (result.isConfirmed) {
+     const success = await deleteBem(bemId, selectedCheckbox.closest("tr"));
+     if(success){
+        Swal.fire({
+        title: "Excluído!",
+        text: "O bem foi removido com sucesso.",
+        icon: "success",
+        confirmButtonColor: "#198754", 
+        confirmButtonText: "OK",
+        background: "#f8f9fa",
+        customClass: {
+        popup: "rounded-4 shadow-lg"
+      }
+    });
+     }
     }
-  
-    await deleteBem(bemId, selectedCheckbox.closest("tr"));
+   });
   });
-  
-}
+};
 // DELETAR
 async function deleteBem(id, bemItem) {
   const token = localStorage.getItem("token");
@@ -948,6 +979,7 @@ async function deleteBem(id, bemItem) {
       }).showToast();
 
       bemItem.remove();
+      return true
     } else {
       if (response.status === 400) {
         Toastify({
@@ -958,6 +990,7 @@ async function deleteBem(id, bemItem) {
           position: "center",
           backgroundColor: "orange",
         }).showToast();
+        return false
       } else {
         
         Toastify({
@@ -968,6 +1001,7 @@ async function deleteBem(id, bemItem) {
           position: "center",
           backgroundColor: "#f44336",
         }).showToast();
+        return false
       }
     };
   } catch (error) {
@@ -980,6 +1014,7 @@ async function deleteBem(id, bemItem) {
           position: "center",
           backgroundColor: "#f44336",
         }).showToast();
+        return false
       
   };
 };
@@ -988,6 +1023,8 @@ async function deleteBem(id, bemItem) {
 async function updateGoodsSystem() {
 
   const editButton = document.querySelector("#buttonEdit");
+  if(!editButton)return
+
   editButton.addEventListener("click", (event) => {
    
     loadSelectOptions("/api/codefamilyben", "cofaEdit", "fabecode");
@@ -1035,8 +1072,7 @@ async function updateGoodsSystem() {
   
     try {
       const bemSelecionado = JSON.parse(bemData);
-      console.log('Seleção' , bemSelecionado)
-  
+      
       const campos = [
         { id: "codeEdit", valor: bemSelecionado.benscode },
         { id: "nameEdit", valor: bemSelecionado.bensnome },
@@ -1115,7 +1151,7 @@ async function updateGoodsSystem() {
     }
   });
 
-  editAndUpdateOfBens()
+  await editAndUpdateOfBens()
 };
 
 //ENVIAR A EDIÇÃO 
@@ -1196,10 +1232,20 @@ async function editAndUpdateOfBens() {
      
     try {
         
-      const confirmedEdition = confirm(
-        `Tem certeza de que deseja ATUALIZAR Bem?`
-      );
-      if (!confirmedEdition) return;
+      const result = await Swal.fire({
+        title: `Atualizar o bem ${bemIdParsed}?`,
+        text: "Você tem certeza de que deseja atualizar os dados deste bem?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Atualizar",
+        cancelButtonText: "Cancelar",
+        reverseButtons: true,
+        confirmButtonColor: "#1d5e1d",
+        cancelButtonColor: "#d33"
+      });
+
+      if (!result.isConfirmed) return;
+
 
       const response = await fetch(`/api/bens/update/${bemIdParsed}`, {
         method: "PUT",

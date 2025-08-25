@@ -99,11 +99,10 @@ async getDestinationByCode(code){
 
  async updateDestination(id , updateDest){
     try {
-      const query = ` UPDATE cadderi SET  derenome = $1, derecep = $2, derecida = $3, dererua = $4, derebair = $5, dereestd = $6, dereativ = $7, deretipo = $8 WHERE dereid = $9 RETURNING * ;`;
+      const query = ` UPDATE cadderi SET  derenome = $1, derecida = $2, dererua = $3, derebair = $4, dereestd = $5, dereativ = $6, deretipo = $7 WHERE dereid = $8 RETURNING * ;`;
        
       const values = [
         updateDest.nomeDest || null,
-        updateDest.cepDest || null,
         updateDest.cidaDest || null,
         updateDest.ruaDest || null,
         updateDest.bairDest || null,

@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
           registerNewFornecedor();
           searchFornecedorForId();
           dateAtualInField("fornDtcd");
-          deleteFornecedor();
+          deleteFornecedorSystem();
           editFornecedor();
         } else {
           console.error("#mainContent não encontrado no DOM");
@@ -809,8 +809,10 @@ async function fetchListFornecedores() {
 
 
 // deletar fornecedor
-function deleteFornecedor() {
+function deleteFornecedorSystem() {
   const btnDeleteForn = document.querySelector(".buttonDeleteForn");
+  if(!btnDeleteForn) return
+
   btnDeleteForn.addEventListener("click", async () => {
     const selectedCheckbox = document.querySelector(
       'input[name="selectFornecedor"]:checked'
@@ -827,21 +829,51 @@ function deleteFornecedor() {
       return;
     }
 
-    const fornecedorSelecionado = JSON.parse(
-      selectedCheckbox.dataset.fornecedor
-    );
+    const fornecedorSelecionado = JSON.parse(selectedCheckbox.dataset.fornecedor);
+
     const fornecedorId = fornecedorSelecionado.forncode;
+    if(!fornecedorId)return
 
-    const confirmacao = confirm(
-      `Tem certeza de que deseja excluir o Fornecedor com código ${fornecedorId}?`
-    );
-    if (!confirmacao) {
-      return;
-    }
-
-    await deleteForne(fornecedorId, selectedCheckbox.closest("tr"));
+    Swal.fire({
+    title: `Excluir fornecedor ${fornecedorSelecionado.fornnome}?`,
+    text: "Essa ação não poderá ser desfeita!",
+    icon: "warning",
+    iconColor: "#dc3545", // cor do ícone de alerta
+    showCancelButton: true,
+    confirmButtonText: "Excluir !",
+    cancelButtonText: "Cancelar",
+    reverseButtons: true,
+    background: "#f8f9fa", // cor de fundo clara
+    color: "#212529", // cor do texto
+    confirmButtonColor: "#dc3545", // vermelho Bootstrap
+    cancelButtonColor: "#6c757d", // cinza Bootstrap
+    buttonsStyling: true, // deixa os botões com estilo customizado
+    customClass: {
+     popup: "rounded-4 shadow-lg", // bordas arredondadas e sombra
+     title: "fw-bold text-danger", // título em negrito e vermelho
+     confirmButton: "btn btn-danger px-4", // botão vermelho estilizado
+     cancelButton: "btn btn-secondary px-4" // botão cinza estilizado
+   }
+  }).then(async (result) => {
+   if (result.isConfirmed) {
+     const success = await deleteForne(fornecedorId, selectedCheckbox.closest("tr"));
+     if(success){
+         Swal.fire({
+        title: "Excluído!",
+        text: "O fornecedor foi removido com sucesso.",
+        icon: "success",
+        confirmButtonColor: "#198754", 
+        confirmButtonText: "OK",
+        background: "#f8f9fa",
+        customClass: {
+        popup: "rounded-4 shadow-lg"
+      }
+      });
+     };
+    };
+   });
   });
-
+};
   //delete
   async function deleteForne(id, fornRow) {
     const token = localStorage.getItem("token");
@@ -883,6 +915,7 @@ function deleteFornecedor() {
         }).showToast();
 
         fornRow.remove();
+        return true
       } else {
         if (response.status === 400) {
           Toastify({
@@ -893,6 +926,7 @@ function deleteFornecedor() {
             position: "center",
             backgroundColor: "orange",
           }).showToast();
+          return false
         } else {
           Toastify({
             text: "Erro na exclusão do Fornecedor",
@@ -902,6 +936,7 @@ function deleteFornecedor() {
             position: "center",
             backgroundColor: "#f44336",
           }).showToast();
+          return false
         }
       };
     } catch (error) {
@@ -913,14 +948,15 @@ function deleteFornecedor() {
         position: "center",
         backgroundColor: "#f44336",
       }).showToast();
+      return false
     };
-  };
-};
+ };
 
 // editar fornecedor
-function editFornecedor() {
+async function editFornecedor() {
 
   const editButtonForn = document.querySelector(".buttonEditForn");
+  if(!editButtonForn) return
 
   editButtonForn.addEventListener("click", (e) => {
     e.preventDefault();
@@ -1075,9 +1111,29 @@ function editFornecedor() {
       }
     });
   };
-
+  await editAndUpdateOfForn();
+};
   // função ENVIA O DADO ATUALIZADO
   async function editAndUpdateOfForn() {
+
+     const token = localStorage.getItem("token"); 
+
+      if (!token || isTokenExpired(token)) {
+        Toastify({
+          text: "Sessão expirada. Faça login novamente.",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+        }).showToast();
+
+        localStorage.removeItem("token");
+        setTimeout(() => {
+          window.location.href = "/index.html";
+        }, 2000);
+        return;
+      }
     const formEditForn = document.querySelector(".formEditForn");
 
     formEditForn.addEventListener("submit", async (event) => {
@@ -1129,31 +1185,23 @@ function editFornecedor() {
         fornptsv: document.getElementById("editFornDisPro").value,
       };
 
-      const token = localStorage.getItem("token"); 
-
-      if (!token || isTokenExpired(token)) {
-        Toastify({
-          text: "Sessão expirada. Faça login novamente.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "red",
-        }).showToast();
-
-        localStorage.removeItem("token");
-        setTimeout(() => {
-          window.location.href = "/index.html";
-        }, 2000);
-        return;
-      }
-
+     
       try {
 
-        const confirmedEdition = confirm(
-        `Tem certeza de que deseja ATUALIZAR os dados desse Fornecedor?`
-        );
-          if (!confirmedEdition) return;
+      const result = await Swal.fire({
+        title: `Atualizar o fornecedor ${fornIdParsed}?`,
+        text: "Você tem certeza de que deseja atualizar os dados deste fornecedor?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Atualizar",
+        cancelButtonText: "Cancelar",
+        reverseButtons: true,
+        confirmButtonColor: "#1d5e1d",
+        cancelButtonColor: "#d33"
+      });
+
+      if (!result.isConfirmed) return;
+
         const response = await fetch(`/api/updateforn/${fornIdParsed}`, {
           method: "PUT",
           headers: {
@@ -1199,8 +1247,8 @@ function editFornecedor() {
         }).showToast();
       }
     });
-  }
-  editAndUpdateOfForn();
-};
+  };
+  
+
 
 

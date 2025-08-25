@@ -8,35 +8,58 @@ function isTokenExpired(token) {
   }
 }
 
-function addMetrosCubicos() {
-  const inputCapa = document.getElementById('fabeCapa');
-  if (!inputCapa) return; 
+// function addMetrosCubicos() {
+//   const inputCapa = document.getElementById('fabeCapa');
+//   if (!inputCapa) return; 
 
-  inputCapa.addEventListener('input', () => {
-    let somenteNumero = inputCapa.value.replace(/\D/g, '');
-    inputCapa.value = somenteNumero ? `${somenteNumero}m³` : '';
+//   inputCapa.addEventListener('input', () => {
+//     let somenteNumero = inputCapa.value.replace(/\D/g, '');
+//     inputCapa.value = somenteNumero ? `${somenteNumero}m³` : '';
+//   });
+
+//    inputCapa.addEventListener('focus', () => {
+//     inputCapa.value = inputCapa.value.replace(/m³/, '');
+//   });
+// };
+
+// function aplicarMetrosCubicosEdicao(valorNumero) {
+//   const inputEdit = document.getElementById('editFabeCapa');
+//   if (!inputEdit) return;
+
+//   inputEdit.value = valorNumero ? `${valorNumero}m³` : '';
+
+//   inputEdit.addEventListener('focus', () => {
+//     inputEdit.value = inputEdit.value.replace(/m³/, '');
+//   });
+
+//   inputEdit.addEventListener('blur', () => {
+//     let apenasNumero = inputEdit.value.replace(/\D/g, '');
+//     inputEdit.value = apenasNumero ? `${apenasNumero}m³` : '';
+//   });
+// };
+
+function aplicarMascaraMetrosCubicos(idCampo) {
+  const input = document.getElementById(idCampo);
+  if (!input) return;
+
+  // Quando digitar, remove caracteres não numéricos e aplica "m³"
+  input.addEventListener("input", () => {
+    const num = input.value.replace(/\D/g, "");
+    input.value = num ? `${num}m³` : "";
   });
 
-   inputCapa.addEventListener('focus', () => {
-    inputCapa.value = inputCapa.value.replace(/m³/, '');
-  });
-};
-
-function aplicarMetrosCubicosEdicao(valorNumero) {
-  const inputEdit = document.getElementById('editFabeCapa');
-  if (!inputEdit) return;
-
-  inputEdit.value = valorNumero ? `${valorNumero}m³` : '';
-
-  inputEdit.addEventListener('focus', () => {
-    inputEdit.value = inputEdit.value.replace(/m³/, '');
+  // Quando focar, remove "m³" para facilitar edição
+  input.addEventListener("focus", () => {
+    input.value = input.value.replace(/m³/, "");
   });
 
-  inputEdit.addEventListener('blur', () => {
-    let apenasNumero = inputEdit.value.replace(/\D/g, '');
-    inputEdit.value = apenasNumero ? `${apenasNumero}m³` : '';
+  // Quando sair do campo, garante que termine com "m³"
+  input.addEventListener("blur", () => {
+    const num = input.value.replace(/\D/g, "");
+    input.value = num ? `${num}m³` : "";
   });
-};
+}
+
 
 const socketFamilyBens = io();
 document.addEventListener("DOMContentLoaded", () => {
@@ -57,9 +80,9 @@ document.addEventListener("DOMContentLoaded", () => {
           mainContent.innerHTML = html;
           interationSystemFamilyBens();
           registerNewFamilyBens();
-          addMetrosCubicos();
           searchFamilyGoodsForId();
-          deleteFamilyGoods();
+          deleteFamilyGoodsSystem();
+          aplicarMascaraMetrosCubicos("fabeCapa"); 
           editFamilyGoods();
         } else {
           console.error("#mainContent não encontrado no DOM");
@@ -108,7 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
           position: "center",
           backgroundColor: "red",
         }).showToast();
-        console.error("Erro na pagina");
+        console.error("Erro na pagina" ,error);
       }
 
       await fetchListFabricante();
@@ -220,31 +243,6 @@ function interationSystemFamilyBens() {
     });
   };
  
-  const btnOutInitFabriEdit = document.querySelector(".btnOutInitFabriEdit");
-  if(btnOutInitFabriEdit){
-    btnOutInitFabriEdit.addEventListener("click", (event) => {
-      event.preventDefault();
-  
-      const btnPageInit = document.querySelector(".btnMainPageFabri");
-      if(btnPageInit){
-        btnPageInit.classList.remove('hidden')
-        btnPageInit.classList.add('flex')
-      }
-    
-      const listFamilyGoods = document.querySelector(".listingFabri");
-      if(listFamilyGoods){
-        listFamilyGoods.classList.remove("hidden")
-        listFamilyGoods.classList.add('flex')
-      }
-      
-      const containerFormFabriRegister = document.querySelector(".editFabri");
-      if(containerFormFabriRegister){
-        containerFormFabriRegister.classList.remove('flex')
-        containerFormFabriRegister.classList.add('hidden')
-      }
-    });
-  };
-  
 };
 
 // CADASTRAR FAMILIA DE BENS
@@ -689,9 +687,10 @@ function renderFamilyGoodsTable(familyGoods) {
 };
 
 // //deletar FAMILIA DE BEM
-function deleteFamilyGoods(){
+function deleteFamilyGoodsSystem(){
 
     const btnDeleteFabri = document.querySelector(".buttonDeleteFabri");
+    if(!btnDeleteFabri) return 
     btnDeleteFabri.addEventListener("click", async () => {
    const selectedCheckbox = document.querySelector(
     'input[name="selectfamilyGoods"]:checked'
@@ -710,18 +709,51 @@ function deleteFamilyGoods(){
 
   const fabricanteSelecionado = JSON.parse(selectedCheckbox.dataset.familyGoods);
   const fabricanteId = fabricanteSelecionado.fabecode;
+  if(!fabricanteId) return 
 
-  const confirmacao = confirm(
-    `Tem certeza de que deseja excluir a familia de bens com código: ${fabricanteId}?`
-  );
-  if (!confirmacao) {
-    return;
-  }
+  Swal.fire({
+    title: `Excluir familia de bem, ${fabricanteSelecionado.fabedesc}?`,
+    text: "Essa ação não poderá ser desfeita!",
+    icon: "warning",
+    iconColor: "#dc3545", // cor do ícone de alerta
+    showCancelButton: true,
+    confirmButtonText: "Excluir !",
+    cancelButtonText: "Cancelar",
+    reverseButtons: true,
+    background: "#f8f9fa", // cor de fundo clara
+    color: "#212529", // cor do texto
+    confirmButtonColor: "#dc3545", // vermelho Bootstrap
+    cancelButtonColor: "#6c757d", // cinza Bootstrap
+    buttonsStyling: true, // deixa os botões com estilo customizado
+    customClass: {
+     popup: "rounded-4 shadow-lg", // bordas arredondadas e sombra
+     title: "fw-bold text-danger", // título em negrito e vermelho
+     confirmButton: "btn btn-danger px-4", // botão vermelho estilizado
+     cancelButton: "btn btn-secondary px-4" // botão cinza estilizado
+   }
+  }).then(async (result) => {
+   if (result.isConfirmed) {
+      const success = await deleteFamilyGoods(fabricanteId, selectedCheckbox.closest("tr"));
+      if(success){
+        Swal.fire({
+        title: "Excluído!",
+        text: "A familia de bem foi removido com sucesso.",
+        icon: "success",
+        confirmButtonColor: "#198754", 
+        confirmButtonText: "OK",
+        background: "#f8f9fa",
+        customClass: {
+        popup: "rounded-4 shadow-lg"
+      }
+    });
+    };
+   };
+  });
 
-  await deleteFabri(fabricanteId, selectedCheckbox.closest("tr"));
+  
 });
 //DELETE
-async function deleteFabri(id, fabeRow) {
+async function deleteFamilyGoods(id, fabeRow) {
   const token = localStorage.getItem("token");
 
   if (!token || isTokenExpired(token)) {
@@ -760,6 +792,7 @@ async function deleteFabri(id, fabeRow) {
       }).showToast();
 
       fabeRow.remove();
+      return true
     } else {
       if (response.status === 400) {
         Toastify({
@@ -770,6 +803,7 @@ async function deleteFabri(id, fabeRow) {
           position: "center",
           backgroundColor: "orange",
         }).showToast();
+        return false
       } else {
         Toastify({
           text: "Erro na exclusão da familia de bem",
@@ -779,6 +813,7 @@ async function deleteFabri(id, fabeRow) {
           position: "center",
           backgroundColor: "#f44336",
         }).showToast();
+        return false
       }
     }
   } catch (error) {
@@ -791,13 +826,16 @@ async function deleteFabri(id, fabeRow) {
       position: "center",
       backgroundColor: "#f44336",
     }).showToast();
+    return false
   };
  };
 };
 
-// Edição do familia de ben
-function editFamilyGoods(){
+// Edição do familia de bem
+async function editFamilyGoods(){
       const btnFormEditFabri = document.querySelector(".buttonEditFabri");
+      if(!btnFormEditFabri) return
+
 btnFormEditFabri.addEventListener("click", () => {
   const selectedCheckbox = document.querySelector(
     'input[name="selectfamilyGoods"]:checked'
@@ -815,7 +853,6 @@ btnFormEditFabri.addEventListener("click", () => {
     return;
   }
 
-  
   const btnMainPageFamiliGoods = document.querySelector(".btnMainPageFabri");
   if(btnMainPageFamiliGoods){
     btnMainPageFamiliGoods.classList.remove('flex')
@@ -868,21 +905,8 @@ const containerEditForm = document.querySelector('.editFabri')
         console.warn(`Elemento com ID '${id}' não encontrado.`);
       }
     });
-    function aplicarMascaraMetrosCubicosEdicao() {
-  const input = document.getElementById("editFabeCapa");
-  if (!input) return;
 
-  input.addEventListener("focus", () => {
-    input.value = input.value.replace(/m³/, "");
-  });
-
-  input.addEventListener("blur", () => {
-    const num = input.value.replace(/\D/g, "");
-    input.value = num ? num + "m³" : "";
-  });
-};
-
-aplicarMascaraMetrosCubicosEdicao();
+      aplicarMascaraMetrosCubicos("editFabeCapa");
 
     const spaceEditFabri = document.querySelector(".editFabri");
     const btnMainPageFabri = document.querySelector(".btnMainPageFabri");
@@ -907,9 +931,31 @@ aplicarMascaraMetrosCubicosEdicao();
     console.error("Erro ao fazer parse de data-bem:", error);
   }
 });
+  await editAndUpdateOfFabric();
+};
 
 // função DE EDIÇÃO
 async function editAndUpdateOfFabric() {
+
+   const token = localStorage.getItem("token");
+
+    if (!token || isTokenExpired(token)) {
+      Toastify({
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+
+      localStorage.removeItem("token");
+      setTimeout(() => {
+        window.location.href = "/index.html";
+      }, 2000);
+      return;
+    }
+
   const formEditFabri = document.querySelector(".formEditFabri");
 
   formEditFabri.addEventListener("submit", async (event) => {
@@ -953,29 +999,23 @@ async function editAndUpdateOfFabric() {
       fabectct: document.getElementById("editFabeCtct").value,
     };
 
-    const token = localStorage.getItem("token");
-
-    if (!token || isTokenExpired(token)) {
-      Toastify({
-        text: "Sessão expirada. Faça login novamente.",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-
-      localStorage.removeItem("token");
-      setTimeout(() => {
-        window.location.href = "/index.html";
-      }, 2000);
-      return;
-    }
-
+   
     try {
 
-      const confirmedEdition = confirm(`Tem certeza de que deseja ATUALIZAR os dados dessa Familia de bem ?`);
-        if (!confirmedEdition) return;
+       const result = await Swal.fire({
+        title: `Atualizar familia de bem ${fabeIdParsed}?`,
+        text: "Você tem certeza de que deseja atualizar os dados desta familia de bem?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Atualizar",
+        cancelButtonText: "Cancelar",
+        reverseButtons: true,
+        confirmButtonColor: "#1d5e1d",
+        cancelButtonColor: "#d33"
+      });
+
+      if (!result.isConfirmed) return;
+
 
       const response = await fetch(`/api/updatefabe/${fabeIdParsed}`, {
         method: "PUT",
@@ -1024,5 +1064,5 @@ async function editAndUpdateOfFabric() {
     }
   });
 };
-  editAndUpdateOfFabric();
-};
+
+

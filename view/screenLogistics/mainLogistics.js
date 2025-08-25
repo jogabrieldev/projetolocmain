@@ -97,11 +97,11 @@ function btnExitSection(){
       btnExit.addEventListener('click' , ()=>{
           const containerLogistics = document.querySelector('.containerLogistica')
           if(containerLogistics){
-            containerLogistics.style.display = 'none'
-            containerLogistics.classList.remove('d-flex')
+            containerLogistics.classList.remove('flex')
+            containerLogistics.classList.add('d-none')
           }
       });
-    } 
+    };
 };
 
 //TABELA DE LOCAÇÃO PENDENTE
@@ -137,7 +137,7 @@ async function locationPendente() {
     });
 
     if (response.status === 404) {
-      document.querySelector(".orders").innerHTML ="<p class=' text-danger text-center'>Nenhuma Locação encontrada ainda!</p>";
+      document.querySelector(".orders").innerHTML ="<p class=' text-danger text-center'>Nenhuma Locação pendente encontrada ainda!</p>";
       return;
     }
 

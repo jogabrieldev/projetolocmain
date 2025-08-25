@@ -406,7 +406,8 @@ async function getAllDestinationDescarte() {
 // DELETAR DESTINO DE DESCARTE
 function deleteDestination() {
   const buttonDeleteDestination = document.querySelector(".buttonDeleteDestination");
-  
+  if(!buttonDeleteDestination) return 
+
   buttonDeleteDestination.addEventListener("click", async () => {
     const selectedCheckbox = document.querySelector('input[name="selectDestino"]:checked');
 
@@ -424,14 +425,47 @@ function deleteDestination() {
 
     const destinoSelecionado = JSON.parse(selectedCheckbox.dataset.destino);
     const destinoId = destinoSelecionado.dereid;
-
-    const confirmacao = confirm(`Tem certeza de que deseja excluir o destino com código ${destinoId}?`);
-    if (!confirmacao) {
-      return;
-    }
-
-    await deleteDestino(destinoId, selectedCheckbox.closest("tr"));
-  });
+    if(!destinoId) return
+     Swal.fire({
+    title: `Excluir destino de descarte ${destinoSelecionado.derenome}?`,
+    text: "Essa ação não poderá ser desfeita!",
+    icon: "warning",
+    iconColor: "#dc3545", // cor do ícone de alerta
+    showCancelButton: true,
+    confirmButtonText: "Excluir !",
+    cancelButtonText: "Cancelar",
+    reverseButtons: true,
+    background: "#f8f9fa", // cor de fundo clara
+    color: "#212529", // cor do texto
+    confirmButtonColor: "#dc3545", // vermelho Bootstrap
+    cancelButtonColor: "#6c757d", // cinza Bootstrap
+    buttonsStyling: true, // deixa os botões com estilo customizado
+    customClass: {
+     popup: "rounded-4 shadow-lg", // bordas arredondadas e sombra
+     title: "fw-bold text-danger", // título em negrito e vermelho
+     confirmButton: "btn btn-danger px-4", // botão vermelho estilizado
+     cancelButton: "btn btn-secondary px-4" // botão cinza estilizado
+   }
+  }).then(async (result) => {
+   if (result.isConfirmed) {
+      const success = await deleteDestino(destinoId, selectedCheckbox.closest("tr"));
+      if(success){
+        Swal.fire({
+        title: "Excluído!",
+        text: "O residuo foi removido com sucesso.",
+        icon: "success",
+        confirmButtonColor: "#198754", 
+        confirmButtonText: "OK",
+        background: "#f8f9fa",
+        customClass: {
+        popup: "rounded-4 shadow-lg"
+      }
+    });
+    };
+   };
+  });  
+ });
+}
 
   // função interna que faz o fetch
   async function deleteDestino(id, destinoRow) {
@@ -476,6 +510,7 @@ function deleteDestination() {
         }).showToast();
 
         destinoRow.remove();
+        return true
       } else {
         Toastify({
           text: data.message || "Erro na exclusão do destino.",
@@ -485,6 +520,7 @@ function deleteDestination() {
           position: "center",
           backgroundColor: "#f44336",
         }).showToast();
+        return false
       }
     } catch (error) {
       console.error("Erro ao excluir destino:", error);
@@ -496,9 +532,10 @@ function deleteDestination() {
         position: "center",
         backgroundColor: "#f44336",
       }).showToast();
+      return false
     };
   };
-};
+
 
 //Atualização de destino 
 
@@ -604,6 +641,7 @@ async function editAndUpdateDestination() {
 
   const form = document.getElementById("formEditDestination");
     const id = form.dataset.destinationId;
+    console.log(id)
 
     if (!id) {
       console.error("ID do destino não encontrado.");
@@ -613,7 +651,6 @@ async function editAndUpdateDestination() {
              
     const body = {
       nomeDest: document.getElementById("editNomeDest").value,
-      cepDest: document.getElementById("editCepDest").value,
       cidaDest: document.getElementById("editCidaDest").value,
       ruaDest: document.getElementById("editRuaDest").value,
       bairDest: document.getElementById("editBairDest").value,
@@ -623,8 +660,19 @@ async function editAndUpdateDestination() {
     };
 
     try {
-      const confirmed = confirm(`Tem certeza de que deseja atualizar esse destino?`);
-      if (!confirmed) return;
+      const result = await Swal.fire({
+        title: `Atualizar local de descarte ${id}?`,
+        text: "Você tem certeza de que deseja atualizar os dados deste local de descarte?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Atualizar",
+        cancelButtonText: "Cancelar",
+        reverseButtons: true,
+        confirmButtonColor: "#1d5e1d",
+        cancelButtonColor: "#d33"
+      });
+
+      if (!result.isConfirmed) return;
 
       const response = await fetch(`/api/destination/${id}`, {
         method: "PUT",
@@ -644,7 +692,6 @@ async function editAndUpdateDestination() {
 
         form.reset();
         form.removeAttribute("data-destination-id");
-        document.querySelector(".containerFormEditDestination").style.display = "none";
 
       } else {
         const error = await response.json();

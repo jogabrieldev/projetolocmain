@@ -97,7 +97,7 @@ export const crudRegisterFamilyGoods = {
 
   verificarDepedenciaDeReservaLocacao: async (id) => {
     try {
-      const checkQuery = "SELECT COUNT(*) FROM bensloc WHERE bencodb= $1";
+      const checkQuery = "SELECT COUNT(*) FROM bensloc WHERE belocodb= $1";
       const checkResult = await dbFamilyGoods.query(checkQuery, [id]);
 
       return parseInt(checkResult.rows[0].count) > 0;

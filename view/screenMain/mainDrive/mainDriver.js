@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
           maskFieldDriver();
           interationSystemDriver();
           registerNewDriver();
-          deleteMotista();
+          deleteMotistaSystem()
           searchDriverForId();
           editDriver();
           editAndUpdateOfDriver();
@@ -877,8 +877,10 @@ function renderMotoristasTable(motoristas) {
 }
 
 // deletar motorista
-function deleteMotista() {
+function deleteMotistaSystem() {
   const btnDeleteDriver = document.querySelector(".buttonDeleteDriver");
+  if(!btnDeleteDriver) return
+
   btnDeleteDriver.addEventListener("click", async () => {
     const selectedCheckbox = document.querySelector(
       'input[name="selectDriver"]:checked'
@@ -897,14 +899,49 @@ function deleteMotista() {
 
     const MotoristaSelecionado = JSON.parse(selectedCheckbox.dataset.motorista);
     const motoristaId = MotoristaSelecionado.motocode;
+    if(!motoristaId) return
 
-    const confirmacao = confirm(`Tem certeza de que deseja excluir o Fabricante com código ${motoristaId}?`);
-    if (!confirmacao) {
-      return;
-    }
-
-    await deleteDriver(motoristaId, selectedCheckbox.closest("tr"));
+      Swal.fire({
+    title: `Excluir motorista ${MotoristaSelecionado.motonome}?`,
+    text: "Essa ação não poderá ser desfeita!",
+    icon: "warning",
+    iconColor: "#dc3545", // cor do ícone de alerta
+    showCancelButton: true,
+    confirmButtonText: "Excluir !",
+    cancelButtonText: "Cancelar",
+    reverseButtons: true,
+    background: "#f8f9fa", // cor de fundo clara
+    color: "#212529", // cor do texto
+    confirmButtonColor: "#dc3545", // vermelho Bootstrap
+    cancelButtonColor: "#6c757d", // cinza Bootstrap
+    buttonsStyling: true, // deixa os botões com estilo customizado
+    customClass: {
+     popup: "rounded-4 shadow-lg", // bordas arredondadas e sombra
+     title: "fw-bold text-danger", // título em negrito e vermelho
+     confirmButton: "btn btn-danger px-4", // botão vermelho estilizado
+     cancelButton: "btn btn-secondary px-4" // botão cinza estilizado
+   }
+  }).then(async (result) => {
+   if (result.isConfirmed) {
+      const success =  await deleteDriver(motoristaId, selectedCheckbox.closest("tr"));
+      if(success){
+        Swal.fire({
+        title: "Excluído!",
+        text: "O motorista foi removido com sucesso.",
+        icon: "success",
+        confirmButtonColor: "#198754", 
+        confirmButtonText: "OK",
+        background: "#f8f9fa",
+        customClass: {
+        popup: "rounded-4 shadow-lg"
+      }
+    });
+    };
+   };
   });
+ });
+};
+
  //DELETE
   async function deleteDriver(id, driverRow) {
     const token = localStorage.getItem("token");
@@ -948,6 +985,7 @@ function deleteMotista() {
         }).showToast();
 
         driverRow.remove();
+        return true
       } else {
       
         let errorMessage = "Erro ao excluir o motorista.";
@@ -964,6 +1002,7 @@ function deleteMotista() {
           position: "center",
           backgroundColor: "orange",
         }).showToast();
+         return false
       }
     } catch (error) {
       console.error("Erro ao excluir motorista:", error);
@@ -975,13 +1014,16 @@ function deleteMotista() {
         position: "center",
         backgroundColor: "#f44336",
       }).showToast();
+      return false
     };
   };
-};
+
 
 // EDITAR MOTORISTA
-function editDriver() {
+async function editDriver() {
   const btnFormEditDrive = document.querySelector(".buttonEditDriver");
+  if(!btnFormEditDrive) return
+
   btnFormEditDrive.addEventListener("click", () => {
     const selectedCheckbox = document.querySelector(
       'input[name="selectDriver"]:checked'
@@ -1185,9 +1227,29 @@ function editDriver() {
       }
     });
   };
+  await editAndUpdateOfDriver()
 };
 //EDITAR
 async function editAndUpdateOfDriver() {
+
+   const token = localStorage.getItem("token");
+
+    if (!token || isTokenExpired(token)) {
+      Toastify({
+        text: "Sessão expirada. Faça login novamente.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "red",
+      }).showToast();
+
+      localStorage.removeItem("token");
+      setTimeout(() => {
+        window.location.href = "/index.html";
+      }, 2000);
+      return;
+    }
   const formEditDrive = document.querySelector(".formEditDriver");
 
   formEditDrive.addEventListener("submit", async (event) => {
@@ -1239,28 +1301,22 @@ async function editAndUpdateOfDriver() {
       motostat: document.getElementById("editMotoStat").value,
     };
 
-    const token = localStorage.getItem("token");
-
-    if (!token || isTokenExpired(token)) {
-      Toastify({
-        text: "Sessão expirada. Faça login novamente.",
-        duration: 3000,
-        close: true,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red",
-      }).showToast();
-
-      localStorage.removeItem("token");
-      setTimeout(() => {
-        window.location.href = "/index.html";
-      }, 2000);
-      return;
-    }
-
+   
     try {
-      const confirmedEdition = confirm(`Tem certeza de que deseja ATUALIZAR os dados desse Motorista?`);
-      if (!confirmedEdition) return;
+       const result = await Swal.fire({
+        title: `Atualizar motorista ${motoIdParsed}?`,
+        text: "Você tem certeza de que deseja atualizar os dados deste motorista?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Atualizar",
+        cancelButtonText: "Cancelar",
+        reverseButtons: true,
+        confirmButtonColor: "#1d5e1d",
+        cancelButtonColor: "#d33"
+      });
+
+      if (!result.isConfirmed) return;
+
 
       const response = await fetch(`/api/updatemoto/${motoIdParsed}`, {
         method: "PUT",

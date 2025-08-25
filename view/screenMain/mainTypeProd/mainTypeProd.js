@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded' , ()=>{
                   if (mainContent) {
                     mainContent.innerHTML = html;
                     registerNewTypeProduct();
-                    deleteTypeProduct();
+                    deleteTypeProductSystem();
                     interationSystemTypeProduct();
                     searchTypeProduct();
                     EditTypeProduct();
@@ -623,9 +623,10 @@ function renderTypeProdTable(tipoProduto) {
 };
 
 //delete tipo do produto
-function deleteTypeProduct(){
+function deleteTypeProductSystem(){
 
     const btnDeleteTypeProd = document.querySelector(".buttonDeleteTipoProd");
+    if(!btnDeleteTypeProd) return
 btnDeleteTypeProd.addEventListener("click", async () => {
   const selectedCheckbox = document.querySelector(
     'input[name="selectTypeProd"]:checked'
@@ -643,17 +644,50 @@ btnDeleteTypeProd.addEventListener("click", async () => {
   }
 
   const typeProdutoSelecionado = JSON.parse(selectedCheckbox.dataset.typeProd);
-  const tyoeProdutoId = typeProdutoSelecionado.tiprcode;
+  const typeProdutoId = typeProdutoSelecionado.tiprcode;
+   if(!typeProdutoId) return
 
-  const confirmacao = confirm(
-    `Tem certeza de que deseja excluir o produto com código ${tyoeProdutoId}?`
-  );
-  if (!confirmacao) {
-    return;
-  }
-
-  await deleteTypeProd(tyoeProdutoId, selectedCheckbox.closest("tr"));
+    Swal.fire({
+    title: `Excluir tipo de produto ${typeProdutoSelecionado.tiprdesc}?`,
+    text: "Essa ação não poderá ser desfeita!",
+    icon: "warning",
+    iconColor: "#dc3545", // cor do ícone de alerta
+    showCancelButton: true,
+    confirmButtonText: "Excluir !",
+    cancelButtonText: "Cancelar",
+    reverseButtons: true,
+    background: "#f8f9fa", // cor de fundo clara
+    color: "#212529", // cor do texto
+    confirmButtonColor: "#dc3545", // vermelho Bootstrap
+    cancelButtonColor: "#6c757d", // cinza Bootstrap
+    buttonsStyling: true, // deixa os botões com estilo customizado
+    customClass: {
+     popup: "rounded-4 shadow-lg", // bordas arredondadas e sombra
+     title: "fw-bold text-danger", // título em negrito e vermelho
+     confirmButton: "btn btn-danger px-4", // botão vermelho estilizado
+     cancelButton: "btn btn-secondary px-4" // botão cinza estilizado
+   }
+  }).then(async (result) => {
+   if (result.isConfirmed) {
+      const success = await deleteTypeProd(typeProdutoId, selectedCheckbox.closest("tr"));
+      if(success){
+        Swal.fire({
+        title: "Excluído!",
+        text: "O tipo de produto foi removido com sucesso.",
+        icon: "success",
+        confirmButtonColor: "#198754", 
+        confirmButtonText: "OK",
+        background: "#f8f9fa",
+        customClass: {
+        popup: "rounded-4 shadow-lg"
+      }
+    });
+    };
+   };
+  });
 });
+};
+
 //DELETE
 async function deleteTypeProd(id, rowProd) {
   const token = localStorage.getItem("token"); 
@@ -696,6 +730,7 @@ async function deleteTypeProd(id, rowProd) {
       }).showToast();
 
       rowProd.remove();
+      return true 
     } else {
       if (response.status === 400) {
         Toastify({
@@ -706,6 +741,7 @@ async function deleteTypeProd(id, rowProd) {
           position: "center",
           backgroundColor: "orange",
         }).showToast();
+        return false
       } else {
         Toastify({
           text: "Erro na exclusão do tipo de produto",
@@ -715,6 +751,7 @@ async function deleteTypeProd(id, rowProd) {
           position: "center",
           backgroundColor: "#f44336",
         }).showToast();
+        return false
       };
     };
   } catch (error) {
@@ -727,14 +764,16 @@ async function deleteTypeProd(id, rowProd) {
       position: "center",
       backgroundColor: "#f44336",
     }).showToast();
+    return false
   };
  };
-};
+
 
 //EDITAR TIPO DE PRODUTO
-function EditTypeProduct(){
+ async function EditTypeProduct(){
 
      const btnEditTp = document.querySelector(".buttonEditTipoProd");
+     if(!btnEditTp) return
 btnEditTp.addEventListener("click", () => {
   const selectedCheckbox = document.querySelector(
     'input[name="selectTypeProd"]:checked'
@@ -820,8 +859,14 @@ btnEditTp.addEventListener("click", () => {
     console.error("Erro ao fazer parse de data-bem:", error);
   };
  });
-// //atualização
+ await editAndUpdateOfTypeProduct()
+ };
+
+// atualização
 async function editAndUpdateOfTypeProduct() {
+   const token = localStorage.getItem("token"); 
+   if(!token) return 
+
   const formEditProd = document.querySelector(".formEditTp");
 
   formEditProd.addEventListener("submit", async (event) => {
@@ -863,11 +908,21 @@ async function editAndUpdateOfTypeProduct() {
       tiprctct: document.getElementById("editTpCtct").value,
     };
 
-    const token = localStorage.getItem("token"); 
-
+   
     try {
-      const confirmedEdition = confirm(`Tem certeza de que deseja ATUALIZAR os dados desse Tipo de produto?`);
-      if (!confirmedEdition) return;
+      const result = await Swal.fire({
+        title: `Atualizar o tipo de produto ${typeProdIdParsed}?`,
+        text: "Você tem certeza de que deseja atualizar os dados deste tipo de produto?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Atualizar",
+        cancelButtonText: "Cancelar",
+        reverseButtons: true,
+        confirmButtonColor: "#1d5e1d",
+        cancelButtonColor: "#d33"
+      });
+
+      if(!result.isConfirmed) return
 
       const response = await fetch(`/api/updatetypeprod/${typeProdIdParsed}`, {
         method: "PUT",
@@ -916,7 +971,6 @@ async function editAndUpdateOfTypeProduct() {
     }
   });
 };
- editAndUpdateOfTypeProduct();
-};
+
 
 
