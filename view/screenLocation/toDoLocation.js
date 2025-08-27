@@ -228,7 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 maskFieldLocalization();
                 addLocalizationInLocation();
-                deletarLocation();
+                deletarLocationSystem();
                 esconderElemento();
                 mostrarElemento();
               } else {
@@ -728,37 +728,44 @@ async function carregarFamilias() {
       },
     });
 
-    if (!response.ok) {
-      throw new Error("Erro ao buscar famílias de bens");
-    };
+    if (!response.ok) throw new Error("Erro ao buscar famílias de bens");
 
     const familias = await response.json();
 
+    // === TODOS OS SELECTS family1..5 ===
     for (let i = 1; i <= 5; i++) {
       const select = document.getElementById(`family${i}`);
-      const selectEdit = document.getElementById(`family${i}Edit`);
+      const input = document.getElementById(`produto${i}`);
 
       if (select) {
-        select.addEventListener("change", () => preencherProduto(i, familias));
-
         familias.forEach(({ fabecode }) => {
           const option = document.createElement("option");
           option.value = fabecode;
           option.textContent = fabecode;
           select.appendChild(option);
-
-          if (selectEdit) {
-            selectEdit.addEventListener("change", () =>
-              preencherProduto(i, familias)
-            );
-
-            selectEdit.appendChild(option.cloneNode(true));
-          }
         });
-      } else {
-        console.warn(`Select family${i} não encontrado no DOM.`);
-      };
-    };
+
+        // evento change para preencher produto
+        select.addEventListener("change", () =>
+          preencherProduto(`family${i}`, `produto${i}`, familias)
+        );
+      }
+    }
+
+    // === SELECT DE EDIÇÃO ===
+    const selectEdit = document.getElementById("familyEdit");
+    if (selectEdit) {
+      familias.forEach(({ fabecode }) => {
+        const option = document.createElement("option");
+        option.value = fabecode;
+        option.textContent = fabecode;
+        selectEdit.appendChild(option);
+      });
+
+      selectEdit.addEventListener("change", () =>
+        preencherProduto("familyEdit", "produtoEdit", familias)
+      );
+    }
   } catch (error) {
     console.error("Erro ao carregar famílias de bens:", error);
     Toastify({
@@ -769,40 +776,22 @@ async function carregarFamilias() {
       position: "center",
       backgroundColor: "#f44336",
     }).showToast();
-  };
-};
+  }
+}
 
-// PRECHER A DESCRIÇÃO DE ACORDO COM O CODIGO DE FAMILIA
-function preencherProduto(index, familias) {
-  const select = document.getElementById(`family${index}`);
-  const selectEdit = document.getElementById(`family${index}Edit`);
+// PREENCHE A DESCRIÇÃO DE ACORDO COM O CÓDIGO
+function preencherProduto(selectId, inputId, familias) {
+  const select = document.getElementById(selectId);
+  const inputProduto = document.getElementById(inputId);
+  if (!select || !inputProduto) return;
 
-  const inputProduto = document.getElementById(`produto${index}`);
-  const inputProdutoEdit = document.getElementById(`produto${index}Edit`);
   const codigoSelecionado = select.value;
-  const codigoSelecionadoEdit = selectEdit.value;
-
   const familiaSelecionada = familias.find(
     (familia) => familia.fabecode === codigoSelecionado
   );
 
-  const familiaSelecionadaEdit = familias.find(
-    (familia) => familia.fabecode === codigoSelecionadoEdit
-  );
-
-  if (familiaSelecionada) {
-    inputProduto.value = familiaSelecionada.fabedesc || "Sem nome definido";
-  } else {
-    inputProduto.value = "";
-  }
-
-  if (familiaSelecionadaEdit) {
-    inputProdutoEdit.value =
-      familiaSelecionadaEdit.fabedesc || "Sem nome definido";
-  } else {
-    inputProdutoEdit.value = "";
-  };
-};
+  inputProduto.value = familiaSelecionada?.fabedesc || "";
+}
 
 // LIMPAR CAMPOS 
 function clearFields() {
@@ -1215,8 +1204,7 @@ async function handleSubmit() {
    if (isJson) {
      errorData = await response.json();
   };
-    const velocode = errorData.locationGoods[0]?.belocode;
-
+    
     if (response.ok && response.status === 200) {
    
       Toastify({
@@ -1237,34 +1225,39 @@ async function handleSubmit() {
         bem.contrato = contratoHTML;
        });
 
-       const updateContratoRes = await fetch(`/api/contrato/${velocode}`, {
+    if (errorData.locationGoods && errorData.locationGoods.length > 0) {
+    for (const locGood of errorData.locationGoods) {
+      const velocode = locGood.belocode;
+
+      const updateContratoRes = await fetch(`/api/contrato/${velocode}`, {
         method: "PUT",
-       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      },
-       body: JSON.stringify({contrato: contratoHTML})
-    });
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ contrato: contratoHTML })
+      });
 
-     if (!updateContratoRes.ok) {
-       Toastify({
-      text: "Contrato não pôde ser salvo! locação inrregular",
-      duration: 4000,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "#f44336"
-      }).showToast();
-      return;
-     };
+      if (!updateContratoRes.ok) {
+        Toastify({
+          text: `Contrato não pôde ser salvo para o bem ${velocode}!`,
+          duration: 4000,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "#f44336"
+        }).showToast();
+      }
+    }
+  }
 
-      setTimeout(() => {
+       setTimeout(() => {
         clearFields();
         localStorage.removeItem("dadosInputs");
         atualizarData("dataLoc");
         preencheraResiduo("residuoSelect");
       }, 500);
 
-    } else {
+} else {
     
     const errors = errorData.errors || [];
 
@@ -1304,6 +1297,8 @@ async function handleSubmit() {
 // CONTRATO COM OS DADOS A LOCAÇÃO
 async function gerarContrato() {
   const contratoDiv = document.querySelector(".contrato");
+  if(!contratoDiv) return
+  
   contratoDiv.innerHTML = "";
   contratoDiv.style.display = "flex";
 

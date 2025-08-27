@@ -216,46 +216,55 @@ ORDER BY c.clloid;`
     }
   },
 
-  verificarDependenciaLocacao: async (id) => {
-    try {
-      const checkQuery = "SELECT COUNT(*) FROM locafim WHERE lofiidlo= $1";
-      const checkResult = await dataLocation.query(checkQuery, [id]);
+  // verificarDependenciaLocacao: async (id) => {
+  //   try {
+  //     const checkQuery = "SELECT COUNT(*) FROM locafim WHERE lofiidlo= $1";
+  //     const checkResult = await dataLocation.query(checkQuery, [id]);
 
-      return parseInt(checkResult.rows[0].count) > 0;
-    } catch (error) {
-      console.error("Erro ao verificar dependências de bens:", error);
-      throw error;
+  //     return parseInt(checkResult.rows[0].count) > 0;
+  //   } catch (error) {
+  //     console.error("Erro ao verificar dependências de bens:", error);
+  //     throw error;
+  //   }
+  // },
+
+  // Model
+async deleteLocation(idLocation) {
+  const client = await dataLocation.connect(); // abre conexão para transação
+  try {
+    await client.query("BEGIN"); // inicia transação
+
+    // Busca ID da locação
+    const result = await client.query(
+      "SELECT clloid FROM clieloc WHERE clloid = $1",
+      [idLocation] 
+    );
+  console.log('resultado' , result)
+    if (result.rows.length === 0) {
+      await client.query("ROLLBACK"); // desfaz transação
+      console.log("Nenhuma locação encontrada com o número fornecido.");
+      return false;
     }
-  },
 
-  async deleteLocation(numeroLocacao) {
-    try {
-      const result = await dataLocation.query(
-        "SELECT clloid FROM clieloc WHERE cllonmlo = $1",
-        [numeroLocacao]
-      );
+    const idLocacao = result.rows[0].clloid;
 
-      if (result.rows.length === 0) {
-        console.log("Nenhuma locação encontrada com o número fornecido.");
-        return false;
-      }
+    // Apaga primeiro os bens vinculados
+    await client.query("DELETE FROM bensloc WHERE beloidcl = $1", [idLocacao]);
 
-      const idLocacao = result.rows[0].clloid;
+    // Depois apaga a locação
+    await client.query("DELETE FROM clieloc WHERE clloid = $1", [idLocacao]);
 
-      await dataLocation.query("DELETE FROM bensloc WHERE beloidcl = $1", [
-        idLocacao,
-      ]);
+    await client.query("COMMIT"); // confirma transação
+    return true;
+  } catch (error) {
+    await client.query("ROLLBACK"); // reverte caso dê erro
+    console.error("Erro no model:", error.message);
+    throw error;
+  } finally {
+    client.release(); // libera conexão
+  }
+},
 
-      await dataLocation.query("DELETE FROM clieloc WHERE clloid = $1", [
-        idLocacao,
-      ]);
-
-      return true;
-    } catch (error) {
-      console.error("Erro no model:", error.message);
-      throw error;
-    }
-  },
 
   // atualizando status de locação
   async updateBemStatus(client ,codeLocation, beloStat) {
@@ -278,79 +287,58 @@ ORDER BY c.clloid;`
     }
   },
 
-  async updateLocationAndBens(id, bens) {
-    try {
-      await dataLocation.query("BEGIN");
+ async updateLocationAndBens(id, bens) {
+  try {
+    await dataLocation.query("BEGIN");
 
-      // Query para atualização dos bens
-      const updateQuery = `
+    // Atualizar bensloc
+    const updateBensQuery = `
       UPDATE bensloc
-      SET belocodb = $1, belobem = $2, belodtin = $3, belodtfi = $4, beloqntd = $5, 
-          beloobsv = $6
-      WHERE belocode = $7
+      SET beloqntd = $1, beloobsv = $2, belodtfi = $3
+      WHERE belocode = $4
       RETURNING belocode;
     `;
 
-      const resultadosBens = [];
+    const resultadosBens = [];
 
-      for (const bem of bens) {
-        const {
-          belocode, 
-          codeBen,
-          produto,
-          dataInicio,
-          dataFim,
-          quantidade,
-          observacao,
-        } = bem;
+    const { quantidade, observacao, dataDevolucao, dataFinal, } = bens;
 
-        if (belocode) {
-          const bemExistente = await dataLocation.query(
-            `SELECT * FROM bensloc WHERE belocode = $1`,
-            [belocode]
-          );
+    // Atualiza bensloc
+    const resultBem = await dataLocation.query(updateBensQuery, [
+      quantidade,
+      observacao,
+      dataFinal,   // belodtfi
+      id
+    ]);
 
-          if (bemExistente.rows.length > 0) {
-            // Atualizando bem existente
-            const updateValues = [
-              codeBen,
-              produto,
-              dataInicio,
-              dataFim,
-              quantidade,
-              observacao,
-              belocode,
-            ];
-
-            const result = await dataLocation.query(updateQuery, updateValues);
-            if (result.rows.length) {
-              resultadosBens.push(result.rows[0]);
-              console.log("Bem atualizado:", result.rows[0]);
-            } else {
-              console.log("Nenhum bem foi atualizado.");
-            }
-          } else {
-            console.log(
-              `Bem com belocode ${belocode} não encontrado para atualização.`
-            );
-          }
-        } else {
-          console.log("Bem não possui belocode, não será atualizado.");
-        }
-      }
-
-      await dataLocation.query("COMMIT");
-
-      return {
-        bensAtualizados: resultadosBens,
-      };
-    } catch (error) {
-      // Rollback caso ocorra erro
-      await dataLocation.query("ROLLBACK");
-      console.error("Erro ao atualizar locação e bens:", error);
-      throw error;
+    if (resultBem.rows.length) {
+      resultadosBens.push(resultBem.rows[0]);
     }
-  },
+
+    // Atualizar clieloc (data de devolução)
+    if (dataDevolucao) {
+      const updateClieQuery = `
+        UPDATE clieloc
+        SET cllodtdv = $1
+        WHERE clloid = (
+          SELECT beloidcl FROM bensloc WHERE belocode = $2
+        )
+        RETURNING clloid;
+      `;
+
+      await dataLocation.query(updateClieQuery, [dataDevolucao, id]);
+    }
+
+    await dataLocation.query("COMMIT");
+
+    return { bensAtualizados: resultadosBens };
+  } catch (error) {
+    await dataLocation.query("ROLLBACK");
+    console.error("Erro ao atualizar locação e bens:", error);
+    throw error;
+  }
+},
+
 
   // Método para inserção de novos bens na tabela bensloc
   async inserirNovosBens(bens) {

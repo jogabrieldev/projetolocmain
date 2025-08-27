@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import { parseISO, isValid, differenceInCalendarDays } from "date-fns";
+import { parseISO, isValid, differenceInCalendarDays, isBefore, startOfDay  } from "date-fns";
 import { LocacaoModel } from "../../model/modelsLocationGoods.js";
 import { moduleResiduo } from "../../model/modelsResiduo.js";
 import { movementDestination } from "../../model/modelsDestination.js";
@@ -58,19 +58,19 @@ export const validateLocationGoods = [
     })
     .withMessage("O número de locação gerado já existe! Acione o suporte."),
 
-  // body("descarte")
-  //   .notEmpty().withMessage("Local de descarte é obrigatório.")
-  //   .custom(async (value) => {
-  //     const desc = await movementDestination.getCodeDestination();
-  //     const valid = desc.map(item => item.dereid);
+  body("descarte")
+    .notEmpty().withMessage("Local de descarte é obrigatório.")
+    .custom(async (value) => {
+      const desc = await movementDestination.getCodeDestination();
+      const valid = desc.map(item => item.dereid);
 
-  //     if (!valid.includes(value)) {
-  //       return Promise.reject("Local de descarte não existe no banco de dados.");
-  //     }
+      if (!valid.includes(value)) {
+        return Promise.reject("Local de descarte não existe no banco de dados.");
+      }
 
-  //     return true;
-  //   })
-  //   .withMessage("Local de descarte não existe no banco de dados."),
+      return true;
+    })
+    .withMessage("Local de descarte não existe no banco de dados."),
 
   body("resi")
     .notEmpty().withMessage("Resíduo é obrigatório.")
@@ -149,6 +149,50 @@ export const validateLocationGoods = [
       }
     }
 
+    return true;
+  })
+];
+
+export const validateUpdateLocationGoods = [
+
+  body("quantidade")
+    // .notEmpty().withMessage("Quantidade é obrigatória")
+    .isInt({ min: 1, max: 5 }).withMessage("Quantidade deve ser entre 1 e 5"),
+
+  body("observacao")
+    // .notEmpty().withMessage("Observação é obrigatória")
+    .isString().withMessage("Observação deve ser uma string"),
+
+  body("dataDevolucao")
+
+  .custom((value) => {
+    if (!value) return true;
+
+    // Se o input vem no formato DD/MM/YYYY, converta para YYYY-MM-DD
+    let dataISO;
+    if (value.includes("/")) {
+      const [dia, mes, ano] = value.split("/");
+      dataISO = `${ano}-${mes}-${dia}`;
+    } else {
+      dataISO = value;
+    }
+    console.log('data' ,  dataISO)
+
+  const dataInformada = startOfDay(parseISO(dataISO)); 
+const hoje = startOfDay(new Date());
+
+    if (isBefore(dataInformada, hoje)) {
+      throw new Error("A data de devolução não pode ser menor que a data atual");
+    }
+    return true;
+  }),
+
+  body("dataFinal")
+  .custom((value, { req }) => {
+    // Se o cliente informou dataDevolucao, a dataFinal é obrigatória
+    if (req.body.dataDevolucao && !value) {
+      throw new Error("Data final é obrigatória quando a data de devolução é informada");
+    }
     return true;
   })
 ];

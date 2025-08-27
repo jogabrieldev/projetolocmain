@@ -45,8 +45,7 @@ async function frontLocation() {
       console.warn("Elemento .tableLocation não encontrado.");
       return;
     }
-
-
+    
     const listaLocacoes = locacoesFinishTable.map((locacao) => {
         if (locacao.bens.length > 0) {
           return locacao.bens.map((bem) => ({
@@ -73,12 +72,34 @@ async function frontLocation() {
             dataFim: formatDataPattersBr(bem.belodtfi),
           }));
            
-         }else{
-            return []
+         }else if(locacao.bens.length > 1){
+            return locacao.bens.map((bem) => ({
+            idClient: locacao.clloid,
+            numeroLocacao: locacao.cllonmlo || "Não definido",
+            nomeCliente: locacao.clloclno || "Não definido",
+            dataLocacao: formatDataPattersBr(locacao.cllodtlo),
+            dataDevolucao: formatDataPattersBr(locacao.cllodtdv),
+            formaPagamento: locacao.cllopgmt || "Não definido",
+            descarte: locacao.cllodesc || "Não definido",
+            cidade:locacao.cllocida|| "__",
+            bairro:locacao.cllobair || "__",
+            refere:locacao.cllorefe || "__",
+            rua:locacao.cllorua || "__", 
+            qdlt:locacao.clloqdlt || "__" ,   
+            residuo:locacao.clloresi || "__" ,
+            codigoBem: bem.belocodb || "-",
+            belocode:bem.belocode,
+            produto: bem.belobem || "Nenhum bem associado",
+            quantidade: bem.beloqntd || "-",
+            status: bem.belostat || "Não definido",
+            observacao: bem.beloobsv || "Sem observação",
+            dataInicio: formatDataPattersBr(bem.belodtin),
+            dataFim: formatDataPattersBr(bem.belodtfi),
+          }));
          }
-      })
-    
-      .flat(); 
+      }).flat(); 
+
+      //  console.log("resultado do map" , listaLocacoes)
 
     renderTable(listaLocacoes); 
   } catch (error) {
@@ -151,6 +172,7 @@ function renderTable(data) {
   const tbody = document.createElement("tbody");
 
   data.forEach((locacao) => {
+    
     const row = document.createElement("tr");
 
     const checkboxTd = document.createElement("td");
@@ -216,11 +238,6 @@ function renderTable(data) {
       const locacaoData = JSON.parse(event.target.value);
       const isChecked = event.target.checked;
 
-      document.querySelectorAll(".locacao-checkbox").forEach((cb) => {
-        if (JSON.parse(cb.value).numeroLocacao === locacaoData.numeroLocacao) {
-          cb.checked = isChecked;
-        }
-      });
     });
   });
 };
@@ -248,7 +265,7 @@ async function buscarResiduo(id) {
     console.error('Erro em buscar residuo:', error);
     return null;
   }
-}
+};
 
 
 async function showContratoLocationGoods(locacao) {
@@ -267,6 +284,8 @@ async function showContratoLocationGoods(locacao) {
     containerBtn.classList.remove("flex");
     containerBtn.classList.add("hidden");
   }
+
+  console.log('mostrar contrato' , locacao)
 
   try {
     const response = await fetch(`/api/contrato/${locacao.belocode}` , {
@@ -499,8 +518,10 @@ async function searchLocation() {
 };
 
 // BOTÃO DELETAR LOCAÇÃO
-function deletarLocation() {
+function deletarLocationSystem() {
   const btnDeleteLocation = document.querySelector(".buttonDeleteLocation");
+  if(!btnDeleteLocation) return
+
   btnDeleteLocation.addEventListener("click", async () => {
     const selectedCheckbox = document.querySelector(
       ".locacao-checkbox:checked"
@@ -521,14 +542,49 @@ function deletarLocation() {
       const tipo = selectedCheckbox.getAttribute("data-tipo");
 
       const locacaoData = JSON.parse(selectedCheckbox.value);
-      const locacaoId = locacaoData.numeroLocacao;
+      console.log("locacao" , locacaoData)
+      const locacaoId = locacaoData.idClient;
+      if(!locacaoId) return
+      const numeroLocacao = locacaoData?.numeroLocacao
+    Swal.fire({
+    title: `Excluir a locação ${numeroLocacao}?`,
+    text: "Essa ação não poderá ser desfeita!",
+    icon: "warning",
+    iconColor: "#dc3545", // cor do ícone de alerta
+    showCancelButton: true,
+    confirmButtonText: "Excluir !",
+    cancelButtonText: "Cancelar",
+    reverseButtons: true,
+    background: "#f8f9fa", // cor de fundo clara
+    color: "#212529", // cor do texto
+    confirmButtonColor: "#dc3545", // vermelho Bootstrap
+    cancelButtonColor: "#6c757d", // cinza Bootstrap
+    buttonsStyling: true, // deixa os botões com estilo customizado
+    customClass: {
+     popup: "rounded-4 shadow-lg", // bordas arredondadas e sombra
+     title: "fw-bold text-danger", // título em negrito e vermelho
+     confirmButton: "btn btn-danger px-4", // botão vermelho estilizado
+     cancelButton: "btn btn-secondary px-4" // botão cinza estilizado
+   }
+  }).then(async (result) => {
+   if (result.isConfirmed) {
+      const success =  await deletelocation(locacaoId, tipo, selectedCheckbox.closest("tr"));
+      if(success){
+        Swal.fire({
+        title: "Excluído!",
+        text: "A Locação foi removido com sucesso.",
+        icon: "success",
+        confirmButtonColor: "#198754", 
+        confirmButtonText: "OK",
+        background: "#f8f9fa",
+        customClass: {
+        popup: "rounded-4 shadow-lg"
+      }
+    });
+    };
+   };
+  });
 
-      const confirmacao = confirm(
-        `Tem certeza de que deseja excluir a locação com código ${locacaoId}?`
-      );
-      if (!confirmacao) return;
-
-      await deletelocation(locacaoId, tipo, selectedCheckbox.closest("tr"));
     } catch (error) {
       console.error("Erro ao excluir locação", error);
       Toastify({
@@ -541,6 +597,7 @@ function deletarLocation() {
       }).showToast();
     }
   });
+};
 
   //  Função de exclusão
   async function deletelocation(id,tipo, rowProd) {
@@ -586,6 +643,7 @@ function deletarLocation() {
         }).showToast();
 
         rowProd.remove();
+        return true
       } else {
         if (response.status === 400) {
           Toastify({
@@ -596,6 +654,7 @@ function deletarLocation() {
             position: "center",
             backgroundColor: "orange",
           }).showToast();
+          return false
         } else {
           console.log("Erro para excluir:", data);
           Toastify({
@@ -606,6 +665,7 @@ function deletarLocation() {
             position: "center",
             backgroundColor: "#f44336",
           }).showToast();
+          return false
         };
       };
     } catch (error) {
@@ -618,12 +678,32 @@ function deletarLocation() {
         position: "center",
         backgroundColor: "#f44336",
       }).showToast();
+      return false
     };
   };
-};
+
 // Editar Locação
 
 function editLocation() {
+    const token = localStorage.getItem("token");
+
+        if (!token || isTokenExpired(token)) {
+          Toastify({
+            text: "Sessão expirada. Faça login novamente.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "RED",
+          }).showToast();
+
+          localStorage.removeItem("token");
+          setTimeout(() => {
+            window.location.href = "/index.html";
+          }, 2000);
+          return;
+        }
+
   const buttonEditLocation = document.querySelector(".buttonEditLocation");
   if (buttonEditLocation) {
     buttonEditLocation.addEventListener("click", async () => {
@@ -666,47 +746,11 @@ function editLocation() {
         }
 
         const locacaoData = JSON.parse(selectedCheckbox.value);
-        const locacaoId = locacaoData.numeroLocacao;
-
-        const token = localStorage.getItem("token");
-
-        if (!token || isTokenExpired(token)) {
-          Toastify({
-            text: "Sessão expirada. Faça login novamente.",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "RED",
-          }).showToast();
-
-          localStorage.removeItem("token");
-          setTimeout(() => {
-            window.location.href = "/index.html";
-          }, 2000);
-          return;
-        }
-
-        const response = await fetch("/api/locationFinish", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const result = await response.json();
-
-        const locacaoSelecionada = result.locacoes.find(
-          (loc) => loc.cllonmlo === locacaoId
-        );
-
-        if (locacaoSelecionada) {
-          const existeBemEmLocacao = locacaoSelecionada.bens.some(
-            (bem) => bem.belostat === "Em Locação"
-          );
-        
-          if (existeBemEmLocacao) {
-            Toastify({
+      
+        if(locacaoData){
+           const status = locacaoData?.status
+            if(status === "Em Locação"){
+              Toastify({
               text: "A locação selecionada já possui um bem em locação!",
               duration: 3000,
               close: true,
@@ -714,15 +758,15 @@ function editLocation() {
               position: "center",
               backgroundColor: "orange",
             }).showToast();
-            
-            return; 
-          }
-        
-          preencherFormularioDeEdicao(locacaoSelecionada);
-        } else {
-          console.error("Locação não encontrada.");
-        }
-        
+             return;
+            }
+        };
+        const locacaoId = locacaoData.numeroLocacao;
+       
+         preencherFormularioDeEdicao(locacaoData);
+
+      
+      
       } catch (error) {
         console.error('ERRO NA APLICAÇÃO PARA EDITAR LOCAÇÃO' , error)
       }
@@ -731,38 +775,59 @@ function editLocation() {
 };
 
 //PRECHER FORMULARIO DE EDIÇÃO
-function preencherFormularioDeEdicao(locacao) {
-  document.getElementById("idLocation").value = locacao.cllonmlo;
+async function preencherFormularioDeEdicao(locacao) {
+  if (!locacao) return;
 
-  document.getElementById("clientList").value = locacao.clloclno;
+  function formatDateToInput(dateStr) {
+  const [dia, mes, ano] = dateStr.split("/");
+  return `${ano}-${mes}-${dia}`;
+}
 
-  document.getElementById('dateDev').value = locacao.cllodtdv.split("T")[0] 
+let dataForUpdate = ""
+  // Campos principais da locação
+  document.getElementById("idLocation").value = locacao.numeroLocacao || "Invalido";
+  document.getElementById("clientList").value = locacao.nomeCliente || "Não foi informado";
 
-  locacao.bens.forEach((bem, index) => {
-    const i = index + 1;
+  const dataDevolucao = document.getElementById("dateDev").value = formatDateToInput(locacao.dataDevolucao);
+  const dataFinal = document.getElementById("dataFim1Edit").value = formatDateToInput(locacao.dataFim) || "";
+  if(dataDevolucao && dataFinal){
+     dataForUpdate = {
+        dataDevolucao:dataDevolucao,
+        dataFinal:dataFinal
+     }
+  }
 
-    if(bem.belodtin){
-      document.getElementById(`dataInicio${i}Edit`).readOnly = true;
-    }
-  
+  // Campos do bem (assumindo 1 bem por seleção)
+  document.getElementById("familyEdit").value = locacao.codigoBem || "";
+  document.getElementById("produtoEdit").value = locacao.produto || "";
+  document.getElementById("quantidadeEdit").value = locacao.quantidade || "";
+  document.getElementById("observacaoEdit").value = locacao.observacao || "";
+  document.getElementById("dataInicio1Edit").value = formatDateToInput(locacao.dataInicio) || "";
+ 
+  document.getElementById("belocode1Edit").value = locacao.belocode || "";
 
-    if (i <= 5) {
-      document.getElementById(`family${i}Edit`).value = bem.belocodb;
-      document.getElementById(`produto${i}Edit`).value = bem.belobem;
-      document.getElementById(`quantidade${i}Edit`).value = bem.beloqntd;
-      document.getElementById(`observacao${i}Edit`).value = bem.beloobsv;
-      document.getElementById(`dataInicio${i}Edit`).value = bem.belodtin.split("T")[0];
-      document.getElementById(`dataFim${i}Edit`).value = bem.belodtfi.split("T")[0];
-      document.getElementById(`belocode${i}Edit`).value = bem.belocode;
-    }
+  // Se quiser deixar o campo de data inicial readonly
+  document.getElementById("dataInicio1Edit").readOnly = true;
 
-  });
+  await editarlocationFinish(locacao.belocode , dataForUpdate);
+}
 
-  editarlocationFinish(locacao.cllonmlo);
+ function clearInputsEdition(){
+
+  document.getElementById("familyEdit").value = "";
+  document.getElementById("produtoEdit").value = "";
+  document.getElementById("quantidadeEdit").value = "";
+  document.getElementById("observacaoEdit").value = "";
+  document.getElementById("dataInicio1Edit").value = "";
+  document.getElementById("idLocation").value = "";
+  document.getElementById("clientList").value = "";
+  document.getElementById("dateDev").value = "";
+  document.getElementById("dataFim1Edit").value = "";
+
 };
 
 // FUNÇAÕ DE ENVIAR A EDIÇÃ
-function editarlocationFinish(id) {
+async function editarlocationFinish(id , dataForUpdate) {
   const token = localStorage.getItem("token");
 
   if (!token || isTokenExpired(token)) {
@@ -787,186 +852,93 @@ function editarlocationFinish(id) {
     buttonSave.addEventListener("click", async (event) => {
       event.preventDefault();
         
-      const confirmacao = confirm(
-        `Tem certeza de que deseja ATUALIZAR essa locação?`
-      );
-      if (!confirmacao) return;
+      const result = await Swal.fire({
+        title: `Atualizar locacao ?`,
+        text: "Você tem certeza de que deseja atualizar os dados desta locação?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Atualizar",
+        cancelButtonText: "Cancelar",
+        reverseButtons: true,
+        confirmButtonColor: "#1d5e1d",
+        cancelButtonColor: "#d33"
+      });
 
-      const validLocation = await fetch("/api/locationFinish", {
-        method: "GET",
+      if (!result.isConfirmed) return;
+
+      try {
+            const quantidade = document.getElementById("quantidadeEdit")?.value.trim();
+            const observacao = document.getElementById("observacaoEdit")?.value.trim();
+            const dataDevolucao = document.getElementById("dateDev")?.value;
+            const dataFinal = document.getElementById("dataFim1Edit")?.value;
+            if(!quantidade || !observacao) return
+
+          const payloadUpdate = {
+               quantidade,
+               observacao,
+               dataDevolucao:dataDevolucao,
+               dataFinal: dataFinal
+          }
+          console.log('data' , payloadUpdate.dataDevolucao)
+           
+         const updateLocation = await fetch(`/api/location/${id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      });
+        body: JSON.stringify(payloadUpdate)
+       });
 
-      if (!validLocation.ok) {
-        console.error("❌ Erro ao buscar locações");
-        return;
-      }
+     const result = await updateLocation.json();
+     console.log('resultado' ,  result)
 
-      const data = await validLocation.json();
-      const { locacoes } = data;
-
-      const locacaoEncontrada = locacoes.find((loc) => loc.cllonmlo === id);
-      if (!locacaoEncontrada) {
-        console.error(`Locação ${id} não encontrada`);
-        return;
-      }
-
-      const bensEditados = [];
-      const bensNovos = [];
-
-      for (let i = 1; i <= 5; i++) {
-        const family = document.getElementById(`family${i}Edit`).value;
-        const produto = document.getElementById(`produto${i}Edit`).value;
-        const quantidade = document.getElementById(`quantidade${i}Edit`).value;
-        const observacao = document.getElementById(`observacao${i}Edit`).value;
-        const dataInicioStr = document.getElementById(`dataInicio${i}Edit`).value;
-        const dataFimStr = document.getElementById(`dataFim${i}Edit`).value;
-        const belocode = document.getElementById(`belocode${i}Edit`).value;
-        
-        const todosCamposPreenchidos = [family, produto, quantidade, observacao, dataInicioStr, dataFimStr].every(campo => campo && campo.trim() !== "");
-        if (!todosCamposPreenchidos) {
-          continue; 
-        }
-
-        if (!isDataValida(dataInicioStr) || !isDataValida(dataFimStr)) {
-          Toastify({
-            text: `Item ${i}: data de início ou fim inválida.`,
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "#f44336",
-          }).showToast();
-          return;
-        }
-
-        const dataDevolutionStr = document.getElementById('dateDev')?.value || "";
-        const dataInicio = parseDataLocal(dataInicioStr);
-        const dataFim = parseDataLocal(dataFimStr);
-        const dataDevolution = parseDataLocal(dataDevolutionStr);
-       
-        const hoje = new Date();
-        hoje.setHours(0, 0, 0, 0);
-
-        if (dataFim < hoje ) {
-          Toastify({
-            text: `Item ${i}: a data de FIM deve ser futura`,
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "orange",
-          }).showToast();
-          return;
-        }
-
-        if (dataFim.getTime() !== dataDevolution.getTime()) {
-           Toastify({
-           text: `Item ${i}: A data FIM foi alterada, portanto, a data de DEVOLUÇÃO da locação também deve ser atualizada.`,
-           duration: 4000,
-           close: true,
-           gravity: "top",
-           position: "center",
-           backgroundColor: "#f44336",
-        }).showToast();
-       return;
-     }
-        if (!belocode && dataInicio > hoje) {
-          Toastify({
-            text: `Item ${i}: a data de INÍCIO deve ser hoje ou futura.`,
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "orange",
-          }).showToast();
-          return;
-        }
-
-        const bem = {
-          bencodb: family,
-          beloben: produto,
-          beloqntd: quantidade,
-          beloobsv: observacao,
-          belodtin: dataInicioStr,
-          belodtfi: dataFimStr,
-          belostat: "Pendente"
-        };
-
-        
-
-        if (belocode) {
-          bem.belocode = belocode;
-          bensEditados.push(bem);
-        } else {
-          bem.beloidcl = locacaoEncontrada.clloid;
-          bensNovos.push(bem);
-        }
-      }
-
-      // === ATUALIZAÇÃO DOS BENS EXISTENTES ===
-      try {
-        let bensForamAtualizados = false;
-
-        if (bensEditados.length > 0) {
-          const bodyUpdate = {
-            cllonmlo: id,
-            bens: bensEditados,
-          };
-
-          const respon = await fetch(`/api/location/${id}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(bodyUpdate),
-          });
-
-          const result = await respon.json();
-          bensForamAtualizados = result?.data?.bensAtualizados?.length > 0;
-
-          if (bensForamAtualizados) {
-            Toastify({
-              text: "Dados atualizados com sucesso!",
-              duration: 3000,
-              close: true,
-              gravity: "top",
-              position: "center",
-              backgroundColor: "#1d5e1d",
-            }).showToast();
-          }
-        }
-
-        // Inserção de novos bens em função separada
-        if (bensNovos.length > 0) {
-          await addNewGoodsInLocation(bensNovos, token);
-        }
-
-        if (!bensForamAtualizados && bensNovos.length === 0) {
-          Toastify({
-            text: "Nenhuma alteração detectada.",
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "orange",
-          }).showToast();
-        }
+if (updateLocation.ok) {
+  Toastify({
+    text: result.message || "Locação atualizada com sucesso!",
+    duration: 3000,
+    close: true,
+    gravity: "top",
+    position: "center",
+    backgroundColor: "#1d5e1d",
+  }).showToast();
+  clearInputsEdition()
+} else {
+  if (result.errors && Array.isArray(result.errors)) {
+    result.errors.forEach(err => {
+      Toastify({
+        text: `${err.message}`, 
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "#f44336",
+      }).showToast();
+    });
+  } else {
+    Toastify({
+      text: result.error || "Erro ao atualizar locação!",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "#f44336",
+    }).showToast();
+  }
+}
       } catch (error) {
-        console.error("🔥 Erro ao atualizar bens:", error);
+        console.error('Erro para atualizar a locação' , error);
+
         Toastify({
-          text: "Erro ao atualizar no servidor.",
-          duration: 3000,
-          close: true,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "#f44336",
+        text: "Erro para atualizar.",
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "#f44336",
         }).showToast();
       }
+
     });
   };
 };

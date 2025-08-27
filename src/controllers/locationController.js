@@ -156,13 +156,13 @@ async DeleteLocationFinish(req, res) {
 
   const { id } = req.params;
   try {
-     const verificar = await LocacaoModel.verificarDependenciaLocacao(id);
+    //  const verificar = await LocacaoModel.verificarDependenciaLocacao(id);
     
-          if (verificar) {
-            return res.status(400).json({
-              message: "Não e possivel excluir. a locação esta vinculada a um bem ",
-            });
-          }
+    //       if (verificar) {
+    //         return res.status(400).json({
+    //           message: "Não e possivel excluir. a locação esta vinculada a um bem ",
+    //         });
+    //       }
     const deleteSuccess = await LocacaoModel.deleteLocation(id);
 
     if (!deleteSuccess) {
@@ -207,23 +207,14 @@ async DeleteLocationFinish(req, res) {
   async updateLocationAndBens(req, res) {
     try {
       const { id } = req.params; // ID da locação vindo da URL
-      const { bens } = req.body; // Recebendo os dados da locação e bens
+      const  bens  = req.body;
 
-      const bensConvertidos = bens.map(bem => ({
-        codeBen: bem.belocodb,
-        produto: bem.belobem,
-        dataInicio: bem.belodtin,
-        dataFim: bem.belodtfi,
-        quantidade: bem.beloqntd,
-        observacao: bem.beloobsv,
-        belocode: bem.belocode // se tiver
-      }));
-
-      if (!id || !Array.isArray(bens)) {
-        return res.status(400).json({ error: "Dados inválidos para atualização." });
+      if (!id || !bens ) {
+         return res.status(400).json({ error: "Dados inválidos para atualização."});
       }
 
-      const resultado = await LocacaoModel.updateLocationAndBens(id, bensConvertidos);
+
+      const resultado = await LocacaoModel.updateLocationAndBens(id, bens);
       if(!resultado){
         return res.status(400).json({error: "Erro na atualização da locação"})
       }
@@ -246,6 +237,7 @@ async DeleteLocationFinish(req, res) {
   async insertNewGoods(req , res){
       
     try {
+         const  {id} = req.parmas 
          const {newGoods} = req.body 
 
          if ( !Array.isArray(newGoods)) {

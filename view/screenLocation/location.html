@@ -715,8 +715,8 @@
 </div>
 
   <!-- EDITAR LOCATION -->
-  <div class="containerEditLocation container d-flex flex-column gap-3 d-none">
-    <h3 class="text-center">Editar Locação</h3>
+  <div class="containerEditLocation container d-flex flex-column gap-3 d-none overflow-auto">
+    <h3 class="text-center text-dark">Editar Locação</h3>
 
     <div class="row g-3">
       <!-- Campo ID Locação -->
@@ -753,11 +753,8 @@
       </div>
     </div>
 
-    <div class="p-4 rounded shadow-sm mb-4">
-      <div
-        class="p-3 rounded shadow-sm mb-4 bg-secondary overflow-auto"
-        style="min-width: 1000px; max-width: 100%; overflow-x: auto"
-      >
+    <div class="p-4 rounded shadow-sm mb-4 border">
+      <div class="p-3 rounded  mb-4 bg-white overflow-auto" style="min-width: 1000px; max-width: 100%; overflow-x: auto">
         <!-- Cabeçalhos -->
         <div class="row gx-2 gy-1 mb-2 flex-nowrap align-items-center">
           <div class="col-2">
@@ -776,11 +773,11 @@
           <div class="col-2"><label class="form-label small">Fim</label></div>
         </div>
 
-        <!-- Grid Repetido -->
+    
         <div class="row gx-2 gy-2 flex-nowrap">
           <!-- Grupo 1 -->
           <div class="col-2">
-            <select id="family1Edit" class="form-select form-select-sm">
+            <select id="familyEdit" class="form-select form-select-sm" disabled>
               <option value="">Selecione...</option>
             </select>
           </div>
@@ -788,7 +785,7 @@
           <div class="col-3">
             <input
               type="text"
-              id="produto1Edit"
+              id="produtoEdit"
               class="form-control form-control-sm"
               placeholder="Descrição"
               readonly
@@ -797,7 +794,7 @@
           <div class="col-1">
             <input
               type="number"
-              id="quantidade1Edit"
+              id="quantidadeEdit"
               class="form-control form-control-sm"
               placeholder="Qtd."
               required
@@ -806,7 +803,7 @@
           <div class="col-2">
             <input
               type="text"
-              id="observacao1Edit"
+              id="observacaoEdit"
               class="form-control form-control-sm"
               placeholder="Observação"
             />
@@ -816,6 +813,7 @@
               type="date"
               id="dataInicio1Edit"
               class="form-control form-control-sm"
+              readonly
               required
             />
           </div>
@@ -823,212 +821,6 @@
             <input
               type="date"
               id="dataFim1Edit"
-              class="form-control form-control-sm"
-              required
-            />
-          </div>
-        </div>
-
-        <!-- Grupo 2 -->
-        <div class="row gx-2 gy-2 flex-nowrap mt-2">
-          <div class="col-2">
-            <select id="family2Edit" class="form-select form-select-sm">
-              <option value="">Selecione...</option>
-            </select>
-          </div>
-          <input type="hidden" id="belocode2Edit" value="" />
-          <div class="col-3">
-            <input
-              type="text"
-              id="produto2Edit"
-              class="form-control form-control-sm"
-              placeholder="Descrição"
-              readonly
-            />
-          </div>
-          <div class="col-1">
-            <input
-              type="number"
-              id="quantidade2Edit"
-              class="form-control form-control-sm"
-              placeholder="Qtd."
-              required
-            />
-          </div>
-          <div class="col-2">
-            <input
-              type="text"
-              id="observacao2Edit"
-              class="form-control form-control-sm"
-              placeholder="Observação"
-            />
-          </div>
-          <div class="col-2">
-            <input
-              type="date"
-              id="dataInicio2Edit"
-              class="form-control form-control-sm"
-              required
-            />
-          </div>
-          <div class="col-2">
-            <input
-              type="date"
-              id="dataFim2Edit"
-              class="form-control form-control-sm"
-              required
-            />
-          </div>
-        </div>
-
-        <!-- Grupo 3 -->
-        <div class="row gx-2 gy-2 flex-nowrap mt-2">
-          <div class="col-2">
-            <select id="family3Edit" class="form-select form-select-sm">
-              <option value="">Selecione...</option>
-            </select>
-          </div>
-          <input type="hidden" id="belocode3Edit" value="" />
-          <div class="col-3">
-            <input
-              type="text"
-              id="produto3Edit"
-              class="form-control form-control-sm"
-              placeholder="Descrição"
-              readonly
-            />
-          </div>
-          <div class="col-1">
-            <input
-              type="number"
-              id="quantidade3Edit"
-              class="form-control form-control-sm"
-              placeholder="Qtd."
-              required
-            />
-          </div>
-          <div class="col-2">
-            <input
-              type="text"
-              id="observacao3Edit"
-              class="form-control form-control-sm"
-              placeholder="Observação"
-            />
-          </div>
-          <div class="col-2">
-            <input
-              type="date"
-              id="dataInicio3Edit"
-              class="form-control form-control-sm"
-              required
-            />
-          </div>
-          <div class="col-2">
-            <input
-              type="date"
-              id="dataFim3Edit"
-              class="form-control form-control-sm"
-              required
-            />
-          </div>
-        </div>
-        <!-- Grupo 4 -->
-        <div class="row gx-2 gy-2 flex-nowrap mt-2">
-          <div class="col-2">
-            <select id="family4Edit" class="form-select form-select-sm">
-              <option value="">Selecione...</option>
-            </select>
-          </div>
-          <input type="hidden" id="belocode4Edit" value="" />
-          <div class="col-3">
-            <input
-              type="text"
-              id="produto4Edit"
-              class="form-control form-control-sm"
-              placeholder="Descrição"
-              readonly
-            />
-          </div>
-          <div class="col-1">
-            <input
-              type="number"
-              id="quantidade4Edit"
-              class="form-control form-control-sm"
-              placeholder="Qtd."
-              required
-            />
-          </div>
-          <div class="col-2">
-            <input
-              type="text"
-              id="observacao4Edit"
-              class="form-control form-control-sm"
-              placeholder="Observação"
-            />
-          </div>
-          <div class="col-2">
-            <input
-              type="date"
-              id="dataInicio4Edit"
-              class="form-control form-control-sm"
-              required
-            />
-          </div>
-          <div class="col-2">
-            <input
-              type="date"
-              id="dataFim4Edit"
-              class="form-control form-control-sm"
-              required
-            />
-          </div>
-        </div>
-        <!-- Grupo 5 -->
-        <div class="row gx-2 gy-2 flex-nowrap mt-2">
-          <div class="col-2">
-            <select id="family5Edit" class="form-select form-select-sm">
-              <option value="">Selecione...</option>
-            </select>
-          </div>
-          <input type="hidden" id="belocode5Edit" value="" />
-          <div class="col-3">
-            <input
-              type="text"
-              id="produto5Edit"
-              class="form-control form-control-sm"
-              placeholder="Descrição"
-              readonly
-            />
-          </div>
-          <div class="col-1">
-            <input
-              type="number"
-              id="quantidade5Edit"
-              class="form-control form-control-sm"
-              placeholder="Qtd."
-              required
-            />
-          </div>
-          <div class="col-2">
-            <input
-              type="text"
-              id="observacao5Edit"
-              class="form-control form-control-sm"
-              placeholder="Observação"
-            />
-          </div>
-          <div class="col-2">
-            <input
-              type="date"
-              id="dataInicio5Edit"
-              class="form-control form-control-sm"
-              required
-            />
-          </div>
-          <div class="col-2">
-            <input
-              type="date"
-              id="dataFim5Edit"
               class="form-control form-control-sm"
               required
             />

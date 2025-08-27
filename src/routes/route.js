@@ -7,7 +7,7 @@ import { validateProduto } from "../middleware/validators/validProduct.js";
 import { validateAutomovel } from "../middleware/validators/validVehicles.js";
 import { controllerLinkVehicleWithDriver } from "../controllers/controllerLinkDriverVehicle.js";
 import { validateCheckIn } from "../middleware/validators/validCheckIn.js";
-import {validateCheckInOpen} from "../middleware/validators/validCheckIn.js"
+import { validateUpdateLocationGoods } from "../middleware/validators/validLocationGoods.js";
 import { validateSubmitDateForLogistics } from "../middleware/validators/validLogistcs.js";
 import { validateLocationGoods } from "../middleware/validators/validLocationGoods.js";
 import{validateLocationVehicle} from "../middleware/validators/validLocationVehicle.js";
@@ -320,7 +320,7 @@ route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
  route.put('/api/updatestatuslocation/:codeLocation' , authenticateToken, (req , res)=>{
     location.updateStatus(req ,res)
  });
- route.put("/api/location/:id", authenticateToken, (req ,res)=>{
+ route.put("/api/location/:id", validateUpdateLocationGoods , validate ,  authenticateToken, (req ,res)=>{
   location.updateLocationAndBens(req ,res)
  });
 

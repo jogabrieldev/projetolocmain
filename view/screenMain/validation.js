@@ -339,7 +339,7 @@ $(function () {
           },
           fornAge:{
              required: true,
-             maxlength: 4
+             maxlength: 6
           },
           fornCont:{
             required: true,
@@ -385,7 +385,7 @@ $(function () {
           },
           fornAge:{
             required: "OBRIGATORIO",
-            maxlength: 'Maximo 4 caracteres'
+            maxlength: 'Maximo 6 caracteres'
          },
          fornCont:{
            required: "OBRIGATORIO",
