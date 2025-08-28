@@ -839,7 +839,7 @@ function carregamentoEmTempoReal(){
       renderTable(listaLocacoes);
     }
   );
-}
+};
 
 // ENVIO DA LOCAÇÃO FINALIZADA
 async function handleSubmit() {
@@ -889,9 +889,9 @@ async function handleSubmit() {
     if (!codeBen && !quantidade && !dataFimStr) continue;
 
     const quantidadeNum = parseInt(quantidade, 10);
-    if (isNaN(quantidadeNum) || quantidadeNum < 1 || quantidadeNum > 5) {
+    if (isNaN(quantidadeNum) || quantidadeNum < 1 || quantidadeNum > 4) {
       Toastify({
-        text: `Grupo ${i}: A quantidade deve ser um número entre 1 e 5.`,
+        text: `Grupo ${i}: A quantidade deve ser um número entre 1 e 4.`,
         duration: 3000,
         close: true,
         gravity: "top",

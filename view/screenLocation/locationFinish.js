@@ -723,50 +723,43 @@ function editLocation() {
           }).showToast();
           return;
         }
-        const contentEditlocation = document.querySelector(
-          ".containerEditLocation"
-        );
-        if (contentEditlocation) {
-          contentEditlocation.classList.remove("hidden");
-          contentEditlocation.classList.add("flex");
-        }
+      const locacaoData = JSON.parse(selectedCheckbox.value);
+      const containerEdit =  document.querySelector('.containerEditLocation')
+      if(locacaoData){
+         const status = locacaoData?.status
+          if(status === "Em Locação"){
+            Toastify({
+            text: "A locação selecionada já possui um bem em locação!",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "orange",
+          }).showToast();
 
-        const btnInitPageMainLoc = document.querySelector(
-          ".btnInitPageMainLoc"
-        );
-        if (btnInitPageMainLoc) {
-          btnInitPageMainLoc.classList.remove("flex");
-          btnInitPageMainLoc.classList.add("hidden");
-        }
+           containerEdit.classList.remove('flex')
+           containerEdit.classList.add('hidden')
+           return;
+          };
+      };
 
-        const listLocation = document.querySelector(".tableLocation");
-        if (listLocation) {
-          listLocation.classList.remove("flex");
-          listLocation.classList.add("hidden");
-        }
+       containerEdit.classList.remove('hidden')
+       containerEdit.classList.add('flex')
 
-        const locacaoData = JSON.parse(selectedCheckbox.value);
-      
-        if(locacaoData){
-           const status = locacaoData?.status
-            if(status === "Em Locação"){
-              Toastify({
-              text: "A locação selecionada já possui um bem em locação!",
-              duration: 3000,
-              close: true,
-              gravity: "top",
-              position: "center",
-              backgroundColor: "orange",
-            }).showToast();
-             return;
-            }
-        };
-        const locacaoId = locacaoData.numeroLocacao;
-       
-         preencherFormularioDeEdicao(locacaoData);
+      const btnInitPageMainLoc = document.querySelector(".btnInitPageMainLoc");
+      if (btnInitPageMainLoc) {
+        btnInitPageMainLoc.classList.remove("flex");
+        btnInitPageMainLoc.classList.add("hidden");
+      }
 
-      
-      
+      const listLocation = document.querySelector(".tableLocation");
+      if (listLocation) {
+        listLocation.classList.remove("flex");
+        listLocation.classList.add("hidden");
+      }
+
+      preencherFormularioDeEdicao(locacaoData);
+
       } catch (error) {
         console.error('ERRO NA APLICAÇÃO PARA EDITAR LOCAÇÃO' , error)
       }
@@ -784,18 +777,13 @@ async function preencherFormularioDeEdicao(locacao) {
 }
 
 let dataForUpdate = ""
-  // Campos principais da locação
+  
   document.getElementById("idLocation").value = locacao.numeroLocacao || "Invalido";
   document.getElementById("clientList").value = locacao.nomeCliente || "Não foi informado";
 
-  const dataDevolucao = document.getElementById("dateDev").value = formatDateToInput(locacao.dataDevolucao);
-  const dataFinal = document.getElementById("dataFim1Edit").value = formatDateToInput(locacao.dataFim) || "";
-  if(dataDevolucao && dataFinal){
-     dataForUpdate = {
-        dataDevolucao:dataDevolucao,
-        dataFinal:dataFinal
-     }
-  }
+  document.getElementById("dateDev").value = formatDateToInput(locacao.dataDevolucao);
+   document.getElementById("dataFim1Edit").value = formatDateToInput(locacao.dataFim) || "";
+  
 
   // Campos do bem (assumindo 1 bem por seleção)
   document.getElementById("familyEdit").value = locacao.codigoBem || "";
@@ -809,7 +797,7 @@ let dataForUpdate = ""
   // Se quiser deixar o campo de data inicial readonly
   document.getElementById("dataInicio1Edit").readOnly = true;
 
-  await editarlocationFinish(locacao.belocode , dataForUpdate);
+  await editarlocationFinish(locacao.belocode );
 }
 
  function clearInputsEdition(){
@@ -827,7 +815,7 @@ let dataForUpdate = ""
 };
 
 // FUNÇAÕ DE ENVIAR A EDIÇÃ
-async function editarlocationFinish(id , dataForUpdate) {
+async function editarlocationFinish(id) {
   const token = localStorage.getItem("token");
 
   if (!token || isTokenExpired(token)) {

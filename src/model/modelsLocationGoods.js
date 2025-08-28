@@ -216,17 +216,17 @@ ORDER BY c.clloid;`
     }
   },
 
-  // verificarDependenciaLocacao: async (id) => {
-  //   try {
-  //     const checkQuery = "SELECT COUNT(*) FROM locafim WHERE lofiidlo= $1";
-  //     const checkResult = await dataLocation.query(checkQuery, [id]);
+  verificarDependenciaLocacao: async (id) => {
+    try {
+      const checkQuery = "SELECT COUNT(*) FROM locafim WHERE lofiidlo= $1 AND lofistat = 'Em locação'";
+      const checkResult = await dataLocation.query(checkQuery, [id]);
 
-  //     return parseInt(checkResult.rows[0].count) > 0;
-  //   } catch (error) {
-  //     console.error("Erro ao verificar dependências de bens:", error);
-  //     throw error;
-  //   }
-  // },
+      return parseInt(checkResult.rows[0].count) > 0;
+    } catch (error) {
+      console.error("Erro ao verificar dependências de bens:", error);
+      throw error;
+    }
+  },
 
   // Model
 async deleteLocation(idLocation) {
