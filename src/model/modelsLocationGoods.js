@@ -1,7 +1,5 @@
-// const database = require("../database/dataBaseSgt");
-import { pool as  dataLocation } from "../database/userDataBase.js";
-import cron from "node-cron"
 
+import { pool as  dataLocation } from "../database/userDataBase.js";
 
 export const LocacaoModel = {
   async gerarNumeroLocacao() {

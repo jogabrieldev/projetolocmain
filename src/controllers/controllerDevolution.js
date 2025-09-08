@@ -1,5 +1,4 @@
 import { processDevolution } from "../model/modelsDevolution.js";
-import { clientRegister as valid } from "../model/modelsClient.js";
 
 export const controllerDevolution = {
       

@@ -97,7 +97,6 @@ let user= userId
       backgroundColor: "green",
     }).showToast();
 
-    // Delay de 3,5 segundos antes do reload
     setTimeout(() => {
       // Limpa os campos antes do reload
       document.getElementById('caminhao').value = "";
@@ -187,7 +186,6 @@ async function getCheck() {
       }
     });
       
-     console.log('resposta do check' , response)
      const result = await response.json();
 
       if (!response.ok) {

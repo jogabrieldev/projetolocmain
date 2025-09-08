@@ -1,6 +1,6 @@
 
 import { pool as dbGoods } from "../database/userDataBase.js";
-// const dbGoods = pool;
+
 
 export const goodsRegister = {
   registerOfBens: async (data) => {

@@ -1,4 +1,4 @@
-import { th } from "date-fns/locale";
+
 import { pool as dataCheckIn } from "../database/userDataBase.js";
 
 export const movimentCheckInAndCheckOut = {

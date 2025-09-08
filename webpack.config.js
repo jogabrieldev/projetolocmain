@@ -16,14 +16,13 @@ export default  {
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "[name].bundle.js",
-    // filename: "[name].bundle.js",
-    // filename: "[name].bundle.js"
+    
   },
-  mode: "development", // Mude para "production" quando for lançar o sistema
+  mode: "development", 
   module: {
     rules: [
       {
-        test: /\.js$/, // Aplica o Babel para arquivos JS
+        test: /\.js$/, 
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
@@ -47,7 +46,7 @@ export default  {
   test: /\.(png|jpe?g|gif|svg)$/i,
   type: "asset/resource",
   generator: {
-    filename: "img/[name][ext]" // manda as imagens para dist/img/
+    filename: "img/[name][ext]"
   }
 }
 
@@ -56,18 +55,16 @@ export default  {
   plugins: [
     new CleanWebpackPlugin(),
 
-    // Gera a página de login
     new HtmlWebpackPlugin({
       template: "./view/index.html",
       filename: "index.html",
-      chunks: ["login"], // só inclui login.bundle.js
+      chunks: ["login"], 
     }),
 
-    // Gera a SPA principal
     new HtmlWebpackPlugin({
       template: "./view/screenMain/main.html",
       filename: "main.html",
-      chunks: ["main"], // só inclui main.bundle.js
+      chunks: ["main"], 
     }),
 
     
@@ -82,10 +79,4 @@ export default  {
   extensions: ['.js', '.json', '.css', '.html']
 }
 
-
-  // resolve:{
-  //   alias:{
-  //     Inputmask: path.resolve(__dirname , "node_modules/inputmask/dist/inputmask.min.js")
-  //   }
-  // }
 };

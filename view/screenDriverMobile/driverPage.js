@@ -85,7 +85,7 @@ async function verifiqueID(motoristaId) {
       },
     });
     const res = await response.json();
-    if (res.success === true) {
+    if (response.ok) {
       const user = res.user;
       Toastify({
         text: `Seja bem vindo ${user.motonome}`,
@@ -155,7 +155,7 @@ async function SearchNameDriverLogado(id) {
   try {
     const token = localStorage.getItem("token");
 
-    if (!token || !id) return;
+    // if (!token || !id) return;
     const response = await fetch(`/api/driver/${id}`, {
       method: "GET",
       headers: {
@@ -239,7 +239,7 @@ async function getAllCar() {
 
     const select = document.getElementById("caminhao");
     if (select) {
-      select.innerHTML = '<option value="">Selecione..</option>'; // Limpa
+      select.innerHTML = '<option value="">Selecione..</option>';
       carrosAtivos.forEach((carro) => {
         const option = document.createElement("option");
         option.value = carro.caaucode;
@@ -267,7 +267,7 @@ async function listDeliveryForDriver() {
 
     if (!token || !motoristaId || !container) return;
 
-    if (!isTokenExpired(token)) {
+    if (isTokenExpired(token)) {
       Toastify({
         text: "Sessão expirada. Faça login novamente.",
         duration: 3000,

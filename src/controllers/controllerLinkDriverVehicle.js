@@ -6,7 +6,6 @@ export const controllerLinkVehicleWithDriver = {
     try {
       const { codeMoto, codeVeic } = req.body;
 
-      console.log(req.body)
 
       if (!codeMoto || !codeVeic) {
         return res.status(400).json({ message: "Nao foi passado os codigos para vinculação" });
@@ -18,8 +17,6 @@ export const controllerLinkVehicleWithDriver = {
          return res.status(400).json({message:"Esse motorista ja esta vinculado a um veiculo"})
        }
         
-      //  console.log('code' , codeDriver)
-
       const linkSuccess = await linkVehicle.registerDriverWithVehicle(codeMoto,codeVeic);
       if (!linkSuccess) {
         return res.status(400).json({ message: "ERRO para vincular o veiculo com o motorista", success:false });

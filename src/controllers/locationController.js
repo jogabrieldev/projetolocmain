@@ -133,7 +133,7 @@ export const location = {
   
   async buscarLocacaoPorId(req, res) {
     try {
-        const { id } = req.params; // Pega o ID da URL
+        const { id } = req.params; 
 
         if (!id) {
             return res.status(400).json({ error: "ID da locação não foi informado." });
@@ -156,13 +156,6 @@ async DeleteLocationFinish(req, res) {
 
   const { id } = req.params;
   try {
-    //  const verificar = await LocacaoModel.verificarDependenciaLocacao(id);
-    
-    //       if (verificar) {
-    //         return res.status(400).json({
-    //           message: "Não e possivel excluir. a locação esta vinculada a um bem ",
-    //         });
-    //       }
     const deleteSuccess = await LocacaoModel.deleteLocation(id);
 
     if (!deleteSuccess) {

@@ -1,4 +1,4 @@
-// const dataBaseM = require('../database/dataBaseSgt')
+
 import { pool as userDbFo  } from "../database/userDataBase.js";
 
 export const crudRegisterForn = {

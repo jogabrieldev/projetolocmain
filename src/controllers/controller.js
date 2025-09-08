@@ -75,8 +75,7 @@ class Control {
      res.sendFile(path.join(__dirname , ".." , ".." , "view" , "screenMain" , "driverWithVehicleExterno" , "driverWithVehicle.html"))
   }
  
-
-}
+};
 
 
 export const control = new Control();

@@ -10,7 +10,7 @@ function addLocalizationInLocation(){
                  containerMaps.classList.add('flex')
               }
         })
-    }
+    };
 
     const buttonExitAddlocalization = document.querySelector('.btnExitAddLoc')
     if(buttonExitAddlocalization){
@@ -21,15 +21,15 @@ function addLocalizationInLocation(){
                  containerMaps.classList.add('hidden')
               }
         })
-    }
-}
+    };
+};
 
 function maskFieldLocalization(){
     $(document).ready(function () {
 
     $("#enderecoCepInput").mask("00000-000");
 });
-}
+};
 
  function saveLocalizationInCache(){
         

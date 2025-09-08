@@ -9,7 +9,7 @@ A aplicação é uma **SPA (Single Page Application)** com **JavaScript puro no 
 ## 🛠️ Tecnologias Utilizadas
 
 - **Frontend:** HTML5, CSS3 (puro), JavaScript Vanilla , Bootstrap5
-- **Backend:** Node.js + Express.js 
+- **Backend:** Node.js + Express.js + Express Validator
 - **Banco de Dados:** PostgreSQL
 - **Segurança:** JWT (JSON Web Token), Bcrypt para criptografia de senhas
 - **Build/Dev Tools:** Webpack, Babel, Nodemon, Dotenv
@@ -20,9 +20,10 @@ A aplicação é uma **SPA (Single Page Application)** com **JavaScript puro no 
 
 ├── View/ → Frontend (HTML, CSS, JS , jquery-validation , Jquery-Mask )
 ├── controller/ → Camada Controller (lógica das requisições ,  e algumas validações para o processo)
+|__ Service/ -> Executando transações para garantir a consistencia , quando e preciso fazer mais de 1 transação no banco.
 ├── model/ → Modelos de dados e acesso ao banco (As query SQL estão nesta pasta)
 ├── routes/ → Endpoints da API
-├── middleware/ → Middlewares (autenticação)
+├── middleware/ → Middlewares (autenticação) / -> Validações das rotas as validações esta sendo aplicada nas rotas do metodo POST
 ├── config/ → Configuração dos bancos de dados 
 ├── database/ → Conexão com o banco PostgreSQL
 ├── .env → Variáveis de ambiente (credenciais, configs)
@@ -38,6 +39,7 @@ A aplicação é uma **SPA (Single Page Application)** com **JavaScript puro no 
 | **Model**   | Contém a lógica de acesso ao banco de dados (queries SQL), mapeamento de tabelas . Utiliza placeholders nas queries para evitar SQL Injection. |
 | **View**    | Interface do usuário: SPA com um único HTML (`main.html`), CSS modular por seção e JavaScript responsável por manipulação de DOM e consumo da API via Fetch. |
 | **Controller** | Faz a ponte entre o frontend e os models. Recebe as requisições HTTP, valida os dados e coordena as respostas da API. |
+| **Service** | contem as transações. |
 | **Routes**  | Define todos os endpoints REST disponíveis na API, conectando as requisições aos controllers correspondentes. |
 
 ---
@@ -46,7 +48,7 @@ A aplicação é uma **SPA (Single Page Application)** com **JavaScript puro no 
 
 - Estruturado como **SPA (Single Page Application)**.
 
-- Todas as telas (cadastros, locação, logística, entrega, devolução) estão dentro de **uma única página principal (`main.html`)**, navegadas via manipulação de seções DOM com `display: none` / `display: block` e funções auxiliares para (mostrarElemento , esconderElemento).
+- Todas as telas (cadastros, locação, logística, entrega, devolução) estão dentro de **uma única página principal (`main.html`)**, navegadas via manipulação de seções DOM com `display: none` / `display: flex` e funções auxiliares para (mostrarElemento , esconderElemento).
 
 - **CSS Modular:**  
 Cada seção tem seu próprio arquivo CSS , além de um CSS global `main.css` com estilos gerais da aplicação e o arquivo do bootstrap juntamente com a CDN aplicada na (`main.html`) .
@@ -79,6 +81,11 @@ Padrão **camelCase** aplicado em IDs, classes, variáveis e funções JavaScrip
 ### Middlewares:
 - **Autenticação JWT:**  
 Intercepta requisições privadas e valida o token de acesso antes de liberar a execução.
+
+- **Validações de rotas:**
+Validações de rotas para validar antes mesmo de processar algo , essas validações esta presente em todas as rotas de registro ,
+estou usando o express-validator e aplicando as validações nas rotas pegando propriedade por propriedade.
+
 
 ### Routes:
 - Definem todos os **endpoints RESTFULL da aplicação**, nesse modulo temos o arquivo que faz o roteamento da pagínas dinamicamente também 1 arquivo e meus endpoints da aplicação e no outro o roteamento das paginas HTML.

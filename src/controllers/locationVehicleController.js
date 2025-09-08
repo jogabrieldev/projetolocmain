@@ -9,7 +9,6 @@ async dataLocacaoVehicle(req ,res){
        
  try {
           
-  // console.log('req body' , req.body)
     const isLocacaoVeiculo = req.body;
   
      const veiculo = isLocacaoVeiculo.veiculos
@@ -84,8 +83,7 @@ async dataLocacaoVehicle(req ,res){
        
     const {id} = req.params
 
-    console.log('identificador' , id)
-
+   
     try {
       
       const deleteSuccess = await modelsLocationAuto.deleteLocationVehicles(id);
@@ -104,10 +102,9 @@ async dataLocacaoVehicle(req ,res){
     }
   },
   async updateContrato(req, res) {
-  const { id } = req.params; // velocode
-  const { contrato } = req.body;
 
-  console.log("Recebido PUT contrato:", req.params.id, req.body.contrato);
+   const { id } = req.params; 
+   const { contrato } = req.body;
 
 
   if (!contrato || contrato.trim() === "") {
@@ -122,7 +119,5 @@ async dataLocacaoVehicle(req ,res){
     console.error("Erro ao atualizar contrato:", error);
     return res.status(500).json({ error: "Erro interno ao atualizar contrato." });
   }
-}
-
-
-}
+ }
+};

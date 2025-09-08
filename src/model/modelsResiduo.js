@@ -13,7 +13,7 @@ export const moduleResiduo = {
              return resunt.rows[0]
         } catch (error) {
 
-            if (error.code === "23505") { // Código de erro para chave duplicada no PostgreSQL
+            if (error.code === "23505") { 
           throw new Error("Código de Residuo já cadastrado. Tente outro.");
          }
           console.error("Erro no registro do cliente");

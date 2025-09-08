@@ -1,7 +1,4 @@
 
-
-
-//iconPassword
 function showPassword() {
   const inputPassword = document.querySelector("#pin");
   const iconPassword = document.querySelector("#btn-senha");
@@ -15,7 +12,7 @@ function showPassword() {
   }
 }
 
-//to-enter-page main /valid login
+
 function loginUserCenter() {
   const form = document.querySelector("#formLogin");
   if (form) {
@@ -36,7 +33,7 @@ function loginUserCenter() {
         let response = await responseData.json();
 
         if (!response.token) {
-          // Se falhou, tenta como motorista
+  
           responseData = await fetch("/api/drive/auth", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -91,7 +88,7 @@ function loginUserCenter() {
       }
     });
   }
-}
+};
 
 document.addEventListener("DOMContentLoaded", loginUserCenter);
 

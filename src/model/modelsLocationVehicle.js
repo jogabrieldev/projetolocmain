@@ -40,7 +40,6 @@ export const modelsLocationAuto = {
         
         const resultado = await locationAuto.query(query, valoresVeiculo);
 
-        // console.log('resuntado' , resultado)
         resultados.push(resultado.rows[0]);
       }
 

@@ -9,7 +9,7 @@ import { checkInService } from "../service/checkInService.js";
     async toDoCheckIn(req, res) {
     try {
       const io = req.app.get("socketio");
-      console.log(req.body)
+ 
       const newCheckIn = await checkInService.doCheckIn(req.body, io);
 
       return res.status(200).json({ success: true, checkin: newCheckIn });

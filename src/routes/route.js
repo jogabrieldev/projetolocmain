@@ -360,11 +360,6 @@ route.put("/api/contrato/:id" , authenticateToken, (req ,res)=>{
 
 // PROCESSO DE ENTREGA
 
-// ENDPOINT PARA ATUALIZAR O STATUS ESPECIFICO DE UMA ENTREGA
-// route.patch('/api/updatestatusdelivery/:id', (req ,res)=>{
-//    controllerDelivery.updateStatusDelivery(req ,res)
-// });
-
  route.get('/api/getdelivery' , authenticateToken, (req ,res)=>{
   controllerDelivery.getDate(req ,res)
  });

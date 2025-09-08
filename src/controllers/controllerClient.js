@@ -8,8 +8,6 @@ export const movementClient = {
     try {
       const dataClientSubmit = req.body;
 
-     console.log('dataclient' , dataClientSubmit)
-
       if (!dataClientSubmit) {
         return res
           .status(400)
@@ -205,9 +203,7 @@ export const movementClient = {
         updateClient
       );
       if (!clientUpdate) {
-        return res
-          .status(404)
-          .json({ message: "cliente não encontrado para atualização." });
+        return res.status(404).json({ message: "cliente não encontrado para atualização." });
       }
       if (io) {
         io.emit("updateClients", clientUpdate);
