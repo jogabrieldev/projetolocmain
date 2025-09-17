@@ -9,6 +9,7 @@ function isTokenExpired(token) {
   }
 }
 
+//INICIALIZAÇÃO
 const socketTypeProd  = io()
 document.addEventListener('DOMContentLoaded' , ()=>{
        const btnLoadTypeProd = document.querySelector('.btnCadTypeProd')

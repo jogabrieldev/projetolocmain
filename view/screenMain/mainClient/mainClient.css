@@ -30,7 +30,6 @@
 .containerOfForm{
     overflow: auto;
 }
-/* Visualização */
 
 .hidden {
     display: none !important;
@@ -58,14 +57,7 @@
     width: 65%;
 }
 
-/* .searchIdClient {
-  animation: popin 0.3s ease-out;
-}
 
-@keyframes popin {
-  0% { transform: scale(0.95) translate(-50%, -50%); opacity: 0; }
-  100% { transform: scale(1) translate(-50%, -50%); opacity: 1; }
-} */
 
 
 

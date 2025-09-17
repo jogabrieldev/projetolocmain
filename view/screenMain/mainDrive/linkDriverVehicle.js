@@ -33,6 +33,7 @@ async function getCarSituationExterno() {
   }
 };
 
+//Vinvular motorista externo ao seu veiculo
 function linkDriverExternoWithVehicle(){
     const buttonLinkDriverExterno = document.getElementById('buttonLinkDriverExterno')
     const popUpLinkDriverVehicle = document.querySelector('.popUpLinkDriverVehicle')
@@ -98,9 +99,8 @@ function linkDriverExternoWithVehicle(){
   };
  };
 
-async function linkDriverWithVehicleSubmit(codeMoto , nameMoto) {
 
-    console.log('code' , codeMoto ,)
+async function linkDriverWithVehicleSubmit(codeMoto , nameMoto) {
 
     const btnSubmitLink = document.querySelector('.saveDriverVehicle')
     if(btnSubmitLink){

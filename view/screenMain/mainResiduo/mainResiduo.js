@@ -1,4 +1,4 @@
-
+//INICIALIZAÇÃO
 const socketResiduo = io()
 document.addEventListener('DOMContentLoaded' , ()=>{
     const btnLoadResiduo = document.querySelector('.btnCadResiduo')

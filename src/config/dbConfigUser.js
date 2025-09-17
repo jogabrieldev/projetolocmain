@@ -9,5 +9,5 @@ database:process.env.DB_AUTH_NAME,
 port:process.env.DB_AUTH_PORT
 };
 
-  //passwordLogin 123123
+
 

@@ -18,8 +18,8 @@ function isDataValida(data) {
   const ano = date.getFullYear();
 
   return (
-    !isNaN(date.getTime()) && // Verifica se o Date é válido
-    ano >= 1950 && ano <= 2030 // Define limites plausíveis para ano
+    !isNaN(date.getTime()) && 
+    ano >= 1950 && ano <= 2030 
   );
 }
 
@@ -96,7 +96,7 @@ async function loadSelectOptions(url, selectId, fieldName) {
     }
 
     data.forEach((item) => {
-      // Debug
+      
       if (!item.hasOwnProperty(fieldName)) {
         console.warn(`Campo '${fieldName}' não encontrado em`, item);
         return;
@@ -139,7 +139,7 @@ function formatDateInput(dataISO) {
 
 function parseDataLocal(dataStr) {
   const [ano, mes, dia] = dataStr.split("-").map(Number);
-  return new Date(ano, mes - 1, dia); // mês é zero-based
+  return new Date(ano, mes - 1, dia); 
 }
 
 const buttonOutStart = document.querySelector(".material-symbols-outlined");
@@ -189,7 +189,7 @@ function formatarCampo(tipo, valor) {
         // CNPJ
         return valor.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
       } else {
-        return valor; // Se não for CPF nem CNPJ
+        return valor; 
       }
 
     case "cep":
@@ -201,10 +201,9 @@ function formatarCampo(tipo, valor) {
 
   case "telefone":
     if (valor.length === 10) {
-    // Se vier com 10 dígitos, adiciona o 9 depois do DDD
-    // Exemplo: 6299999999 → (62) 9 9999-9999
-    valor = valor.replace(/(\d{2})(\d{4})(\d{4})/, "$1$2$3"); // Junta tudo
-    valor = valor.replace(/(\d{2})(\d{8})/, "$1" + "9" + "$2"); // Insere o 9 depois do DDD
+  
+    valor = valor.replace(/(\d{2})(\d{4})(\d{4})/, "$1$2$3"); 
+    valor = valor.replace(/(\d{2})(\d{8})/, "$1" + "9" + "$2"); 
    }
 
    if (valor.length === 11) {

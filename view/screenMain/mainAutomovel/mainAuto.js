@@ -16,10 +16,10 @@ function dateAtualInField(date) {
     const dia = String(hoje.getDate()).padStart(2, "0");
 
     inputDtCad.value = `${ano}-${mes}-${dia}`;
-    return true; // indica sucesso
+    return true; 
   } else {
     console.error("Campo #fornDtcd não encontrado no DOM");
-    return false; // indica falha
+    return false; 
   }
 }
 
@@ -64,7 +64,6 @@ function validarRenavam(renavam) {
 function validarChassi(chassi) {
   chassi = chassi.toUpperCase().trim();
 
-  // Deve ter 17 caracteres
   if (chassi.length !== 17) return false;
 
   // Não pode conter I, O ou Q
@@ -76,8 +75,7 @@ function validarChassi(chassi) {
   return true; // Validação básica
 };
 
-
-
+//INICIALIZAÇÃO
 const socketAutomovel = io();
 document.addEventListener("DOMContentLoaded", () => {
   const btnLoadVehicles = document.querySelector(".btnCadAutomo");
@@ -808,21 +806,21 @@ function deleteVehiclesSystem() {
     title: `Excluir veiculo ${veiculoSelecionado.caauplac}?`,
     text: "Essa ação não poderá ser desfeita!",
     icon: "warning",
-    iconColor: "#dc3545", // cor do ícone de alerta
+    iconColor: "#dc3545",
     showCancelButton: true,
     confirmButtonText: "Excluir !",
     cancelButtonText: "Cancelar",
     reverseButtons: true,
-    background: "#f8f9fa", // cor de fundo clara
-    color: "#212529", // cor do texto
-    confirmButtonColor: "#dc3545", // vermelho Bootstrap
-    cancelButtonColor: "#6c757d", // cinza Bootstrap
-    buttonsStyling: true, // deixa os botões com estilo customizado
+    background: "#f8f9fa", 
+    color: "#212529", 
+    confirmButtonColor: "#dc3545", 
+    cancelButtonColor: "#6c757d", 
+    buttonsStyling: true, 
     customClass: {
-     popup: "rounded-4 shadow-lg", // bordas arredondadas e sombra
-     title: "fw-bold text-danger", // título em negrito e vermelho
-     confirmButton: "btn btn-danger px-4", // botão vermelho estilizado
-     cancelButton: "btn btn-secondary px-4" // botão cinza estilizado
+     popup: "rounded-4 shadow-lg", 
+     title: "fw-bold text-danger",
+     confirmButton: "btn btn-danger px-4", 
+     cancelButton: "btn btn-secondary px-4" 
    }
   }).then(async (result) => {
    if (result.isConfirmed) {

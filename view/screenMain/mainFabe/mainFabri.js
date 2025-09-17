@@ -8,59 +8,27 @@ function isTokenExpired(token) {
   }
 }
 
-// function addMetrosCubicos() {
-//   const inputCapa = document.getElementById('fabeCapa');
-//   if (!inputCapa) return; 
-
-//   inputCapa.addEventListener('input', () => {
-//     let somenteNumero = inputCapa.value.replace(/\D/g, '');
-//     inputCapa.value = somenteNumero ? `${somenteNumero}m³` : '';
-//   });
-
-//    inputCapa.addEventListener('focus', () => {
-//     inputCapa.value = inputCapa.value.replace(/m³/, '');
-//   });
-// };
-
-// function aplicarMetrosCubicosEdicao(valorNumero) {
-//   const inputEdit = document.getElementById('editFabeCapa');
-//   if (!inputEdit) return;
-
-//   inputEdit.value = valorNumero ? `${valorNumero}m³` : '';
-
-//   inputEdit.addEventListener('focus', () => {
-//     inputEdit.value = inputEdit.value.replace(/m³/, '');
-//   });
-
-//   inputEdit.addEventListener('blur', () => {
-//     let apenasNumero = inputEdit.value.replace(/\D/g, '');
-//     inputEdit.value = apenasNumero ? `${apenasNumero}m³` : '';
-//   });
-// };
 
 function aplicarMascaraMetrosCubicos(idCampo) {
   const input = document.getElementById(idCampo);
   if (!input) return;
 
-  // Quando digitar, remove caracteres não numéricos e aplica "m³"
   input.addEventListener("input", () => {
     const num = input.value.replace(/\D/g, "");
     input.value = num ? `${num}m³` : "";
   });
 
-  // Quando focar, remove "m³" para facilitar edição
   input.addEventListener("focus", () => {
     input.value = input.value.replace(/m³/, "");
   });
 
-  // Quando sair do campo, garante que termine com "m³"
   input.addEventListener("blur", () => {
     const num = input.value.replace(/\D/g, "");
     input.value = num ? `${num}m³` : "";
   });
-}
+};
 
-
+// Inicialização
 const socketFamilyBens = io();
 document.addEventListener("DOMContentLoaded", () => {
   const btnLoadFabe = document.querySelector(".btnCadFabri");
@@ -432,7 +400,6 @@ async function fetchListFabricante() {
         checkboxCell.classList.add("text-center", "align-middle", "wh-nowrap");
         checkboxCell.appendChild(checkbox);
 
-        // Demais dados
         const dados = [
           fabricante.fabecode,
           fabricante.fabedesc,
@@ -481,7 +448,7 @@ async function fetchListFabricante() {
   };
 };
 
-// buscar family bens
+// buscar familia bens
 async function searchFamilyGoodsForId() {
     
   const btnFamilySearch = document.getElementById('searchFamilyGoods');
@@ -715,21 +682,21 @@ function deleteFamilyGoodsSystem(){
     title: `Excluir familia de bem, ${fabricanteSelecionado.fabedesc}?`,
     text: "Essa ação não poderá ser desfeita!",
     icon: "warning",
-    iconColor: "#dc3545", // cor do ícone de alerta
+    iconColor: "#dc3545", 
     showCancelButton: true,
     confirmButtonText: "Excluir !",
     cancelButtonText: "Cancelar",
     reverseButtons: true,
-    background: "#f8f9fa", // cor de fundo clara
-    color: "#212529", // cor do texto
-    confirmButtonColor: "#dc3545", // vermelho Bootstrap
-    cancelButtonColor: "#6c757d", // cinza Bootstrap
-    buttonsStyling: true, // deixa os botões com estilo customizado
+    background: "#f8f9fa", 
+    color: "#212529", 
+    confirmButtonColor: "#dc3545", 
+    cancelButtonColor: "#6c757d", 
+    buttonsStyling: true, 
     customClass: {
-     popup: "rounded-4 shadow-lg", // bordas arredondadas e sombra
-     title: "fw-bold text-danger", // título em negrito e vermelho
-     confirmButton: "btn btn-danger px-4", // botão vermelho estilizado
-     cancelButton: "btn btn-secondary px-4" // botão cinza estilizado
+     popup: "rounded-4 shadow-lg", 
+     title: "fw-bold text-danger", 
+     confirmButton: "btn btn-danger px-4", 
+     cancelButton: "btn btn-secondary px-4" 
    }
   }).then(async (result) => {
    if (result.isConfirmed) {

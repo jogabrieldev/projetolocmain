@@ -117,30 +117,38 @@ npm run dev
 
 ## DEPENDENCIA DE PRODUÇÃO
 "bcrypt": "^5.1.1",
-"body-parser": "^1.20.3",
-"express": "^4.21.1",
-"jquery": "^3.7.1",
-"jquery-mask-plugin": "^1.14.16",
-"jquery-validation": "^1.21.0",
-"jsonwebtoken": "^9.0.2",
-"pg": "^8.13.1",
-"pg-hstore": "^2.3.4",
-"socket.io": "^4.8.1"
+    "body-parser": "^1.20.3",
+    "date-fns": "^4.1.0",
+    "express": "^4.21.1",
+    "express-validator": "^7.2.1",
+    "jquery": "^3.7.1",
+    "jquery-mask-plugin": "^1.14.16",
+    "jquery-validation": "^1.21.0",
+    "jsonwebtoken": "^9.0.2",
+    "node-cron": "^4.1.1",
+    "node-fetch": "^3.3.2",
+    "pg": "^8.13.1",
+    "pg-hstore": "^2.3.4",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
 
 
 ##DEPENDENCIA DE DESENVOLVIMENTO
 
-"@babel/core": "^7.26.10",
-"@babel/preset-env": "^7.26.9",
-"@babel/preset-react": "^7.26.3",
-"babel-loader": "^10.0.0",
-"clean-webpack-plugin": "^4.0.0",
-"dotenv": "^16.4.5",
-"html-webpack-plugin": "^5.6.3",
-"nodemon": "^3.1.7",
-"webpack": "^5.97.1",
-"webpack-cli": "^6.0.1",
-"webpack-dev-server": "^5.2.0"
+ "@babel/core": "^7.26.10",
+    "@babel/preset-env": "^7.26.9",
+    "@babel/preset-react": "^7.26.3",
+    "babel-loader": "^10.0.0",
+    "clean-webpack-plugin": "^4.0.0",
+    "css-loader": "^7.1.2",
+    "dotenv": "^16.4.5",
+    "html-loader": "^5.1.0",
+    "html-webpack-plugin": "^5.6.3",
+    "nodemon": "^3.1.7",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.0"
 
 ### MODULO DE LOCAÇÃO
 
