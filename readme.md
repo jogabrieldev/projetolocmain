@@ -1,8 +1,8 @@
-# 📦 Projeto Caçamba 1.0.0 - MVP
+# 📦 Projeto Caçamba 
 
 Sistema de gestão de locação de caçambas e logística de resíduos, desenvolvido seguindo a arquitetura **MVC (Model-View-Controller)**.
 
-A aplicação é uma **SPA (Single Page Application)** com **JavaScript puro no frontend**, **Node.js no backend** e **PostgreSQL como banco de dados relacional**.
+A aplicação é uma **SPA (Single Page Application)** com **JavaScript Vanilla no frontend**, **Node.js no backend** e **PostgreSQL como banco de dados relacional**.
 
 ---
 
