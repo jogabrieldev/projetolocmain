@@ -1,7 +1,8 @@
 import { autoRegister } from "../model/modelsVehicles.js";
 
 export const movementAuto = {
-
+  
+  // cadastrar veiculo
   async registerAuto(req, res) {
   try {
     const dataAuto = req.body;
@@ -33,7 +34,8 @@ export const movementAuto = {
      return res.status(500).json({ success: false, message: "Erro interno no servidor." });
   }
 },
-
+ 
+// buscar veiculo por codigo
 async getCodeVehicle(req , res){
    try {
        const {code} = req.params
@@ -53,6 +55,7 @@ async getCodeVehicle(req , res){
    }
 },
 
+// Pegar veiculo por codigo ou placa
 async getAutomovelByCode(req, res) {
     const { caaucode, caauplac } = req.query;
    
@@ -74,6 +77,7 @@ async getAutomovelByCode(req, res) {
   }
 },
 
+// listagem de veiculos
   async listingOfAuto(req, res) {
     try {
       const autos = await autoRegister.listAutos();
@@ -91,7 +95,7 @@ async getAutomovelByCode(req, res) {
     }
   },
 
-  
+  // deletar automovel
   async deleteOfAuto(req, res) {
     try {
       const { id } = req.params;

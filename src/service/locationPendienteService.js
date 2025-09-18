@@ -1,5 +1,8 @@
 import cron from 'node-cron'
 
+// Momento que e perciso fazer uma transação no banco passa por esse serviço
+
+// SERVIÇO DE NOTIFICAÇÃO PARA ALERTA QUANDO TEM LOCAÇÃO PENDENTE A MAIS DE 1 HORA
 export async function notificationTheLocationPendiente(io , pool){
     cron.schedule("0 * * * *", async () => {
         console.log("⏰ Verificando locações pendentes há > 1h...");

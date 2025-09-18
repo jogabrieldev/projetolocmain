@@ -2,6 +2,7 @@ import { crudRegisterProd as prodRegister} from "../model/modelsProd.js";
 
 export const movementOfProd = {
 
+  // cadastro de produto
   async registerProd(req, res) {
   try {
     const dataProd = req.body;
@@ -33,6 +34,8 @@ export const movementOfProd = {
     return res.status(500).json({ success: false, message: error.message });
   }
 },
+
+// buscar produto por codigo
 async searchProductByCode(req, res) {
       const { prodCode } = req.query;
     
@@ -54,7 +57,7 @@ async searchProductByCode(req, res) {
     }
  },
 
-
+// Buscar codigos de tipo de produto
   async codeTipoProd(req, res) {
     try {
       const dataTyperod = await prodRegister.buscartipoProd();
@@ -70,6 +73,7 @@ async searchProductByCode(req, res) {
     }
   },
 
+  // listagem de produtos
   async listofProd(req, res) {
     try {
       const produto = await prodRegister.listingOfProd();
@@ -87,6 +91,7 @@ async searchProductByCode(req, res) {
     }
   },
 
+  // deletar produto
   async deleteProd(req, res) {
     try {
       const { id } = req.params;
@@ -106,6 +111,7 @@ async searchProductByCode(req, res) {
     }
   },
 
+  // atualizar produto
   async updateProduct(req, res) {
     const prodId = req.params.id;
     const updateData = req.body;

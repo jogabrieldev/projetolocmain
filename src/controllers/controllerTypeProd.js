@@ -1,6 +1,7 @@
 import { crudRegisterTypeProd as typeProdRegister } from "../model/modelsTypeProd.js";
 
 export const movementOfTypeProd = {
+  // cadastrar tipo de produto
   async registerTyperProd(req, res) {
     try {
       const dataTypeProd = req.body;
@@ -33,6 +34,7 @@ export const movementOfTypeProd = {
     }
   },
 
+  // pegar tipo de produto por codigo passado
   async getTypeProductByCode(req, res) {
     const { tiprCode } = req.query;
        
@@ -54,7 +56,7 @@ export const movementOfTypeProd = {
         }
      },
   
-
+// listafem de tipo de produto
   async listingOfTypeProd(req, res) {
     try {
       const produto = await typeProdRegister.listTypeProd(req, res);
@@ -71,7 +73,7 @@ export const movementOfTypeProd = {
       });
     }
   },
-
+  // deleta tipo de produto
   async deleteOfTypeProd(req, res) {
     const { id } = req.params;
     try {
@@ -100,7 +102,8 @@ export const movementOfTypeProd = {
       return res.status(500).json({ message: "erro no servidor" });
     }
   },
-
+ 
+  // atualizar tipo de produto
   async updateOfTypeProd(req, res) {
     const prodId = req.params.id;
     const updateData = req.body;

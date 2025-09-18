@@ -3,6 +3,7 @@ import { serviceLocation } from "../service/locationService.js";
 
 export const location = {
 
+  // gerar numero de locação de 6 digitos sempre comparando se não esta se repetindo
   async gerarNumeroLocacao(req, res) {
     try {
       const numero = await LocacaoModel.gerarNumeroLocacao(); 
@@ -16,7 +17,8 @@ export const location = {
       return res.status(500).json({ error: "Erro ao gerar número de locação." });
     }
   },
-
+ 
+  // gerar locação 
  async dataLocacao(req, res) {
   const { userClientValidade, numericLocation, dataLoc, localization, resi, descarte, dataDevo, pagament, bens } = req.body;
 
@@ -72,6 +74,7 @@ export const location = {
   }
 },
 
+// Buscar cliente por CPF
   async getClientByCPF(req, res) {
     try {
       const { cpf } = req.query;
@@ -104,6 +107,7 @@ export const location = {
     }
   },
 
+  // lISTA FAMILIA DE BENS
   async listarFamilias(req, res) {
     try {
       const familias = await LocacaoModel.buscarCodigosBens();
@@ -117,6 +121,7 @@ export const location = {
     }
   },
 
+  // Pega todas as locações geradas na tabela pro completo
   async buscarLocationFinish(req, res) {
     try {
       const locacaoFinish = await LocacaoModel.buscarTodasLocacoes();
@@ -131,6 +136,7 @@ export const location = {
     }
   },
   
+  // Busca locação por ID passado
   async buscarLocacaoPorId(req, res) {
     try {
         const { id } = req.params; 
@@ -152,6 +158,7 @@ export const location = {
     }
 },
 
+// deletar locação
 async DeleteLocationFinish(req, res) {
 
   const { id } = req.params;
@@ -171,6 +178,7 @@ async DeleteLocationFinish(req, res) {
   }
 },
 
+// atualizar status de locação
   async updateStatus(req, res) {
     const { codeLocation } = req.params;
     const { belostat } = req.body; // Novo status
@@ -188,12 +196,12 @@ async DeleteLocationFinish(req, res) {
       }
 
   
-      res.status(200).json({
+      return res.status(200).json({
         message: "Status atualizado com sucesso.",
         bem: bemAtualizado,
       });
     } catch (error) {
-      res.status(500).json({ error: "Erro ao atualizar o status do bem." });
+      return res.status(500).json({ error: "Erro ao atualizar o status do bem." });
     }
   },
 

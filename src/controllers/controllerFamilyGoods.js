@@ -1,6 +1,8 @@
 import { crudRegisterFamilyGoods as fabriRegister } from "../model/modelsFamilyGoods.js";
 
 export const movementOfFamilyGoods = {
+
+  //cadastro de familia de bens
   async registerOfFabri(req, res) {
     try {
       const dataFabri = req.body;
@@ -37,6 +39,7 @@ export const movementOfFamilyGoods = {
     }
   },
 
+  // buscar familia de bens por codigo
   async getfamilygoodsByCode(req, res) {
      const { fabeCode } = req.query;
      
@@ -57,7 +60,8 @@ export const movementOfFamilyGoods = {
         return res.status(500).json({ message: "Erro ao buscar familia de bem." });
       }
    },
-
+  
+   // listar familia de bens
   async listingOfFabri(req, res) {
     try {
       const fabricante = await fabriRegister.listingFabri();
@@ -75,6 +79,7 @@ export const movementOfFamilyGoods = {
     }
   },
 
+  // deletar familia de bens
   async deleteOfFabri(req, res) {
     const { id } = req.params;
      try {
@@ -109,7 +114,8 @@ export const movementOfFamilyGoods = {
       return res.status(500).json({ message: "erro no servidor" });
     }
   },
-
+  
+ // atualizar familia de bens
   async updateFabri(req, res) {
     const fabeId = req.params.id;
     const updateData = req.body;

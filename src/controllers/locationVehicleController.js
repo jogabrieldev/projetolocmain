@@ -4,7 +4,7 @@ import { LocacaoModel } from "../model/modelsLocationGoods.js";
 
 export const controllerLocationVehicle = {
 
-      
+// Gerar locação de veiculos
 async dataLocacaoVehicle(req ,res){
        
  try {
@@ -65,6 +65,7 @@ async dataLocacaoVehicle(req ,res){
   },
 
     
+  // Buscar locação de veiculos
   async getLocationVehicles(req ,res){
        try {
       const locacaoFinishVehicles = await modelsLocationAuto.buscarTodasLocacoes();
@@ -79,6 +80,7 @@ async dataLocacaoVehicle(req ,res){
     }
   },
 
+  // Deletar locação de veiculos
   async deleteLocationVehicles(req , res){
        
     const {id} = req.params
@@ -101,6 +103,8 @@ async dataLocacaoVehicle(req ,res){
        res.status(500).json({message: 'Erro no server para deletar'})
     }
   },
+
+  //Atualiza contrato passado no parametro
   async updateContrato(req, res) {
 
    const { id } = req.params; 

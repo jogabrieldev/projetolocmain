@@ -2,6 +2,9 @@ import { pool } from "../database/userDataBase.js";
 import { mecanismDelivey } from "../model/modelsDelivery.js";
 import { goodsRegister } from "../model/modelsGoods.js";
 
+// Momento que e perciso fazer uma transação no banco passa por esse serviço
+
+// aceitar entrega e finalizar entrega
 export const deliveryService = {
   async acceptDeliveryAndUpdateGoods(deliveryId, goodsId, statusDelivery, statusGoods) {
 

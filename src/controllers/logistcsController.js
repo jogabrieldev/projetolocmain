@@ -4,6 +4,7 @@ import LogisticsService from "../service/logisticsService.js"
 
 class logistcgController {
 
+  // vinculando o BEM na locação e gerando a entrega
   async submitDateForLogistcs(req, res) {
     try {
       const {payloadLogistcs} = req.body;
@@ -38,6 +39,8 @@ class logistcgController {
       res.status(500).json({ sucess: false, message: error.message });
     };
   };
+
+  // buscando contrato
   async getAll(req ,res){
       try {
          const {id}  = req.params;
@@ -58,6 +61,7 @@ class logistcgController {
   }
    };
 
+   // Buscar entrega por codigo de locação  , status , ou IDcliente
    async searchLocationForParams(req ,res){
    
        const {lofiidlo, lofistat, lofiidcl} =req.query
@@ -80,6 +84,7 @@ class logistcgController {
          }
    }
 
+   // Atualizar contrato de locação de bens
    async updateContratoWithGoods(req ,res){
       try {
         const {id} = req.params;

@@ -2,6 +2,8 @@ import { crudRegisterForn as fornRegister } from "../model/modelsFornecedor.js";
 import fetch from "node-fetch";
 
 export const movementForne = {
+  
+  // cadastrar fornecedor
   async registerForn(req, res) {
     try {
       const dataForn = req.body;
@@ -32,7 +34,8 @@ export const movementForne = {
       return res.status(500).json({ success: false, message: error.message });
     }
   },
-
+ 
+  // Busca fornecedor por codigo ou cnpj
   async searchForneParams(req, res) {
     const { fornCode, fornCnpj } = req.query;
      
@@ -58,7 +61,8 @@ export const movementForne = {
       return res.status(500).json({ message: "Erro ao buscar fornecedor." });
     }
  },
-
+ 
+ // listagem de fornecedor
   async listOfForn(req, res) {
     try {
       const forne = await fornRegister.listingForn();
@@ -76,14 +80,15 @@ export const movementForne = {
     }
   },
 
+  // buscar fornecedor por codigo
   async codeForn(req, res) {
     try {
       const dataforn = await fornRegister.buscarIdForn();
       if (dataforn) {
-        res.status(200).json(dataforn);
-        return dataforn;
+           return res.status(200).json(dataforn);
+     
       } else {
-        return req.status(400).json({ error: "Nenhum dado encontrado" });
+        return req.status(400).json({ error: "Nenhum codigo encontrado encontrado" });
       }
     } catch (error) {
       console.error("Erro ao buscar fornecedor", error);
@@ -91,6 +96,7 @@ export const movementForne = {
     }
   },
 
+ // deletar o fornecedor
   async deleteOfForn(req, res) {
     try {
       const { id } = req.params;
@@ -120,6 +126,7 @@ export const movementForne = {
     }
   },
 
+  // atualizar o fornecedor
   async updateOfForn(req, res) {
     const fornId = req.params.id;
     const updateForn = req.body;

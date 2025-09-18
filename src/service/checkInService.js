@@ -2,6 +2,9 @@ import { pool as dataCheckIn } from "../database/userDataBase.js";
 import { movimentCheckInAndCheckOut } from "../model/modelsCheckIn.js";
 import { autoRegister as updateRuntime } from "../model/modelsVehicles.js";
 
+// Momento que e perciso fazer uma transação no banco passa por esse serviço
+
+// check-in e check-out
 export const checkInService = {
   async doCheckIn(payloadCheckin, io) {
     const client = await dataCheckIn.connect();

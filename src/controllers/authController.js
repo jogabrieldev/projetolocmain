@@ -75,7 +75,7 @@ export const authSystemValidade = {
         return res.status(401).json({ message: "Usuário ou senha inválidos" });
       }
 
-      // Redireciona para externo se for
+      // Redireciona para motorista externo se for
       if (motorista.motositu === "Externo") {
         return this.loginMotoristaExterno(req, res, motorista);
       }

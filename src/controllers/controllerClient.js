@@ -4,6 +4,8 @@ import { dateFilial as controllerFili } from "../model/modelsFilial.js";
 import fetch from "node-fetch";
 
 export const movementClient = {
+
+  // cadastrar cliente
   async registerClient(req, res) {
     try {
       const dataClientSubmit = req.body;
@@ -49,6 +51,7 @@ export const movementClient = {
     }
   },
 
+  // buscar cliente
  async searchClient(req, res) {
     const { cliecode , valueCpf , valueCnpj } = req.query;
     try {
@@ -80,6 +83,7 @@ export const movementClient = {
     }
   },
 
+  // pegar cliente pelo ID 
   getClientId: async (req, res) => {
     const { cliecode } = req.params;
 
@@ -100,7 +104,8 @@ export const movementClient = {
       return res.status(500).json({ message: "Erro interno ao buscar cliente." });
     }
   },
-
+ 
+  // listagem de clientes
   async listingOfClient(req, res) {
     try {
       const client = await clientRegister.listingClient();
@@ -120,6 +125,7 @@ export const movementClient = {
     }
   },
 
+  // deletar os clientes
   async deleteOfClient(req, res) {
     const { id } = req.params;
     try {
@@ -151,7 +157,8 @@ export const movementClient = {
       return res.status(500).json({ message: "erro no servidor" });
     }
   },
-
+ 
+  // Atualização de clientes
   async updateOfClient(req, res) {
     const clientId = req.params.id;
     const updateClient = req.body;

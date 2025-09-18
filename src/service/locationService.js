@@ -1,5 +1,8 @@
 import {pool as dataLocation} from '../database/userDataBase.js'
 
+// Momento que e perciso fazer uma transação no banco passa por esse serviço
+
+// Momento de criar a locaçaõ 
 export const serviceLocation =  {
     async criarLocacaoComBens(locacao, bens) {
   const client = await dataLocation.connect();

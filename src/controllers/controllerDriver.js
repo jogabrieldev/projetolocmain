@@ -28,7 +28,6 @@ export const movementOfDriver = {
      data.motoPasw = await bcrypt.hash(data.motoPasw, saltRounds);
         
   
-      // Prossegue com o cadastro
       const newDriver = await driverRegister.registerDriver(data);
       if(!newDriver){
         return res.status(400).json({message:"Erro para cadastrar o motorista"})

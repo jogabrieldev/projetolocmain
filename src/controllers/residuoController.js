@@ -1,7 +1,7 @@
 import { moduleResiduo } from "../model/modelsResiduo.js";
 
 export const movementResiduo =  {
-    
+  // registrar residuo
   async registerResiduo(req , res){
         try {
          const {dataResi} = req.body
@@ -34,6 +34,7 @@ export const movementResiduo =  {
        
     },
 
+    // listar residuo
 async listResiduo(req , res){
    try {
        const residuo = await moduleResiduo.getAllResiduo()
@@ -45,6 +46,7 @@ async listResiduo(req , res){
        }
      },
 
+     // buscar residuo por ID
   async getIdResiduo(req , res){
       try {
          const {id} =  req.params
@@ -64,6 +66,7 @@ async listResiduo(req , res){
       }
   },
 
+  // Deletar residuo
       async deleteResiduo(req, res) {
        
         try {

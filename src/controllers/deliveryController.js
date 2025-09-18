@@ -4,7 +4,8 @@ import {deliveryService} from "../service/deliveryService.js"
 
 
 const controllerDelivery = {
-
+  
+  // pegar dados de locação final ja com o bem
       async getDate(req , res){
           try {
              const response = await mecanismDelivey.getDateLocationFinish()
@@ -18,7 +19,8 @@ const controllerDelivery = {
 
           }
      },
-
+ 
+     // pegar locação por codigo do motorista passado no parametro
     async getDataLocationDriver(req ,res){
         try {
            const {id} = req.params
@@ -38,6 +40,7 @@ const controllerDelivery = {
         }
      },
 
+     // atualizar status de entrega
      async updateStatusDelivery(req ,res){
          try {
              const {id} = req.params
@@ -64,6 +67,7 @@ const controllerDelivery = {
          }
      },
 
+     // finalizar a entrega
 async finishProcessDelivery(req, res) {
   try {
     const payload = req.body;
@@ -88,7 +92,7 @@ async finishProcessDelivery(req, res) {
     return res.status(500).json({ message:"Erro no server para finalizar entrega", success: false });
   }
 },
-
+ // Aceitar entrega e atualizar status
   async updateStatusAcceptDelivery(req ,res){
 
      try {

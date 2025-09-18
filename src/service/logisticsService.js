@@ -5,6 +5,9 @@ import { goodsRegister as authGoods } from "../model/modelsGoods.js";
 import { LocacaoModel as updateStatusLocation } from "../model/modelsLocationGoods.js";
 import { pool } from "../database/userDataBase.js";
 
+// Momento que e perciso fazer uma transação no banco passa por esse serviço garantir persistencia
+
+// Momento que vai vincular BEM a aquele locação .
 class LogisticsService {
   async handleSubmit(payload) {
     const client = await pool.connect();

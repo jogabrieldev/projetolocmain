@@ -4,6 +4,7 @@ import { crudRegisterFamilyGoods as validFamily } from "../model/modelsFamilyGoo
 
 export const movementGoods = {
 
+  // cadastrar bens
   async registerBens(req, res) {
   try {
     const data = req.body;
@@ -33,8 +34,7 @@ export const movementGoods = {
   }
 },
 
-
-
+ // pegar bens por codigo ou status
 async getbensByCode(req, res) {
     const { benscode, status } = req.query;
    
@@ -55,7 +55,8 @@ async getbensByCode(req, res) {
     return res.status(500).json({ message: "Erro ao buscar bens." });
   }
 },
-
+ 
+// busca Por ID o bem
   async pegarBemPorID(req ,res){
      try {
         const {id} = req.params
@@ -73,7 +74,8 @@ async getbensByCode(req, res) {
         return res.status(500).json({ message: "Erro ao buscar bem por ID." });
      }
   },
-
+ 
+  // busca codigos de familia de bens
   async codeFamilyBens(req, res) {
     try {
       const dataFamilybens = await goodsRegister.buscarIdFamiliaBens();
@@ -88,7 +90,8 @@ async getbensByCode(req, res) {
       return res.status(500).json({ error: "Erro interno do servidor" });
     }
   },
-  
+
+  // listagem de bens 
   async listBens(req, res) {
     try {
       const bens = await goodsRegister.listingBens();
@@ -105,7 +108,8 @@ async getbensByCode(req, res) {
       });
     }
   },
-
+ 
+  // atualizaçaõ de bens
   async updateGoods(req, res) {
     const bemId = req.params.id;
     const updatedData = req.body;
@@ -159,10 +163,11 @@ async getbensByCode(req, res) {
      
     } catch (error) {
       console.error("Erro ao atualizar o bem:", error);
-      res.status(500).json({ message: "Erro ao atualizar o bem", error });
+      return res.status(500).json({ message: "Erro ao atualizar o bem", error });
     }
   },
-
+ 
+  //deletar bem
   async deletarGoods(req, res) {
     const { id } = req.params;
     try {
@@ -189,12 +194,12 @@ async getbensByCode(req, res) {
     }
   },
 
+  // atualizar status de bem
   async updateStatus(req, res) {
   try {
     const { bemId } = req.params;
     const { bensstat } = req.body;
   
-    console.log('bem' , bemId , bensstat)
     if (!bemId || !bensstat) {
       return res.status(400).json({ message: "Dados inválidos" });
     }

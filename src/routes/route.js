@@ -44,7 +44,7 @@ route.post("/autenticar",  (req, res) => {
 });
 
 
-//bens
+//Rotas de bens
 
 route.post("/api/bens/submit", validateBens,validate, authenticateToken,(req, res) => {
   movementGoods.registerBens(req, res)
@@ -74,7 +74,7 @@ route.put("/api/updatestatus/:bemId" , authenticateToken, async(req, res)=>{
   movementGoods.updateStatus(req ,res)
 });
 
-//client
+//Rotas de clientes
 route.post('/api/client/submit', validateClient, validate, authenticateToken, (req, res) => {
   movementClient.registerClient(req, res);  
 });
@@ -95,7 +95,7 @@ route.put('/api/updateclient/:id', authenticateToken, (req , res)=>{
 });
 
 
-// fornecedor
+// Rotas de fornecedor
 route.post('/api/forne/submit' , validateForn,validate, authenticateToken, (req , res)=>{
 movementForne.registerForn(req, res)
 });
@@ -116,7 +116,7 @@ route.put('/api/updateforn/:id' , authenticateToken, (req , res)=>{
 });
 
 
-// produto
+// Rotas de produtos
 route.post('/api/prod/submit' , validateProduto, validate,  authenticateToken,  (req , res)=>{
   movementOfProd.registerProd(req ,res)
 });
@@ -134,7 +134,7 @@ route.put('/api/updateprod/:id' ,  authenticateToken,   (req , res)=>{
 });
 
 
-//Familia do bem
+// Rotas de Familia do bem
 route.post('/api/fabri/submit' , authenticateToken,(req , res)=>{
   movementOfFamilyGoods.registerOfFabri(req , res)
 });
@@ -154,7 +154,7 @@ route.put('/api/updatefabe/:id' , authenticateToken,(req , res)=>{
   movementOfFamilyGoods.updateFabri(req ,res)
 });
 
-// tipo do produto
+// Rotas de tipo do produto
 route.post('/api/typeprod/submit' , authenticateToken, (req , res)=>{
    movementOfTypeProd.registerTyperProd(req , res)
 });
@@ -174,7 +174,7 @@ route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
   movementOfTypeProd.updateOfTypeProd(req , res)
 });
 
- // motorista 
+ // Rotas de  motorista 
  route.post('/api/drive/submit' , validateMotorista , validate, authenticateToken, (req , res)=>{
   movementOfDriver.registerOfDriver(req , res)
  });
@@ -201,7 +201,7 @@ route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
  });
 
  
- // Veiculo
+ // Rotas de Veiculo
  route.post('/api/cadauto', authenticateToken, validateAutomovel, validate, (req , res)=>{
   movementAuto.registerAuto(req, res)
  });
@@ -225,7 +225,7 @@ route.put('/api/updatetypeprod/:id', authenticateToken, (req , res)=>{
  });
 
 
- // residuo
+ // Rotas de residuo
 route.post('/residuo' , (req ,res)=>{
    movementResiduo.registerResiduo(req ,res)
 });
@@ -241,7 +241,7 @@ route.delete("/residuo/:id" , (req , res)=>{
    movementResiduo.deleteResiduo(req , res)
 });
 
-// destino
+// Rotas de destino
 
 route.post('/api/destination' , (req ,res)=>{
   controllerDestination.insertDestination(req,res)
@@ -277,7 +277,7 @@ route.get('/api/drivercar/:id' , (req ,res)=>{
    controllerLinkVehicleWithDriver.getVehicleTheDriver(req ,res)
 });
 
-// checkIN checkOut
+//Rotas de  checkIN checkOut
 
 route.post("/api/checkin" ,validateCheckIn , validate, authenticateToken, (req ,res)=>{
   controllerCheckInAndCheckOut.toDoCheckIn(req ,res)
@@ -291,7 +291,7 @@ route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
 });
 
 
- //locação Bens
+ //Rotas de Processo de locação Bens
  route.get('/api/generateNumber' , (req , res)=>{
    location.gerarNumeroLocacao(req , res)
  });
@@ -325,7 +325,7 @@ route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
  });
 
 
- // LOCAÇÃO VEICULOS
+ // Rotas Processo de LOCAÇÃO VEICULOS
  route.post('/api/locacaoveiculo' ,validateLocationVehicle, validate, authenticateToken,   (req ,res)=>{
    controllerLocationVehicle.dataLocacaoVehicle(req ,res)
  });
@@ -341,7 +341,7 @@ route.put("/api/checkin/:id" , authenticateToken, (req ,res)=> {
  });
     
 
- // LOGISTICA
+ // ROTAS DE LOGISTICA
  route.post('/logistics' , validateSubmitDateForLogistics,validate,  authenticateToken, (req , res)=>{
   logistcgController.submitDateForLogistcs(req ,res)
 });
@@ -358,7 +358,7 @@ route.put("/api/contrato/:id" , authenticateToken, (req ,res)=>{
   logistcgController.updateContratoWithGoods(req ,res)
 });
 
-// PROCESSO DE ENTREGA
+//ROTAS  PROCESSO DE ENTREGA
 
  route.get('/api/getdelivery' , authenticateToken, (req ,res)=>{
   controllerDelivery.getDate(req ,res)
@@ -375,7 +375,7 @@ route.patch('/api/statusupdate/:id', authenticateToken, (req ,res)=>{
     controllerDelivery.finishProcessDelivery(req ,res)
  });
 
- // DEVOLUÇÃO
+ // ROTAS PARA DEVOLUÇÃO
 
  route.get("/api/devolution" , (req , res)=>{
    controllerDevolution.getDevolution(req ,res)

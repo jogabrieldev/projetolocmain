@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// controlle de telas
 class Control {
   
   main(req, res) {

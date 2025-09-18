@@ -1,5 +1,5 @@
 import { movementDestination } from "../model/modelsDestination.js";
-import fetch from "node-fetch";
+
 
 export const controllerDestination = {
   async insertDestination(req, res) {

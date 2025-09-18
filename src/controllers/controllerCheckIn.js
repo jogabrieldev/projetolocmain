@@ -1,7 +1,7 @@
 import { movimentCheckInAndCheckOut } from "../model/modelsCheckIn.js";
-import { autoRegister as updateRuntime } from "../model/modelsVehicles.js";
-import { mecanismDelivey } from "../model/modelsDelivery.js";
-import { pool as dataCheckIn } from "../database/userDataBase.js";
+// import { autoRegister as updateRuntime } from "../model/modelsVehicles.js";
+// import { mecanismDelivey } from "../model/modelsDelivery.js";
+// import { pool as dataCheckIn } from "../database/userDataBase.js";
 import { checkInService } from "../service/checkInService.js";
 
  export const controllerCheckInAndCheckOut = {
@@ -54,5 +54,5 @@ async toCheckOut(req, res) {
     }
   },
 
-}
+};
 

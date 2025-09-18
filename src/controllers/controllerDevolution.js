@@ -1,7 +1,7 @@
 import { processDevolution } from "../model/modelsDevolution.js";
 
 export const controllerDevolution = {
-      
+      // pegar devoluções
      async getDevolution(req ,res){
          try {
               const result = await processDevolution.getDevolutionTheDay()
